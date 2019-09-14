@@ -24,6 +24,7 @@ do {
 	$wijk = $data['wijk'];
 	$relatie = $data['relatie'];
 	$status = $data['belijdenis'];
+	$geslacht = $data['geslacht'];
 			
 	# Van elke persoon vraag ik op of die al voorkomt in mijn lokale mailchimp-database.
 	# 	dat is iets sneller dan aan mailchimp vragen of die al voorkomt én
@@ -39,6 +40,13 @@ do {
 			echo makeName($scipioID, 6) ." toegevoegd<br>\n";
 		} else {
 			toLog('error', '', $scipioID, 'Kon niet syncen naar MailChimp');
+		}
+		
+		# + geslacht toevoegen
+		if(mc_addtag($data['mail'], $tagGeslacht[$geslacht])) {
+			toLog('debug', '', $scipioID, 'Geslacht gesynced naar MailChimp');
+		} else {
+			toLog('error', '', $scipioID, 'Kon geslacht niet syncen naar MailChimp');
 		}
 		
 		# + tag van de juiste wijk eraan
@@ -191,6 +199,26 @@ do {
 					toLog('error', '', $scipioID, "Kerkelijke relatie gewijzigd (". $row_mc[$MCrelatie] ." -> $relatie) maar niet gesynced naar MailChimp");
 				}
 			}
+			
+			
+			
+			
+			
+			# Gewijzigd geslacht
+			if($row_mc[$MCgeslacht] != $geslacht) {
+				$oudeGeslacht = $row_mc[$MCgeslacht];						
+				if((mc_addtag($email, $tagGeslacht[$geslacht]) AND mc_rmtag($email, $tagGeslacht[$oudeGeslacht])) OR (mc_addtag($email, $tagGeslacht[$geslacht]) AND $row_mc[$MCgeslacht] == '')){
+					toLog('info', '', $scipioID, "Geslacht gewijzigd (". $row_mc[$MCgeslacht] ." -> $geslacht) dus gesynced naar MailChimp");
+					$sql_update[] = "$MCgeslacht = '$geslacht'";
+				} else {
+					toLog('error', '', $scipioID, "Geslacht gewijzigd (". $row_mc[$MCgeslacht] ." -> $geslacht) maar niet gesynced naar MailChimp");
+				}
+			}			
+			
+			
+			
+			
+			
 		}
 		
 		# De wijzigingen aan de MC kant moeten ook verwerkt worden in mijn lokale mailchimp-database
