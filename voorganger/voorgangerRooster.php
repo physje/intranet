@@ -1,11 +1,11 @@
 <?php
-include_once('include/functions.php');
-include_once('include/config.php');
-include_once('include/HTML_TopBottom.php');
+include_once('../include/functions.php');
+include_once('../include/config.php');
+include_once('../include/HTML_TopBottom.php');
 
 $db = connect_db();
 $requiredUserGroups = array(1, 20);
-$cfgProgDir = 'auth/';
+$cfgProgDir = '../auth/';
 include($cfgProgDir. "secure.php");
 
 # Als er op een knop gedrukt is, het rooster wegschrijven
@@ -97,7 +97,7 @@ foreach($diensten as $dienst) {
 	if($data['voorganger_id'] > 0) {
 		$text[] = "	<td>&nbsp;</td>";
 	} else {
-		$text[] = "	<td align='right'><a href='editVoorganger.php?new=ja' target='_blank'><img src='images/invite.gif' title='Open een nieuw scherm om missende voorganger toe te voegen'></a></td>";
+		$text[] = "	<td align='right'><a href='voorganger/editVoorganger.php?new=ja' target='_blank'><img src='images/invite.gif' title='Open een nieuw scherm om missende voorganger toe te voegen'></a></td>";
 	}
 	$text[] = "	<td>". $data['bijzonderheden'] ."</td>";
 	$text[] = "</tr>";

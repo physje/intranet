@@ -276,6 +276,7 @@ function getMemberDetails($id) {
 	$data['relatie']				= $row[$UserRelatie];	
 	$data['tel']						= $row[$UserTelefoon];
 	$data['mail']						= $row[$UserMail];
+	$data['alt_mail']				= $row[$UserMail];
 	
 	return $data;
 }

@@ -1,6 +1,6 @@
 <?php
-include_once('include/functions.php');
-include_once('include/config.php');
+include_once('../include/functions.php');
+include_once('../include/config.php');
 
 $db = connect_db();
 
@@ -166,7 +166,7 @@ if($row_agenda = mysqli_fetch_array($result_agenda)) {
 	}while($row_agenda = mysqli_fetch_array($result_agenda));
 }
 
-$file_name = 'ical/scipio.ics';
+$file_name = '../ical/scipio.ics';
 	
 $file = fopen($file_name, 'w+');
 fwrite($file, implode("\r\n", $header));

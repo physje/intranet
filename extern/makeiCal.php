@@ -1,6 +1,6 @@
 <?php
-include_once('include/functions.php');
-include_once('include/config.php');
+include_once('../include/functions.php');
+include_once('../include/config.php');
 
 $db = connect_db();
 
@@ -83,7 +83,7 @@ foreach($ids as $id) {
 		} while($row = mysqli_fetch_array($result));
 	}
 	
-	$file = fopen('ical/'.$memberData['username'].'-'. $memberData['hash_short'] .'.ics', 'w+');
+	$file = fopen('../ical/'.$memberData['username'].'-'. $memberData['hash_short'] .'.ics', 'w+');
 	fwrite($file, implode("\r\n", str_replace('[[NAAM]]', '3GK ('. makeName($id, 1) .')', $header)));
 	fwrite($file, "\r\n");
 	fwrite($file, implode("\r\n", $ics));

@@ -1,6 +1,6 @@
 <?php
-include_once('include/functions.php');
-include_once('include/config.php');
+include_once('../include/functions.php');
+include_once('../include/config.php');
 
 $db = connect_db();
 
@@ -64,7 +64,7 @@ for($maand=1 ; $maand<13 ; $maand++) {
 	}
 }
 
-$file = fopen('ical/verjaardagskalender.ics', 'w+');
+$file = fopen('../ical/verjaardagskalender.ics', 'w+');
 fwrite($file, implode("\r\n", $header));
 fwrite($file, "\r\n");
 fwrite($file, implode("\r\n", $ics));

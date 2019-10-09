@@ -1,10 +1,10 @@
 <?php
-include_once('include/functions.php');
-include_once('include/config.php');
-include_once('include/HTML_TopBottom.php');
+include_once('../include/functions.php');
+include_once('../include/config.php');
+include_once('../include/HTML_TopBottom.php');
 
 $db = connect_db();
-$cfgProgDir = 'auth/';
+$cfgProgDir = '../auth/';
 $requiredUserGroups = array(1, 20);
 include($cfgProgDir. "secure.php");
 

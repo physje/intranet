@@ -59,6 +59,14 @@ echo "	</tr>".NL;
 echo "		<td><b>Mailadres</b></td>".NL;
 echo "		<td><a href='mailto:". makeName($id, 5) ." <".$personData['mail'] .">'>". $personData['mail'] ."</td>".NL;
 echo "	</tr>".NL;
+
+if(in_array(1, getMyGroups($_SESSION['ID']))) {	
+	echo "	<tr>".NL;
+	echo "		<td><b>Alternatief mailadres</b></td>".NL;
+	echo "		<td><input type='text' name='alt_mail' value='". $personData['alt_mail'] ."'></td>".NL;
+	echo "	</tr>".NL;
+}
+
 echo "	<tr>".NL;
 echo "		<td><b>Wijk</b></td>".NL;
 echo "		<td><a href='ledenlijst.php?wijk=". $personData['wijk'] ."'>".$personData['wijk'] ."</a></td>".NL;
@@ -92,6 +100,13 @@ if(in_array(1, getMyGroups($_SESSION['ID']))) {
 	echo "	<tr>".NL;
 	echo "		<td><b>Gebruikersnaam</b></td>".NL;
 	echo "		<td><a href='account.php?id=$id'>". $personData['username'] ."</a></td>".NL;
+	echo "	</tr>".NL;
+	echo "	<tr>".NL;
+	echo "		<td colspan='2'>&nbsp;</td>".NL;
+	echo "	</tr>".NL;
+	echo "	<tr>".NL;
+	echo "		<td>&nbsp;</td>".NL;
+	echo "		<td><input type='submit' name='save_address' value='Opslaan'></td>".NL;
 	echo "	</tr>".NL;
 }
 
