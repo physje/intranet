@@ -16,99 +16,38 @@ echo '</tr>'.NL;
 echo '</table>'.NL;
 echo $HTMLFooter;
 
+# Scherm 1
+# kiezen of je declaratie als gastpredikant (A) of gemeentelid (B) wil doen.
 
+# Scherm 2A
+# selecteer dienst (uit database kan ik dan predikant halen). Melding dat mail gestuurd zal worden naar bekend adres om te valideren dat we met de juiste predikant te maken hebben.
+# Kan dan gelijk een check doen of dienst al geweest is en nog niet eerder gedeclareerd.
 
+#	Scherm 3A
+# Toon declaratie-formulier. De eerste rij, met onkostenvergoeding is hierbij "vast"/niet wijzigbaar met tarief wat voor de predikant afgesproken is.
+# Daaronder kan men de postcode invullen van het vertrek-adres waarna het systeem de reisafstand automatisch uitrekend op basis van locationiq.com (ik heb een account). Deze kilometers worden vervolgens als default ingevuld in het venster eronder.
+# De ingevuld kilometers worden vervolgend automatisch vermenigdvuldigd met €0,35
+# Daaronder verschijnt een veld voor overige kosten.
 
+# Scherm 4A
+# Toon nogmaals overzicht van declaratie met daaronder de vraag of IBAN nog correct is
+# [discussie-punt : willen wij bekende IBAN ook tonen ? => betekent opvragen uit eBoekhouden]
 
+# Scherm 5A
+# pas IBAN in relatie aan mocht dat nodig zijn
+# Voeg mutatie toe aan eBoekhouden
+# Noteer dienst als "gedeclareerd" in database
+# Genereer PDF (include/pdf/fpdf.php)
+# Stuur PDF naar predikant met begeleidende tekst (rond de 20ste uitbetalen)
+# Stuur PDF naar peningmeester.
+# Sla PDF lokaal op (jaar/maand-map)
 
+# tabel met predikanten uitbreiden met
+#	- tarief
+# - postcode (voor afstand berekenen)
+# - eBoekhouden relatie
 
+# tabel met dient-predikant uitbreiden met
+#	- declaratie-status
 
-
-
-
-
-
-
-
-
-
-
-
-
-//echo $_SESSION['ID'];
-
-/*
-# LINKS
-$links['account.php']					= 'Account';
-$links['archief.php']						= 'Archief';
-$links['search.php']						= 'Zoeken op woorden';
-$links['auth/objects/logout.php']										= 'Uitloggen';	
-
-foreach($links as $url => $titel) {
-	$blockLinks .= "<a href='$url' target='_blank'>$titel</a><br>\n";
-}
-
-$blockArray[] = $blockLinks;
-
-# BEHEERDER & ADMIN
-if($_SESSION['level'] >= 2) {
-	$beheer['exemplaar.php']	= 'Voeg exemplaar Trinitas toe';
-	$beheer['sendMail.php']	= 'Verstuur klaarstaande mail';
-	$beheer['stats.php']	= 'Bekijk download-statistieken';
-	$beheer['stats_user.php']	= 'Bekijk statistieken per gebruiker';
-			
-	$admin['new_account.php?adminAdd']	= 'Voeg account toe';
-		
-	if($_SESSION['level'] >= 3) {
-		$beheer['sendMail.php?testRun=true']	= 'Test klaarstaande mail';
-		
-		$admin['account.php?all']	= 'Toon alle accounts';
-		//$admin['renewHash.php']	= 'Vernieuw gebruikers-hash';
-		$admin['generateURL.php']	= 'Genereer URL';
-		$admin['log.php']	= 'Bekijk logfiles';
-	}
-		
-	foreach($beheer as $url => $titel) {
-		$blockBeheer .= "<a href='$url' target='_blank'>$titel</a><br>\n";
-	}
-
-	foreach($admin as $url => $titel) {
-		$blockAdmin .= "<a href='$url' target='_blank'>$titel</a><br>\n";
-	}
-		
-	$blockArray[] = $blockBeheer;
-	$blockArray[] = $blockAdmin;
-}
-
-//echo $HTMLHeader;
-//echo "<tr>\n";
-//
-//# Als er maar 1 blok is, is het mooier die gecentreerd te hebben
-//if($_SESSION['level'] == 1) {
-//	echo "<td width='25%' valign='top' align='center'>&nbsp;</td>\n";
-//	echo "<td width='50%' valign='center' align='center'>\n";
-//# Als er meer blokken zijn, dan gewoon in 2 kolommen bovenaan
-//} else {
-//	echo "<td width='50%' valign='top' align='center'>\n";
-//}
-//echo showBlock($blockLinks);
-//if($_SESSION['level'] == 1) {
-//	echo "</td>\n";
-//	echo "<td width='25%' valign='top' align='center'>&nbsp;</td>\n";
-//} else {
-//	echo "</td><td width='50%' valign='top' align='center'>\n";
-//	if(isset($blockBeheer)) {
-//		echo showBlock($blockBeheer);
-//	}	
-//	if(isset($blockAdmin)) {
-//		echo "<p>\n";
-//		echo showBlock($blockAdmin);
-//	}	
-//	echo "</td>\n";	
-//}
-//echo "</tr>\n";
-//echo $HTMLFooter;
-
-verdeelBlokken($blockArray);
-*/
 ?>
