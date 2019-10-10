@@ -97,7 +97,7 @@ foreach($diensten as $dienst) {
 	if($data['voorganger_id'] > 0) {
 		$text[] = "	<td>&nbsp;</td>";
 	} else {
-		$text[] = "	<td align='right'><a href='voorganger/editVoorganger.php?new=ja' target='_blank'><img src='images/invite.gif' title='Open een nieuw scherm om missende voorganger toe te voegen'></a></td>";
+		$text[] = "	<td align='right'><a href='editVoorganger.php?new=ja' target='_blank'><img src='images/invite.gif' title='Open een nieuw scherm om missende voorganger toe te voegen'></a></td>";
 	}
 	$text[] = "	<td>". $data['bijzonderheden'] ."</td>";
 	$text[] = "</tr>";
