@@ -2,8 +2,7 @@
 
 // variabelen definieren
 // zie hiervoor e-boekhouden.nl -> ‘Beheer’ > ‘Instellingen’ > ‘Magento’.
-try
-{
+try {
   $client = new SoapClient("https://soap.eboekhouden.nl/soap.asmx?WSDL");
   $Username = "[username]";
   $SecurityCode1 = "[securitycode1]";
@@ -40,32 +39,29 @@ try
   $Rekeningen = $response->GetGrootboekrekeningenResult->Rekeningen;
   
   // indien een resultaat, dan even een array maken
-  if(!is_array($Rekeningen->cGrootboekrekening))
-    $Rekeningen->cGrootboekrekening = array($Rekeningen->cGrootboekrekening);
-    
-    // weergeven van alle opgehaalde grootboekrekeningen...
-    echo '<table>';
-    echo '<tr><th>ID</th><th>Code</th><th>Omschrijving</th>';
-    echo '<th>Categorie</th><th>Groep</th></tr>';
-    foreach ($Rekeningen->cGrootboekrekening as $Rekening) {
-      echo '<tr>';
-      echo '<td>' . $Rekening->ID . '</td>';
-      echo '<td>' . $Rekening->Code . '</td>';
-      echo '<td>' . $Rekening->Omschrijving . '</td>';
-      echo '<td>' . $Rekening->Categorie . '</td>';
-      echo '<td>' . $Rekening->Groep . '</td>';
-      echo '</tr>';
-    }
-    echo '</table>';
-    
-    // sessie sluiten
-    $params = array("SessionID" => $SessionID);
-    $response = $client->__soapCall("CloseSession", array($params));
+  if(!is_array($Rekeningen->cGrootboekrekening)) $Rekeningen->cGrootboekrekening = array($Rekeningen->cGrootboekrekening);
+  
+  // weergeven van alle opgehaalde grootboekrekeningen...
+  echo '<table>';
+  echo '<tr><th>ID</th><th>Code</th><th>Omschrijving</th>';
+  echo '<th>Categorie</th><th>Groep</th></tr>';
+  foreach ($Rekeningen->cGrootboekrekening as $Rekening) {
+    echo '<tr>';
+    echo '<td>' . $Rekening->ID . '</td>';
+    echo '<td>' . $Rekening->Code . '</td>';
+    echo '<td>' . $Rekening->Omschrijving . '</td>';
+    echo '<td>' . $Rekening->Categorie . '</td>';
+    echo '<td>' . $Rekening->Groep . '</td>';
+    echo '</tr>';
   }
-  catch(SoapFault $soapFault) {
-    echo '<strong>Er is een fout opgetreden:</strong><br>';
-    echo $soapFault;
-    
+  echo '</table>';
+  
+  // sessie sluiten
+  $params = array("SessionID" => $SessionID);
+  $response = $client->__soapCall("CloseSession", array($params));
+} catch(SoapFault $soapFault) {
+  echo '<strong>Er is een fout opgetreden:</strong><br>';
+  echo $soapFault;  
 }
 
 // standaard error afhandeling
@@ -73,9 +69,9 @@ function checkforerror($rawresponse, $sub) {
   $LastErrorCode = $rawresponse->$sub->ErrorMsg->LastErrorCode;
   $LastErrorDescription = $rawresponse->$sub->ErrorMsg->LastErrorDescription;
   if($LastErrorCode <> '') {
-  echo '<strong>Er is een fout opgetreden:</strong><br>';
-  echo $LastErrorCode . ': ' . $LastErrorDescription;
-  exit();
+    echo '<strong>Er is een fout opgetreden:</strong><br>';
+    echo $LastErrorCode . ': ' . $LastErrorDescription;
+    exit();
   }
 }
 ?>
