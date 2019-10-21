@@ -47,7 +47,18 @@ echo $HTMLFooter;
 # - postcode (voor afstand berekenen)
 # - eBoekhouden relatie
 
-# tabel met dient-predikant uitbreiden met
-#	- declaratie-status
+# tabel met dienst-predikant uitbreiden met
+#	- declaratie-status (open, link verstuurd, link bezocht, ingestuurd, afgezien)
+
+# functies
+#	getEBIDbyIBAN(string iban)
+#	getEBIDbyText(string text)
+#	getEBRelatie(int id)
+
+# Subtaken
+# - Functies voor communicatie met EB
+# - Functie om mbv locationiq.com afstand uit te rekenen
+# - PDF genereren & opmaken
+# - Online workflow
 
 ?>

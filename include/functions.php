@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Maakt verbinding met de database
+ * @return mysqli-database-link
+ */
 function connect_db() {
 	global $dbHostname, $dbUsername, $dbPassword, $dbName;
 	
@@ -9,6 +13,11 @@ function connect_db() {
 	return $link;
 }
 
+/**
+ * Genereer een gebruikersnaam voor gebruiker
+ * @param int id van de gebruiker
+ * @return string gebruikersnaam
+ */
 function generateUsername($id) {
 	$data = getMemberDetails($id);
 	
@@ -34,6 +43,11 @@ function generateUsername($id) {
 	return $username;
 }
 
+/**
+ * Controleert of een gebruikersnaam uniek is
+ * @param string gebruikersnaam
+ * @return boolean
+ */
 function isUniqueUsername($username) {
 	global $TableUsers, $UserUsername;
 	$db = connect_db();
@@ -47,6 +61,11 @@ function isUniqueUsername($username) {
 	}
 }
 
+/**
+ * Genereert een wachtwoord
+ * @param int lengte van het wachtwoord, default is 8 tekens
+ * @return string wachtwoord
+ */
 function generatePassword ($length = 8) {
 	// start with a blank password
 	$password = "";

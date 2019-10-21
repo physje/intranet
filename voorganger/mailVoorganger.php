@@ -55,12 +55,20 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 		$mail = new PHPMailer;
 		$mail->FromName	= 'Preekvoorziening Koningskerk Deventer';
 		$mail->From			= $ScriptMailAdress;
-		$mail->AddReplyTo('', '');
+		$mail->AddReplyTo($voorgangerReplyAddress, $voorgangerReplyName);
 		
 		# Alle geadresseerden toevoegen
 		$mail->AddAddress($voorgangerData['mail'], $mailNaam);		
 		$mail->AddCC($adresBand, makeName($bandleider, 6));
-		$mail->AddCC($adresSchrift, makeName($schriftlezer, 6));		
+		$mail->AddCC($adresSchrift, makeName($schriftlezer, 6));
+		
+		foreach($voorgangerCC as $naam => $adres) {
+			$mail->AddCC($adres, $naam);
+		}
+		
+		foreach($voorgangerBCC as $naam => $adres) {
+			$mail->AddBCC($adres, $naam);
+		}		
 						
 		# Mail opstellen
 		$mailText = $bijlageText = array(); 
@@ -69,7 +77,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 		$mailText[] = "Fijn dat ".($voorgangerData['stijl'] == 0 ? 'u' : 'je')." komt preken in de $dagdeel van ". strftime ('%e %B', $dienstData['start'])." om ". date('H:i', $dienstData['start'])." uur, in de Koningskerk te Deventer.";
 		$mailText[] = "Ik geef ".($voorgangerData['stijl'] == 0 ? 'u' : 'je')." de nodige informatie door.";
 		$mailText[] = "";
-		$mailText[] = "De band wordt geleid door ". makeName($bandleider, 5) .".";
+		$mailText[] = "De muzikale begeleiding in deze dienst wordt gecoordineerd door ". makeName($bandleider, 5) .".";
 		$mailText[] = "Schriftlezing wordt gedaan door ". makeName($schriftlezer, 5) .".";
 		$mailText[] = "Beamer wordt bediend door ". makeName($beameraar, 5) .".";
 		$mailText[] = "";
