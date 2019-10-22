@@ -17,7 +17,7 @@ echo '</table>'.NL;
 echo $HTMLFooter;
 
 # Scherm 1
-# kiezen of je declaratie als gastpredikant (A) of gemeentelid (B) wil doen.
+# kiezen of je declaratie als gastpredikant (A) of gemeentelid (B) wil doen!
 
 # Scherm 2A
 # selecteer dienst (uit database kan ik dan predikant halen). Melding dat mail gestuurd zal worden naar bekend adres om te valideren dat we met de juiste predikant te maken hebben.
