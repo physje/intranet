@@ -6,7 +6,7 @@ $HTMLHead	.= '<html>'.NL;
 $HTMLHead	.= '<head>'.NL;
 $HTMLHead	.= "	<title>$ScriptTitle $Version</title>\n";
 $HTMLHead	.= "	<link rel='stylesheet' type='text/css' href='". $ScriptURL ."include/style.css'>\n";
-$HTMLHead	.= "	<link rel='icon' href='". $ScriptURL ."include/logo.ico'>\n";
+$HTMLHead	.= "	<link rel='icon' href='". $ScriptURL ."images/logo.ico'>\n";
 
 //if($_SERVER['HTTPS'] == '') {
 	//$HTMLHead .= "<meta http-equiv='refresh' content='0; URL=$ScriptSever".$_SERVER['REQUEST_URI']."'>";

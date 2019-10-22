@@ -1,18 +1,19 @@
 <?php
+include_once('../include/config.php');
+
+# https://secure.e-boekhouden.nl/handleiding/Documentatie_soap.pdf
+
 
 // variabelen definieren
 // zie hiervoor e-boekhouden.nl -> ‘Beheer’ > ‘Instellingen’ > ‘Magento’.
 try {
-  $client = new SoapClient("https://soap.eboekhouden.nl/soap.asmx?WSDL");
-  $Username = "[username]";
-  $SecurityCode1 = "[securitycode1]";
-  $SecurityCode2 = "[securitycode2]";
-
+  $client = new SoapClient("https://soap.e-boekhouden.nl/soap.asmx?WSDL");
+  
   // sessie openen en sessionid ophalen
   $params = array(
-    "Username" => $Username,
-    "SecurityCode1" => $SecurityCode1,
-    "SecurityCode2" => $SecurityCode2
+    "Username" => $ebUsername,
+    "SecurityCode1" => $ebSecurityCode1,
+    "SecurityCode2" => $ebSecurityCode2
   );
   
   $response = $client->__soapCall("OpenSession", array($params));
@@ -22,6 +23,92 @@ try {
   echo "SessionID: " . $SessionID;
   echo "<hr>";
   
+  // opvragen alle relaties
+  $params = array(
+    "SecurityCode2" => $ebSecurityCode2,
+    "SessionID" => $SessionID,
+    cFilter => array(
+    	"Trefwoord" => "",
+    	"Code" => "",
+    	"ID" => 0,
+    )
+  );
+  
+  $response = $client->__soapCall("GetRelaties", array($params));
+  checkforerror($response, "GetRelaties");
+  
+  //var_dump($response);
+  
+  $Relaties = $response->GetRelatiesResult->Relaties;
+  
+  //var_dump($Relaties);
+  //is_array($Relaties->cGetRelaties)
+  
+  // indien een resultaat, dan even een array maken
+  if(!is_array($Relaties->cRelatie)) $Relaties->cRelatie = array($Relaties->cRelatie);
+  
+  
+  echo '<table border=1>';
+	echo '	<th>ID</td>';
+	//echo '	<th>Adddatum</td>';
+	echo '	<th>Code</td>';
+	echo '	<th>Bedrijf</td>';
+	echo '	<th>Contactpersoon</td>';
+	echo '	<th>Geslacht</td>';
+	echo '	<th>Adres</td>';
+	echo '	<th>Postcode</td>';
+	echo '	<th>Plaats</td>';
+	echo '	<th>Land</td>';
+	echo '	<th>Adres2</td>';
+	echo '	<th>Postcode2</td>';
+	echo '	<th>Plaats2</td>';
+	echo '	<th>Land2</td>';
+	echo '	<th>Telefoon</td>';
+	echo '	<th>FAX</td>';
+	echo '	<th>Email</td>';
+	echo '	<th>Site</td>';
+	echo '	<th>Notitie</td>';
+	echo '	<th>Bankrekening</td>';
+	echo '	<th>Girorekening</td>';
+	//echo '	<th>Btw-nummer</td>';
+	echo '	<th>Aanhef</td>';
+	echo '	<th>IBAN</td>';
+	echo '	<th>BIC</td>';
+	echo '	<th>BP</td>';
+  foreach ($Relaties->cRelatie as $Relatie) {
+    echo '<tr>';
+		echo '	<td>'. $Relatie->ID .'</td>';
+		//echo '	<td>'. $Relatie->Adddatum .'</td>';
+		echo '	<td>'. $Relatie->Code .'</td>';
+		echo '	<td>'. $Relatie->Bedrijf .'</td>';
+		echo '	<td>'. $Relatie->Contactpersoon .'</td>';
+		echo '	<td>'. $Relatie->Geslacht .'</td>';
+		echo '	<td>'. $Relatie->Adres .'</td>';
+		echo '	<td>'. $Relatie->Postcode .'</td>';
+		echo '	<td>'. $Relatie->Plaats .'</td>';
+		echo '	<td>'. $Relatie->Land .'</td>';
+		echo '	<td>'. $Relatie->Adres2 .'</td>';
+		echo '	<td>'. $Relatie->Postcode2 .'</td>';
+		echo '	<td>'. $Relatie->Plaats2 .'</td>';
+		echo '	<td>'. $Relatie->Land2 .'</td>';
+		echo '	<td>'. $Relatie->Telefoon .'</td>';
+		echo '	<td>'. $Relatie->FAX .'</td>';
+		echo '	<td>'. $Relatie->Email .'</td>';
+		echo '	<td>'. $Relatie->Site .'</td>';
+		echo '	<td>'. $Relatie->Notitie .'</td>';
+		echo '	<td>'. $Relatie->Bankrekening .'</td>';
+		echo '	<td>'. $Relatie->Girorekening .'</td>';
+		//echo '	<td>'. $Relatie->Btw .'</td>';
+		echo '	<td>'. $Relatie->Aanhef .'</td>';
+		echo '	<td>'. $Relatie->IBAN .'</td>';
+		echo '	<td>'. $Relatie->BIC .'</td>';
+		echo '	<td>'. $Relatie->BP .'</td>';
+    echo '</tr>';
+  }
+  echo '</table>';
+  
+  
+  /*
   // opvragen alle grootboekrekeningen van de categorie balans
   $params = array(
     "SecurityCode2" => $SecurityCode2,
@@ -55,6 +142,9 @@ try {
     echo '</tr>';
   }
   echo '</table>';
+  */
+  
+  
   
   // sessie sluiten
   $params = array("SessionID" => $SessionID);
