@@ -62,13 +62,13 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 		$mail->AddCC($adresBand, makeName($bandleider, 6));
 		$mail->AddCC($adresSchrift, makeName($schriftlezer, 6));
 		
-		foreach($voorgangerCC as $naam => $adres) {
+		foreach($voorgangerCC as $adres => $naam) {
 			$mail->AddCC($adres, $naam);
 		}
 		
-		foreach($voorgangerBCC as $naam => $adres) {
+		foreach($voorgangerBCC as $adres => $naam) {
 			$mail->AddBCC($adres, $naam);
-		}		
+		}	
 						
 		# Mail opstellen
 		$mailText = $bijlageText = array(); 

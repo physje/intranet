@@ -69,17 +69,6 @@ function isUniqueUsername($username) {
 function generatePassword ($length = 8) {
 	// start with a blank password
 	$password = "";
-	#$possible = "";
-	
-	// define possible characters - any character in this string can be
-	// picked for use in the password, so if you want to put vowels back in
-  // or add special characters such as exclamation marks, this is where
-  // you should do it
-  //$possible = "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!#$%&";
-  #$possible .= "1234567890";
-  #$possible .= "bcdfghjkmnpqrtvwxyz";
-  #$possible .= "BCDFGHJKLMNPQRTVWXYZ";
-  #$possible .= "!#$%&";
   
   $klink[] = 'a';
   $klink[] = 'e';
@@ -113,14 +102,6 @@ function generatePassword ($length = 8) {
   $mede[] = 'z';
   $mede[] = 'ch';
     
-  // we refer to the length of $possible a few times, so let's grab it now
-  #$maxlength = count($possible);
-  
-  // check for length overflow and truncate if necessary
-  #if ($length > $maxlength) {
-  #	$length = $maxlength;
-  #}
-  
   $len_klink = count($klink);
   $len_mede = count($mede);
   
@@ -162,15 +143,12 @@ function getAllKerkdiensten($fromNow = false) {
 		$startTijd = time() - (31*24*60*60);
 	}
 	
-	$sql = "SELECT $DienstID FROM $TableDiensten WHERE $DienstEind > $startTijd ORDER BY $DienstEind ASC";
-	$result = mysqli_query($db, $sql);
-	if($row = mysqli_fetch_array($result)) {
-		do {
-			$id[] = $row[$DienstID];
-		} while($row = mysqli_fetch_array($result));
-	}
-	return $id;
+	$eindTijd = mktime(0,0,0,1,1,2100);
+	
+	return getKerkdiensten($startTijd, $eindTijd);
 }
+
+
 
 function getKerkdiensten($startTijd, $eindTijd) {
 	global $TableDiensten, $DienstID, $DienstEind;
@@ -1056,6 +1034,7 @@ function getAgendaDetails($id) {
 	return $data;
 }
 
+/*
 function replaceVoorganger($string) {
 	$delen = explode(',', $string);
 	
@@ -1080,6 +1059,7 @@ function replaceVoorganger($string) {
 			
 	return $voorganger;        
 }
+*/
 
 function getVoorgangers() {
 	global $TableVoorganger, $VoorgangerID, $VoorgangerAchter;
