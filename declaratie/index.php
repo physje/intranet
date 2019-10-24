@@ -2,22 +2,113 @@
 include_once('../include/functions.php');
 include_once('../include/config.php');
 include_once('../include/HTML_TopBottom.php');
+include_once('../../../general_include/class.phpmailer.php');
 $db = connect_db();
 
 if(isset($_REQUEST['draad'])) {
 	if($_REQUEST['draad'] == 'predikant') {
-		if(isset($_POST['send_link'])) {
+		if(isset($_REQUEST['hash'])) {
+			# 3de scherm voor predikanten
+			# De direct-link uit de declaratie-mail komt hier terecht
+			
+			$hash = urldecode($_REQUEST['hash']);
+			$dienst = $_REQUEST['d'];
+			$voorganger = $_REQUEST['v'];
+			
+			if(password_verify($dienst.'$'.$voorganger,$hash)) {
+				$dienstData = getKerkdienstDetails($dienst);
+				$voorgangerData = getVoorgangerData($voorganger);
+				
+				$page[] = 'En we zijn binnen';
+				
+				$page[] = "<form method='post' action='$_SERVER[PHP_SELF]'>";
+				$page[] = "<input type='hidden' name='draad' value='". $_REQUEST['draad'] ."'>";
+				$page[] = "<input type='hidden' name='dienst' value='$dienst'>";
+				$page[] = "<input type='hidden' name='voorganger' value='$voorganger'>";
+				
+				$page[] = "<br>";
+				$page[] = "<input type='submit' name='send_link' value='Verstuur link'>";
+				$page[] = "</form>";
+				
+			} else {
+				# Direct-link om te declareren is niet correct
+				
+				$page[] = 'Deze link is niet correct';
+			}			
+		} elseif(isset($_POST['send_link'])) {
+			# 2de scherm voor predikanten
+			# Als er een dienst geselecteerd is wordt deze doorgemails
+			
 			$dienst = $_POST['dienst'];
 			$dienstData = getKerkdienstDetails($dienst);
 			$voorganger = $dienstData['voorganger_id'];
 			$voorgangerData = getVoorgangerData($voorganger);
 			
-			if($voorgangerData['declaratie'] == 0) {
-				$page[] = $dienstData['voorganger'] . ' kan niet declareren (er komt een algemene melding dat er niet gedeclareerd kan worden';
+			if($voorgangerData['declaratie'] == 0) {				
+				$page[] = 'Voor deze dienst is het niet mogelijk een declaratie in te dienen.<br>';
+				$page[] = 'Mogelijke oorzaken zijn :';
+				$page[] = "<ul>";
+				$page[] = '<li>Er is in deze dienst geen gastpredikant voorgegaan.</li>';
+				$page[] = '<li>Er is voor deze dienst al een declaratie ingediend.</li>';
+				$page[] = "</ul>";				
 			} else {
-				$page[] = $dienstData['voorganger'] .' -> '. $voorgangerData['mail'];
+				if(date("H", $dienstData['start']) < 12) {
+					$dagdeel = 'morgendienst';
+				} elseif(date("H", $dienstData['start']) < 18) {
+					$dagdeel = 'middagdienst';
+				} else {
+					$dagdeel = 'avonddienst';
+				}
+								
+				# Achternaam
+				$voorgangerAchterNaam = '';
+				if($voorgangerData['tussen'] != '')	$voorgangerAchterNaam = lcfirst($voorgangerData['tussen']).' ';	
+				$voorgangerAchterNaam .= $voorgangerData['achter'];
+				
+				# Naam voor voorganger in de mail
+				if($voorgangerData['voor'] != "") {
+					$aanspeekNaam = $voorgangerData['voor'];
+					$mailNaam = $voorgangerData['voor'].' '.$voorgangerAchterNaam;
+				} else {
+					$aanspeekNaam = lcfirst($voorgangerData['titel']).' '.$voorgangerAchterNaam;
+					$mailNaam = $voorgangerData['init'].' '.$voorgangerAchterNaam;
+				}
+				
+				# Nieuw mail-object aanmaken
+				$mail = new PHPMailer;
+				$mail->FromName	= 'Penningmeester Koningskerk Deventer';
+				$mail->From			= $ScriptMailAdress;
+				//$mail->AddReplyTo($voorgangerReplyAddress, $voorgangerReplyName);
+				
+				# Alle geadresseerden toevoegen
+				$mail->AddAddress($voorgangerData['mail'], $mailNaam);
+				
+				# Declaratielink genereren
+				$hash = urlencode(password_hash($dienst.'$'.$voorganger, PASSWORD_BCRYPT));
+				$declaratieLink = $ScriptURL ."declaratie/index.php?hash=$hash&d=$dienst&draad=". $_REQUEST['draad'] ."&v=$voorganger";
+				
+				# Mail opstellen
+				$mailText = $bijlageText = array(); 
+				$mailText[] = "Beste $aanspeekNaam,";
+				$mailText[] = "";
+				$mailText[] = "U heeft online aangegeven een declaratie te willen indienen voor het voorgaan in de $dagdeel van ". strftime ('%e %B', $dienstData['start'])." in de Koningskerk te Deventer.";
+				$mailText[] = "";
+				$mailText[] = "Om zeker te weten dat alleen de juiste persoon de declaratie kan indienen wordt u verzocht onderstaande link te volgen, u wordt dat doorgeleid naar de juiste pagina.";
+				$mailText[] = "<a href='$declaratieLink'>invoeren online declaratie</a>";
+				$mailText[] = "";
+				$mailText[] = "Mochten er nog vragen zijn dan hoor ik het graag.";
+				$mailText[] = "";
+				$mailText[] = "Vriendelijke groeten";
+				$mailText[] = "";
+				$mailText[] = "Paul Huizing";
+				$mailText[] = "paul.huizing@koningskerkdeventer.nl";
+				
+				$page = $mailText;
 			}
-		} else {
+		} else {			
+			# Startscherm voor predikanten
+			# Hier kunnen zij een dienst selecteren
+			
 			$page[] = "Om u te identificeren zal zometeen naar het bij ons bekende email-adres van de voorganger van die dienst een link worden gestuurd.<br>";
 			$page[] = "<br>";
 			$page[] = "Door het volgen van die link komt u uit op de juiste plek in de declaratie-omgeving.<br>";
@@ -57,10 +148,14 @@ if(isset($_REQUEST['draad'])) {
 		}
 		
 	} elseif($_REQUEST['draad'] == 'gemeentelid') {
+		# Scherm voor gemeenteleden
+						
 		$page[] = "Momenteel is dat nog niet mogelijk.<br>";
 		$page[] = "De wens is er wel, dus hopelijk op een later moment.<br>";
 	}
-} else {
+} else {	
+	# Het eerste scherm waarin men de keuze kan maken welk type declaratie men wil uitvoeren	
+	
 	$page[] = "In welke hoedanigheid wilt u een declaratie doen?<br>";
 	$page[] = "<ul>";
 	$page[] = "<li><a href='?draad=predikant'>Gastpredikant</a></li>";
