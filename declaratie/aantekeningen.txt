@@ -30,7 +30,18 @@
 # - eBoekhouden relatie
 
 # tabel met dienst-predikant uitbreiden met
-#	- declaratie-status (open, link verstuurd, link bezocht, ingestuurd, afgezien)
+#	- declaratie-status (
+	0 geen
+	1 open
+	2 link verstuurd
+	3 link bezocht
+	4 opgeslagen
+	5 bij CluCo
+	6 bij lid
+	7 afgekeurd
+	8 afgerond
+	9 afgezien
+)
 
 # functies
 #	getEBIDbyIBAN(string iban)

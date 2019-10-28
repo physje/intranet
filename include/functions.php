@@ -1196,4 +1196,27 @@ function getWijkteamLeden($wijk) {
 	return $leden;	
 }
 
+function formatPrice($price, $euro = true) {
+	$input = $price/100;
+	
+	if($euro) {
+		return "&euro;&nbsp;". number_format($input, 2,',','.');
+	} else {
+		return number_format($input, 2,',','.');
+	}
+}
+
+
+function formatDagdeel($start) {
+	if(date("H", $start) < 12) {
+		$dagdeel = 'morgendienst';
+	} elseif(date("H", $start) < 18) {
+		$dagdeel = 'middagdienst';
+	} else {
+		$dagdeel = 'avonddienst';
+	}
+	
+	return $dagdeel;
+}	
+
 ?>

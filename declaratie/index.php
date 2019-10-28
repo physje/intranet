@@ -19,15 +19,75 @@ if(isset($_REQUEST['draad'])) {
 				$dienstData = getKerkdienstDetails($dienst);
 				$voorgangerData = getVoorgangerData($voorganger);
 				
-				$page[] = 'En we zijn binnen';
+				//$page[] = 'En we zijn binnen';
 				
 				$page[] = "<form method='post' action='$_SERVER[PHP_SELF]'>";
 				$page[] = "<input type='hidden' name='draad' value='". $_REQUEST['draad'] ."'>";
-				$page[] = "<input type='hidden' name='dienst' value='$dienst'>";
-				$page[] = "<input type='hidden' name='voorganger' value='$voorganger'>";
+				$page[] = "<input type='hidden' name='d' value='$dienst'>";
+				$page[] = "<input type='hidden' name='v' value='$voorganger'>";
+				$page[] = "<input type='hidden' name='hash' value='". $_REQUEST['hash'] ."'>";
+				$page[] = "<table border=1>";
+				$page[] = "	<tr>";
+				$page[] = "		<td colspan='6'><b>Preekbeurt</b></td>";
+				$page[] = "	</tr>";
+				$page[] = "	<tr>";
+				$page[] = "		<td width='20'>&nbsp;</td>";
+				$page[] = "		<td colspan='3'>".formatDagdeel($dienstData['start']) ." ". date('d M Y', $dienstData['start']) ."</td>";
+				$page[] = "		<td>&nbsp;</td>";
+				$page[] = "		<td>". formatPrice($preekbeurt) ."</td>";
+				$page[] = "	</tr>";
+				$page[] = "	<tr>";
+				$page[] = "		<td colspan='6'>&nbsp;</td>";
+				$page[] = "	</tr>";
+				$page[] = "	<tr>";
+				$page[] = "		<td colspan='6'>&nbsp;</td>";
+				$page[] = "	</tr>";		
+				$page[] = "	<tr>";
+				$page[] = "		<td colspan='6'><b>Reiskostenvergoeding</b></td>";
+				$page[] = "	</tr>";				
+				$page[] = "	<tr>";
+				$page[] = "		<td>&nbsp;</td>";
+				$page[] = "		<td>Van</td>";
+				$page[] = "		<td>&nbsp;</td>";
+				$page[] = "		<td>Naar</td>";				
+				$page[] = "		<td colspan='2'>&nbsp;</td>";
+				$page[] = "	</tr>";
+				$page[] = "	<tr>";
+				$page[] = "		<td>&nbsp;</td>";
+				$page[] = "		<td><input type='text' name='reis_van' value='' size='30'></td>";
+				$page[] = "		<td>&nbsp;</td>";
+				$page[] = "		<td><input type='text' name='reis_naar' value='Mariënburghstraat 4, Deventer' size='30'></td>";				
+				$page[] = "		<td colspan='2'>&nbsp;</td>";
+				$page[] = "	</tr>";
+				
+				if(isset($_POST['reis_van']) AND isset($_POST['reis_naar'])) {
+					$km = 125;
+					
+					$page[] = "	<tr>";
+					$page[] = "		<td>&nbsp;</td>";
+					$page[] = "		<td>$km km x € 0,35</td>";
+					$page[] = "		<td>&nbsp;</td>";
+					$page[] = "		<td>&nbsp;</td>";
+					$page[] = "		<td>&nbsp;</td>";
+					$page[] = "		<td>". formatPrice($reiskosten) ."</td>";
+					$page[] = "	</tr>";
+					$page[] = "	<tr>";
+					$page[] = "		<td colspan='6'>&nbsp;</td>";
+					$page[] = "	</tr>";
+					$page[] = "	<tr>";
+					$page[] = "		<td colspan='6'><b>Overige</b></td>";
+					$page[] = "	</tr>";
+					$page[] = "	<tr>";
+					$page[] = "		<td colspan='6'>&nbsp;</td>";
+					$page[] = "	</tr>";
+				}
+				
+
+				
+				$page[] = "</table>";	
 				
 				$page[] = "<br>";
-				$page[] = "<input type='submit' name='send_link' value='Verstuur link'>";
+				$page[] = "<input type='submit' name='check_form' value='Volgende'>";
 				$page[] = "</form>";
 				
 			} else {
@@ -52,6 +112,10 @@ if(isset($_REQUEST['draad'])) {
 				$page[] = '<li>Er is voor deze dienst al een declaratie ingediend.</li>';
 				$page[] = "</ul>";				
 			} else {
+				
+				$dagdeel = formatDagdeel($dienstData['start']);
+				
+				/*
 				if(date("H", $dienstData['start']) < 12) {
 					$dagdeel = 'morgendienst';
 				} elseif(date("H", $dienstData['start']) < 18) {
@@ -59,6 +123,7 @@ if(isset($_REQUEST['draad'])) {
 				} else {
 					$dagdeel = 'avonddienst';
 				}
+				*/
 								
 				# Achternaam
 				$voorgangerAchterNaam = '';
@@ -129,16 +194,8 @@ if(isset($_REQUEST['draad'])) {
 			
 			
 			foreach(array_reverse($diensten) as $dienst) {
-				$dienstData = getKerkdienstDetails($dienst);
-				
-				if(date("H", $dienstData['start']) < 12) {
-					$dagdeel = 'ochtenddienst';
-				} elseif(date("H", $dienstData['start']) < 18) {
-					$dagdeel = 'middagdienst';
-				} else {
-					$dagdeel = 'avonddienst';
-				}			
-				
+				$dienstData = getKerkdienstDetails($dienst);				
+				$dagdeel = formatDagdeel($dienstData['start']);				
 				$page[] = "<option value='$dienst'>$dagdeel ". date('d M', $dienstData['start']) ."</option>";
 			}
 			$page[] = "</select><br>";
