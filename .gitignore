@@ -45,16 +45,10 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
-include/config.php
 include/config_db.php
-include/config_db.php
-admin/log.php
-admin/log.php
 *.ics
-include/config_db.php
 onderhoud/local_preekrooster.xlsx
 onderhoud/local_collecterooster.xlsx
 onderhoud/ambtsdragers.csv
 scipio/dump.txt
-include/config_db.php
-include/config_db.php
+
