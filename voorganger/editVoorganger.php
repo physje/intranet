@@ -33,7 +33,10 @@ if(isset($_REQUEST['voorgangerID'])) {
 		$sql .= "$VoorgangerPlaats = '". $_REQUEST['plaats'] ."', "; 
 		$sql .= "$VoorgangerDenom = '". $_REQUEST['denom'] ."', "; 
 		$sql .= "$VoorgangerOpmerking = '". $_REQUEST['opm'] ."', ";
-		$sql .= "$VoorgangerStijl = '". $_REQUEST['stijl'] ."', ";
+		$sql .= "$VoorgangerStijl = '". $_REQUEST['stijl'] ."', ";		
+		$sql .= "$VoorgangerHonorarium = '". $_REQUEST['honorarium'] ."', ";
+		$sql .= "$VoorgangerKM = '". $_REQUEST['km_vergoeding'] ."', ";
+		$sql .= "$VoorgangerEBRelatie = '". $_REQUEST['EB_relatie'] ."', ";		
 		$sql .= "$VoorgangerAandacht = '". ($_REQUEST['aandachtspunten'] == 'ja' ? '1' : '0') ."', ";
 		$sql .= "$VoorgangerDeclaratie = '". ($_REQUEST['declaratie'] == 'ja' ? '1' : '0') ."' ";
 		$sql .= "WHERE $VoorgangerID = '". $_REQUEST['voorgangerID'] ."'";
@@ -108,6 +111,20 @@ if(isset($_REQUEST['voorgangerID'])) {
 		$text[] = "	<td valign='top'>Opmerking</td>";
 		$text[] = "	<td><textarea name='opm'>". $voorgangerData['opm'] ."</textarea></td>";
 		$text[] = "</tr>";
+		
+		$text[] = "<tr>";
+		$text[] = "	<td valign='top'>Honorarium</td>";
+		$text[] = "	<td><input type='text' name='honorarium' value='". $voorgangerData['honorarium'] ."'></td>";
+		$text[] = "</tr>";
+		$text[] = "<tr>";
+		$text[] = "	<td valign='top'>KM-vergoeding</td>";
+		$text[] = "	<td><input type='text' name='km_vergoeding' value='". $voorgangerData['km_vergoeding'] ."'></td>";
+		$text[] = "</tr>";
+		$text[] = "<tr>";
+		$text[] = "	<td valign='top'>eBoekhouden</td>";
+		$text[] = "	<td><input type='text' name='EB_relatie' value='". $voorgangerData['EB-relatie'] ."'></td>";
+		$text[] = "</tr>";
+		
 		$text[] = "<tr>";
 		$text[] = "	<td>Aanspreekstijl</td>";
 		$text[] = "	<td><select name='stijl'>";

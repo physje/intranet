@@ -19,14 +19,14 @@ if(isset($_REQUEST['draad'])) {
 				$dienstData = getKerkdienstDetails($dienst);
 				$voorgangerData = getVoorgangerData($voorganger);
 				
-				//$page[] = 'En we zijn binnen';
+				$next = false;
 				
 				$page[] = "<form method='post' action='$_SERVER[PHP_SELF]'>";
 				$page[] = "<input type='hidden' name='draad' value='". $_REQUEST['draad'] ."'>";
 				$page[] = "<input type='hidden' name='d' value='$dienst'>";
 				$page[] = "<input type='hidden' name='v' value='$voorganger'>";
 				$page[] = "<input type='hidden' name='hash' value='". $_REQUEST['hash'] ."'>";
-				$page[] = "<table border=1>";
+				$page[] = "<table border=0>";
 				$page[] = "	<tr>";
 				$page[] = "		<td colspan='6'><b>Preekbeurt</b></td>";
 				$page[] = "	</tr>";
@@ -34,14 +34,11 @@ if(isset($_REQUEST['draad'])) {
 				$page[] = "		<td width='20'>&nbsp;</td>";
 				$page[] = "		<td colspan='3'>".formatDagdeel($dienstData['start']) ." ". date('d M Y', $dienstData['start']) ."</td>";
 				$page[] = "		<td>&nbsp;</td>";
-				$page[] = "		<td>". formatPrice($preekbeurt) ."</td>";
+				$page[] = "		<td align='right'>". formatPrice($voorgangerData['honorarium']) ."</td>";
 				$page[] = "	</tr>";
 				$page[] = "	<tr>";
 				$page[] = "		<td colspan='6'>&nbsp;</td>";
 				$page[] = "	</tr>";
-				$page[] = "	<tr>";
-				$page[] = "		<td colspan='6'>&nbsp;</td>";
-				$page[] = "	</tr>";		
 				$page[] = "	<tr>";
 				$page[] = "		<td colspan='6'><b>Reiskostenvergoeding</b></td>";
 				$page[] = "	</tr>";				
@@ -54,22 +51,29 @@ if(isset($_REQUEST['draad'])) {
 				$page[] = "	</tr>";
 				$page[] = "	<tr>";
 				$page[] = "		<td>&nbsp;</td>";
-				$page[] = "		<td><input type='text' name='reis_van' value='' size='30'></td>";
+				$page[] = "		<td><input type='text' name='reis_van' value='". (!isset($_POST['reis_van']) ? $voorgangerData['reis_van'] : $_POST['reis_van']) ."' size='30'></td>";
 				$page[] = "		<td>&nbsp;</td>";
 				$page[] = "		<td><input type='text' name='reis_naar' value='Mariënburghstraat 4, Deventer' size='30'></td>";				
 				$page[] = "		<td colspan='2'>&nbsp;</td>";
 				$page[] = "	</tr>";
 				
+				$totaal = $voorgangerData['honorarium'];
+				
 				if(isset($_POST['reis_van']) AND isset($_POST['reis_naar'])) {
+					$next = true;
+					$first = true;
 					$km = 125;
+					
+					$reiskosten = $km * $voorgangerData['km_vergoeding'];
+					$totaal = $totaal + $reiskosten;
 					
 					$page[] = "	<tr>";
 					$page[] = "		<td>&nbsp;</td>";
-					$page[] = "		<td>$km km x € 0,35</td>";
+					$page[] = "		<td>$km km x ". formatPrice($voorgangerData['km_vergoeding']) ."</td>";
 					$page[] = "		<td>&nbsp;</td>";
 					$page[] = "		<td>&nbsp;</td>";
 					$page[] = "		<td>&nbsp;</td>";
-					$page[] = "		<td>". formatPrice($reiskosten) ."</td>";
+					$page[] = "		<td align='right'>". formatPrice($reiskosten) ."</td>";
 					$page[] = "	</tr>";
 					$page[] = "	<tr>";
 					$page[] = "		<td colspan='6'>&nbsp;</td>";
@@ -77,18 +81,58 @@ if(isset($_REQUEST['draad'])) {
 					$page[] = "	<tr>";
 					$page[] = "		<td colspan='6'><b>Overige</b></td>";
 					$page[] = "	</tr>";
+					
+					if(isset($_POST['overig'])) {
+						$overige = $_POST['overig'];						
+					} else {
+						$overige = array();
+					}
+					
+					$overige[] = '';					
+					
+					foreach($overige as $key => $string) {
+						if($string != '' OR $first) {							
+							$page[] = "	<tr>";
+							$page[] = "		<td>&nbsp;</td>";
+							$page[] = "		<td colspan='3'><input type='text' name='overig[$key]' value='$string' size='50'></td>";
+							$page[] = "		<td>&nbsp;</td>";
+							$page[] = "		<td>&euro;&nbsp;<input type='text' name='overig_price[$key]' value='". $_POST['overig_price'][$key] ."' size='5'></td>";
+							$page[] = "	</tr>";
+							
+							$totaal = $totaal + (100*str_replace(',', '.', $_POST['overig_price'][$key]));
+						}
+						
+						# 1 lege regel is voldoende
+						if($string == '' AND $first)	$first = false;
+					}
+				}
+								
+				$page[] = "	<tr>";
+				$page[] = "		<td colspan='6'>&nbsp;</td>";
+				$page[] = "	</tr>";
+				$page[] = "	<tr>";
+				$page[] = "		<td>&nbsp;</td>";
+				$page[] = "		<td colspan='3'><b>TOTAAL</b></td>";
+				$page[] = "		<td>&nbsp;</td>";
+				$page[] = "		<td  align='right'><b>". formatPrice($totaal) ."</b></td>";
+				$page[] = "	</tr>";
+				$page[] = "	<tr>";
+				$page[] = "		<td colspan='6'>&nbsp;</td>";
+				$page[] = "	</tr>";
+								
+				if(!$next) {
 					$page[] = "	<tr>";
-					$page[] = "		<td colspan='6'>&nbsp;</td>";
+					$page[] = "		<td colspan='6' align='right'><input type='submit' name='check_form' value='Volgende'></td>";
+					$page[] = "	</tr>";
+				} else {
+					$page[] = "	<tr>";
+					$page[] = "		<td colspan='3' align='left'><input type='submit' name='new_item' value=\"Regel 'overige' toevoegen\">";
+					$page[] = "		<td colspan='3' align='right'><input type='submit' name='send_form' value='Insturen'>";
 					$page[] = "	</tr>";
 				}
-				
-
-				
 				$page[] = "</table>";	
-				
-				$page[] = "<br>";
-				$page[] = "<input type='submit' name='check_form' value='Volgende'>";
 				$page[] = "</form>";
+				
 				
 			} else {
 				# Direct-link om te declareren is niet correct

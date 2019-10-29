@@ -129,6 +129,12 @@ $VoorgangerStijl		= "stijl";
 $VoorgangerOpmerking= "opmerking";
 $VoorgangerAandacht	= "aandachtspunten";
 $VoorgangerDeclaratie   = "declaratie";
+
+$VoorgangerHonorarium		= "honorarium";
+$VoorgangerKM						= "km_vergoeding";
+$VoorgangerVertrekpunt	= "vertrekpunt";
+$VoorgangerEBRelatie		= "boekhoudenID";
+
 $VoorgangerLastSeen     = "laatst_voorgaan";
 $VoorgangerLastAandacht = "laatst_aandacht";
 

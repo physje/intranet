@@ -1095,7 +1095,7 @@ function getLiturgie($id) {
 }
 
 function getVoorgangerData($id) {
-	global $TableVoorganger, $VoorgangerID, $VoorgangerTitel, $VoorgangerVoor, $VoorgangerInit, $VoorgangerTussen, $VoorgangerAchter, $VoorgangerTel, $VoorgangerTel2, $VoorgangerPVNaam, $VoorgangerPVTel, $VoorgangerMail, $VoorgangerPlaats, $VoorgangerDenom, $VoorgangerOpmerking, $VoorgangerAandacht, $VoorgangerDeclaratie, $VoorgangerLastAandacht, $VoorgangerStijl;
+	global $TableVoorganger, $VoorgangerID, $VoorgangerTitel, $VoorgangerVoor, $VoorgangerInit, $VoorgangerTussen, $VoorgangerAchter, $VoorgangerTel, $VoorgangerTel2, $VoorgangerPVNaam, $VoorgangerPVTel, $VoorgangerMail, $VoorgangerPlaats, $VoorgangerDenom, $VoorgangerOpmerking, $VoorgangerAandacht, $VoorgangerDeclaratie, $VoorgangerLastAandacht, $VoorgangerStijl, $VoorgangerHonorarium, $VoorgangerKM, $VoorgangerVertrekpunt, $VoorgangerEBRelatie;
 	
 	$db = connect_db();
 	$sql = "SELECT * FROM $TableVoorganger WHERE $VoorgangerID = $id";
@@ -1118,7 +1118,11 @@ function getVoorgangerData($id) {
 	$data['stijl'] = $row[$VoorgangerStijl];		
 	$data['opm'] = $row[$VoorgangerOpmerking];
 	$data['aandacht'] = $row[$VoorgangerAandacht];
-	$data['declaratie'] = $row[$VoorgangerDeclaratie];
+	$data['declaratie'] = $row[$VoorgangerDeclaratie];	
+	$data['honorarium'] = $row[$VoorgangerHonorarium];
+	$data['km_vergoeding'] = $row[$VoorgangerKM];
+	$data['reis_van'] = $row[$VoorgangerVertrekpunt];
+	$data['EB-relatie'] = $row[$VoorgangerEBRelatie];	
 	$data['last_aandacht'] = $row[$VoorgangerLastAandacht];
 	
 	return $data;
