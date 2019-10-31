@@ -1221,6 +1221,52 @@ function formatDagdeel($start) {
 	}
 	
 	return $dagdeel;
-}	
+}
+
+function makeVoorgangerName($id, $type) {
+	# type = 1 : C.M. van den Berg
+	# type = 2 : ds. van den Berg
+	# type = 3 : ds. C.M. van den Berg
+	# type = 4 : Catharinus van den Berg -> C.M. van den Berg (bij ontbreken voornaam)
+	# type = 5 : Catharinus -> ds. van den Berg (bij ontbreken voornaam)
+	
+	$voorgangerData = getVoorgangerData($id);
+	
+	# Achternaam	
+	if($voorgangerData['tussen'] != '') {
+		$voorgangerAchterNaam = lcfirst($voorgangerData['tussen']).' '. $voorgangerData['achter'];
+	} else {
+		$voorgangerAchterNaam = $voorgangerData['achter'];
+	}
+	
+	# Voornaam
+	if($voorgangerData['voor'] != "") {
+		$voornaam = $voorgangerData['voor'];
+	}
+		
+	if($type == 5 AND $voornaam != '') {
+		return $voornaam;
+	} elseif($type == 5 AND $voornaam == '') {
+		$type = 2;
+	}
+	
+	if($type == 4 AND $voornaam != '') {
+		return $voornaam .' '.$voorgangerAchterNaam;
+	} elseif($type == 4 AND $voornaam == '') {
+		$type = 1;
+	}
+		
+	if($type == 3) {
+		return lcfirst($voorgangerData['titel']).' '.$voorgangerData['init'].' '.$voorgangerAchterNaam;
+	}
+		
+	if($type == 2) {
+		return lcfirst($voorgangerData['titel']).' '.$voorgangerAchterNaam;
+	}
+	
+	if($type == 1) {
+		return $voorgangerData['init'].' '.$voorgangerAchterNaam;
+	}
+}
 
 ?>

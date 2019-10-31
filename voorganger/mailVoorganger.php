@@ -19,37 +19,20 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 		
 		$aBandleider		= getRoosterVulling(22, $dienst);
 		$bandleider			= $aBandleider[0];
-		$bandData		= getMemberDetails($bandleider);
+		$bandData				= getMemberDetails($bandleider);
 		$adresBand			= getMailAdres($bandleider);
 				
 		$aSchriftlezer	= getRoosterVulling(12, $dienst);
 		$schriftlezer		= $aSchriftlezer[0];
 		$adresSchrift		= getMailAdres($schriftlezer);
 		
-		$aBeamer		= getRoosterVulling(11, $dienst);
-		$beameraar		= $aBeamer[0];
-				
-		if(date("H", $dienstData['start']) < 12) {
-			$dagdeel = 'morgendienst';
-		} elseif(date("H", $dienstData['start']) < 18) {
-			$dagdeel = 'middagdienst';
-		} else {
-			$dagdeel = 'avonddienst';
-		}
+		$aBeamer				= getRoosterVulling(11, $dienst);
+		$beameraar			= $aBeamer[0];
 		
-		# Achternaam
-		$voorgangerAchterNaam = '';
-		if($voorgangerData['tussen'] != '')	$voorgangerAchterNaam = lcfirst($voorgangerData['tussen']).' ';	
-		$voorgangerAchterNaam .= $voorgangerData['achter'];
+		$dagdeel 				= formatDagdeel($dienstData['start']);
 		
-		# Naam voor voorganger in de mail
-		if($voorgangerData['voor'] != "") {
-			$aanspeekNaam = $voorgangerData['voor'];
-			$mailNaam = $voorgangerData['voor'].' '.$voorgangerAchterNaam;
-		} else {
-			$aanspeekNaam = lcfirst($voorgangerData['titel']).' '.$voorgangerAchterNaam;
-			$mailNaam = $voorgangerData['init'].' '.$voorgangerAchterNaam;
-		}
+		$aanspeekNaam		= makeVoorgangerName($dienstData['voorganger_id'], 5);
+		$mailNaam 			= makeVoorgangerName($dienstData['voorganger_id'], 4);
 		
 		# Nieuw mail-object aanmaken
 		$mail = new PHPMailer;

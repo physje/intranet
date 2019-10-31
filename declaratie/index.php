@@ -2,23 +2,24 @@
 include_once('../include/functions.php');
 include_once('../include/config.php');
 include_once('../include/HTML_TopBottom.php');
+include_once('../include/HTML_HeaderFooter.php');
 include_once('../../../general_include/class.phpmailer.php');
+
 $db = connect_db();
 
 if(isset($_REQUEST['draad'])) {
 	if($_REQUEST['draad'] == 'predikant') {
 		if(isset($_REQUEST['hash'])) {
-			# 3de scherm voor predikanten
-			# De direct-link uit de declaratie-mail komt hier terecht
-			
 			$hash = urldecode($_REQUEST['hash']);
 			$dienst = $_REQUEST['d'];
 			$voorganger = $_REQUEST['v'];
 			
+			# De hash klopt
 			if(password_verify($dienst.'$'.$randomCodeDeclaratie.'$'.$voorganger,$hash)) {
 				$dienstData = getKerkdienstDetails($dienst);
 				$voorgangerData = getVoorgangerData($voorganger);
 				
+				# Schrijf de variabelen die in het hele proces verzameld worden als hidden parameters weg in het formulier
 				$page[] = "<form method='post' action='$_SERVER[PHP_SELF]'>";
 				if(isset($_REQUEST['draad']))		$page[] = "<input type='hidden' name='draad' value='". $_REQUEST['draad'] ."'>";
 				if(isset($dienst))							$page[] = "<input type='hidden' name='d' value='$dienst'>";
@@ -36,32 +37,47 @@ if(isset($_REQUEST['draad'])) {
 				}
 				
 				if(isset($_POST['indienen'])) {
+					# Scherm waarbij de declaratie wordt ingevoerd
+					# Alle betrokkenen een mail krijgen
+					# Data in de database wordt weggeschreven
+					
 					$page[] = "Hopsakee";
 					$page[] = "<ul>";
 					$page[] = "	<li>PDF maken</li>";
-					$page[] = "	<li>relatie/IBAN aanpassen indien nodig</li>";
+					$page[] = "	<li>op basis van IBAN relatie opzoeken -> relatie toevoegen of IBAN aanpassen indien nodig</li>";
 					$page[] = "	<li>in eBoekhouden schieten</li>";
 					$page[] = "	<li>mail naar predikant</li>";
 					$page[] = "	<li>mail naar Paul</li>";
-					$page[] = "	<li>reis_van in dB schrijven voor volgende keer</li>";
+					$page[] = "	<li>reis_van en relatie in dB schrijven voor volgende keer</li>";
 					$page[] = "</ul>";
 					
+					$aanspeekNaam		= makeVoorgangerName($voorganger, 5);
+										
+					$mailPredikant = array(); 
+					$mailPredikant[] = "Beste $aanspeekNaam,";
+					$mailPredikant[] = "";
+					$mailPredikant[] = "";					
+					
 				} elseif(isset($_POST['check_iban'])) {
-					$IBAN = 'NL96INGB000004554479';
+					# Formulier waar IBAN wordt gecontroleerd
+					
+					$IBAN = '';
 					
 					$page[] = "Voer hieronder het bankrekening-nummer in waarnaar het bedrag moet worden overgemaakt.<br>";
 					$page[] = "<br>";
 					$page[] = "<input type='text' name='IBAN' value='$IBAN' size='30'>";
 					$page[] = "<input type='submit' name='indienen' value='Dien declaratie in'>";
 					$page[] = "</form>";
-				} elseif(isset($_POST['check_form'])) {					
+				} elseif(isset($_POST['check_form'])) {	
+					# Formulier waar preekbeurt en reiskostenvergoeding ter controle worden getoond
+									
 					$page[] = "U staat op het punt de volgende declaratie in te dienen :<br>";
 					$page[] = "<br>";
 					$page[] = "<table>";
 					$page[] = "	<tr>";
 					$page[] = "		<td>Naam</td>";
 					$page[] = "		<td>&nbsp;</td>";
-					$page[] = "		<td colspan='2'>". $voorgangerData['titel'] .' '. ($voorgangerData['tussen'] == '' ? '' : $voorgangerData['tussen'] .' '). $voorgangerData['achter'] ."</td>";
+					$page[] = "		<td colspan='2'>". makeVoorgangerName($voorganger, 3) ."</td>";
 					$page[] = "	</tr>";
 					$page[] = "	<tr>";
 					$page[] = "		<td>Dienst</td>";
@@ -110,13 +126,13 @@ if(isset($_REQUEST['draad'])) {
 					$page[] = "		<td colspan='2'><input type='submit' name='redo_form' value='Nee'></td>";
 					$page[] = "	</tr>";
 					$page[] = "</table>";					
-					$page[] = "</form>";
-					
-					//$page[] = "Even alles controleren, doe er gelijk een IBAN-check bij.";
+					$page[] = "</form>";					
 				} else {				
-					$next = false;
+					# De direct-link uit de declaratie-mail komt hier terecht
 					
 					# Formulier waar preekbeurt en reiskostenvergoeding kunnen worden ingevuld					
+					$next = false;					
+					
 					$page[] = "<table border=0>";
 					$page[] = "	<tr>";
 					$page[] = "		<td colspan='6'><b>Preekbeurt</b></td>";
@@ -222,7 +238,7 @@ if(isset($_REQUEST['draad'])) {
 			}			
 		} elseif(isset($_POST['send_link'])) {
 			# 2de scherm voor predikanten
-			# Als er een dienst geselecteerd is wordt deze doorgemails
+			# Als er een dienst geselecteerd is wordt deze doorgemaild
 			
 			$dienst = $_POST['dienst'];
 			$dienstData = getKerkdienstDetails($dienst);
@@ -239,50 +255,53 @@ if(isset($_REQUEST['draad'])) {
 			} else {				
 				$dagdeel = formatDagdeel($dienstData['start']);
 								
-				# Achternaam
-				$voorgangerAchterNaam = '';
-				if($voorgangerData['tussen'] != '')	$voorgangerAchterNaam = lcfirst($voorgangerData['tussen']).' ';	
-				$voorgangerAchterNaam .= $voorgangerData['achter'];
-				
-				# Naam voor voorganger in de mail
-				if($voorgangerData['voor'] != "") {
-					$aanspeekNaam = $voorgangerData['voor'];
-					$mailNaam = $voorgangerData['voor'].' '.$voorgangerAchterNaam;
-				} else {
-					$aanspeekNaam = lcfirst($voorgangerData['titel']).' '.$voorgangerAchterNaam;
-					$mailNaam = $voorgangerData['init'].' '.$voorgangerAchterNaam;
-				}
+				$aanspeekNaam		= makeVoorgangerName($voorganger, 5);
+				$mailNaam 			= makeVoorgangerName($voorganger, 4);
 				
 				# Nieuw mail-object aanmaken
 				$mail = new PHPMailer;
-				$mail->FromName	= 'Penningmeester Koningskerk Deventer';
-				$mail->From			= $ScriptMailAdress;
-				//$mail->AddReplyTo($voorgangerReplyAddress, $voorgangerReplyName);
-				
+				$mail->FromName	= $declaratieReplyName;
+				$mail->From			= $declaratieReplyAddress;
+							
 				# Alle geadresseerden toevoegen
-				$mail->AddAddress($voorgangerData['mail'], $mailNaam);
+				//$mail->AddAddress($voorgangerData['mail'], $mailNaam);
+				$mail->AddAddress('internet@draijer.org');
 				
 				# Declaratielink genereren
 				$hash = urlencode(password_hash($dienst.'$'.$randomCodeDeclaratie.'$'.$voorganger, PASSWORD_BCRYPT));
 				$declaratieLink = $ScriptURL ."declaratie/index.php?hash=$hash&d=$dienst&draad=". $_REQUEST['draad'] ."&v=$voorganger";
 				
 				# Mail opstellen
-				$mailText = $bijlageText = array(); 
+				$mailText = array(); 
 				$mailText[] = "Beste $aanspeekNaam,";
 				$mailText[] = "";
-				$mailText[] = "U heeft online aangegeven een declaratie te willen indienen voor het voorgaan in de $dagdeel van ". strftime ('%e %B', $dienstData['start'])." in de Koningskerk te Deventer.";
+				$mailText[] = ($voorgangerData['stijl'] == 0 ? 'u heeft' : 'jij hebt')." online aangegeven een declaratie te willen indienen voor het voorgaan in de $dagdeel van ". strftime ('%e %B', $dienstData['start'])." in de Koningskerk te Deventer.";
 				$mailText[] = "";
-				$mailText[] = "Om zeker te weten dat alleen de juiste persoon de declaratie kan indienen wordt u verzocht onderstaande link te volgen, u wordt dat doorgeleid naar de juiste pagina.";
+				$mailText[] = "Om zeker te weten dat alleen de juiste persoon de declaratie kan indienen wordt ".($voorgangerData['stijl'] == 0 ? 'u' : 'je')." verzocht onderstaande link te volgen, ".($voorgangerData['stijl'] == 0 ? 'u' : 'je')." wordt dat doorgeleid naar de juiste pagina.";
 				$mailText[] = "<a href='$declaratieLink'>invoeren online declaratie</a>";
 				$mailText[] = "";
 				$mailText[] = "Mochten er nog vragen zijn dan hoor ik het graag.";
 				$mailText[] = "";
 				$mailText[] = "Vriendelijke groeten";
 				$mailText[] = "";
-				$mailText[] = "Paul Huizing";
-				$mailText[] = "paul.huizing@koningskerkdeventer.nl";
+				$mailText[] = $declaratieReplyName;
+				$mailText[] = $declaratieReplyAddress;
 				
-				$page = $mailText;
+				# Onderwerp maken
+				$Subject = "Declaratie $dagdeel ". date('j-n-Y', $dienstData['start']);
+				
+				$mail->Subject	= trim($Subject);
+				$mail->IsHTML(true);
+				$mail->Body	= $MailHeader.implode("<br>\n", $mailText).$MailFooter;
+				
+				if(!$mail->Send()) {
+					toLog('error', '', '', "Problemen met declaratie-link versturen naar $mailNaam voor ". date('j-n-Y', $dienstData['start']));
+					$page[] = "Er zijn problemen met het versturen van de mail.";
+					$page = array_merge($page, $mailText);
+				} else {
+					toLog('info', '', '', "Declaratie-link verstuurd naar $mailNaam voor ". date('j-n-Y', $dienstData['start']));
+					$page[] = "Er is een mail gestuurd.";
+				}
 			}
 		} else {			
 			# Startscherm voor predikanten
