@@ -1269,4 +1269,73 @@ function makeVoorgangerName($id, $type) {
 	}
 }
 
+function setVoorgangerDeclaratieStatus($status, $dienst) {
+	global $db, $TableDiensten, $DienstDeclStatus, $DienstID;
+	
+	# 0 geen
+	# 1 open
+	# 2 link verstuurd
+	# 3 link bezocht
+	# 4 opgeslagen
+	# 5 bij CluCo
+	# 6 bij lid
+	# 7 afgekeurd
+	# 8 afgerond
+	# 9 afgezien
+	
+	$sql = "UPDATE $TableDiensten SET $DienstDeclStatus = $status WHERE $DienstID = $dienst";
+	return mysqli_query($db, $sql);
+}
+
+function getCoordinates($q) {
+	global $locationIQkey;
+		
+	$url = "https://eu1.locationiq.com/v1/search.php?key=$locationIQkey";	
+	$url .= "&q=". urlencode($q);
+	$url .= "&format=json";
+			
+	$contents		= file_get_contents($url);
+	$json				= json_decode($contents, true);		
+	$longitude	= $json[0]['lon'];	# 52
+	$latitude		= $json[0]['lat']; 	# 6
+		
+	return array($latitude, $longitude);
+}
+
+function determineAdressDistance($start, $end) {
+	global $locationIQkey;
+	
+	$service = 'matrix';
+	$profile = 'driving';
+	
+	if($end == '') {		
+		$latitude_end = '52.267184';
+		$longitude_end = '6.159086';
+	} else {
+		$coord_end = getCoordinates($end);
+		$latitude_end = $coord_end[0];
+		$longitude_end = $coord_end[1];		
+	}
+	
+	$coord_start = getCoordinates($start);
+	$latitude_start = $coord_start[0];
+	$longitude_start = $coord_start[1];
+	
+	if($longitude_start > 0 AND $latitude_start > 0 AND $longitude_end > 0 AND $latitude_end > 0) {
+		$coordinates = "{$longitude_start},{$latitude_start};{$longitude_end},{$latitude_end}";
+
+		$url = "https://eu1.locationiq.com/v1/$service/$profile/$coordinates?key=$locationIQkey&sources=0&destinations=1&annotations=distance";
+	
+		$contents		= file_get_contents($url);
+		$json				= json_decode($contents, true);
+	
+		$afstand = ($json['distances'][0][0])/1000;		
+	} else {
+		$afstand = 0;
+	}
+	
+	return $afstand;
+
+}
+
 ?>

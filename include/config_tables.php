@@ -75,7 +75,8 @@ $DienstVoorganger		= "voorganger";
 $DienstCollecte_1		= "collecte_1";
 $DienstCollecte_2		= "collecte_2";
 $DienstOpmerking		= "opmerking";
-$DienstLiturgie         = "liturgie";
+$DienstLiturgie     = "liturgie";
+$DienstDeclStatus   = "declaratie_status";
 
 $TablePlanning			= "planning";
 $PlanningDienst			= "dienst";
@@ -129,12 +130,10 @@ $VoorgangerStijl		= "stijl";
 $VoorgangerOpmerking= "opmerking";
 $VoorgangerAandacht	= "aandachtspunten";
 $VoorgangerDeclaratie   = "declaratie";
-
 $VoorgangerHonorarium		= "honorarium";
 $VoorgangerKM						= "km_vergoeding";
 $VoorgangerVertrekpunt	= "vertrekpunt";
 $VoorgangerEBRelatie		= "boekhoudenID";
-
 $VoorgangerLastSeen     = "laatst_voorgaan";
 $VoorgangerLastAandacht = "laatst_aandacht";
 

@@ -76,15 +76,16 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 			$mail->AddAttachment('download/aandachtspunten.pdf', 'Aandachtspunten Liturgie Deventer (dd 11-6-2018).pdf');
 			setLastAandachtspunten($dienstData['voorganger_id']);
 		}
-		
-		if($voorgangerData['declaratie'] == 1) {
-			$bijlageText[] = "het declaratieformulier";
-			$mail->AddAttachment('download/declaratieformulier.xlsx', date('ymd', $dienstData['start'])."_Declaratieformulier_". str_replace(' ', '', $voorgangerAchterNaam) .".xlsx");
-		}
-		
+				
 		if(count($bijlageText) > 0) {
 			$mailText[] = "";
-			$mailText[] = "In de bijlage ".($voorgangerData['stijl'] == 0 ? 'treft u' : 'tref je')." ". implode(' en ', $bijlageText) ." aan.";				
+			$mailText[] = "In de bijlage ".($voorgangerData['stijl'] == 0 ? 'treft u' : 'tref je')." ". implode(' en ', $bijlageText) ." aan.";
+		}
+		
+		if($voorgangerData['declaratie'] == 1) {
+			$mailText[] = "";
+			$mailText[] = "Op de ochtend van de dienst ontvangt u een persoonlijke link naar de online omgeving voor het declareren van uw onkosten.";
+			setVoorgangerDeclaratieStatus(1, $dienst);
 		}
 		
 		$mailText[] = "";
@@ -94,7 +95,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 		$mailText[] = "";
 		$mailText[] = "Jenny van der Vegt-Huzen";
 		$mailText[] = "Tel.: 06-10638291";
-		$mailText[] = "jenny@overbrugger.nl";
+		$mailText[] = $voorgangerReplyAddress;
 		
 		# Onderwerp maken
 		$Subject = "Preken $dagdeel ". date('j-n-Y', $dienstData['start']);
