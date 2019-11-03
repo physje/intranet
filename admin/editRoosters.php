@@ -10,15 +10,17 @@ $db = connect_db();
 if(isset($_POST['save'])) {
 	if($_POST['text_only'] == 1) {
 		$_POST['aantal'] = 0;
+		$_POST['planner'] = 0;
+		$_POST['groep'] = 0;
 	} else {
 		$_POST['text_only'] = 0;
 	}
 		
 	if(isset($_REQUEST['new'])) {		
-		$sql = "INSERT INTO $TableRoosters ($RoostersNaam, $RoostersGroep, $RoostersFields, $RoostersTextOnly, $RoostersReminder) VALUES ('". $_POST['naam'] ."', ". $_POST['groep'] .", ". $_POST['aantal'] .", ". $_POST['text_only'] .", '". $_POST['reminder'] ."')";
+		$sql = "INSERT INTO $TableRoosters ($RoostersNaam, $RoostersGroep, $RoostersBeheerder, $RoostersPlanner, $RoostersFields, $RoostersTextOnly, $RoostersReminder) VALUES ('". $_POST['naam'] ."', ". $_POST['groep'] .", ". $_POST['beheerder'] .", ". $_POST['planner'] .", ". $_POST['aantal'] .", ". $_POST['text_only'] .", '". $_POST['reminder'] ."')";
 		toLog('info', $_SESSION['ID'], '', 'Roostergegevens '. $_POST['naam'] .' toegevoegd');
 	} else {
-		$sql = "UPDATE $TableRoosters SET $RoostersNaam = '". $_POST['naam'] ."', $RoostersGroep = ". $_POST['groep'] .", $RoostersFields = ". $_POST['aantal'] .", $RoostersTextOnly = ". $_POST['text_only'] .", $RoostersReminder = '". $_POST['reminder'] ."', $RoostersAlert = '". $_POST['alert'] ."' WHERE $GroupID = ". $_POST['id'];
+		$sql = "UPDATE $TableRoosters SET $RoostersNaam = '". $_POST['naam'] ."', $RoostersPlanner = ". $_POST['planner'] .", $RoostersBeheerder = ". $_POST['beheerder'] .", $RoostersGroep = ". $_POST['groep'] .", $RoostersFields = ". $_POST['aantal'] .", $RoostersTextOnly = ". $_POST['text_only'] .", $RoostersReminder = '". $_POST['reminder'] ."', $RoostersAlert = '". $_POST['alert'] ."' WHERE $GroupID = ". $_POST['id'];
 		toLog('info', $_SESSION['ID'], '', 'Roostergegevens '. $_POST['naam'] .' gewijzigd');
 	}
 		
@@ -46,24 +48,39 @@ if(isset($_POST['save'])) {
 	$text[] = "<tr>";
 	$text[] = "	<td>Naam</td>";
 	$text[] = "	<td><input type='text' name='naam' value='". $roosterData['naam'] ."'></td>";
-	$text[] = "</tr>";
+	$text[] = "</tr>";	
 	$text[] = "<tr>";
-	
-	if($roosterData['text_only'] == 0) {
-		$text[] = "	<td>Groep</td>";
-	} else {
-		$text[] = "	<td>Beheerder</td>";
-	}
-	$text[] = "	<td><select name='groep'>";
+	$text[] = "	<td>Beheerder</td>";	
+	$text[] = "	<td><select name='beheerder'>";
 	$groepen = getAllGroups();	
 	foreach($groepen as $groep) {
 		$data = getGroupDetails($groep);
-		$text[] = "	<option value='$groep'". ($groep == $roosterData['groep'] ? ' selected' : '') .">". $data['naam'] ."</option>";
+		$text[] = "	<option value='$groep'". ($groep == $roosterData['beheerder'] ? ' selected' : '') .">". $data['naam'] ."</option>";
 	}
 	$text[] = "	</select></td>";
 	$text[] = "</tr>";
 	
 	if($roosterData['text_only'] == 0) {
+		$text[] = "<tr>";
+		$text[] = "	<td>Te plannen groep</td>";	
+		$text[] = "	<td><select name='groep'>";
+		$groepen = getAllGroups();	
+		foreach($groepen as $groep) {
+			$data = getGroupDetails($groep);
+			$text[] = "	<option value='$groep'". ($groep == $roosterData['groep'] ? ' selected' : '') .">". $data['naam'] ."</option>";
+		}
+		$text[] = "	</select></td>";
+		$text[] = "</tr>";			
+		$text[] = "<tr>";
+		$text[] = "	<td>Planner</td>";
+		$text[] = "	<td><select name='planner'>";
+		$groepen = getAllGroups();	
+		foreach($groepen as $groep) {
+			$data = getGroupDetails($groep);
+			$text[] = "	<option value='$groep'". ($groep == $roosterData['planner'] ? ' selected' : '') .">". $data['naam'] ."</option>";
+		}
+		$text[] = "	</select></td>";		
+		$text[] = "</tr>";		
 		$text[] = "<tr>";
 		$text[] = "	<td>Aantal personen</td>";
 		$text[] = "	<td><select name='aantal'>";		
@@ -90,7 +107,11 @@ if(isset($_POST['save'])) {
 	$text[] = "	</select></td>";
 	$text[] = "</tr>";
 	$text[] = "<tr>";
-	$text[] = "	<td rowspan='2'><input type='submit' name='save' value='Opslaan'></td>";
+	$text[] = "	<td colspan='2'>&nbsp;</td>";
+	$text[] = "</tr>";
+	$text[] = "<tr>";
+	$text[] = "	<td>&nbsp;</td>";
+	$text[] = "	<td><input type='submit' name='save' value='Opslaan'></td>";
 	$text[] = "</tr>";
 	$text[] = "</table>";
 	$text[] = "</form>";

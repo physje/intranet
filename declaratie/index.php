@@ -290,13 +290,14 @@ if(isset($_REQUEST['draad'])) {
 					if(isset($_POST['reis_van']) AND isset($_POST['reis_naar'])) {
 						$next = true;
 						$first = true;
-						$km = determineAdressDistance($_POST['reis_van'], $_POST['reis_naar']);
+						$kms = determineAddressDistance($_POST['reis_van'], $_POST['reis_naar']);
+						$km = array_sum($kms);
 
-						$reiskosten = 2*$km * $voorgangerData['km_vergoeding'];
+						$reiskosten = $km * $voorgangerData['km_vergoeding'];
 
 						$page[] = "	<tr>";
 						$page[] = "		<td>&nbsp;</td>";
-						$page[] = "		<td><small>". round(2*$km, 1) ." km x ". formatPrice($voorgangerData['km_vergoeding']) ."</small></td>";
+						$page[] = "		<td><small>". round($km, 1) ." km x ". formatPrice($voorgangerData['km_vergoeding']) ."</small></td>";
 						$page[] = "		<td>&nbsp;</td>";
 						$page[] = "		<td>&nbsp;</td>";
 						$page[] = "		<td>&nbsp;</td>";

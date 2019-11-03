@@ -5,6 +5,7 @@ include_once('include/HTML_TopBottom.php');
 $db = connect_db();
 $showLogin = true;
 
+
 if(isset($_REQUEST['hash'])) {
 	$dader = isValidHash($_REQUEST['hash']);
 	
@@ -14,7 +15,7 @@ if(isset($_REQUEST['hash'])) {
 	} else {
 		$showLogin = false;
 		$_SESSION['ID'] = $dader;
-		toLog('info', $dader, $id, 'profiel mbv hash');
+		toLog('info', $dader, $_REQUEST['id'], 'profiel mbv hash');
 	}
 }
 
@@ -23,8 +24,13 @@ if($showLogin) {
 	include($cfgProgDir. "secure.php");
 }
 
+if(isset($_POST['save_address'])) {
+	$sql_update = "UPDATE $TableUsers SET $UserFormeelMail = '". $_POST['form_mail'] ."' WHERE $UserID like ". $_POST['id'];
+	mysqli_query($db, $sql_update);
+}
 $id = getParam('id', $_SESSION['ID']);
 $personData = getMemberDetails($id);
+
 # Als je als admin bent ingelogd zie je alle leden, anders alleen de actieve 
 $familie = getFamilieleden($id, in_array(1, getMyGroups($_SESSION['ID'])));
 
@@ -37,6 +43,12 @@ echo "<table width=100% border=0>".NL;
 echo "<tr>".NL;
 echo "	<td width=4%>&nbsp;</td>".NL;
 echo "	<td width=44% valign='top'>";
+
+# De admin kan hier zaken wijzigen, dus even een formulier aanmaken
+if(in_array(1, getMyGroups($_SESSION['ID']))) {
+	echo "	<form method='post' action='$_SERVER[PHP_SELF]'>".NL;	
+	echo "	<input type='hidden' name='id' value='$id'>".NL;	
+}
 
 # Eigen gegevens
 echo "	<table>".NL;
@@ -60,10 +72,11 @@ echo "		<td><b>Mailadres</b></td>".NL;
 echo "		<td><a href='mailto:". makeName($id, 5) ." <".$personData['mail'] .">'>". $personData['mail'] ."</td>".NL;
 echo "	</tr>".NL;
 
+# De admin kan hier een formeel-adres ingeven
 if(in_array(1, getMyGroups($_SESSION['ID']))) {	
 	echo "	<tr>".NL;
-	echo "		<td><b>Alternatief mailadres</b></td>".NL;
-	echo "		<td><input type='text' name='alt_mail' value='". $personData['alt_mail'] ."'></td>".NL;
+	echo "		<td><b>Formeel mailadres</b></td>".NL;
+	echo "		<td><input type='text' name='form_mail' value='". $personData['form_mail'] ."'></td>".NL;
 	echo "	</tr>".NL;
 }
 
@@ -84,6 +97,7 @@ echo "		<td><b>Status</b></td>".NL;
 echo "		<td>". $personData['status'] ."</td>".NL;
 echo "	</tr>".NL;
 
+# Alleen zichtbaar voor de administrator
 if(in_array(1, getMyGroups($_SESSION['ID']))) {	
 	echo "	<tr>".NL;
 	echo "		<td valign='top'><b>Hash</b></td>".NL;
@@ -111,6 +125,10 @@ if(in_array(1, getMyGroups($_SESSION['ID']))) {
 }
 
 echo "	</table>".NL;
+
+# De admin kan hier zaken wijzigen, dus even een formulier aangemaakt
+if(in_array(1, getMyGroups($_SESSION['ID'])))	echo "	</form>".NL;
+
 echo "	</td>".NL;
 echo "	<td width=4%>&nbsp;</td>".NL;
 

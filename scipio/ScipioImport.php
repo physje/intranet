@@ -253,6 +253,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 				}
 				
 				foreach($wijkTeam as $lid => $rol) {
+					$variabele['formeel'] = true;
 					$data = getMemberDetails($lid);					
 					$andereOntvangers = excludeID($namenWijkteam, $lid);
 					

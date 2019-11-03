@@ -11,9 +11,6 @@ if(!isset($_REQUEST['rooster'])) {
 	exit;
 }
 
-# Zoek op wie de beheerder is
-$beheerder = getBeheerder4Rooster($_REQUEST['rooster']);
-
 if(isset($_REQUEST['hash'])) {
 	$id = isValidHash($_REQUEST['hash']);
 	
@@ -27,15 +24,17 @@ if(isset($_REQUEST['hash'])) {
 	}
 }
 
+# Eerste keer data ophalen voor in logfiles enzo
+$RoosterData = getRoosterDetails($_REQUEST['rooster']);
+$beheerder = $RoosterData['beheerder'];
+$planner = $RoosterData['planner'];
+
 if($showLogin) {
-	# Ken kijk-rechten
-	$requiredUserGroups = array(1, $beheerder);
+	# Ken kijk- en schrijf-rechten voor admin, beheerder en planner
+	$requiredUserGroups = array(1, $beheerder, $planner);
 	$cfgProgDir = 'auth/';
 	include($cfgProgDir. "secure.php");
 }
-
-# Eerste keer data ophalen voor in logfiles enzo
-$RoosterData = getRoosterDetails($_REQUEST['rooster']);
 
 # Als op de knop van de mail geklikt is die data wegschrijven
 if(isset($_POST['save_mail'])) {
@@ -116,6 +115,9 @@ if($RoosterData['text_only'] == 0) {
 } else {
 	$nrFields = 1;
 }
+
+# Om zo de rechten te kunnen checken even opvragen in welke groepen de gebruiker zit
+$myGroups = getMyGroups($_SESSION['ID']);	
 
 # Haal alle kerkdiensten binnen een tijdsvak op
 $diensten = getKerkdiensten(mktime(0,0,0), mktime(date("H"),date("i"),date("s"),(date("n")+(3*$blokken))));
@@ -206,54 +208,50 @@ if($RoosterData['text_only'] == 0) {
 	}
 	$block_3[] = '</table>';
 	
-	$block_2[] = "<h2>Remindermail</h2>";
-	$block_2[] = "3 dagen voordat iemand op het rooster staat krijgt hij/zij een mail als reminder.<br>";
-	$block_2[] = "Hieronder kan die mail worden vormgegeven.<br>";
-	$block_2[] = "<br>";
-	$block_2[] = "<form method='post' action='$_SERVER[PHP_SELF]'>";
-	$block_2[] = "<input type='hidden' name='rooster' value='". $_REQUEST['rooster'] ."'>";
-	$block_2[] = "<table border=0>";
-	$block_2[] = "<tr>";
-	$block_2[] = "	<td valign='top'>Afzendernaam</td>";
-	$block_2[] = "	<td valign='top' colspan='2'><input type='text' name='naam_afzender' size=80 value='".$RoosterData['naam_afzender'] ."'></td>";
-	$block_2[] = "</tr>";
-	$block_2[] = "<tr>";
-	$block_2[] = "	<td valign='top'>Mailadres</td>";
-	$block_2[] = "	<td valign='top' colspan='2'><input type='text' name='mail_afzender' size=80 value='".$RoosterData['mail_afzender'] ."'></td>";
-	$block_2[] = "</tr>";
-	$block_2[] = "<tr>";
-	$block_2[] = "	<td valign='top'>Onderwerp</td>";
-	$block_2[] = "	<td valign='top' colspan='2'><input type='text' name='onderwerp_mail' size=80 value='".$RoosterData['onderwerp_mail'] ."'></td>";
-	$block_2[] = "</tr>";
-	$block_2[] = "<tr>";
-	$block_2[] = "	<td valign='top'>Mailtekst</td>";
-	$block_2[] = "	<td valign='top'><textarea name='text_mail' rows=20 cols=60>". $RoosterData['text_mail'] ."</textarea></td>";
-	$block_2[] = "	<td valign='top'>";
-	$block_2[] = "		<table border=0>";
-	$block_2[] = "		<tr><td valign='top'>[[voornaam]]</td><td valign='top'>voornaam van de ontvanger.</td></tr>";
-	$block_2[] = "		<tr><td valign='top'>[[achternaam]]</td><td valign='top'>achternaam van de ontvanger.</td></tr>";
-	$block_2[] = "		<tr><td valign='top'>[[team]]</td><td valign='top'>alle namen (uitgezonderd de ontvanger) van wie op het rooster staan.</td></tr>";
-	$block_2[] = "		<tr><td valign='top'>[[voorganger]]</td><td valign='top'>naam van de voorganger.</td></tr>";
-	$block_2[] = "		<tr><td valign='top'>[[dag]]</td><td valign='top'>naam van de dag. Meestal zondag, bij feestdagen meestal andere dag.</td></tr>";
-	$block_2[] = "		<tr><td valign='top'>[[dagdeel]]</td><td valign='top'>naam van het dagdeel (ochtend, middag, avond).</td></tr>";
-	$block_2[] = "		<tr><td valign='top'>[[team|xx]]</td><td valign='top'>Om namen die voor deze dienst op een ander roosters in te voeren, vervang je XX door het id van dat rooster.</td></tr>";
-	
-	/*
-	$roosters = getRoosters(0);	
-	foreach($roosters as $r) {
-		$data = getRoosterDetails($r);
-		$block_2[] = "		<tr><td valign='top'>[[team|$r]]</td><td valign='top'>alle namen voor ". $data['naam'] .".</td></tr>";
+	# Deze pagina is toegangelijk voor beheerder, planner en admin.
+	# Het bovenste gedeelte is dus voor iedereen
+	# Het 2de deel (met de mail) alleen voor beheerder of de admin	
+	if(in_array(1, $myGroups) OR in_array($beheerder, $myGroups)) {	
+		$block_2[] = "<h2>Remindermail</h2>";
+		$block_2[] = "3 dagen voordat iemand op het rooster staat krijgt hij/zij een mail als reminder.<br>";
+		$block_2[] = "Hieronder kan die mail worden vormgegeven.<br>";
+		$block_2[] = "<br>";
+		$block_2[] = "<form method='post' action='$_SERVER[PHP_SELF]'>";
+		$block_2[] = "<input type='hidden' name='rooster' value='". $_REQUEST['rooster'] ."'>";
+		$block_2[] = "<table border=0>";
+		$block_2[] = "<tr>";
+		$block_2[] = "	<td valign='top'>Afzendernaam</td>";
+		$block_2[] = "	<td valign='top' colspan='2'><input type='text' name='naam_afzender' size=80 value='".$RoosterData['naam_afzender'] ."'></td>";
+		$block_2[] = "</tr>";
+		$block_2[] = "<tr>";
+		$block_2[] = "	<td valign='top'>Mailadres</td>";
+		$block_2[] = "	<td valign='top' colspan='2'><input type='text' name='mail_afzender' size=80 value='".$RoosterData['mail_afzender'] ."'></td>";
+		$block_2[] = "</tr>";
+		$block_2[] = "<tr>";
+		$block_2[] = "	<td valign='top'>Onderwerp</td>";
+		$block_2[] = "	<td valign='top' colspan='2'><input type='text' name='onderwerp_mail' size=80 value='".$RoosterData['onderwerp_mail'] ."'></td>";
+		$block_2[] = "</tr>";
+		$block_2[] = "<tr>";
+		$block_2[] = "	<td valign='top'>Mailtekst</td>";
+		$block_2[] = "	<td valign='top'><textarea name='text_mail' rows=20 cols=60>". $RoosterData['text_mail'] ."</textarea></td>";
+		$block_2[] = "	<td valign='top'>";
+		$block_2[] = "		<table border=0>";
+		$block_2[] = "		<tr><td valign='top'>[[voornaam]]</td><td valign='top'>voornaam van de ontvanger.</td></tr>";
+		$block_2[] = "		<tr><td valign='top'>[[achternaam]]</td><td valign='top'>achternaam van de ontvanger.</td></tr>";
+		$block_2[] = "		<tr><td valign='top'>[[team]]</td><td valign='top'>alle namen (uitgezonderd de ontvanger) van wie op het rooster staan.</td></tr>";
+		$block_2[] = "		<tr><td valign='top'>[[voorganger]]</td><td valign='top'>naam van de voorganger.</td></tr>";
+		$block_2[] = "		<tr><td valign='top'>[[dag]]</td><td valign='top'>naam van de dag. Meestal zondag, bij feestdagen meestal andere dag.</td></tr>";
+		$block_2[] = "		<tr><td valign='top'>[[dagdeel]]</td><td valign='top'>naam van het dagdeel (ochtend, middag, avond).</td></tr>";
+		$block_2[] = "		<tr><td valign='top'>[[team|xx]]</td><td valign='top'>Om namen die voor deze dienst op een ander roosters in te voeren, vervang je XX door het id van dat rooster.</td></tr>";
+		$block_2[] = "		</table>";
+		$block_2[] = "	</td>";
+		$block_2[] = "</tr>";
+		$block_2[] = "<tr>";
+		$block_2[] = "	<td valign='top'>&nbsp;</td><td valign='top' colspan='2'><input type='submit' name='save_mail' value='Mail-gegevens opslaan'></td>";
+		$block_2[] = "</tr>";
+		$block_2[] = "</table>";
+		$block_2[] = "</form>";
 	}
-	*/
-	
-	$block_2[] = "		</table>";
-	$block_2[] = "	</td>";
-	$block_2[] = "</tr>";
-	$block_2[] = "<tr>";
-	$block_2[] = "	<td valign='top'>&nbsp;</td><td valign='top' colspan='2'><input type='submit' name='save_mail' value='Mail-gegevens opslaan'></td>";
-	$block_2[] = "</tr>";
-	$block_2[] = "</table>";
-	$block_2[] = "</form>";
 }
 
 echo $HTMLHeader;
@@ -262,8 +260,11 @@ echo showBlock(implode(NL, $block_1), 100);
 if($RoosterData['text_only'] == 0) {
 	echo "<p>";
 	echo showBlock(implode(NL, $block_3), 100);
-	echo "<p>";
-	echo showBlock(implode(NL, $block_2), 100);
+	
+	if(isset($block_2)) {
+		echo "<p>";
+		echo showBlock(implode(NL, $block_2), 100);
+	}
 }
 echo $HTMLFooter;
 ?>

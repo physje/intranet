@@ -234,7 +234,7 @@ function getGroupMembers($commID) {
 function getMemberDetails($id) {
 	global $TableUsers, $UserID, $UserStatus, $UserAdres, $UserGeslacht, $UserVoorletters, $UserVoornaam, $UserTussenvoegsel,
 	$UserAchternaam, $UserMeisjesnaam, $UserUsername, $UserPassword, $UserHashShort, $UserGeboorte, $UserTelefoon, $UserMail,
-	$UserBelijdenis, $UserLastChange, $UserLastVisit, $UserBurgelijk, $UserRelatie, $UserStraat, $UserHuisnummer,
+	$UserFormeelMail, $UserBelijdenis, $UserLastChange, $UserLastVisit, $UserBurgelijk, $UserRelatie, $UserStraat, $UserHuisnummer,
 	$UserToevoeging, $UserPC, $UserPlaats, $UserWijk, $UserHashLong;
 	
 	$db = connect_db();
@@ -273,7 +273,7 @@ function getMemberDetails($id) {
 	$data['relatie']				= $row[$UserRelatie];	
 	$data['tel']						= $row[$UserTelefoon];
 	$data['mail']						= $row[$UserMail];
-	$data['alt_mail']				= $row[$UserMail];
+	$data['form_mail']			= $row[$UserFormeelMail];
 	
 	return $data;
 }
@@ -365,15 +365,15 @@ function getRoosters($id = 0) {
 	return $data;	
 }
 
-function getMyRoostersBeheer($id) {
-	global $TableRoosters, $TableGroups, $TableGrpUsr, $RoostersGroep, $RoostersID, $GroupID, $GroupBeheer, $GrpUsrGroup, $GrpUsrUser;
-	$db = connect_db();
+function getMyRoostersBeheer($id) {	
+	global $TableRoosters, $TableGroups, $TableGrpUsr, $RoostersID, $RoostersBeheerder, $RoostersPlanner, $GroupID, $GrpUsrGroup, $GrpUsrUser;	
 	
-	$data = array();
+	$data = array();	
+	$db = connect_db();
 		
-	$sql = "SELECT $TableRoosters.$RoostersID FROM $TableRoosters, $TableGroups, $TableGrpUsr WHERE $TableRoosters.$RoostersGroep = $TableGroups.$GroupID AND $TableGroups.$GroupBeheer = $TableGrpUsr.$GrpUsrGroup AND $TableGrpUsr.$GrpUsrUser = $id";
+	$sql = "SELECT $TableRoosters.$RoostersID FROM $TableRoosters, $TableGroups, $TableGrpUsr WHERE ($TableRoosters.$RoostersBeheerder = $TableGroups.$GroupID OR $TableRoosters.$RoostersPlanner = $TableGroups.$GroupID) AND $TableGroups.$GroupID = $TableGrpUsr.$GrpUsrGroup AND $TableGrpUsr.$GrpUsrUser = $id";	
 	$result = mysqli_query($db, $sql);
-	if($row = mysqli_fetch_array($result)) {
+	if($row = mysqli_fetch_array($result)) {		
 		do {
 			$data[] = $row[$RoostersID];
 		} while($row = mysqli_fetch_array($result));		
@@ -382,7 +382,7 @@ function getMyRoostersBeheer($id) {
 }
 
 function getRoosterDetails($id) {
-	global $TableRoosters, $RoostersID, $RoostersNaam, $RoostersGroep, $RoostersFields, $RoostersReminder, $RoostersMail, $RoostersSubject, $RoostersFrom, $RoostersFromAddr, $RoostersGelijk, $RoostersTextOnly, $RoostersAlert, $RoostersOpmerking;
+	global $TableRoosters, $RoostersID, $RoostersNaam, $RoostersBeheerder, $RoostersGroep, $RoostersPlanner, $RoostersFields, $RoostersReminder, $RoostersMail, $RoostersSubject, $RoostersFrom, $RoostersFromAddr, $RoostersGelijk, $RoostersTextOnly, $RoostersAlert, $RoostersOpmerking;
 	$db = connect_db();
 	
 	$data = array();
@@ -391,7 +391,9 @@ function getRoosterDetails($id) {
 	$result = mysqli_query($db, $sql);
 	if($row = mysqli_fetch_array($result)) {
 		$data['naam']	= $row[$RoostersNaam];
-		$data['groep']	= $row[$RoostersGroep];
+		$data['groep']	= $row[$RoostersGroep];		
+		$data['beheerder']	= $row[$RoostersBeheerder];
+		$data['planner']	= $row[$RoostersPlanner];		
 		$data['aantal']	= $row[$RoostersFields];
 		$data['reminder']	= $row[$RoostersReminder];
 		$data['text_mail']	= urldecode($row[$RoostersMail]);
@@ -421,23 +423,24 @@ function getBeheerder($groep) {
 	}	
 }
 
-function getBeheerder4Rooster($rooster) {
-	global $TableRoosters, $RoostersGroep, $RoostersID, $TableGroups, $GroupID, $GroupBeheer;
-	$db = connect_db();
-	
-	/*
-	$sql = "SELECT $TableRoosters.$RoostersID FROM $TableRoosters, $TableGroups, $TableGrpUsr WHERE 
-	$TableRoosters.$RoostersGroep = $TableGroups.$GroupID AND
-	$TableGroups.$GroupBeheer = $TableGrpUsr.$GrpUsrGroup AND
-	$TableGrpUsr.$GrpUsrUser = $id";
-	*/
-	
-	$sql = "SELECT $TableGroups.$GroupBeheer FROM $TableRoosters, $TableGroups WHERE $TableRoosters.$RoostersGroep = $TableGroups.$GroupID AND $TableRoosters.$RoostersID = $rooster";
-	$result = mysqli_query($db, $sql);
-	$row = mysqli_fetch_array($result);
-	
-	return $row[$GroupBeheer];	
-}
+#function getBeheerder4Rooster($rooster) {
+#	global $TableRoosters, $RoostersGroep, $RoostersID, $TableGroups, $GroupID, $GroupBeheer;
+#	$db = connect_db();
+#	
+#	/*
+#	$sql = "SELECT $TableRoosters.$RoostersID FROM $TableRoosters, $TableGroups, $TableGrpUsr WHERE 
+#	$TableRoosters.$RoostersGroep = $TableGroups.$GroupID AND
+#	$TableGroups.$GroupBeheer = $TableGrpUsr.$GrpUsrGroup AND
+#	$TableGrpUsr.$GrpUsrUser = $id";
+#	*/
+#	
+#	$sql = "SELECT $TableGroups.$GroupBeheer FROM $TableRoosters, $TableGroups WHERE $TableRoosters.$RoostersGroep = $TableGroups.$GroupID AND $TableRoosters.$RoostersID = $rooster";
+#	$result = mysqli_query($db, $sql);
+#	$row = mysqli_fetch_array($result);
+#	
+#	return $row[$GroupBeheer];	
+#}
+
 
 function addGroupLid($lidID, $commID) {
 	global $TableGrpUsr, $GrpUsrGroup, $GrpUsrUser;	
@@ -673,22 +676,27 @@ function makeName($id, $type) {
 function sendMail($ontvanger, $subject, $bericht, $var) {
 	global $ScriptURL, $ScriptMailAdress, $ScriptTitle, $SubjectPrefix, $MailHeader, $MailFooter;
 	
+	# Er staat ook een formeel mailadres in de database
+	# Met de variabele formeel kan worden aangegeven of deze gebruikt moet worden
+	if(isset($var['formeel'])) {
+		$formeel = $var['formeel'];
+	} else {
+		$formeel = false;
+	}
+	
+	# Haal de data van de ontvanger op
+	# Zoek ook direct de mail op van de ontvanger
 	$UserData = getMemberDetails($ontvanger);
-	$UserMail	= getMailAdres($ontvanger);
+	$UserMail	= getMailAdres($ontvanger, $formeel);
 						
 	$HTMLMail = $MailHeader.$bericht.$MailFooter;
-			
-	//$html =& new html2text($HTMLMail);
-	//$html->set_base_url($ScriptURL);
-	//$PlainMail = $html->get_text();
 		
-	$mail = new PHPMailer;
-	
+	$mail = new PHPMailer;	
 	$mail->From     = $ScriptMailAdress;
 	$mail->FromName = $ScriptTitle;
 		
-	if($var['ReplyTo'] != "") {
-		if($var['ReplyToName'] != "") {
+	if(isset($var['ReplyTo']) AND $var['ReplyTo'] != '') {
+		if(isset($var['ReplyToName']) AND $var['ReplyToName'] != '') {
 			$mail->AddReplyTo($var['ReplyTo'], $var['ReplyToName']);
 		} else {
 			$mail->AddReplyTo($var['ReplyTo']);
@@ -700,15 +708,14 @@ function sendMail($ontvanger, $subject, $bericht, $var) {
 	$mail->Subject	= $SubjectPrefix . trim($subject);
 	$mail->IsHTML(true);
 	$mail->Body			= $HTMLMail;
-	//$mail->AltBody	= $PlainMail;
 		
 	# Als de ouders ook een CC moeten
 	# Alleen bij mensen die als relatie 'zoon' of 'dochter' hebben
-	if(isset($var['ouderCC']) AND ($UserData['relatie'] == 'zoon' OR  $UserData['relatie'] == 'dochter')) {
+	if(isset($var['ouderCC']) AND ($UserData['relatie'] == 'zoon' OR $UserData['relatie'] == 'dochter')) {
 		$ouders = getParents($ontvanger);
 		foreach($ouders as $ouder){
 			$OuderData = getMemberDetails($ouder);
-			if($OuderData['mail'] != $UserMail) {
+			if($OuderData['mail'] != $UserMail AND $OuderData['mail'] != '') {
 				$mail->AddCC($OuderData['mail']);
 				toLog('debug', '', $ontvanger, makeName($ouder, 5) .' ('. $OuderData['mail'] .') als ouder in CC opgenomen');
 			}
@@ -716,7 +723,7 @@ function sendMail($ontvanger, $subject, $bericht, $var) {
 	}
 		
 	if(isset($var['file']) AND $var['file'] != "") {
-		if($var['name'] != "") {
+		if(isset($var['name']) AND $var['name'] != "") {
 			$mail->addAttachment($var['file'], $var['name']);
 		} else {
 			$mail->addAttachment($var['file']);
@@ -1121,7 +1128,7 @@ function getVoorgangerData($id) {
 	$data['declaratie'] = $row[$VoorgangerDeclaratie];	
 	$data['honorarium'] = $row[$VoorgangerHonorarium];
 	$data['km_vergoeding'] = $row[$VoorgangerKM];
-	$data['reis_van'] = $row[$VoorgangerVertrekpunt];
+	$data['reis_van'] = urldecode($row[$VoorgangerVertrekpunt]);
 	$data['EB-relatie'] = $row[$VoorgangerEBRelatie];	
 	$data['last_aandacht'] = $row[$VoorgangerLastAandacht];
 	
@@ -1144,10 +1151,17 @@ function setVoorgangerLastSeen($id, $tijd) {
 	mysqli_query($db, $sql);
 }
 
-function getMailAdres($user) {
+function getMailAdres($user, $formeel = false) {
+	# initialiseren
+	$returnAdres = '';
+	
+	# Data opvragen van de ontvanger
 	$gebruikersData = getMemberDetails($user);
 	
-	if($gebruikersData['mail'] == ''){
+	# Zoek het juiste mailadres op
+	if($formeel AND $gebruikersData['form_mail'] != '') {
+		$returnAdres = $gebruikersData['form_mail'];
+	} elseif($gebruikersData['mail'] == ''){
 		$ouders = getParents($user);
 		
 		foreach($ouders as $ouder) {
@@ -1302,21 +1316,24 @@ function getCoordinates($q) {
 	return array($latitude, $longitude);
 }
 
-function determineAdressDistance($start, $end) {
+function determineAddressDistance($start, $end) {
 	global $locationIQkey;
 	
 	$service = 'matrix';
 	$profile = 'driving';
 	
-	if($end == '') {		
+	if($end == 'Mariënburghstraat 4, Deventer') {		
 		$latitude_end = '52.267184';
 		$longitude_end = '6.159086';
 	} else {
 		$coord_end = getCoordinates($end);
 		$latitude_end = $coord_end[0];
 		$longitude_end = $coord_end[1];		
+		
+		# Om niet 2x vlak achter elkaar een request te doen even 1 seconden wachten
+		sleep(1);
 	}
-	
+		
 	$coord_start = getCoordinates($start);
 	$latitude_start = $coord_start[0];
 	$longitude_start = $coord_start[1];
@@ -1324,18 +1341,21 @@ function determineAdressDistance($start, $end) {
 	if($longitude_start > 0 AND $latitude_start > 0 AND $longitude_end > 0 AND $latitude_end > 0) {
 		$coordinates = "{$longitude_start},{$latitude_start};{$longitude_end},{$latitude_end}";
 
-		$url = "https://eu1.locationiq.com/v1/$service/$profile/$coordinates?key=$locationIQkey&sources=0&destinations=1&annotations=distance";
+		# https://locationiq.com/docs-html/index.html#matrix
+		$url = "https://eu1.locationiq.com/v1/$service/$profile/$coordinates?key=$locationIQkey&sources=0;1&destinations=1;0&annotations=distance";
 	
 		$contents		= file_get_contents($url);
 		$json				= json_decode($contents, true);
 	
-		$afstand = ($json['distances'][0][0])/1000;		
+		$heen = ($json['distances'][0][0])/1000;
+		$terug = ($json['distances'][1][1])/1000;
+		
+		$afstand = array($heen, $terug);		
 	} else {
-		$afstand = 0;
+		$afstand = array(0,0);
 	}
-	
+		
 	return $afstand;
-
 }
 
 ?>
