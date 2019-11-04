@@ -63,13 +63,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 								$ReplacedBericht = $onderwerp;
 							}
 							
-							if(date("H", $dienstData['start']) < 12) {
-								$dagdeel = 'ochtend';
-							} elseif(date("H", $dienstData['start']) < 18) {
-								$dagdeel = 'middag';
-							} else {
-								$dagdeel = 'avond';
-							}
+							$dagdeel					= formatDagdeel($dienstData['start'], false);
 							
 							$ReplacedBericht = str_replace ('[[voornaam]]', makeName($lid, 1), $ReplacedBericht);
 							$ReplacedBericht = str_replace ('[[achternaam]]', makeName($lid, 4), $ReplacedBericht);

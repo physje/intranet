@@ -7,13 +7,10 @@ include_once('../../../general_include/class.phpmailer.php');
 
 $db = connect_db();
 
-# Het eerste scherm waarin men de keuze kan maken welk type declaratie men wil uitvoeren
+# Scherm voor gemeenteleden
 
-$page[] = "In welke hoedanigheid wilt u een declaratie doen?<br>";
-$page[] = "<ul>";
-$page[] = "<li><a href='gastpredikant.php'>Gastpredikant</a></li>";
-$page[] = "<li><a href='gemeentelid.php'>Gemeentelid</a></li>";
-$page[] = "</ul>";
+$page[] = "Momenteel is dat nog niet mogelijk.<br>";
+$page[] = "De wens is er wel, dus hopelijk op een later moment.<br>";
 
 # Pagina tonen
 echo $HTMLHeader;

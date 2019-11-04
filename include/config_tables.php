@@ -36,6 +36,7 @@ $UserLastVisit			= "last_visit";
 $UserWijk						= "wijk";
 $UserUsername				= "username";
 $UserPassword				= "password";
+$UserNewPassword		= "password_new";
 $UserHash						= "hash";
 $UserHashShort			= "hash_short";
 $UserHashLong				= "hash_long";

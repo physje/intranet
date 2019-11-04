@@ -23,15 +23,8 @@ $block_1[] = "</table>";
 $dienstBlocken[] = implode(NL, $block_1);
 
 foreach($diensten as $dienst) {	
-	$details = getKerkdienstDetails($dienst);
-		
-	if(date("H", $details['start']) < 12) {
-		$dagdeel = "Ochtenddienst";
-	} elseif(date("H", $details['start']) < 18) {
-		$dagdeel = "Middagdienst";
-	} else {
-		$dagdeel = "Avonddienst";
-	}
+	$details	= getKerkdienstDetails($dienst);
+	$dagdeel	= formatDagdeel($details['start']);
 	
 	$block_1 = array();
 	$block_1[] = "<table width='100%' border=0>";

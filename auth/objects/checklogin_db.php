@@ -72,7 +72,11 @@ if(isset($userArray["$cfgDbUserIDfield"]) && !empty($cfgDbUserIDfield)) {
 	
 	if(!$_SESSION['logged']) {
 		toLog('info', $_SESSION['ID'], '', 'Inlogpoging vanaf '. $_SERVER['REMOTE_ADDR']);
-		$sql = "UPDATE $TableUsers SET $UserLastVisit = '". date("Y-m-d H:i:s") ."' WHERE $UserID like ". $_SESSION['ID'];
+		
+		# Noteer de laatste keer dat deze persoon is ingelogd
+		# En schrijf het wachtwoord in een nieuw formaat weg. Op deze manier kunnen we
+		# over x-aantal maanden "geruisloos" over op een nieuwe manier van wachtwoord opslaan
+		$sql = "UPDATE $TableUsers SET $UserLastVisit = '". date("Y-m-d H:i:s") ."', $UserNewPassword = '". password_hash($entered_password, PASSWORD_DEFAULT) ."' WHERE $UserID like ". $_SESSION['ID'];
 		mysqli_query($db, $sql);
 		
 		$_SESSION['logged'] = true;

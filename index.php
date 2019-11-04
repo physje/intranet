@@ -77,7 +77,7 @@ if(count($myGroepBeheer) > 0) {
 # Rooster-beheer
 $myRoosterBeheer = getMyRoostersBeheer($_SESSION['ID']);
 if(count($myRoosterBeheer) > 0) {
-	$txtRoosterBeheer[] = "<b>Roosters die ik beheer</b>";
+	$txtRoosterBeheer[] = "<b>Roosters die ik kan wijzigen</b>";
 	foreach($myRoosterBeheer as $rooster) {
 		$data = getRoosterDetails($rooster);
 		$txtRoosterBeheer[] = "<a href='makeRooster.php?rooster=$rooster' target='_blank'>".$data['naam']."</a>";

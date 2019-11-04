@@ -9,8 +9,7 @@ $db = connect_db();
 
 if(isset($_POST['opvragen'])) {
 	$invoer	= $_POST['invoer'];
-	$sql		= "SELECT $UserID FROM $TableUsers WHERE $UserUsername like '$invoer' OR $UserMail like '$invoer'";
-	//$sql		= "SELECT $TableUsers.$UserID FROM $TableUsers WHERE $TableUsers.$UserUsername like '$invoer' OR $TableUsers.$UserMail like '$invoer'";
+	$sql		= "SELECT $UserID FROM $TableUsers WHERE $UserUsername like '$invoer' OR $UserMail like '$invoer'";	
 	$result = mysqli_query($db, $sql);
 			
 	if(mysqli_num_rows($result) == 0) {
@@ -27,6 +26,7 @@ if(isset($_POST['opvragen'])) {
 		$Mail[] = "Door <a href='". $ScriptURL ."account.php?hash=". $data['hash_long'] ."'>deze link</a> te volgen kom je op jouw persoonlijke account-pagina waarop je een wachtwoord kunt instellen.<br>";
 		$Mail[] = "<br>";
 		$Mail[] = "Let wel op, iemand met deze link kan zonder in te loggen bij je account komen, wees er dus zuinig op!";
+		$Mail[] = "Mocht je het idee hebben dan iemand anders jouw link gebruikt/misbruikt, laat het weten, dan krijg jij een nieuwe link en maken we de oude link onklaar.";
 		
 		$HTMLMail = implode("\n", $Mail);
 		

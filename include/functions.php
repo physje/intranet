@@ -1225,14 +1225,16 @@ function formatPrice($price, $euro = true) {
 }
 
 
-function formatDagdeel($start) {
+function formatDagdeel($start, $dienst = true) {
 	if(date("H", $start) < 12) {
-		$dagdeel = 'morgendienst';
+		$dagdeel = 'ochtend';
 	} elseif(date("H", $start) < 18) {
-		$dagdeel = 'middagdienst';
+		$dagdeel = 'middag';
 	} else {
-		$dagdeel = 'avonddienst';
+		$dagdeel = 'avond';
 	}
+	
+	if($dienst)	$dagdeel .= 'dienst';
 	
 	return $dagdeel;
 }

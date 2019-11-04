@@ -23,8 +23,8 @@ foreach($roosters as $rooster) {
 	mysqli_query($db, $sql);
 }
 
-# Tabel aanpassen
-$sql = "ALTER TABLE $TableUsers ADD $UserFormeelMail TEXT NOT NULL AFTER $UserMail;";
+# User-Tabel aanpassen voor mailadres en password
+$sql = "ALTER TABLE $TableUsers ADD $UserFormeelMail TEXT NOT NULL AFTER $UserMail, ADD $UserNewPassword TEXT NOT NULL AFTER $UserPassword;";
 mysqli_query($db, $sql);
 
 ?>
