@@ -28,9 +28,10 @@ class eBoekhoudenConnect
     public function __construct($username, $securityCode1, $securityCode2)
     {
         try {
-            $this->soapClient = new \SoapClient("https://soap.e-boekhouden.nl/soap.asmx?WSDL");
-            // The line below will enable trace possibilities. For example: The last sent xml can be requested for analyzing and/or debugging.
-            // $this->soapClient = new \SoapClient("https://soap.e-boekhouden.nl/soap.asmx?WSDL", array('trace' => 1));
+            // The trace param in the SoapClient constructor below will enable trace possibilities. 
+            // For example: The last sent xml can be requested for analyzing and/or debugging when trace is true by running the following piece of code after a soapCall
+            //              echo "REQUEST:\n". htmlentities($this->soapClient->__getLastRequest()). "\n";
+            $this->soapClient = new \SoapClient("https://soap.e-boekhouden.nl/soap.asmx?WSDL", array('trace' => false, 'exceptions' => true));
 
             $params = [
                 "Username" => $username,
@@ -56,9 +57,10 @@ class eBoekhoudenConnect
             $params = array(
                 "SessionID" => $this->sessionId
             );
+            
             return $this->soapClient->__soapCall("CloseSession", array($params));
         } catch(\SoapFault $soapFault) {
-            throw new \Exception('<strong>Soap Exception:</strong> ' . $soapFault);
+            // SoapFault will not be thrown further since this can hang up the program when another exception is occurred before the __destruct is called.
         }
     }
 
@@ -67,7 +69,7 @@ class eBoekhoudenConnect
      * @return mixed
      * @throws \Exception 
      */
-    public function addMutation(Mutation $mutation, &$response)
+    public function addMutation(Mutation $mutation)
     {
         try {
             $params = [
@@ -78,12 +80,9 @@ class eBoekhoudenConnect
 
             $response = $this->soapClient->__soapCall("AddMutatie", [$params]);
 
-            if ( $this->checkforerror($response, "AddMutatieResponse") )  {
-                return TRUE;
-            }
-            
-            $response = $response->AddMutatieResult;
-            return FALSE;
+            $this->checkforerror($response, "AddMutatieResponse");
+
+            return $response->AddMutatieResult;
         } catch(\SoapFault $soapFault) {
             throw new \Exception('<strong>Soap Exception:</strong> ' . $soapFault);
         }
@@ -94,7 +93,7 @@ class eBoekhoudenConnect
      * @return mixed
      * @throws \Exception
      */
-    public function addRelation(Relation $relation, &$response)
+    public function addRelation(Relation $relation)
     {
         try {
             $params = [
@@ -105,14 +104,10 @@ class eBoekhoudenConnect
 
             $response = $this->soapClient->__soapCall("AddRelatie", [$params]);
             
-            if ( $this->checkforerror($response, "AddRelatieResult") ) {
-                return TRUE;
-            }
+            $this->checkforerror($response, "AddRelatieResult");
 
-            $response = $response->AddRelatieResult;
-            return FALSE;            
+            return  $response->AddRelatieResult;
         } catch(\SoapFault $soapFault) {
-            echo "REQUEST:\n". htmlentities($this->soapClient->__getLastRequest()). "\n";
             throw new \Exception('<strong>Soap Exception:</strong> ' . $soapFault);
         }
     }
@@ -128,6 +123,7 @@ class eBoekhoudenConnect
             $response = $this->soapClient->__soapCall("GetMutaties", [$params]);
 
             $this->checkforerror($response, "GetMutatiesResult");
+            
             return $response->GetMutatiesResult;
         } catch(\SoapFault $soapFault) {
             throw new \Exception('<strong>Soap Exception:</strong> ' . $soapFault);
@@ -212,7 +208,7 @@ class eBoekhoudenConnect
     /**
      *
      */
-    private function getAllRelations(&$relations)
+    private function getAllRelations()
     {
         $params = [
             "SecurityCode2" => $this->securityCode2,
@@ -224,16 +220,13 @@ class eBoekhoudenConnect
             ]
         ];
 
-        return $this->getRelations($params, $relations);
+        return $this->getRelations($params);
     }
 
-    public function generateNewCode(&$newCode)
+    public function generateNewCode()
     {
         // Get all the relations
-        if ($this->getAllRelations($relations)) {
-            return TRUE;
-        }
-
+        $relations = $this->getAllRelations();
         $relations = $relations->Relaties;
 
         if (!is_array($relations->cRelatie)) {
@@ -252,14 +245,14 @@ class eBoekhoudenConnect
         $maxCode = max($codeArray);
         $newCode = (string)((int)$maxCode + 1);        
 
-        return FALSE;
+        return $newCode;
     }
 
     /**
      * @param $relationId
      * @return mixed
      */
-    public function getRelationById($relationId, &$relation)
+    public function getRelationById($relationId)
     {
         $relationId = new RelationId($relationId);
 
@@ -273,22 +266,22 @@ class eBoekhoudenConnect
             ]
         ];
 
-        $error = $this->getRelations($params, $relations);
+        $relations = $this->getRelations($params);
 
         if (isset($relations->Relaties->cRelatie)) {
             $relation = $relations->Relaties->cRelatie;
         } else {
-            $error = TRUE;
+            throw new \Exception("Problems with getRelations: RelationId ".$relationId." has no relation results in the reponse.");
         }
 
-        return $error;
+        return $relation;
     }
 
     /**
      * @param $relationCode
      * @return mixed
      */
-    public function getRelationByCode($relationCode, &$relation)
+    public function getRelationByCode($relationCode)
     {
         $relationCode = new RelationCode($relationCode);
 
@@ -302,15 +295,15 @@ class eBoekhoudenConnect
             ]
         ];
 
-        $error = $this->getRelations($params, $relations);
+        $relations = $this->getRelations($params);
 
         if (isset($relations->Relaties->cRelatie)) {
             $relation = $relations->Relaties->cRelatie;
         } else {
-            $error = TRUE;
+            throw new \Exception("Problems with getRelations: RelationCode ".$relationCode." has no relation results in the reponse.");
         }
 
-        return $error;
+        return $relation;
     }
 
     /**
@@ -339,18 +332,14 @@ class eBoekhoudenConnect
      * @return mixed
      * @throws \Exception
      */
-    private function getRelations($params, &$relations)
+    private function getRelations($params)
     {
         try {
             $response = $this->soapClient->__soapCall("GetRelaties", [$params]);
 
-            if ($this->checkforerror($response, "GetRelatiesResult")) { 
-                return TRUE; 
-            }
-
-            $relations = $response->GetRelatiesResult;
-
-            return FALSE; 
+            $this->checkforerror($response, "GetRelatiesResult");
+ 
+            return $response->GetRelatiesResult;
         } catch(\SoapFault $soapFault) {
             throw new \Exception('<strong>Soap Exception:</strong> ' . $soapFault);
         }
@@ -361,7 +350,7 @@ class eBoekhoudenConnect
      * @return mixed
      * @throws \Exception
      */
-    public function updateRelation(Relation $relation, &$response)
+    public function updateRelation(Relation $relation)
     {
         try {
             $params = [
@@ -372,10 +361,8 @@ class eBoekhoudenConnect
             
             $response = $this->soapClient->__soapCall("UpdateRelatie", [$params]);
 
-            if ($this->checkforerror($response, "UpdateRelatieResult")) {
-                return TRUE;
-            }
-            $response = $response->UpdateRelatieResult;
+            $this->checkforerror($response, "UpdateRelatieResult");
+            return  $response->UpdateRelatieResult;
         } catch(\SoapFault $soapFault) {
             throw new \Exception('<strong>Soap Exception:</strong> ' . $soapFault);
         }
@@ -391,12 +378,9 @@ class eBoekhoudenConnect
             $LastErrorCode = $rawresponse->$sub->ErrorMsg->LastErrorCode;
             $LastErrorDescription = $rawresponse->$sub->ErrorMsg->LastErrorDescription;
             if ($LastErrorCode <> '') {
-                /* TODO: hier een error log maken */
-                echo '<strong>Er is een fout opgetreden:</strong><br>';
-                echo $LastErrorCode . ': ' . $LastErrorDescription;
-                return TRUE;
+                // Throw the error as an exception
+                throw new \SoapFault($LastErrorCode, $LastErrorDescription);
             }
         }
-        return FALSE;
     }
 }
