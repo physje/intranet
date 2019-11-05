@@ -61,6 +61,42 @@ if ( $errorResult ) {
 }
 */
 
+/* Test code voor eb_getRelatieCodeByIban 
+$iban = "IbanTest2";
+$code = "";
+
+$errorResult = eb_getRelatieCodeByIban ( $iban, $code );
+
+if ( $errorResult ) {
+  echo "probleem opgetreden bij het opzoeken van de relatiecode <br>".$errorResult;
+} 
+
+if ( $code ) {
+  echo "Relatie gevonden, iban ".$iban. " hoort bij relatie code: ".$code;
+} else {
+  echo "Relatie niet gevonden";
+}
+*/
+
+/* Test code voor eb_getRelatieCodeBySearch 
+$text = "EmailTest2";
+
+$errorResult = eb_getRelatieCodeBySearch($text, $codes);
+
+if ( $errorResult ) {
+  echo "probleem opgetreden bij het opzoeken van de relatiecodes <br>".$errorResult;
+} 
+
+if ( count($codes) == 0 ) {
+  echo "Geen relaties gevonden met volgende zoektext: ".$text."<br>";
+} else {
+  echo count($codes)." relaties gevonden: <br>";
+  foreach ($codes as $code) {
+    echo $code."<br>";
+  }
+}
+*/
+
 /* IN PROGRESS */
 $code = "201"; //test1
 $bedrag = 1; // 1 cent (just to be sure)

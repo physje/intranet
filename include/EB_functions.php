@@ -81,7 +81,7 @@ function eb_updateRelatieIbanByCode ( $code, $newIban )
             // Received relation code is different than the requested relation code
             throw new \Exception("Failure in eb_updateRelatieIbanByCode. Received code is different than the requested code: Rec: ".$relatieOud->Code." Req: ".$code);
         }
-        
+
     } catch (\Exception $exception) {
         return $exception->getMessage();
     }
@@ -123,6 +123,42 @@ function eb_getRelatieIbanByCode ( $code, &$iban )
         $relatie = $ebClient->getRelationByCode ( $code );
 
         $iban = $relatie->IBAN;
+
+    } catch (\Exception $exception) {
+        return $exception->getMessage();
+    }
+}
+
+/**
+ * Get relatiecode door middel van het iban nummer
+ * @param  string $iban         bankrekening nummer nieuwe relatie
+ * @param  string &$code        reference naar e-boekhouden relatie code
+ * @return string $exception    alleen in geval van error of SoapFault wordt deze string gereturned met informatie over de fout 
+ */
+function eb_getRelatieCodeByIban ( $iban, &$code ) {
+    try {
+        global $ebUsername, $ebSecurityCode1, $ebSecurityCode2;
+        $ebClient = new eBoekhoudenConnect($ebUsername, $ebSecurityCode1, $ebSecurityCode2);
+
+        $code = $ebClient->getRelationByIban ( $iban);
+
+    } catch (\Exception $exception) {
+        return $exception->getMessage();
+    }
+}
+
+/**
+ * Get relatiecode door middel van het een text search
+ * @param  string $searchText   invoer text. E-boekhouden zoekt met de invoer op code, bedrijfsnaam, plaats, contactpersoon en e-mailadres adres
+ * @param  array  &$code        reference naar code array e-boekhouden relatie code
+ * @return string $exception    alleen in geval van error of SoapFault wordt deze string gereturned met informatie over de fout 
+ */
+function eb_getRelatieCodeBySearch ( $searchText, &$code ) {
+    try {
+        global $ebUsername, $ebSecurityCode1, $ebSecurityCode2;
+        $ebClient = new eBoekhoudenConnect($ebUsername, $ebSecurityCode1, $ebSecurityCode2);
+
+        $code = $ebClient->getRelationBySearch ( $searchText);
 
     } catch (\Exception $exception) {
         return $exception->getMessage();

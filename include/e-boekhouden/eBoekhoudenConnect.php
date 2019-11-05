@@ -223,6 +223,9 @@ class eBoekhoudenConnect
         return $this->getRelations($params);
     }
 
+    /** 
+     * @return string $newCode
+     */
     public function generateNewCode()
     {
         // Get all the relations
@@ -249,8 +252,37 @@ class eBoekhoudenConnect
     }
 
     /**
-     * @param $relationId
-     * @return mixed
+     * @param  string $iban   
+     * @return string $code
+     */
+    public function getRelationByIban($iban)
+    {
+        // Get all the relations
+        $relations = $this->getAllRelations();
+        $relations = $relations->Relaties;
+
+        $code = "";
+
+        if (!is_array($relations->cRelatie)) {
+            $relations->cRelatie = array($relations->cRelatie);
+        }
+
+        // search through the relations to check if there is a match
+        foreach ($relations->cRelatie as $Relatie) {
+            // Remove spaces
+            $relatieIban = str_replace(' ', '', $Relatie->IBAN);
+            if ( !strcasecmp($relatieIban, $iban) ) {
+                // match!!
+                $code = $Relatie->Code;
+            }
+        }
+
+        return $code;
+    }
+
+    /**
+     * @param  int    $relationId
+     * @return mixed  $relation
      */
     public function getRelationById($relationId)
     {
@@ -324,7 +356,23 @@ class eBoekhoudenConnect
             ]
         ];
 
-        return $this->getRelations($params);
+        $relations = $this->getRelations($params);
+        $relations = $relations->Relaties;
+
+        $code = array();
+
+        if (isset($relations->cRelatie)) {
+            if (!is_array($relations->cRelatie)) {
+                $relations->cRelatie = array($relations->cRelatie);
+            }
+
+            // Get all the relation codes
+            foreach ($relations->cRelatie as $Relatie) {
+                array_push($code, $Relatie->Code);
+            }
+        }
+
+        return $code;
     }
 
     /**
