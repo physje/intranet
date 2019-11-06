@@ -6,9 +6,11 @@ include_once('../../../general_include/class.phpmailer.php');
 include_once('../../../general_include/class.html2text.php');
 $db = connect_db();
 
+$test = false;
+
 # Omdat de server deze dagelijks moet draaien wordt toegang niet gedaan op basis
 # van naam+wachtwoord maar op basis van IP-adres
-if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
+if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 	$startTijd	= mktime(0, 0, 0, date("n"), (date("j")+18), date("Y"));
 	$eindTijd		= mktime(23, 59, 59, date("n"), (date("j")+18), date("Y"));	
 	$diensten		= getKerkdiensten($startTijd, $eindTijd);
@@ -40,18 +42,25 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 		$mail->From			= $ScriptMailAdress;
 		$mail->AddReplyTo($voorgangerReplyAddress, $voorgangerReplyName);
 		
-		# Alle geadresseerden toevoegen
-		$mail->AddAddress($voorgangerData['mail'], $mailNaam);		
-		$mail->AddCC($adresBand, makeName($bandleider, 6));
-		$mail->AddCC($adresSchrift, makeName($schriftlezer, 6));
-		
-		foreach($voorgangerCC as $adres => $naam) {
-			$mail->AddCC($adres, $naam);
+		# Als er niet getest wordt 
+		if(!$test) {
+			# Alle geadresseerden toevoegen
+			$mail->AddAddress($voorgangerData['mail'], $mailNaam);		
+			$mail->AddCC($adresBand, makeName($bandleider, 6));
+			$mail->AddCC($adresSchrift, makeName($schriftlezer, 6));
+			
+			# CC toevoegen
+			foreach($voorgangerCC as $adres => $naam) {
+				$mail->AddCC($adres, $naam);
+			}
+			
+			# BCC toevoegen
+			foreach($voorgangerBCC as $adres => $naam) {
+				$mail->AddBCC($adres, $naam);
+			}
+		} else {
+			$mail->AddAddress($ScriptMailAdress);		
 		}
-		
-		foreach($voorgangerBCC as $adres => $naam) {
-			$mail->AddBCC($adres, $naam);
-		}	
 						
 		# Mail opstellen
 		$mailText = $bijlageText = array(); 
@@ -70,10 +79,11 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 		
 		# Elke keer mailen is wat overdreven. Eens in de 6 weken lijkt mij mooi
 		$aandachtPeriode = mktime(23,59,59,date("n")-(6*7));
+		$lastUpdate = mktime(23,59,59,11,6,2019);
 		
-		if($voorgangerData['aandacht'] == 1 AND $voorgangerData['last_aandacht'] < $aandachtPeriode) {
+		if($voorgangerData['aandacht'] == 1 AND ($voorgangerData['last_aandacht'] < $aandachtPeriode OR $voorgangerData['last_aandacht'] < $lastUpdate)) {
 			$bijlageText[] = "de aandachtspunten van de dienst";
-			$mail->AddAttachment('download/aandachtspunten.pdf', 'Aandachtspunten Liturgie Deventer (dd 11-6-2018).pdf');
+			$mail->AddAttachment('../download/aandachtspunten.pdf', 'Aandachtspunten Liturgie Deventer (dd 29-11-2019).pdf');
 			setLastAandachtspunten($dienstData['voorganger_id']);
 		}
 				

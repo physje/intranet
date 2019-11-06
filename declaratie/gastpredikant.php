@@ -1,5 +1,6 @@
 <?php
 include_once('../include/functions.php');
+include_once('../include/EB_functions.php');
 include_once('../include/config.php');
 include_once('../include/HTML_TopBottom.php');
 include_once('../include/HTML_HeaderFooter.php');
@@ -21,10 +22,10 @@ if(isset($_REQUEST['hash'])) {
 		$page[] = "<form method='post' action='$_SERVER[PHP_SELF]'>";		
 		if(isset($dienst))							$page[] = "<input type='hidden' name='d' value='$dienst'>";
 		if(isset($voorganger))					$page[] = "<input type='hidden' name='v' value='$voorganger'>";
-		if(isset($_REQUEST['hash']))		$page[] = "<input type='hidden' name='hash' value='". $_REQUEST['hash'] ."'>";
-		if(isset($_POST['reiskosten']))	$page[] = "<input type='hidden' name='reiskosten' value='". $_POST['reiskosten'] ."'>";
-		if(isset($_POST['reis_van']))		$page[] = "<input type='hidden' name='reis_van' value='". $_POST['reis_van'] ."'>";
-		if(isset($_POST['reis_naar']))	$page[] = "<input type='hidden' name='reis_naar' value='". $_POST['reis_naar'] ."'>";
+		if(isset($_REQUEST['hash']))		$page[] = "<input type='hidden' name='hash' value='". trim($_REQUEST['hash']) ."'>";
+		if(isset($_POST['reiskosten']))	$page[] = "<input type='hidden' name='reiskosten' value='". trim($_POST['reiskosten']) ."'>";
+		if(isset($_POST['reis_van']))		$page[] = "<input type='hidden' name='reis_van' value='". trim($_POST['reis_van']) ."'>";
+		if(isset($_POST['reis_naar']))	$page[] = "<input type='hidden' name='reis_naar' value='". trim($_POST['reis_naar']) ."'>";
 
 		if(isset($_POST['overig']))	{
 			foreach($_POST['overig'] as $key => $string) {
@@ -52,12 +53,27 @@ if(isset($_REQUEST['hash'])) {
 			# -> komt nog
 			
 			# Relatie bepalen
-			# -> Kan als relatie al lokaal bekend is, dan mogelijk IBAN updaten
-			# -> Als relatie nog niet bekend was, opzoeken of aanmaken en dan in lokale database toevoegen (kan samen met reis_van)
+			if($voorgangerData['EB-relatie'] != '' AND $voorgangerData['EB-relatie'] > 0) {
+				# vergelijken
+				if(trim(strtoupper($_POST['oorspronkelijke_IBAN'])) != trim(strtoupper($_POST['IBAN']))) {
+					# en zo nodig updaten
+					eb_updateRelatieIbanByCode($voorgangerData['EB-relatie'], trim(strtoupper($_POST['IBAN'])));
+				}
+			# -> Als relatie nog niet bekend was, opzoeken of aanmaken en dan in lokale database toevoegen
+			} else {
+				# op basis van IBAN zoeken of iemand al bekend is				 
+				eb_getRelatieCodeByIban ($_POST['IBAN'], $EB_code);
+								
+				if(!is_numeric($EB_code)) {					
+					echo 'Nieuwe relatie';
+					eb_maakNieuweRelatieAan (makeVoorgangerName($voorganger, 6), 'm', '', '', $voorgangerData['plaats'], $voorgangerData['mail'], $_POST['IBAN'], $EB_code, $EB_id);
+				}
+				
+				$sql = "UPDATE $TableVoorganger SET $VoorgangerEBRelatie = '$EB_code' WHERE $VoorgangerID = $voorganger";
+				mysqli_query($db, $sql);
+			}
 			
-			# In eboekhouden inschieten
-			# -> Even overleggen
-
+			
 			# Paar dingen definieren voor zometeen
 			$aanspeekNaam	= makeVoorgangerName($voorganger, 5);
 			$mailNaam			= makeVoorgangerName($voorganger, 4);
@@ -169,6 +185,10 @@ if(isset($_REQUEST['hash'])) {
 				toLog('info', '', '', "Declaratie-notificatie naar penningsmeester voor ". date('j-n-Y', $dienstData['start']));						
 			}
 			
+			# In eboekhouden inschieten
+			# -> Even overleggen
+			//eb_verstuurDeclaratie ($voorgangerData['EB-relatie'], $totaal, $dagdeel.', '. date('d M Y', $dienstData['start']), $mutatieId);
+						
 			# update reis_van voor volgende keer
 			$sql = "UPDATE $TableVoorganger SET $VoorgangerVertrekpunt = '". urlencode($_POST['reis_van']) ."' WHERE $VoorgangerID like '$voorganger'";
 			mysqli_query($db, $sql);
@@ -177,11 +197,12 @@ if(isset($_REQUEST['hash'])) {
 			setVoorgangerDeclaratieStatus(8, $dienst);					
 		} elseif(isset($_POST['check_iban'])) {
 			# Formulier waar IBAN wordt gecontroleerd
-
-			$IBAN = '';
+			
+			eb_getRelatieIbanByCode ($voorgangerData['EB-relatie'], $IBAN);
 
 			$page[] = "Voer hieronder het bankrekening-nummer in waarnaar het bedrag moet worden overgemaakt.<br>";
 			$page[] = "<br>";
+			$page[] = "<input type='hidden' name='oorspronkelijke_IBAN' value='$IBAN' size='30'>";
 			$page[] = "<input type='text' name='IBAN' value='$IBAN' size='30'>";
 			$page[] = "<input type='submit' name='indienen' value='Dien declaratie in'>";
 			$page[] = "</form>";
@@ -443,11 +464,10 @@ if(isset($_REQUEST['hash'])) {
 	$eindTijd = mktime(23, 59, 50);
 	$diensten = getKerkdiensten($startTijd, $eindTijd);
 
-
 	foreach(array_reverse($diensten) as $dienst) {
 		$dienstData = getKerkdienstDetails($dienst);
 		$dagdeel = formatDagdeel($dienstData['start']);
-		$page[] = "<option value='$dienst'>$dagdeel ". strftime('%e %b', $dienstData['start']) ."</option>";
+		$page[] = "<option value='$dienst'>$dagdeel ". strftime('%e %b', $dienstData['start']) ."</option>";		
 	}
 	$page[] = "</select><br>";
 	$page[] = "<br>";

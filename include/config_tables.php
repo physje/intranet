@@ -93,7 +93,6 @@ $PlanningTxTDienst	= "dienst";
 $PlanningTxTGroup		= "rooster";
 $PlanningTxTText		= "text";
 
-
 $TableAgenda				= "agenda";
 $AgendaID 					= "id";
 $AgendaStart 				= "start";
@@ -167,6 +166,12 @@ $CommMCID						= "scipio_id";
 $CommMCGroupID			= "group_id";
 $ComMClastSeen			= "last_seen";
 $ComMClastChecked		= "last_checked";
+
+$TableEBoekhouden = "eboekhouden";
+$EBoekhoudenID		= "id";
+$EBoekhoudenCode	= "code";
+$EBoekhoudenIBAN	= "iban";
+$EBoekhoudenNaam	= "naam";
 
 $wijkArray			= array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J');
 $statusArray		= array('actief', 'afgemeld', 'afgevoerd', 'onttrokken', 'overleden', 'vertrokken');

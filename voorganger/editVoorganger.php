@@ -122,7 +122,19 @@ if(isset($_REQUEST['voorgangerID'])) {
 		$text[] = "</tr>";
 		$text[] = "<tr>";
 		$text[] = "	<td valign='top'>eBoekhouden</td>";
-		$text[] = "	<td><input type='text' name='EB_relatie' value='". $voorgangerData['EB-relatie'] ."'></td>";
+		//$text[] = "	<td><input type='text' name='EB_relatie' value='". $voorgangerData['EB-relatie'] ."'></td>";
+		$text[] = "	<td><select name='EB_relatie'>";
+		$text[] = "	<option value=''>Selecteer relatie</option>";
+		
+		$sql = "SELECT * FROM $TableEBoekhouden ORDER BY $EBoekhoudenNaam";
+		$result = mysqli_query($db, $sql);
+		$row = mysqli_fetch_array($result);
+		
+		do {
+			$text[] = "	<option value='". $row[$EBoekhoudenCode] ."'". ($voorgangerData['EB-relatie'] == $row[$EBoekhoudenCode] ? ' selected' : '') .">". $row[$EBoekhoudenNaam] ."</option>";
+		} while($row = mysqli_fetch_array($result));
+				
+		$text[] = "	</select></td>";
 		$text[] = "</tr>";
 		
 		$text[] = "<tr>";

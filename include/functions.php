@@ -1244,31 +1244,39 @@ function makeVoorgangerName($id, $type) {
 	# type = 2 : ds. van den Berg
 	# type = 3 : ds. C.M. van den Berg
 	# type = 4 : Catharinus van den Berg -> C.M. van den Berg (bij ontbreken voornaam)
-	# type = 5 : Catharinus -> ds. van den Berg (bij ontbreken voornaam)
+	# type = 5 : Catharinus -> ds. van den Berg (bij ontbreken voornaam)	
+	# type = 6 : Berg; van der, C.M.
+	
 	
 	$voorgangerData = getVoorgangerData($id);
 	
 	# Achternaam	
 	if($voorgangerData['tussen'] != '') {
 		$voorgangerAchterNaam = lcfirst($voorgangerData['tussen']).' '. $voorgangerData['achter'];
+		$voorgangerAchterNaamABC = $voorgangerData['achter'] .'; '. lcfirst($voorgangerData['tussen']);
 	} else {
 		$voorgangerAchterNaam = $voorgangerData['achter'];
+		$voorgangerAchterNaamABC = $voorgangerData['achter'];
 	}
 	
 	# Voornaam
 	if($voorgangerData['voor'] != "") {
 		$voornaam = $voorgangerData['voor'];
 	}
+	
+	if($type == 6) {
+		return $voorgangerAchterNaamABC.', '.$voorgangerData['init'];
+	}		
 		
-	if($type == 5 AND $voornaam != '') {
+	if($type == 5 AND isset($voornaam)) {
 		return $voornaam;
-	} elseif($type == 5 AND $voornaam == '') {
+	} elseif($type == 5 AND !isset($voornaam)) {
 		$type = 2;
 	}
 	
-	if($type == 4 AND $voornaam != '') {
+	if($type == 4 AND isset($voornaam)) {
 		return $voornaam .' '.$voorgangerAchterNaam;
-	} elseif($type == 4 AND $voornaam == '') {
+	} elseif($type == 4 AND !isset($voornaam)) {
 		$type = 1;
 	}
 		
