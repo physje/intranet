@@ -143,7 +143,7 @@ function getAllKerkdiensten($fromNow = false) {
 		$startTijd = time() - (31*24*60*60);
 	}
 	
-	$eindTijd = mktime(0,0,0,1,1,2100);
+	$eindTijd = mktime(0,0,0,1,1,date('Y')+5);
 	
 	return getKerkdiensten($startTijd, $eindTijd);
 }
@@ -154,8 +154,9 @@ function getKerkdiensten($startTijd, $eindTijd) {
 	global $TableDiensten, $DienstID, $DienstEind;
 	$db = connect_db();
 	$id = array();
-			
+				
 	$sql = "SELECT $DienstID FROM $TableDiensten WHERE $DienstEind BETWEEN $startTijd AND $eindTijd ORDER BY $DienstEind ASC";
+		
 	$result = mysqli_query($db, $sql);
 	if($row = mysqli_fetch_array($result)) {
 		do {
@@ -771,15 +772,15 @@ function getFamilieleden($id, $all = false) {
 }
 
 function getParents($id, $hoofd = false) {
+	$parents = array();
 	$familie = getFamilieleden($id);
-	
+		
 	foreach($familie as $lid) {
 		$data = getMemberDetails($lid);
 		if(($data['relatie'] == 'echtgenote' AND !$hoofd) OR $data['relatie'] == 'gezinshoofd') {
 			$parents[] = $lid;
 		}
-	}
-	
+	}	
 	return $parents;
 }
 
@@ -1040,33 +1041,6 @@ function getAgendaDetails($id) {
 	
 	return $data;
 }
-
-/*
-function replaceVoorganger($string) {
-	$delen = explode(',', $string);
-	
-	if(count($delen) == 2)	$string = $delen[0]. ' ('. trim($delen[1]) .')';
-		
-	switch (trim($string)) {
-		case "Wim":
-			$voorganger = "ds. W.M. van Wijk";
-      			break;
-		case "Evert":
-			$voorganger = "ds. E. Everts";
-			break;
-		case "Cor":
-			$voorganger = "br. C. Weeda";
-			break;
-		case "Rien":
-			$voorganger = "ds. C. van den Berg";
-			break;
-		default:
-			$voorganger = str_replace('ds ', 'ds. ', lcfirst($string));
-	}
-			
-	return $voorganger;        
-}
-*/
 
 function getVoorgangers() {
 	global $TableVoorganger, $VoorgangerID, $VoorgangerAchter;
