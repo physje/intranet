@@ -77,10 +77,10 @@ class eBoekhoudenConnect
                 "SessionID" => $this->sessionId,
                 "oMut" => $mutation->getMutationArray()
             ];
-
+            
             $response = $this->soapClient->__soapCall("AddMutatie", [$params]);
 
-            $this->checkforerror($response, "AddMutatieResponse");
+            $this->checkforerror($response, "AddMutatieResult");
 
             return $response->AddMutatieResult;
         } catch(\SoapFault $soapFault) {

@@ -166,7 +166,7 @@ function eb_getRelatieCodeBySearch ( $searchText, &$code ) {
 }
 
 /**
- * NOTE: Function below is in progress so not finished:
+ * Maak en verstuur mutatie voor een bestaand e-boekhouden relatie
  * @param  $code         e-boekhouden relatie code
  * @param  $bedrag       het te declareren bedrag in centen
  * @param  $toelichting  toelichting van de declaratie (niet langer dan 200 karakters)
@@ -183,7 +183,7 @@ function eb_verstuurDeclaratie ( $code, $bedrag, $toelichting, &$mutatieId )
         $rekening          = "2000";
         $factuurNummer     = date('Ymd') .+ $code;  // willen we de factuurnummer zo opgebouwd hebben?
         $btwCode           = "GEEN";
-        $betalingstermijn  = "";
+        $betalingstermijn  = "0";
         $tegenRekeningCode = "40491";
         $btwPercentage     = 0.0;
         // Ingevoerde bedrag is in centen, omrekenen naar euro's
@@ -197,11 +197,12 @@ function eb_verstuurDeclaratie ( $code, $bedrag, $toelichting, &$mutatieId )
         $mutatie->setInvoiceNumber($factuurNummer);
         $mutatie->setDescription($toelichting);
         $mutatie->setTermOfPayment($betalingstermijn);
+        $mutatie->setInOrExVat("IN");
         $mutatie->addMutationLine($bedrag, $btwPercentage, $btwCode, $tegenRekeningCode, 0);
 
         $response = $ebClient->addMutation ( $mutatie ); 
 
-        $mutatieId = $response->Mut_ID; //vermoedelijke variabele naam
+        $mutatieId = $response->Mutatienummer;
 
     } catch (\Exception $exception) {
         return $exception->getMessage();

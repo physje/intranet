@@ -97,15 +97,18 @@ if ( count($codes) == 0 ) {
 }
 */
 
-/* IN PROGRESS */
+/* Test code voor eb_verstuurDeclaratie 
 $code = "201"; //test1
 $bedrag = 1; // 1 cent (just to be sure)
 $toelichting = "Dit is een test mutatie, de gebruikte relatie is niet echt";
 
-if ( eb_verstuurDeclaratie ( $code, $bedrag, $toelichting, $mutatieId ) ) {
-  echo "probleem opgetreden bij het toeveogen van een nieuwe mutatie <br";
+$errorResult = eb_verstuurDeclaratie ( $code, $bedrag, $toelichting, $mutatieId );
+
+if ( $errorResult ) {
+  echo "probleem opgetreden bij het toevoegen van een nieuwe mutatie <br".$errorResult;
 } else {
   echo "nieuwe mutatie succesvol toegevoegd, de mutatie ID is: ".$mutatieId."";
 }
+*/
 
 ?>
