@@ -1,14 +1,11 @@
 <?php
+# NL is een nieuwe regel
 define("NL", "\n");
 
-/* Set locale to Dutch */
+# Set locale to Dutch
 setlocale(LC_ALL, 'nl_NL');
 
-$lengthShortHash = 16;
-$lengthLongHash = 64;
-
 # Tabel- en veldnamen voor de verschillende tabellen in MySQL
-
 $TableUsers					= "leden";
 $UserID							= "scipio_id";
 $UserStatus					= "status";
@@ -167,11 +164,19 @@ $CommMCGroupID			= "group_id";
 $ComMClastSeen			= "last_seen";
 $ComMClastChecked		= "last_checked";
 
-$TableEBoekhouden = "eboekhouden";
-$EBoekhoudenID		= "id";
-$EBoekhoudenCode	= "code";
-$EBoekhoudenIBAN	= "iban";
-$EBoekhoudenNaam	= "naam";
+$TableEBoekhouden 	= "eboekhouden";
+$EBoekhoudenID			= "id";
+$EBoekhoudenCode		= "code";
+$EBoekhoudenIBAN		= "iban";
+$EBoekhoudenNaam		= "naam";
+
+$TableConfig				= "config";
+$ConfigID						= "id";
+$ConfigName					= "name";
+$ConfigKey					= "sleutel";
+$ConfigValue				= "value";
+$ConfigOpmerking		= "comment";
+$ConfigAdded				= "added";
 
 $wijkArray			= array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J');
 $statusArray		= array('actief', 'afgemeld', 'afgevoerd', 'onttrokken', 'overleden', 'vertrokken');
@@ -183,8 +188,40 @@ $maandArrayEng	= array(1 => 'January', 2 => 'February', 3 => 'March', 4 => 'Apri
 $letterArray		= array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z');
 $teamRollen			= array(1 => 'Ouderling', 2 => 'Diaken', 3 => 'Wijkco&ouml;rdinator', 4 => 'Bezoekbroeder', 5 => 'Bezoekzuster', 6 => 'Ge&iuml;ntereseerde', 7 => 'Predikant');
 
-# Sommige roosters worden geimporteerd.
-# Deze moeten aantal functionaliteiten niet krijgen
-$importRoosters = array(7, 8, 9, 10);
+$db = connect_db();
 
+# Doorloop de config-tabel en groepeer op naam
+# In een array hebben alle value's dezelfde naam
+# Maar wisselende key's en value's
+# Bij een integer/string/boolean worden alleen naam en value gebruikt
+$sql = "SELECT * FROM $TableConfig GROUP BY $ConfigName";
+$result = mysqli_query($db, $sql);
+$row = mysqli_fetch_array($result);
+
+do {
+	$name = urldecode($row[$ConfigName]);
+	$sql_name = "SELECT * FROM $TableConfig WHERE $ConfigName like '$name'";
+	$result_name = mysqli_query($db, $sql_name);
+	$row_name = mysqli_fetch_array($result_name);
+
+	do {
+		# Als de key niet leeg is, is het dus een array
+		if($row_name[$ConfigKey] != '') {
+			# maak het nieuwe array-element aan
+			$newValue = array(urldecode($row_name[$ConfigKey]) => urldecode($row_name[$ConfigValue]));
+			
+			# Als de array waar het nieuwe array-element bij hoort al bestaat
+			# worden oud en nieuw gemerged en anders is het nieuwe element de array
+			if(isset($$name)) {	
+				$$name = array_merge($$name, $newValue);
+			} else {								
+				$$name = $newValue;
+			}
+		} else {
+			$$name = urldecode($row_name[$ConfigValue]);
+		}		
+	} while($row_name = mysqli_fetch_array($result_name));
+} while($row = mysqli_fetch_array($result));
+
+$ScriptURL = $ScriptSever.$ScriptURL;
 ?>
