@@ -41,7 +41,7 @@ if(isset($_POST['save']) OR isset($_POST['maanden'])) {
 		$mail->FromName = $ScriptTitle;
 		$mail->AddAddress('scipiobeheer@koningskerkdeventer.nl', 'Scipio beheer');
 	
-		$mail->Subject	= $SubjectPrefix . count($subject).' '.(count($subject) > 1 ? 'gewijzigde collectedoelen' : 'gewijzigd collectedoel');
+		$mail->Subject	= $SubjectPrefix . count($bericht).' '.(count($bericht) > 1 ? 'gewijzigde collectedoelen' : 'gewijzigd collectedoel');
 		$mail->IsHTML(true);
 		$mail->Body			= $HTMLMail;
 		
