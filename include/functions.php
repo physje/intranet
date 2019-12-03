@@ -234,7 +234,7 @@ function getGroupMembers($commID) {
 
 function getMemberDetails($id) {
 	global $TableUsers, $UserID, $UserStatus, $UserAdres, $UserGeslacht, $UserVoorletters, $UserVoornaam, $UserTussenvoegsel,
-	$UserAchternaam, $UserMeisjesnaam, $UserUsername, $UserPassword, $UserHashShort, $UserGeboorte, $UserTelefoon, $UserMail,
+	$UserAchternaam, $UserMeisjesnaam, $UserUsername, $UserHashShort, $UserGeboorte, $UserTelefoon, $UserMail,
 	$UserFormeelMail, $UserBelijdenis, $UserLastChange, $UserLastVisit, $UserBurgelijk, $UserRelatie, $UserStraat, $UserHuisnummer,
 	$UserToevoeging, $UserPC, $UserPlaats, $UserWijk, $UserHashLong;
 	
@@ -718,7 +718,7 @@ function sendMail($ontvanger, $subject, $bericht, $var) {
 			$OuderData = getMemberDetails($ouder);
 			if($OuderData['mail'] != $UserMail AND $OuderData['mail'] != '') {
 				$mail->AddCC($OuderData['mail']);
-				toLog('debug', '', $ontvanger, makeName($ouder, 5) .' ('. $OuderData['mail'] .') als ouder in CC opgenomen');
+				toLog('debug', $ontvanger, $ouder, makeName($ouder, 5) .' ('. $OuderData['mail'] .') als ouder in CC opgenomen');
 			}
 		}
 	}
@@ -734,6 +734,145 @@ function sendMail($ontvanger, $subject, $bericht, $var) {
 	if(isset($var['BCC']) AND $var['BCC_mail'] != "") {
 		$mail->AddBCC($var['BCC_mail']);
 	}
+			
+	if(!$mail->Send()) {
+		return false;
+	} else {
+		return true;
+	}
+}
+
+
+function sendMail_new($parameter) {
+	global $ScriptURL, $ScriptMailAdress, $ScriptTitle, $SubjectPrefix, $MailHeader, $MailFooter;
+	
+	# Controleer of er wel een ontvanger bekend is
+	if(isset($parameter['to'])) {
+		if(is_array($parameter['to'])) {
+			$ontvangers = $parameter['to'];
+		} else {
+			$ontvangers = array($parameter['to']);
+		}
+	} else {
+		echo 'Geen ontvangers bekend';
+		exit;
+	}
+	
+	# Controleer of er wel een bericht bekend is
+	if(isset($parameter['message'])) {
+		$bericht = $parameter['message'];
+	} else {
+		echo 'Geen bericht bekend';
+		exit;
+	}	
+	
+	# Controleer of er wel een onderwerp bekend is
+	if(isset($parameter['subject'])) {
+		$subject = $parameter['subject'];
+	} else {
+		echo 'Geen onderwerp bekend';
+		exit;
+	}	
+	
+	$mail = new PHPMailer;	
+	$mail->From     = $ScriptMailAdress;
+	$mail->FromName = $ScriptTitle;
+	
+	# Er staat ook een formeel mailadres in de database
+	# Met de variabele formeel kan worden aangegeven of deze gebruikt moet worden
+	if(isset($parameter['formeel'])) {
+		$formeel = $parameter['formeel'];
+	} else {
+		$formeel = false;
+	}
+	
+	# Als er een reply-adres ingesteld moet worden		
+	if(isset($parameter['ReplyTo']) AND $parameter['ReplyTo'] != '') {
+		if(isset($parameter['ReplyToName']) AND $parameter['ReplyToName'] != '') {
+			$mail->AddReplyTo($parameter['ReplyTo'], $parameter['ReplyToName']);
+		} else {
+			$mail->AddReplyTo($parameter['ReplyTo']);
+		}
+	}
+	
+	# De personen die in de 'Aan' moeten
+	# Met de check of ouders in de 'CC' moeten
+	foreach($ontvangers as $ontvanger) {
+		# Haal de data van de ontvanger op
+		# Zoek ook direct de mail op van de ontvanger
+		$UserData = getMemberDetails($ontvanger);
+		$UserMail	= getMailAdres($ontvanger, $formeel);
+		
+		$mail->AddAddress($UserMail, makeName($ontvanger, 5));
+		toLog('debug', '', $ontvanger, makeName($ontvanger, 5) .' in de Aan opgenomen');
+		
+		# Als de ouders ook een CC moeten
+		# Alleen bij mensen die als relatie 'zoon' of 'dochter' hebben
+		if(isset($parameter['ouderCC']) AND ($UserData['relatie'] == 'zoon' OR $UserData['relatie'] == 'dochter')) {
+			$ouders = getParents($ontvanger);
+			foreach($ouders as $ouder){
+				$OuderData = getMemberDetails($ouder);
+				if($OuderData['mail'] != $UserMail AND $OuderData['mail'] != '') {
+					$mail->AddCC($OuderData['mail']);
+					toLog('debug', '', $ontvanger, makeName($ouder, 5) .' ('. $OuderData['mail'] .') als ouder in CC opgenomen');
+				}
+			}
+		}		
+	}
+	
+	# De personen die in de 'CC' moeten
+	if(isset($parameter['cc'])) {
+		if(is_array($parameter['cc'])) {
+			$cc_ontvangers	= $parameter['cc'];
+		} else {
+			$cc_ontvangers	= array($parameter['cc']);
+		}		
+		
+		foreach($cc_ontvangers as $ontvanger) {
+			if(is_numeric($ontvanger)) {
+				$UserData = getMemberDetails($ontvanger);
+				$UserMail	= getMailAdres($ontvanger, $formeel);
+				$mail->AddCC($UserMail, makeName($ontvanger, 5));				
+			} else {
+				$mail->AddCC($ontvanger);
+			}
+		}
+	}
+	
+	# De personen die in de 'BCC' moeten		
+	if(isset($parameter['bcc'])) {
+		if(is_array($parameter['bcc'])) {
+			$bcc_ontvangers	= $parameter['bcc'];
+		} else {
+			$bcc_ontvangers	= array($parameter['bcc']);
+		}
+		
+		foreach($bcc_ontvangers as $ontvanger) {
+			if(is_numeric($ontvanger)) {				
+				$UserMail	= getMailAdres($ontvanger, $formeel);
+				$mail->AddBCC($UserMail);
+			} else {
+				$mail->AddBCC($ontvanger);
+			}
+		}		
+	}
+	
+	# Controle op bijlages
+	if(isset($parameter['file']) AND $parameter['file'] != "") {
+		if(isset($parameter['name']) AND $parameter['name'] != "") {
+			$mail->addAttachment($parameter['file'], $parameter['name']);
+		} else {
+			$mail->addAttachment($parameter['file']);
+		}
+	}
+	
+	# Bericht opstellen
+	$HTMLMail = $MailHeader.$bericht.$MailFooter;
+	
+	# Onderwerp instellen
+	$mail->Subject	= $SubjectPrefix . trim($subject);
+	$mail->IsHTML(true);
+	$mail->Body			= $HTMLMail;
 			
 	if(!$mail->Send()) {
 		return false;

@@ -223,5 +223,7 @@ do {
 	} while($row_name = mysqli_fetch_array($result_name));
 } while($row = mysqli_fetch_array($result));
 
-$ScriptURL = $ScriptSever.$ScriptURL;
+$ScriptURL	= $ScriptSever.$ScriptURL;
+$Version		= $Version.$VersionCount;
+
 ?>

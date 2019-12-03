@@ -23,7 +23,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 				$username = generateUsername($id);
 				$password = generatePassword(8);
 			
-				$sql_update = "UPDATE $TableUsers SET $UserUsername = '$username', $UserPassword = '". md5($password) ."' WHERE $UserID = $id";
+				$sql_update = "UPDATE $TableUsers SET $UserUsername = '$username', $UserPassword = '". md5($password) ."', $UserNewPassword = '". password_hash($password, PASSWORD_DEFAULT) ."'" : '') ." WHERE $UserID = $id";
 				mysqli_query($db, $sql_update);
 				echo 'Username aangemaakt voor '.  makeName($id, 5) ."($username)<br>\n";
 				toLog('info', '', $id, 'account aangemaakt');

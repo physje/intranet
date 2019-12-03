@@ -65,7 +65,7 @@ if(isset($_REQUEST['hash'])) {
 				eb_getRelatieCodeByIban ($_POST['IBAN'], $EB_code);
 								
 				if(!is_numeric($EB_code)) {					
-					echo 'Nieuwe relatie';
+					//echo 'Nieuwe relatie';
 					eb_maakNieuweRelatieAan (makeVoorgangerName($voorganger, 6), 'm', '', '', $voorgangerData['plaats'], $voorgangerData['mail'], $_POST['IBAN'], $EB_code, $EB_id);
 				}
 				
@@ -187,8 +187,8 @@ if(isset($_REQUEST['hash'])) {
 			
 			# In eboekhouden inschieten
 			# -> Even overleggen
-			//eb_verstuurDeclaratie ($voorgangerData['EB-relatie'], $totaal, $dagdeel.', '. date('d M Y', $dienstData['start']), $mutatieId);
-						
+			eb_verstuurDeclaratie ($voorgangerData['EB-relatie'], $totaal, '[verwijder deze declaratie] '. $dagdeel.', '. date('d M Y', $dienstData['start']), $mutatieId);
+									
 			# update reis_van voor volgende keer
 			$sql = "UPDATE $TableVoorganger SET $VoorgangerVertrekpunt = '". urlencode($_POST['reis_van']) ."' WHERE $VoorgangerID like '$voorganger'";
 			mysqli_query($db, $sql);
