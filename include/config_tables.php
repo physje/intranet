@@ -224,6 +224,6 @@ do {
 } while($row = mysqli_fetch_array($result));
 
 $ScriptURL	= $ScriptSever.$ScriptURL;
-$Version		= $Version.$VersionCount;
+$Version		= $Version.'.'.$VersionCount;
 
 ?>

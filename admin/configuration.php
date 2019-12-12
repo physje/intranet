@@ -33,9 +33,11 @@ if(isset($_POST['save'])) {
 		}
 		
 		if($id == 999 AND $value != '') {
-			$sql_insert = "INSERT INTO $TableConfig ($ConfigName, $ConfigKey, $ConfigValue, $ConfigAdded, $ConfigOpmerking, $ConfigAdded) VALUES ('". urlencode($name) ."', '". urlencode($key) ."', '". urlencode($value) ."', '". urlencode($comment) ."', '". time() ."')";
+			$sql_insert = "INSERT INTO $TableConfig ($ConfigName, $ConfigKey, $ConfigValue, $ConfigOpmerking, $ConfigAdded) VALUES ('". urlencode($name) ."', '". urlencode($key) ."', '". urlencode($value) ."', '". urlencode($comment) ."', '". time() ."')";
 			if(mysqli_query($db, $sql_insert)) {
 				$text[] = $name. ' toegevoegd';
+			} else {
+				$text[] = $sql_insert;
 			}
 		}
 		
