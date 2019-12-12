@@ -1,4 +1,5 @@
 <?php
+include_once('../include/functions.php');
 include_once('../include/config.php');
 include_once('../include/EB_functions.php');
 
@@ -96,8 +97,8 @@ if ( count($codes) == 0 ) {
   }
 }
 */
-
-/* Test code voor eb_verstuurDeclaratie 
+/*
+Test code voor eb_verstuurDeclaratie 
 $code = "201"; //test1
 $bedrag = 1; // 1 cent (just to be sure)
 $toelichting = "Dit is een test mutatie, de gebruikte relatie is niet echt";
@@ -108,7 +109,12 @@ if ( $errorResult ) {
   echo "probleem opgetreden bij het toevoegen van een nieuwe mutatie <br".$errorResult;
 } else {
   echo "nieuwe mutatie succesvol toegevoegd, de mutatie ID is: ".$mutatieId."";
-}
+}*/
+
+/*
+$dateFrom = date('Y-m-d', time() - (24*60*60));
+$toDate = date('Y-m-d');
+eb_getMutatiesByDate ( $dateFrom, $toDate);
 */
 
 ?>

@@ -48,6 +48,34 @@ function eb_maakNieuweRelatieAan ( $naam, $geslacht, $adres, $postcode, $plaats,
     }
 }
 
+function eb_getMutatiesByDate ( $dateFrom, $toDate)
+{
+  	try {
+				global $ebUsername, $ebSecurityCode1, $ebSecurityCode2;
+        $ebClient = new eBoekhoudenConnect($ebUsername, $ebSecurityCode1, $ebSecurityCode2);
+				
+				$mutaties = $ebClient->getMutationsByPeriod($dateFrom, $toDate);
+				
+				$mutaties = $mutaties->Mutaties;
+				//var_dump($mutaties);
+        if (!is_array($mutaties->cMutatieList)) {
+            $mutaties->cMutatieList = array($mutaties->cMutatieList);
+        }
+
+        // Getting the code of each relation
+        $codeArray = array();
+        foreach ($mutaties->cMutatieList as $Mutatie) {
+            var_dump($Mutatie);
+        }
+				
+	  } catch (\Exception $exception) {
+        return $exception->getMessage();
+    }
+	
+	
+	  
+}
+
 /**
  * Update relatie iban door middel van de e-boekhouden relatie code 
  * @param  string $code         e-boekhouden relatie code
@@ -181,13 +209,13 @@ function eb_verstuurDeclaratie ( $code, $bedrag, $toelichting, &$mutatieId )
         $soort             = "FactuurOntvangen";
         $datum             = date('Y-m-d');
         $rekening          = "2000";
-        $factuurNummer     = date('Ymd') .+ $code;  // willen we de factuurnummer zo opgebouwd hebben?
+        $factuurNummer     = date('Ymd').'/'.$code .'/'.rand(0,1000);  // willen we de factuurnummer zo opgebouwd hebben?
         $btwCode           = "GEEN";
         $betalingstermijn  = "0";
         $tegenRekeningCode = "40491";
         $btwPercentage     = 0.0;
         // Ingevoerde bedrag is in centen, omrekenen naar euro's
-        $bedrag            = (double) $bedrag / 100;
+        $bedrag            = (double) round($bedrag / 100, 2);
 
         $mutatie = new Mutation;
         $mutatie->setKind($soort);
@@ -203,7 +231,7 @@ function eb_verstuurDeclaratie ( $code, $bedrag, $toelichting, &$mutatieId )
         $response = $ebClient->addMutation ( $mutatie ); 
 
         $mutatieId = $response->Mutatienummer;
-
+        
     } catch (\Exception $exception) {
         return $exception->getMessage();
     }

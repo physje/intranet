@@ -62,7 +62,7 @@ function genereer_declaratie_pdf($mutatieNr, $mutatieDatum, $naam, $adres, $mail
     $betaalDatum = bereken_betaal_datum($mutatieDatum, 20);
 
     $header = ["Declaratie Nr.", "Declaratie datum", "Verwachte betaaldatum"];
-    $data = [[$mutatieNr, $mutatieDatum, $betaalDatum]];
+    $data = [['ID: '.$mutatieNr, $mutatieDatum, $betaalDatum]];
     $widths = array_fill(1, (count($header)-1), ($breedte-30-(2*$cfgMarge))/(count($header)-1));
     $widths[0] = 30;
     $pdf->SetWidths($widths);
@@ -115,9 +115,12 @@ function genereer_declaratie_pdf($mutatieNr, $mutatieDatum, $naam, $adres, $mail
 
     # Maak tabel met details over de declaratie 
     $totaalBedrag = 0.0;
-    foreach ($declaratieData as $data) {
-        $totaalBedrag += (float) filter_var( $data[1], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION );
+    foreach ($declaratieData as $key => $data) {    	  
+        $totaalBedrag += (float)($data[1] / 100);        
+        $declaratieData[$key][1] = '€ '.number_format($data[1]/100, 2,',','.');
     }
+    
+    $totaalBedrag = number_format($totaalBedrag, 2,',','.');
     $totaalBedragRow = ["Totaal uit te betalen bedrag:", "€ ".$totaalBedrag];
 
     $header = ["Onderdeel", "Bedrag"];
@@ -134,7 +137,7 @@ function genereer_declaratie_pdf($mutatieNr, $mutatieDatum, $naam, $adres, $mail
     $pdf->Write(5, "De declaratie is met succes ontvangen en we proberen het te declareren bedrag over te maken op of voor de bovengenoemde datum. Mochten er gegevens op deze declaratie niet kloppen neem dan contact op met de penningmeester van de Koningskerk via onderstaande contactgegevens. ");
 
     # Genereer de pdf
-    $pdf->Output('I', $mutatieNr.'pdf');
+    $pdf->Output('F', 'PDF/'.$mutatieNr.'.pdf');
 
 }
 
@@ -148,4 +151,5 @@ $iban = "NL01XXXX0123456789";
 $declaratieData = [["OnderdeelX", "€ 90.00"], ["OnderdeelY", "€ 17.15"]];
 
 
-genereer_declaratie_pdf($mutatieNr, $mutatieDatum, $naam, $adres, $mailadres, $iban, $declaratieData); */
+genereer_declaratie_pdf($mutatieNr, $mutatieDatum, $naam, $adres, $mailadres, $iban, $declaratieData);
+*/
