@@ -6,8 +6,8 @@ include_once('../../../general_include/class.phpmailer.php');
 include_once('../../../general_include/class.html2text.php');
 $db = connect_db();
 
-$sendMail = false;
-$sendTestMail = true;
+$sendMail = true;
+$sendTestMail = false;
 
 # Omdat de server deze dagelijks moet draaien wordt toegang niet gedaan op basis
 # van naam+wachtwoord maar op basis van IP-adres
