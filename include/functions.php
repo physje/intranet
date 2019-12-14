@@ -1421,7 +1421,14 @@ function setVoorgangerDeclaratieStatus($status, $dienst) {
 	# 9 afgezien
 	
 	$sql = "UPDATE $TableDiensten SET $DienstDeclStatus = $status WHERE $DienstID = $dienst";
-	return mysqli_query($db, $sql);
+	
+	if(mysqli_query($db, $sql)) {
+		toLog('info', '', '', "Declaratie-status van dienst $dienst veranderd in $status");
+		return true;
+	} else {
+		toLog('error', '', '', "Aanpassen van declaratie-status van dienst $dienst naar $status is mislukt");
+		return false;
+	}	
 }
 
 function getCoordinates($q) {

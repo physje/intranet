@@ -1,14 +1,17 @@
 <?php
+include_once('../../../general_include/class.phpmailer.php');
 include_once('../include/functions.php');
 include_once('../include/EB_functions.php');
 include_once('../include/config.php');
 include_once('../include/HTML_TopBottom.php');
 include_once('../include/HTML_HeaderFooter.php');
 include_once('genereerDeclaratiePdf.php');
-include_once('../../../general_include/class.phpmailer.php');
 
 $db = connect_db();
-$test = true;
+
+$write2EB = false;
+$sendMail = false;
+$sendTestMail = true;
 
 if(isset($_REQUEST['hash'])) {
 	$hash = urldecode($_REQUEST['hash']);
@@ -46,45 +49,58 @@ if(isset($_REQUEST['hash'])) {
 			
 
 			# -------
-			# Paar dingen definieren voor zometeen
-			$aanspeekNaam		= makeVoorgangerName($voorganger, 5);
+			# Paar dingen definieren voor zometeen			
 			$mailNaam				= makeVoorgangerName($voorganger, 4);
 			$dagdeel				= formatDagdeel($dienstData['start']);
+			$IBANChangeSucces = $IBANSearchSucces = $addRelatieSucces = $sendDeclaratieSucces = true;
 
 			
 			# -------
 			# Relatie bepalen, vergelijken, en zo nodig updaten of invoeren
 			if($voorgangerData['EB-relatie'] != '' AND $voorgangerData['EB-relatie'] > 0) {				
-				if(trim(strtoupper($_POST['oorspronkelijke_IBAN'])) != trim(strtoupper($_POST['IBAN']))) {					
-					eb_updateRelatieIbanByCode($voorgangerData['EB-relatie'], trim(strtoupper($_POST['IBAN'])));
+				if(trim(strtoupper($_POST['oorspronkelijke_IBAN'])) != trim(strtoupper($_POST['IBAN'])) AND $write2EB) {
+					$errorResult = eb_updateRelatieIbanByCode($voorgangerData['EB-relatie'], trim(strtoupper($_POST['IBAN'])));
+					if($errorResult) {
+						toLog('error', '', '', $errorResult);
+						$IBANChangeSucces = false;						
+					}
 				}			
 			} else {
 				# op basis van IBAN zoeken of iemand al bekend is				 
-				eb_getRelatieCodeByIban ($_POST['IBAN'], $EB_code);
+				$errorResult = eb_getRelatieCodeByIban ($_POST['IBAN'], $EB_code);
+				if($errorResult) {
+					toLog('error', '', '', $errorResult);
+					$IBANSearchSucces = false;
+				}
 								
 				if(!is_numeric($EB_code)) {
-					if($test) {
-						echo 'Nieuwe relatie';
-					} else {
-						eb_maakNieuweRelatieAan (makeVoorgangerName($voorganger, 6), 'm', '', '', $voorgangerData['plaats'], $voorgangerData['mail'], $_POST['IBAN'], $EB_code, $EB_id);
-					}
-				}
-				
-				$sql = "UPDATE $TableVoorganger SET $VoorgangerEBRelatie = '$EB_code' WHERE $VoorgangerID = $voorganger";
-				mysqli_query($db, $sql);
-				
-				$voorgangerData['EB-relatie'] = $EB_code;
-			}
+					if($write2EB) {
+						$errorResult = eb_maakNieuweRelatieAan (makeVoorgangerName($voorganger, 6), 'm', '', '', $voorgangerData['plaats'], $voorgangerData['mail'], $_POST['IBAN'], $EB_code, $EB_id);
+						if($errorResult) {
+							toLog('error', '', '', $errorResult);
+							$addRelatieSucces = false;
+						}
 						
+						if($addRelatieSucces) {
+							$sql = "UPDATE $TableVoorganger SET $VoorgangerEBRelatie = '$EB_code' WHERE $VoorgangerID = $voorganger";
+							mysqli_query($db, $sql);							
+							$voorgangerData['EB-relatie'] = $EB_code;
+						}
+					} else {
+						echo 'Nieuwe relatie aanmaken voor '. $_POST['IBAN'];
+					}
+				}				
+			}
+			
 			
 			# -------
 			# Mail naar de penningsmeester opstellen
 			$mailPenningsmeester = array();
-			$mailPenningsmeester[] = "Beste,";
-			$mailPenningsmeester[] = "";
-			$mailPenningsmeester[] = makeVoorgangerName($voorganger, 3) .' heeft een declaratie ingediend.';
-			$mailPenningsmeester[] = "";
-			$mailPenningsmeester[] = "Het betreft de $dagdeel van ". date('d M Y', $dienstData['start']);
+			$mailPenningsmeester[] = "Beste,<br>";
+			$mailPenningsmeester[] = "<br>";
+			$mailPenningsmeester[] = makeVoorgangerName($voorganger, 3) .' heeft een declaratie ingediend.<br>';
+			$mailPenningsmeester[] = "<br>";
+			$mailPenningsmeester[] = "Het betreft de $dagdeel van ". date('d M Y', $dienstData['start']) ."<br>";
 			$mailPenningsmeester[] = "<table>";
 			$mailPenningsmeester[] = "	<tr>";
 			$mailPenningsmeester[] = "		<td>Declaratie</td>";
@@ -127,140 +143,144 @@ if(isset($_REQUEST['hash'])) {
 			
 			# -------
 			# In eboekhouden inschieten
-			//if(!$test) {
-			if(true) {
-				$errorResult = eb_verstuurDeclaratie ($voorgangerData['EB-relatie'], $totaal, '[verwijder deze declaratie] '. date('Y-m-d', $dienstData['start']).', '. $dagdeel .', '.makeVoorgangerName($voorganger, 2), $mutatieId);
-			
-				if ( $errorResult ) {
-				  echo "probleem opgetreden bij het toevoegen van een nieuwe mutatie <br>".$errorResult;
-				  toLog('error', '', '', $errorResult);
+			if($write2EB AND isset($voorgangerData['EB-relatie']) AND $voorgangerData['EB-relatie'] > 0) {			
+				$errorResult = eb_verstuurDeclaratie ($voorgangerData['EB-relatie'], $totaal, '[verwijder deze declaratie] '. date('Y-m-d', $dienstData['start']).', '. $dagdeel .', '.makeVoorgangerName($voorganger, 2), $mutatieId);			
+				if($errorResult) {
+					toLog('error', '', '', $errorResult);
+					$sendDeclaratieSucces = false;
 				}
 			} else {
 				$mutatieId = '10101';
-			}			
-			
-			
-			
-			# -------
-			# PDF maken
-			$mutatieNr			= $mutatieId;
-			$mutatieDatum 	= date("d-m-Y");
-			$naam						= makeVoorgangerName($voorganger, 3);
-			$adres					= $voorgangerData['plaats'];
-			$mailadres			= $voorgangerData['mail'];
-			$iban						= trim(strtoupper($_POST['IBAN']));
-			$declaratieData	= array(
-				array("Voorgaan $dagdeel ". date('d-m', $dienstData['start']), $voorgangerData['honorarium']),
-				array("Reiskosten (". $_POST['reis_van'] .")", $_POST['reiskosten'])
-			);
-			
-			$declaratieData = array_merge($declaratieData, $declaratieDataExtra);
-			
-			$PDF = genereer_declaratie_pdf($mutatieNr, $mutatieDatum, $naam, $adres, $mailadres, $iban, $declaratieData);
-						
-			
-			# -------		
-			# Mail naar penningmeester versturen
-			unset($mail);
-			$mail = new PHPMailer;
-			$mail->FromName	= $ScriptTitle;
-			$mail->From			= $ScriptMailAdress;
-
-			# Alle geadresseerden toevoegen
-			$mail->AddAddress($declaratieReplyAddress, $declaratieReplyName);
-						
-			# Onderwerp maken
-			$Subject = "Declaratie $dagdeel ". date('j-n-Y', $dienstData['start']);
-			
-			$mail->Subject	= trim($Subject);
-			$mail->IsHTML(true);
-			$mail->Body	= $MailHeader.implode("<br>\n", $mailPenningsmeester).$MailFooter;
-			$mail->AddAttachment($PDF);
-			
-			if($test) {
-				$page[] = 'Afzender :'. $ScriptTitle .'|'.$ScriptMailAdress;
-				$page[] = 'Ontvanger :'. $declaratieReplyName .'|'.$declaratieReplyAddress;
-				$page[] = 'Onderwerp :'. trim($Subject);
-				$page[] = implode("<br>\n", $mailPenningsmeester);
-			} else {
-				if(!$mail->Send()) {
-					toLog('error', '', '', "Problemen met declaratie-notificatie (dienst $dienst, voorganger $voorganger)");
-					$page[] = "Er zijn problemen met het versturen van de notificatie-mail naar penningsmeester.";
-				} else {
-					toLog('info', '', '', "Declaratie-notificatie naar penningsmeester voor ". date('j-n-Y', $dienstData['start']));						
-				}
 			}
 			
+			# Als de declaratie succesvol is ingeschoten			
+			if($sendDeclaratieSucces) {			
+				# -------
+				# PDF maken
+				$mutatieNr			= $mutatieId;
+				$mutatieDatum 	= date("d-m-Y");
+				$naam						= makeVoorgangerName($voorganger, 3);
+				$adres					= $voorgangerData['plaats'];
+				$mailadres			= $voorgangerData['mail'];
+				$iban						= trim(strtoupper($_POST['IBAN']));
+				$declaratieData	= array(
+					array("Voorgaan $dagdeel ". date('d-m', $dienstData['start']), $voorgangerData['honorarium']),
+					array("Reiskosten (". $_POST['reis_van'] .")", $_POST['reiskosten'])
+				);
 			
+				$declaratieData = array_merge($declaratieData, $declaratieDataExtra);
+						
+				genereer_declaratie_pdf($mutatieNr, $mutatieDatum, $naam, $adres, $mailadres, $iban, $declaratieData);				
+					
 			
-			# -------
-			# Mail naar de predikant opstellen en versturen
-			$mailPredikant = array();
-			$mailPredikant[] = "Beste $aanspeekNaam,";
-			$mailPredikant[] = "";
-			$mailPredikant[] = ($voorgangerData['stijl'] == 0 ? 'u heeft' : 'jij hebt')." online een declaratie ingediend voor het voorgaan in de $dagdeel van ". strftime ('%e %B', $dienstData['start'])." in de Koningskerk te Deventer.";
-			$mailPredikant[] = "Een samenvatting van deze declaratie voor in ". ($voorgangerData['stijl'] == 0 ? 'uw administratie treft u' : 'in je administratie tref je')." aan de bijlage";
-			$mailPredikant[] = "";
-			$mailPredikant[] = "Declaratie worden over het algemeen rond de 20ste van de maand uitbetaald.";
-			$mailPredikant[] = "";
-			$mailPredikant[] = "Mochten er nog vragen zijn dan hoor ik het graag.";
-			$mailPredikant[] = "";
-			$mailPredikant[] = "Vriendelijke groeten";
-			$mailPredikant[] = "";
-			$mailPredikant[] = $declaratieReplyName;
-			$mailPredikant[] = $declaratieReplyAddress;
-			
-			# Nieuw mail-object aanmaken
-			unset($mail);
-			$mail = new PHPMailer;
-			$mail->FromName	= $declaratieReplyName;
-			$mail->From			= $declaratieReplyAddress;
-
-			# Alle geadresseerden toevoegen
-			$mail->AddAddress($voorgangerData['mail'], $mailNaam);
-			//$mail->AddAddress('internet@draijer.org');
-			
-			# Onderwerp maken
-			$Subject = "Declaratie $dagdeel ". date('j-n-Y', $dienstData['start']);
-			
-			$mail->Subject	= trim($Subject);
-			$mail->IsHTML(true);
-			$mail->Body	= $MailHeader.implode("<br>\n", $mailPredikant).$MailFooter;
-			$mail->AddAttachment($PDF);
-			
-			if($test) {
-				$page[] = 'Afzender :'. $declaratieReplyName .'|'.$declaratieReplyAddress;
-				$page[] = 'Ontvanger :'. $mailNaam .'|'.$voorgangerData['mail'];
-				$page[] = 'Onderwerp :'.trim($Subject);
-				$page[] = implode("<br>\n", $mailPredikant);
-			} else {
-				if(!$mail->Send()) {
-					toLog('error', '', '', "Problemen met declaratie-afschrift (dienst $dienst, voorganger $voorganger)");
-					$page[] = "Er zijn problemen met het versturen van een afschrift van de declaratie.";
+				# -------		
+				# Mail naar penningmeester versturen
+				unset($mail);
+				$mail = new PHPMailer;
+				$mail->FromName	= $ScriptTitle;
+				$mail->From			= $ScriptMailAdress;
+    	
+				# Alle geadresseerden toevoegen
+				#
+				# Volgens mij kunnen wij ook  een document in eBoekhouden mailen
+				# dan hoeft de boekhouder alleen te koppelen
+				# even uitzoeken
+				# PDF sturen naar 184264@e-boekhouden.nl
+				
+				if(!$sendTestMail) {
+					$mail->AddAddress($declaratieReplyAddress, $declaratieReplyName);
+					$mail->AddCC($EBDeclaratieAddress);
 				} else {
-					toLog('info', '', '', "Declaratie-afschrift naar $mailNaam voor ". date('j-n-Y', $dienstData['start']));
-					$page[] = "Er is een afschrift van de declaratie naar ". ($voorgangerData['stijl'] == 0 ? 'u' : 'jou') ." verstuurd.";
+					$mail->AddAddress($ScriptMailAdress);
 				}
-			}					
-			
-			
-			
-			# -------						
-			# Volgens mij kunnen wij ook  een document in eBoekhouden mailen
-			# dan hoeft de boekhouder alleen te koppelen
-			# even uitzoeken
-			
-			
-			# -------						
-			# update reis_van voor volgende keer
-			$sql = "UPDATE $TableVoorganger SET $VoorgangerVertrekpunt = '". urlencode($_POST['reis_van']) ."' WHERE $VoorgangerID like '$voorganger'";
-			mysqli_query($db, $sql);
-			
-			
-			
-			# -------
-			# Zet de status op afgerond
-			setVoorgangerDeclaratieStatus(8, $dienst);					
+							
+				# Onderwerp maken
+				$Subject = "Declaratie $dagdeel ". date('j-n-Y', $dienstData['start']);
+				
+				$mail->Subject	= trim($Subject);
+				$mail->IsHTML(true);
+				$mail->Body	= $MailHeader.implode("\n", $mailPenningsmeester).$MailFooter;
+				$mail->AddAttachment('PDF\\'. $mutatieNr .'.pdf', date('ymd') .' '. makeVoorgangerName($voorganger, 1) . ' '. date('d-m', $dienstData['start']) .' '. $dagdeel .'.pdf');
+				
+				if(!$sendMail) {
+					$page[] = 'Afzender :'. $ScriptTitle .'|'.$ScriptMailAdress;
+					$page[] = 'Ontvanger :'. $declaratieReplyName .'|'.$declaratieReplyAddress;
+					$page[] = 'Onderwerp :'. trim($Subject);
+					$page[] = implode("\n", $mailPenningsmeester);
+				} else {
+					if(!$mail->Send()) {
+						toLog('error', '', '', "Problemen met declaratie-notificatie (dienst $dienst, voorganger $voorganger)");
+						$page[] = "Er zijn problemen met het versturen van de notificatie-mail naar penningsmeester.";
+					} else {
+						toLog('info', '', '', "Declaratie-notificatie naar penningsmeester voor ". date('j-n-Y', $dienstData['start']));						
+					}
+				}
+				
+				
+				
+				# -------
+				# Mail naar de predikant opstellen en versturen
+				$mailPredikant = array();
+				$mailPredikant[] = "Beste ". makeVoorgangerName($voorganger, 5) .",";
+				$mailPredikant[] = "";
+				$mailPredikant[] = ($voorgangerData['stijl'] == 0 ? 'u heeft' : 'jij hebt')." online een declaratie ingediend voor het voorgaan in de $dagdeel van ". strftime ('%e %B', $dienstData['start'])." in de Koningskerk te Deventer.";
+				$mailPredikant[] = "Een samenvatting van deze declaratie voor in ". ($voorgangerData['stijl'] == 0 ? 'uw administratie treft u' : 'in je administratie tref je')." aan de bijlage";
+				$mailPredikant[] = "";
+				$mailPredikant[] = "Declaratie worden over het algemeen rond de 20ste van de maand uitbetaald.";
+				$mailPredikant[] = "";
+				$mailPredikant[] = "Mochten er nog vragen zijn dan hoor ik het graag.";
+				$mailPredikant[] = "";
+				$mailPredikant[] = "Vriendelijke groeten";
+				$mailPredikant[] = "";
+				$mailPredikant[] = $declaratieReplyName;
+				$mailPredikant[] = $declaratieReplyAddress;
+				
+				# Nieuw mail-object aanmaken
+				unset($mail);
+				$mail = new PHPMailer;
+				$mail->FromName	= $declaratieReplyName;
+				$mail->From			= $declaratieReplyAddress;
+    	
+				# Alle geadresseerden toevoegen
+				if(!$sendTestMail) {
+					$mail->AddAddress($voorgangerData['mail'], $mailNaam);
+				} else {
+					$mail->AddAddress($ScriptMailAdress);
+				}
+							
+				# Onderwerp maken
+				$Subject = "Declaratie $dagdeel ". date('j-n-Y', $dienstData['start']);
+				
+				$mail->Subject	= trim($Subject);
+				$mail->IsHTML(true);
+				$mail->Body	= $MailHeader.implode("<br>\n", $mailPredikant).$MailFooter;
+				$mail->AddAttachment('PDF\\'. $mutatieNr .'.pdf',"Declaratie $dagdeel ". date('j-n-Y', $dienstData['start']) ." Koningskerk Deventer.pdf");
+				
+				if(!$sendMail) {
+					$page[] = 'Afzender :'. $declaratieReplyName .'|'.$declaratieReplyAddress;
+					$page[] = 'Ontvanger :'. $mailNaam .'|'.$voorgangerData['mail'];
+					$page[] = 'Onderwerp :'.trim($Subject);
+					$page[] = implode("<br>\n", $mailPredikant);
+				} else {
+					if(!$mail->Send()) {
+						toLog('error', '', '', "Problemen met declaratie-afschrift (dienst $dienst, voorganger $voorganger)");
+						$page[] = "Er zijn problemen met het versturen van een afschrift van de declaratie.";
+					} else {
+						toLog('info', '', '', "Declaratie-afschrift naar $mailNaam voor ". date('j-n-Y', $dienstData['start']));
+						$page[] = "Er is een afschrift van de declaratie naar ". ($voorgangerData['stijl'] == 0 ? 'u' : 'jou') ." verstuurd.";
+					}
+				}					
+				
+				# -------						
+				# update reis_van voor volgende keer
+				$sql = "UPDATE $TableVoorganger SET $VoorgangerVertrekpunt = '". urlencode($_POST['reis_van']) ."' WHERE $VoorgangerID like '$voorganger'";
+				mysqli_query($db, $sql);
+				
+							
+				# -------
+				# Zet de status op afgerond
+				setVoorgangerDeclaratieStatus(8, $dienst);
+			}
 		} elseif(isset($_POST['check_iban'])) {
 			# Formulier waar IBAN wordt gecontroleerd
 			
@@ -460,7 +480,6 @@ if(isset($_REQUEST['hash'])) {
 		$page[] = "</ul>";
 	} else {
 		$dagdeel = formatDagdeel($dienstData['start']);
-
 		$aanspeekNaam		= makeVoorgangerName($voorganger, 5);
 		$mailNaam 			= makeVoorgangerName($voorganger, 4);
 
@@ -470,7 +489,11 @@ if(isset($_REQUEST['hash'])) {
 		$mail->From			= $declaratieReplyAddress;
 
 		# Alle geadresseerden toevoegen
-		$mail->AddAddress($voorgangerData['mail'], $mailNaam);
+		if(!$sendTestMail) {		
+			$mail->AddAddress($voorgangerData['mail'], $mailNaam);
+		} else {
+			$mail->AddAddress($ScriptMailAdress);
+		}
 		
 		# Declaratielink genereren
 		$hash = urlencode(password_hash($dienst.'$'.$randomCodeDeclaratie.'$'.$voorganger, PASSWORD_BCRYPT));
@@ -499,7 +522,7 @@ if(isset($_REQUEST['hash'])) {
 		$mail->IsHTML(true);
 		$mail->Body	= $MailHeader.implode("<br>\n", $mailText).$MailFooter;
 		
-		if($test) {
+		if(!$sendMail) {
 			$page[] = 'Afzender :'. $declaratieReplyName .'|'.$declaratieReplyAddress;
 			$page[] = 'Ontvanger :'. $mailNaam .'|'.$voorgangerData['mail'];
 			$page[] = trim($Subject);

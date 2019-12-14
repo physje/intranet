@@ -6,7 +6,8 @@ include_once('../../../general_include/class.phpmailer.php');
 include_once('../../../general_include/class.html2text.php');
 $db = connect_db();
 
-$test = false;
+$sendMail = false;
+$sendTestMail = true;
 
 # Omdat de server deze dagelijks moet draaien wordt toegang niet gedaan op basis
 # van naam+wachtwoord maar op basis van IP-adres
@@ -43,7 +44,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 		$mail->AddReplyTo($voorgangerReplyAddress, $voorgangerReplyName);
 		
 		# Als er niet getest wordt 
-		if(!$test) {
+		if(!$sendTestMail) {
 			# Alle geadresseerden toevoegen
 			$mail->AddAddress($voorgangerData['mail'], $mailNaam);		
 			$mail->AddCC($adresBand, makeName($bandleider, 6));
@@ -125,13 +126,20 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 		$mail->IsHTML(true);
 		$mail->Body	= $HTMLMail;
 		$mail->AltBody	= $PlainMail;
-
-		if(!$mail->Send()) {
-			toLog('error', '', '', "Problemen met voorgangersmail versturen naar $mailNaam voor ". date('j-n-Y', $dienstData['start']));
-			echo "Problemen met mail versturen<br>\n";
+		
+		if($sendMail) {
+			if(!$mail->Send()) {
+				toLog('error', '', '', "Problemen met voorgangersmail versturen naar $mailNaam voor ". date('j-n-Y', $dienstData['start']));
+				echo "Problemen met mail versturen<br>\n";
+			} else {
+				toLog('info', '', '', "Voorgangersmail verstuurd naar $mailNaam voor ". date('j-n-Y', $dienstData['start']));
+				echo "Mail verstuurd naar $mailNaam<br>\n";
+			}
 		} else {
-			toLog('info', '', '', "Voorgangersmail verstuurd naar $mailNaam voor ". date('j-n-Y', $dienstData['start']));
-			echo "Mail verstuurd naar $mailNaam<br>\n";
+			echo 'Afzender : Preekvoorziening Koningskerk Deventer |'.$ScriptMailAdress .'<br>';
+			echo 'Ontvanger :'. $mailNaam .'|'.$voorgangerData['mail'] .'<br>';
+			echo 'Onderwerp :'. trim($Subject) .'<br>';
+			echo $HTMLMail;
 		}
 	
 		setVoorgangerLastSeen($dienstData['voorganger_id'], $dienstData['start']);
