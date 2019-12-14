@@ -181,12 +181,6 @@ if(isset($_REQUEST['hash'])) {
 				$mail->From			= $ScriptMailAdress;
     	
 				# Alle geadresseerden toevoegen
-				#
-				# Volgens mij kunnen wij ook  een document in eBoekhouden mailen
-				# dan hoeft de boekhouder alleen te koppelen
-				# even uitzoeken
-				# PDF sturen naar 184264@e-boekhouden.nl
-				
 				if(!$sendTestMail) {
 					$mail->AddAddress($declaratieReplyAddress, $declaratieReplyName);
 					$mail->AddCC($EBDeclaratieAddress);
