@@ -1,5 +1,7 @@
 <?php
+include_once('../include/functions.php');
 include_once('../include/config.php');
+include_once('../include/EB_functions.php');
 
 # https://secure.e-boekhouden.nl/handleiding/Documentatie_soap.pdf
 

@@ -8,7 +8,7 @@ $db = connect_db();
 $roosters = getRoosters();
 $week = 7*24*60*60;
 
-foreach($roosters as $rooster) {
+foreach($roosters as $rooster) {	
 	$roosterData			= getRoosterDetails($rooster);
 
 	if($roosterData['alert'] > 0) {
@@ -66,7 +66,8 @@ foreach($roosters as $rooster) {
 
 			if(!$verlopen OR $lastWarning) {
 				# geadresseerden
-				$beheerders = getGroupMembers($roosterData['beheerder']);				
+				$beheerders = getGroupMembers($roosterData['beheerder']);
+				$first = true;				
 
 				foreach($beheerders as $beheerder) {
 					# $parameters['to'] = ;
@@ -98,8 +99,16 @@ foreach($roosters as $rooster) {
 					$alert[] = "";
 					$alert[] = "Groet,";
 					$alert[] = "Matthijs";
+					
+					if($first) {
+						$var['BCC'] = '1'
+						$var['BCC_mail'] = $ScriptMailAdress;
+						$first = false;
+					} else {						
+						$var = array();
+					}
 
-					if(sendMail($beheerder, "Rooster-alert '". $roosterData['naam'] ."'", implode("<br>\n", $alert), array())) {
+					if(sendMail($beheerder, "Rooster-alert '". $roosterData['naam'] ."'", implode("<br>\n", $alert), $var)) {
 						toLog('info', '', $beheerder, "Rooster-alert ". $roosterData['naam'] ." verstuurd");
 					} else {
 						toLog('error', '', $beheerder, "Kon geen rooster-alert ". $roosterData['naam'] ." versturen");

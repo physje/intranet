@@ -10,7 +10,7 @@ include_once('genereerDeclaratiePdf.php');
 $db = connect_db();
 
 $write2EB = false;
-$sendMail = false;
+$sendMail = true;
 $sendTestMail = true;
 
 if(isset($_REQUEST['hash'])) {
@@ -194,7 +194,7 @@ if(isset($_REQUEST['hash'])) {
 				$mail->Subject	= trim($Subject);
 				$mail->IsHTML(true);
 				$mail->Body	= $MailHeader.implode("\n", $mailPenningsmeester).$MailFooter;
-				$mail->AddAttachment('PDF\\'. $mutatieNr .'.pdf', date('ymd') .' '. makeVoorgangerName($voorganger, 1) . ' '. date('d-m', $dienstData['start']) .' '. $dagdeel .'.pdf');
+				$mail->AddAttachment('PDF/'. $mutatieNr .'.pdf', date('ymd') .' '. makeVoorgangerName($voorganger, 1) . ' '. date('d-m', $dienstData['start']) .' '. $dagdeel .'.pdf');
 				
 				if(!$sendMail) {
 					$page[] = 'Afzender :'. $ScriptTitle .'|'.$ScriptMailAdress;
@@ -248,7 +248,7 @@ if(isset($_REQUEST['hash'])) {
 				$mail->Subject	= trim($Subject);
 				$mail->IsHTML(true);
 				$mail->Body	= $MailHeader.implode("<br>\n", $mailPredikant).$MailFooter;
-				$mail->AddAttachment('PDF\\'. $mutatieNr .'.pdf',"Declaratie $dagdeel ". date('j-n-Y', $dienstData['start']) ." Koningskerk Deventer.pdf");
+				$mail->AddAttachment('PDF/'. $mutatieNr .'.pdf',"Declaratie $dagdeel ". date('j-n-Y', $dienstData['start']) ." Koningskerk Deventer.pdf");
 				
 				if(!$sendMail) {
 					$page[] = 'Afzender :'. $declaratieReplyName .'|'.$declaratieReplyAddress;

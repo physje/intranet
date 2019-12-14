@@ -1,9 +1,9 @@
 <?php
-include_once ('ValueObjects\MutationId.php');
-include_once ('ValueObjects\Date.php');
-include_once ('ValueObjects\RelationCode.php');
-include_once ('ValueObjects\RelationId.php');
-include_once ('ValueObjects\RelationSearch.php');
+include_once ('ValueObjects/MutationId.php');
+include_once ('ValueObjects/Date.php');
+include_once ('ValueObjects/RelationCode.php');
+include_once ('ValueObjects/RelationId.php');
+include_once ('ValueObjects/RelationSearch.php');
 
 # Documentatie over de gebruikte soap/api: https://secure.e-boekhouden.nl/handleiding/Documentatie_soap.pdf
 
