@@ -1409,24 +1409,24 @@ function makeVoorgangerName($id, $type) {
 function setVoorgangerDeclaratieStatus($status, $dienst) {
 	global $db, $TableDiensten, $DienstDeclStatus, $DienstID;
 	
-	# 0 geen
-	# 1 open
-	# 2 link verstuurd
-	# 3 link bezocht
-	# 4 opgeslagen
-	# 5 bij CluCo
-	# 6 bij lid
-	# 7 afgekeurd
-	# 8 afgerond
-	# 9 afgezien
+	$descr[0] = 'geen';
+	$descr[1] = 'open';
+	$descr[2] = 'link verstuurd';
+	$descr[3] = 'link bezocht';
+	$descr[4] = 'opgeslagen';
+	$descr[5] = 'bij CluCo';
+	$descr[6] = 'bij lid';
+	$descr[7] = 'afgekeurd';
+	$descr[8] = 'afgerond';
+	$descr[9] = 'afgezien';
 	
 	$sql = "UPDATE $TableDiensten SET $DienstDeclStatus = $status WHERE $DienstID = $dienst";
 	
 	if(mysqli_query($db, $sql)) {
-		toLog('info', '', '', "Declaratie-status van dienst $dienst veranderd in $status");
+		toLog('debug', '', '', "Declaratie-status van dienst $dienst veranderd in ". $descr[$status]);
 		return true;
 	} else {
-		toLog('error', '', '', "Aanpassen van declaratie-status van dienst $dienst naar $status is mislukt");
+		toLog('error', '', '', "Aanpassen van declaratie-status van dienst $dienst naar ". $descr[$status] ." is mislukt");
 		return false;
 	}	
 }

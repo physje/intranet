@@ -144,7 +144,7 @@ if(isset($_REQUEST['hash'])) {
 			# -------
 			# In eboekhouden inschieten
 			if($write2EB AND isset($voorgangerData['EB-relatie']) AND $voorgangerData['EB-relatie'] > 0) {			
-				$errorResult = eb_verstuurDeclaratie ($voorgangerData['EB-relatie'], $totaal, '[verwijder deze declaratie] '. date('Y-m-d', $dienstData['start']).', '. $dagdeel .', '.makeVoorgangerName($voorganger, 2), $mutatieId);			
+				$errorResult = eb_verstuurDeclaratie ($voorgangerData['EB-relatie'], $totaal, date('Y-m-d', $dienstData['start']).', '. $dagdeel .', '.makeVoorgangerName($voorganger, 2), $mutatieId);			
 				if($errorResult) {
 					toLog('error', '', '', $errorResult);
 					$sendDeclaratieSucces = false;
@@ -157,12 +157,19 @@ if(isset($_REQUEST['hash'])) {
 			if($sendDeclaratieSucces) {			
 				# -------
 				# PDF maken
+				
+				# We gaan er vanuit dat hierboven alles goed gegaan is,
+				# maar voor de zekerheid vragen we nogmaals het IBAN-nummer op
+				# horend bij dit ID.
+				# Dat gaat ook IBAN nummer zijn wat gebruikt gaat worden.
+				eb_getRelatieIbanByCode ($voorgangerData['EB-relatie'], $iban);
+				
 				$mutatieNr			= $mutatieId;
 				$mutatieDatum 	= date("d-m-Y");
 				$naam						= makeVoorgangerName($voorganger, 3);
 				$adres					= $voorgangerData['plaats'];
 				$mailadres			= $voorgangerData['mail'];
-				$iban						= trim(strtoupper($_POST['IBAN']));
+				$iban						= trim(strtoupper($iban));
 				$declaratieData	= array(
 					array("Voorgaan $dagdeel ". date('d-m', $dienstData['start']), $voorgangerData['honorarium']),
 					array("Reiskosten (". $_POST['reis_van'] .")", $_POST['reiskosten'])
@@ -206,7 +213,7 @@ if(isset($_REQUEST['hash'])) {
 						toLog('error', '', '', "Problemen met declaratie-notificatie (dienst $dienst, voorganger $voorganger)");
 						$page[] = "Er zijn problemen met het versturen van de notificatie-mail naar penningsmeester.";
 					} else {
-						toLog('info', '', '', "Declaratie-notificatie naar penningsmeester voor ". date('j-n-Y', $dienstData['start']));						
+						toLog('debug', '', '', "Declaratie-notificatie naar penningsmeester voor ". date('j-n-Y', $dienstData['start']));
 					}
 				}
 				
@@ -260,7 +267,7 @@ if(isset($_REQUEST['hash'])) {
 						toLog('error', '', '', "Problemen met declaratie-afschrift (dienst $dienst, voorganger $voorganger)");
 						$page[] = "Er zijn problemen met het versturen van een afschrift van de declaratie.";
 					} else {
-						toLog('info', '', '', "Declaratie-afschrift naar $mailNaam voor ". date('j-n-Y', $dienstData['start']));
+						toLog('debug', '', '', "Declaratie-afschrift naar $mailNaam voor ". date('j-n-Y', $dienstData['start']));
 						$page[] = "Er is een afschrift van de declaratie naar ". ($voorgangerData['stijl'] == 0 ? 'u' : 'jou') ." verstuurd.";
 					}
 				}					
@@ -274,6 +281,8 @@ if(isset($_REQUEST['hash'])) {
 				# -------
 				# Zet de status op afgerond
 				setVoorgangerDeclaratieStatus(8, $dienst);
+				
+				toLog('info', '', '', "Declaratie ingediend voor ". $dagdeel .' van '. date('j-n-Y', $dienstData['start']) .' door '. makeVoorgangerName($voorganger, 3));
 			}
 		} elseif(isset($_POST['check_iban'])) {
 			# Formulier waar IBAN wordt gecontroleerd
@@ -526,7 +535,7 @@ if(isset($_REQUEST['hash'])) {
 				toLog('error', '', '', "Problemen met declaratie-link versturen naar $mailNaam voor ". date('j-n-Y', $dienstData['start']));
 				$page[] = "Er zijn problemen met het versturen van de mail.";			
 			} else {
-				toLog('info', '', '', "Declaratie-link verstuurd naar $mailNaam voor ". date('j-n-y', $dienstData['start']));
+				toLog('debug', '', '', "Declaratie-link verstuurd naar $mailNaam voor ". date('j-n-y', $dienstData['start']));
 				$page[] = "Er is een mail gestuurd.";
 			}
 		}

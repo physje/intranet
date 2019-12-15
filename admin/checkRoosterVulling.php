@@ -67,7 +67,7 @@ foreach($roosters as $rooster) {
 			if(!$verlopen OR $lastWarning) {
 				# geadresseerden
 				$beheerders = getGroupMembers($roosterData['beheerder']);
-				$first = true;				
+				$beheerders[] = 984285;
 
 				foreach($beheerders as $beheerder) {
 					# $parameters['to'] = ;
@@ -100,15 +100,7 @@ foreach($roosters as $rooster) {
 					$alert[] = "Groet,";
 					$alert[] = "Matthijs";
 					
-					if($first) {
-						$var['BCC'] = '1'
-						$var['BCC_mail'] = $ScriptMailAdress;
-						$first = false;
-					} else {						
-						$var = array();
-					}
-
-					if(sendMail($beheerder, "Rooster-alert '". $roosterData['naam'] ."'", implode("<br>\n", $alert), $var)) {
+					if(sendMail($beheerder, "Rooster-alert '". $roosterData['naam'] ."'", implode("<br>\n", $alert), array())) {
 						toLog('info', '', $beheerder, "Rooster-alert ". $roosterData['naam'] ." verstuurd");
 					} else {
 						toLog('error', '', $beheerder, "Kon geen rooster-alert ". $roosterData['naam'] ." versturen");

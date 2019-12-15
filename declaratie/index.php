@@ -25,6 +25,4 @@ echo '	<td valign="top" width="25%">&nbsp;</td>'.NL;
 echo '</tr>'.NL;
 echo '</table>'.NL;
 echo $HTMLFooter;
-
-# Aantekeningen zijn verplaatst naar aantekeningen.txt
 ?>
