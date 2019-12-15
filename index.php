@@ -171,6 +171,7 @@ if(in_array(1, getMyGroups($_SESSION['ID']))) {
 	$blockArray[] = implode("<br>".NL, $adminDeel);
 }
 
+# Mailchimp
 if(in_array(1, getMyGroups($_SESSION['ID']))) {
 	$adminDeel = $adminLinks = array();
 	$adminDeel[] = "<b>Mailchimp</b>";
@@ -185,6 +186,25 @@ if(in_array(1, getMyGroups($_SESSION['ID']))) {
 	
 	$blockArray[] = implode("<br>".NL, $adminDeel);
 }
+
+# e-boekhouden.nl
+if(in_array(1, getMyGroups($_SESSION['ID']))) {
+	$adminDeel = $adminLinks = array();
+	$adminDeel[] = "<b>e-boekhouden.nl</b>";
+
+	$adminLinks['declaratie/'] = 'Declaratie-pagina';
+	$adminLinks['declaratie/relatieOverview.php'] = 'Toon alle relaties';
+	$adminLinks['declaratie/syncRelaties.php'] = 'Synchroniseer relaties naar lokale database';
+	$adminLinks['https://secure.e-boekhouden.nl/handleiding/Documentatie_soap.pdf'] = 'SOAP documenatie PDF';
+	
+	foreach($adminLinks as $link => $naam) {
+		$adminDeel[] = "<a href='$link' target='_blank'>$naam</a>";
+	}
+	
+	$blockArray[] = implode("<br>".NL, $adminDeel);
+}
+
+
 
 # Koppelingen-deel
 if(in_array(1, getMyGroups($_SESSION['ID']))) {
