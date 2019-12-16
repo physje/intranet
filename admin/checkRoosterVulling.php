@@ -44,7 +44,7 @@ foreach($roosters as $rooster) {
 			if($row_last['lastDienst'] < time()) {
 				$verlopen = true;
 
-				if(($deadline+$week) > time()) {
+				if($deadline < $firstMissed['start']) {
 					$lastWarning = true;
 				} else {
 					$lastWarning = false;
