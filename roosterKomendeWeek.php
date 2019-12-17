@@ -9,7 +9,8 @@ if(isset($_REQUEST['id'])) {
 	$eind = mktime(23,59,59,date("n", $details['eind']), date("j", $details['eind']), date("Y", $details['eind']));
 } else {
 	$start = mktime(0,0,0);
-	$eind = mktime(23,59,59,date("n"), (date("j")+7+(7-date("N"))));
+	//$eind = mktime(23,59,59,date("n"), (date("j")+7+(7-date("N"))));
+	$eind = mktime(23,59,59,date("n"), (date("j")+9));
 }
 $diensten = getKerkdiensten($start, $eind);
 $roosters = getRoosters();
