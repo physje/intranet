@@ -116,7 +116,7 @@ class PDF_3GK_Table_Declaratie extends PDF_3GK_Declaratie {
 		return $nl;
 	}
 	
-	function makeTable($header, $data) {
+	function makeTable($header, $data, $bottemLineBold) {
 		# Colors, line width and bold font
 		$this->SetFillColor(140,25,116);
 		$this->SetTextColor(255);
@@ -129,9 +129,19 @@ class PDF_3GK_Table_Declaratie extends PDF_3GK_Declaratie {
 		$this->SetFillColor(232,232,232);
 		$this->SetTextColor(0);
 		$this->SetFont('');
+
+		$nrRows = count($data);
+		$count = 0;
+
 		foreach($data as $row) {
 			$fill = !$fill;
+			
+			# Make last row bold when bottemLineBold is true and the last row will be set.
+			if($bottemLineBold and ($count == $nrRows - 1)) {
+				$this->SetFont('','B');
+			}
 			$this->Row($row, $fill);
+			$count++;
 		}
 		
 	}

@@ -66,7 +66,7 @@ function genereer_declaratie_pdf($mutatieNr, $mutatieDatum, $naam, $adres, $mail
     $widths = array_fill(1, (count($header)-1), ($breedte-30-(2*$cfgMarge))/(count($header)-1));
     $widths[0] = 30;
     $pdf->SetWidths($widths);
-    $pdf->makeTable($header, $data);
+    $pdf->makeTable($header, $data, false);
 
     # General information
     $pdf->Ln();
@@ -129,7 +129,7 @@ function genereer_declaratie_pdf($mutatieNr, $mutatieDatum, $naam, $adres, $mail
 
     $widths = array_fill(0, (count($header)), ($breedte-(2*$cfgMarge))/(count($header)));
     $pdf->SetWidths($widths);
-    $pdf->makeTable($header, $data);
+    $pdf->makeTable($header, $data, true);
 
     # Sub text
     $pdf->SetFont("Helvetica",'I',$fontSize);
@@ -141,15 +141,14 @@ function genereer_declaratie_pdf($mutatieNr, $mutatieDatum, $naam, $adres, $mail
 
 }
 
-/*
+
 $mutatieNr = "123_13719";
 $mutatieDatum = date("Y-m-d");
 $naam = "Jan Janssen";
 $adres = "adres 123"; 
 $mailadres = "naam@domein.nl";
 $iban = "NL01XXXX0123456789";
-$declaratieData = [["OnderdeelX", "€ 90.00"], ["OnderdeelY", "€ 17.15"]];
+$declaratieData = [["OnderdeelX", "90.00"], ["OnderdeelY", "17.15"]];
 
 
 genereer_declaratie_pdf($mutatieNr, $mutatieDatum, $naam, $adres, $mailadres, $iban, $declaratieData);
-*/
