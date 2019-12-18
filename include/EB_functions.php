@@ -195,12 +195,14 @@ function eb_getRelatieCodeBySearch ( $searchText, &$code ) {
 
 /**
  * Maak en verstuur mutatie voor een bestaand e-boekhouden relatie
- * @param  $code         e-boekhouden relatie code
- * @param  $bedrag       het te declareren bedrag in centen
- * @param  $toelichting  toelichting van de declaratie (niet langer dan 200 karakters)
- * @return string $exception    alleen in geval van error of SoapFault wordt deze string gereturned met informatie over de fout 
+ * @param  string $code           e-boekhouden relatie code
+ * @param  string $boekstukNummer het boekstuknummer (niet langer dan 50 karakters)
+ * @param  string $factuurNummer  het factuurnummer (niet langer dan 50 karakters)
+ * @param  int    $bedrag         het te declareren bedrag in centen
+ * @param  string $toelichting    toelichting van de declaratie (niet langer dan 200 karakters)
+ * @return string $exception      alleen in geval van error of SoapFault wordt deze string gereturned met informatie over de fout 
  */
-function eb_verstuurDeclaratie ( $code, $bedrag, $toelichting, &$mutatieId )
+function eb_verstuurDeclaratie ( $code, $boekstukNummer, $factuurNummer, $bedrag, $toelichting, &$mutatieId )
 {
     try {
         global $ebUsername, $ebSecurityCode1, $ebSecurityCode2;
@@ -209,7 +211,6 @@ function eb_verstuurDeclaratie ( $code, $bedrag, $toelichting, &$mutatieId )
         $soort             = "FactuurOntvangen";
         $datum             = date('Y-m-d');
         $rekening          = "2000";
-        $factuurNummer     = date('Ymd').'/'.$code .'/'.rand(0,1000);  // willen we de factuurnummer zo opgebouwd hebben?
         $btwCode           = "GEEN";
         $betalingstermijn  = "0";
         $tegenRekeningCode = "40491";
@@ -225,6 +226,7 @@ function eb_verstuurDeclaratie ( $code, $bedrag, $toelichting, &$mutatieId )
         $mutatie->setInvoiceNumber($factuurNummer);
         $mutatie->setDescription($toelichting);
         $mutatie->setTermOfPayment($betalingstermijn);
+        $mutatie->setBookNumber($boekstukNummer);
         $mutatie->setInOrExVat("IN");
         $mutatie->addMutationLine($bedrag, $btwPercentage, $btwCode, $tegenRekeningCode, 0);
 

@@ -149,10 +149,11 @@ if(isset($_REQUEST['hash'])) {
 			# -------
 			# In eboekhouden inschieten
 			if($write2EB AND isset($voorgangerData['EB-relatie']) AND $voorgangerData['EB-relatie'] > 0) {			
-				$relatie = $voorgangerData['EB-relatie'];				
+				$relatie = $voorgangerData['EB-relatie'];	
+				$boekstukNummer = ""; // TODO: boekstuknummer toewijzen		
 				$factuurnummer = 'preekvergoeding-'.date('d-m-Y', $dienstData['start']).'-'.$dagdeel;
 				$toelichting = implode(', ', $omschrijving);
-				$errorResult = eb_verstuurDeclaratie ($relatie, $totaal, $toelichting, $mutatieId);			
+				$errorResult = eb_verstuurDeclaratie ($relatie, $boekstukNummer, $factuurnummer, $totaal, $toelichting, $mutatieId);			
 				if($errorResult) {
 					toLog('error', '', '', $errorResult);
 					$sendDeclaratieSucces = false;

@@ -141,7 +141,7 @@ function genereer_declaratie_pdf($mutatieNr, $mutatieDatum, $naam, $adres, $mail
 
 }
 
-
+/*
 $mutatieNr = "123_13719";
 $mutatieDatum = date("Y-m-d");
 $naam = "Jan Janssen";
@@ -151,4 +151,4 @@ $iban = "NL01XXXX0123456789";
 $declaratieData = [["OnderdeelX", "90.00"], ["OnderdeelY", "17.15"]];
 
 
-genereer_declaratie_pdf($mutatieNr, $mutatieDatum, $naam, $adres, $mailadres, $iban, $declaratieData);
+genereer_declaratie_pdf($mutatieNr, $mutatieDatum, $naam, $adres, $mailadres, $iban, $declaratieData);*/

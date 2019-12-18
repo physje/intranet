@@ -244,9 +244,14 @@ class eBoekhoudenConnect
             }
         }
 
-        // Calculate the highest code and create new one by adding 1
+        // Calculate the highest code and create new one by adding 1. Offset for new relatieCode is 9000 for relations created via SOAP API.
         $maxCode = max($codeArray);
-        $newCode = (string)((int)$maxCode + 1);        
+        $newCode = "";
+        if ( (int)$maxCode < 9000 ) {
+            $newCode = "9000";
+        } else {
+            $newCode = (string)((int)$maxCode + 1);
+        }  
 
         return $newCode;
     }
