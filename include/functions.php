@@ -1034,17 +1034,28 @@ function getWijkMembers($wijk) {
 	return $data;	
 }
 
-function gelijkeDienst($dienst, $gelijk) {
+function toonDienst($dienst, $gelijk) {
 	if($gelijk == 0) {
-		return false;
+		return true;
 	} else {
 		$details = getKerkdienstDetails($dienst);
 		$diensten = getKerkdiensten(mktime(0,0,0,date("n", $details['start']),date("j", $details['start']),date("Y", $details['start'])), mktime(23,59,59,date("n", $details['start']),date("j", $details['start']),date("Y", $details['start'])));
+		$dagdeel = formatDagdeel($details['start'], false);
 		
-		if($diensten[0] == $dienst) {
-			return false;
-		} else {
+		if($gelijk == 1 AND $diensten[0] == $dienst) {
 			return true;
+		} elseif($gelijk == 2 AND ($dagdeel == 'ochtend' OR $dagdeel == 'avond')) {
+			return true;
+		} elseif($gelijk == 3 AND $dagdeel == 'ochtend') {
+			return true;
+		} elseif($gelijk == 4 AND ($dagdeel == 'middag' OR $dagdeel == 'avond')) {
+			return true;
+		} elseif($gelijk == 5 AND $dagdeel == 'middag') {
+			return true;
+		} elseif($gelijk == 6 AND $dagdeel == 'avond') {
+			return true;
+		} else {
+			return false;
 		}
 	}
 }

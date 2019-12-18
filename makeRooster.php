@@ -77,7 +77,7 @@ if(isset($_POST['save']) OR isset($_POST['maanden'])) {
 	toLog('info', $_SESSION['ID'], '', 'Rooster '. $RoosterData['naam'] .' aangepast');
 	
 	$sql = "UPDATE $TableRoosters SET $RoostersGelijk = '". $_POST['gelijkeDiensten'] ."', $RoostersOpmerking = '". $_POST['interneOpmerking'] ."', $RoostersLastChange = '". date("Y-m-d H:i:s") ."' WHERE $RoostersID like ". $_POST['rooster'];
-	mysql_query($sql);
+	mysqli_query($db, $sql);
 }
 
 # Als er op de knop van 3 maanden extra geklikt is, 3 maanden bij de eindtijd toevoegen
@@ -130,14 +130,24 @@ if(isset($_REQUEST['hash'])) {
 }
 $block_1[] = "<input type='hidden' name='blokken' value='$blokken'>";
 $block_1[] = "<table border=0>";
-$block_1[] = "<tr>";
-$block_1[] = "	<td align='right' valign='top'><input type='checkbox' name='gelijkeDiensten' value='1'". ($RoosterData['gelijk'] == 1 ? ' checked' : '') ."></td>";
-$block_1[] = "	<td colspan='". ($nrFields+1+$RoosterData['opmerking']) ."' align='left'>Bij meer diensten per dag is het rooster voor alle diensten gelijk<br><small>(pas effect na opslaan)</small></td>";
-$block_1[] = "</tr>";
-$block_1[] = "<tr>";
-$block_1[] = "	<td align='right' valign='top'><input type='checkbox' name='interneOpmerking' value='1'". ($RoosterData['opmerking'] == 1 ? ' checked' : '') ."></td>";
-$block_1[] = "	<td colspan='". ($nrFields+1+$RoosterData['opmerking']) ."' align='left'>Mogelijkheid om interne opmerkingen bij het rooster te plaatsen<br><small>(huidige opmerkingen worden verwijderd bij uitvinken)</small></td>";
-$block_1[] = "</tr>";
+if(in_array(1, $myGroups) OR in_array($beheerder, $myGroups)) {	
+	$block_1[] = "<tr>";
+	$block_1[] = "	<td align='right' valign='top'>Diensten<br><small>(pas effect na opslaan)</small></td>";
+	$block_1[] = "	<td colspan='". ($nrFields+1+$RoosterData['opmerking']) ."' align='left'>";
+	$block_1[] = "	<input type='radio' name='gelijkeDiensten' value='0'". ($RoosterData['gelijk'] == 0 ? ' checked' : '') ."> Toon alle diensten afzonderlijk<br>";
+	$block_1[] = "	<input type='radio' name='gelijkeDiensten' value='1'". ($RoosterData['gelijk'] == 1 ? ' checked' : '') ."> Toon per dag (ochtend, middag en avond zijn gelijk)<br>";
+	$block_1[] = "	<input type='radio' name='gelijkeDiensten' value='2'". ($RoosterData['gelijk'] == 2 ? ' checked' : '') ."> Toon ochtend- en avonddiensten<br>";
+	$block_1[] = "	<input type='radio' name='gelijkeDiensten' value='3'". ($RoosterData['gelijk'] == 3 ? ' checked' : '') ."> Toon ochtenddiensten<br>";
+	$block_1[] = "	<input type='radio' name='gelijkeDiensten' value='4'". ($RoosterData['gelijk'] == 4 ? ' checked' : '') ."> Toon middag- en avonddiensten<br>";
+	$block_1[] = "	<input type='radio' name='gelijkeDiensten' value='5'". ($RoosterData['gelijk'] == 5 ? ' checked' : '') ."> Toon middagdiensten<br>";
+	$block_1[] = "	<input type='radio' name='gelijkeDiensten' value='6'". ($RoosterData['gelijk'] == 6 ? ' checked' : '') ."> Toon avonddiensten";
+	$block_1[] = "	</td>";
+	$block_1[] = "</tr>";
+	$block_1[] = "<tr>";
+	$block_1[] = "	<td align='right' valign='top'><input type='checkbox' name='interneOpmerking' value='1'". ($RoosterData['opmerking'] == 1 ? ' checked' : '') ."></td>";
+	$block_1[] = "	<td colspan='". ($nrFields+1+$RoosterData['opmerking']) ."' align='left'>Mogelijkheid om interne opmerkingen bij het rooster te plaatsen<br><small>(huidige opmerkingen worden verwijderd bij uitvinken)</small></td>";
+	$block_1[] = "</tr>";
+}
 $block_1[] = "<tr>";
 $block_1[] = "	<td><b>Dienst</b></td>";
 if($RoosterData['text_only'] == 0) {
@@ -150,13 +160,19 @@ $block_1[] = "	<td align='left'><b>Bijzonderheid</b></td>";
 $block_1[] = "</tr>";
 
 foreach($diensten as $dienst) {
-	if(!gelijkeDienst($dienst, $RoosterData['gelijk'])) {	
+	if(toonDienst($dienst, $RoosterData['gelijk'])) {	
 		$details = getKerkdienstDetails($dienst);
 		$vulling = getRoosterVulling($_REQUEST['rooster'], $dienst);
 		$opmerking = getRoosterOpmerking($_REQUEST['rooster'], $dienst);
 		
+		if(in_array($RoosterData['gelijk'], array(1, 3, 5, 6))) {
+			$korteDatum = true;
+		} else {
+			$korteDatum = false;
+		}
+				
 		$block_1[] = "<tr>";
-		$block_1[] = "	<td align='right'>". ($RoosterData['gelijk'] == 1 ? strftime("%A %d %b", $details['start']) : strftime("%A %d %b %H:%M", $details['start'])) ."</td>";
+		$block_1[] = "	<td align='right'>". ($korteDatum ? strftime("%A %d %b", $details['start']) : strftime("%A %d %b %H:%M", $details['start'])) ."</td>";
 				
 		if($RoosterData['text_only'] == 0) {
 			$selected = current($vulling);

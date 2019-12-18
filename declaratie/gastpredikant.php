@@ -10,7 +10,7 @@ include_once('genereerDeclaratiePdf.php');
 $db = connect_db();
 
 $write2EB = false;
-$sendMail = true;
+$sendMail = false;
 $sendTestMail = true;
 
 if(isset($_REQUEST['hash'])) {
@@ -31,6 +31,7 @@ if(isset($_REQUEST['hash'])) {
 		if(isset($_POST['reiskosten']))	$page[] = "<input type='hidden' name='reiskosten' value='". trim($_POST['reiskosten']) ."'>";
 		if(isset($_POST['reis_van']))		$page[] = "<input type='hidden' name='reis_van' value='". trim($_POST['reis_van']) ."'>";
 		if(isset($_POST['reis_naar']))	$page[] = "<input type='hidden' name='reis_naar' value='". trim($_POST['reis_naar']) ."'>";
+		if(isset($_POST['km']))					$page[] = "<input type='hidden' name='km' value='". trim($_POST['km']) ."'>";
 
 		if(isset($_POST['overig']))	{
 			foreach($_POST['overig'] as $key => $string) {
@@ -115,6 +116,9 @@ if(isset($_REQUEST['hash'])) {
 			$mailPenningsmeester[] = "	</tr>";
 
 			$totaal = $voorgangerData['honorarium'] + $_POST['reiskosten'];
+			$omschrijving[] = 'preekvergoeding: '. formatPrice($voorgangerData['honorarium'], false);
+			$omschrijving[] = 'kilometers: '. round($_POST['km']);
+			
 			$declaratieDataExtra = array();
 
 			foreach($_POST['overig'] as $key => $string) {
@@ -129,6 +133,7 @@ if(isset($_REQUEST['hash'])) {
 					$mailPenningsmeester[] = "	</tr>";
 					
 					$declaratieDataExtra[] = array($string, $price);
+					$omschrijving[] = strtolower($string) .': '. formatPrice($price, false);
 				}
 			}
 
@@ -144,13 +149,18 @@ if(isset($_REQUEST['hash'])) {
 			# -------
 			# In eboekhouden inschieten
 			if($write2EB AND isset($voorgangerData['EB-relatie']) AND $voorgangerData['EB-relatie'] > 0) {			
-				$errorResult = eb_verstuurDeclaratie ($voorgangerData['EB-relatie'], $totaal, date('Y-m-d', $dienstData['start']).', '. $dagdeel .', '.makeVoorgangerName($voorganger, 2), $mutatieId);			
+				$relatie = $voorgangerData['EB-relatie'];				
+				$factuurnummer = 'preekvergoeding-'.date('d-m-Y', $dienstData['start']).'-'.$dagdeel;
+				$toelichting = implode(', ', $omschrijving);
+				$errorResult = eb_verstuurDeclaratie ($relatie, $totaal, $toelichting, $mutatieId);			
 				if($errorResult) {
 					toLog('error', '', '', $errorResult);
 					$sendDeclaratieSucces = false;
 				}
 			} else {
 				$mutatieId = '10101';
+				echo 'factuurnummer : '.'preekvergoeding-'.date('d-m-Y', $dienstData['start']).'-'.$dagdeel;
+				echo 'toelichting :'. implode(', ', $omschrijving);
 			}
 			
 			# Als de declaratie succesvol is ingeschoten			
@@ -409,7 +419,8 @@ if(isset($_REQUEST['hash'])) {
 				$page[] = "		<td>&nbsp;</td>";
 				$page[] = "		<td>&nbsp;</td>";
 				$page[] = "		<td align='right'>". formatPrice($reiskosten) ."</td>";
-				$page[] = "<input type='hidden' name='reiskosten' value='$reiskosten'>";
+				$page[] = "		<input type='hidden' name='reiskosten' value='$reiskosten'>";
+				$page[] = "		<input type='hidden' name='km' value='$km'>";
 				$page[] = "	</tr>";
 				$page[] = "	<tr>";
 				$page[] = "		<td colspan='6'>&nbsp;</td>";
