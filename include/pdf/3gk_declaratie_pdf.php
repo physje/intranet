@@ -61,18 +61,17 @@ class PDF_3GK_Declaratie extends FPDF {
     $this->SetDrawColor(255,255,255);
     $this->SetLineWidth(0.5);
     $this->Cell(75, 30, "", 'R', 0, 'C', 1);
-    $this->Image('../images/e-mail.png', ($cfgMarge - $iconXOffset), ($hoogte - ($iconYOffset + 12)), 4, 4);
-    $this->Image('../images/telefoon.png', ($cfgMarge - $iconXOffset), ($hoogte - ($iconYOffset + 6)), 4, 4);
+    $this->Image('../images/e-mail.png', ($cfgMarge - $iconXOffset), ($hoogte - ($iconYOffset + 6)), 4, 4);
     $this->Image('../images/adres.png', ($cfgMarge - $iconXOffset), ($hoogte - ($iconYOffset + 0)), 4, 4);
 
     $this->SetY(-(13+$iconYOffset));
     $this->SetX(($cfgMarge - $iconXOffset) + 5);
    
-    $this->Cell(70, 7,'penningmeester@3gk.nl',0,0,'L');
+    $this->Cell(70, 7,'',0,0,'L');
     $this->Cell(120,7,'KONINGSKERK DEVENTER',0,0,'R');
     $this->Ln();
     $this->SetX(($cfgMarge - $iconXOffset) + 5);
-    $this->Cell(70, 6,'0612345678',0,0,'L');
+    $this->Cell(70, 6,'penningmeester@3gk.nl',0,0,'L');
     $this->Ln();
     $this->SetX(($cfgMarge - $iconXOffset) + 5);
     $this->Cell(70, 6,'Marienburghstraat 4, 7415 BP Deventer',0,0,'L');
