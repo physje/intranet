@@ -42,16 +42,15 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 			$mailText[] = "Vandaag ". ($voorgangerData['stijl'] == 0 ? 'gaat u' : 'ga jij')." voor in de $dagdeel van de Koningskerk te Deventer.";
 			$mailText[] = "";
 			$mailText[] = "De Koningskerk heeft sinds kort een digitale declaratie-omgeving waar gast-predikanten hun declaratie kunnen indienen.";
-			$mailText[] = "Voordeel hiervan is dat waar mogelijk gegevens al zijn ingevuld, dat de declaratie direct in de boekhouding komt (wat de doorloop-tijd verkort) en dat ". ($voorgangerData['stijl'] == 0 ? 'u' : 'jij') ." een PDF-document voor de administratie in ". ($voorgangerData['stijl'] == 0 ? 'uw' : 'jouw') ." mailbox ontvangt.";
+			$mailText[] = "Voordeel hiervan is dat waar mogelijk gegevens al zijn ingevuld, dat de declaratie direct in de boekhouding komt (wat de doorloop-tijd verkort) en dat ". ($voorgangerData['stijl'] == 0 ? 'u' : 'jij') ." een PDF-document voor de administratie in ". ($voorgangerData['stijl'] == 0 ? 'uw' : 'jouw') ." mailbox krijgt.";
 			$mailText[] = "";
-			$mailText[] = "Het kan zijn dat ". ($voorgangerData['stijl'] == 0 ? 'u' : 'jij') ." 2,5 week geleden ookal een Excel-sheet hebt ontvangen. Deze is nog steeds bruikbaar, maar het heeft sterk de voorkeur de digitale declaratie-omgeving te gebruiken.";
+			$mailText[] = "Het kan zijn dat ". ($voorgangerData['stijl'] == 0 ? 'u' : 'jij') ." 2,5 week geleden al een Excel-declaratie-formulier hebt ontvangen. Deze is nog steeds bruikbaar, maar het heeft sterk de voorkeur de digitale declaratie-omgeving te gebruiken.";
 			$mailText[] = "";
-			$mailText[] = "Klik <a href='$declaratieLink'>hier</a> om bij ". ($voorgangerData['stijl'] == 0 ? 'uw' : 'jouw') ." persoonlijke digitale declaratie-omgeving te komen.";
+			$mailText[] = "Om de persoonlijke digitale declaratie-omgeving te bereiken kunt u <a href='$declaratieLink'>hier</a> klikken.";
 			$mailText[] = "";
 			$mailText[] = "Mochten er nog vragen zijn dan hoor ik het graag.";
 			$mailText[] = "";
 			$mailText[] = "Vriendelijke groeten";
-			$mailText[] = "";
 			$mailText[] = $declaratieReplyName;
 			$mailText[] = $declaratieReplyAddress;
 			

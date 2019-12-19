@@ -150,9 +150,10 @@ if(isset($_REQUEST['hash'])) {
 			# In eboekhouden inschieten
 			if($write2EB AND isset($voorgangerData['EB-relatie']) AND $voorgangerData['EB-relatie'] > 0) {			
 				$relatie = $voorgangerData['EB-relatie'];	
-				$boekstukNummer = ""; // TODO: boekstuknummer toewijzen		
+				$boekstukNummer = generateBoekstukNr(date('Y'));
 				$factuurnummer = 'preekvergoeding-'.date('d-m-Y', $dienstData['start']).'-'.$dagdeel;
 				$toelichting = implode(', ', $omschrijving);
+				
 				$errorResult = eb_verstuurDeclaratie ($relatie, $boekstukNummer, $factuurnummer, $totaal, $toelichting, $mutatieId);			
 				if($errorResult) {
 					toLog('error', '', '', $errorResult);
@@ -160,8 +161,9 @@ if(isset($_REQUEST['hash'])) {
 				}
 			} else {
 				$mutatieId = '10101';
-				echo 'factuurnummer : '.'preekvergoeding-'.date('d-m-Y', $dienstData['start']).'-'.$dagdeel;
-				echo 'toelichting :'. implode(', ', $omschrijving);
+				echo 'factuurnummer : '.'preekvergoeding-'.date('d-m-Y', $dienstData['start']).'-'.$dagdeel ."<br>\n";
+				echo 'toelichting :'. implode(', ', $omschrijving) ."<br>\n";
+				echo 'boekstukNummer :'. $boekstukNummer ."<br>\n";
 			}
 			
 			# Als de declaratie succesvol is ingeschoten			
@@ -212,13 +214,14 @@ if(isset($_REQUEST['hash'])) {
 				$mail->Subject	= trim($Subject);
 				$mail->IsHTML(true);
 				$mail->Body	= $MailHeader.implode("\n", $mailPenningsmeester).$MailFooter;
-				$mail->AddAttachment('PDF/'. $mutatieNr .'.pdf', date('ymd') .' '. makeVoorgangerName($voorganger, 1) . ' '. date('d-m', $dienstData['start']) .' '. $dagdeel .'.pdf');
+				$mail->AddAttachment('PDF/'. $mutatieNr .'.pdf', $boekstukNummer .' '. makeVoorgangerName($voorganger, 1) . ' '. date('d-m', $dienstData['start']) .' '. $dagdeel .'.pdf');
 				
 				if(!$sendMail) {
-					$page[] = 'Afzender :'. $ScriptTitle .'|'.$ScriptMailAdress;
-					$page[] = 'Ontvanger :'. $declaratieReplyName .'|'.$declaratieReplyAddress;
-					$page[] = 'Onderwerp :'. trim($Subject);
-					$page[] = implode("\n", $mailPenningsmeester);
+					$page[] = 'Afzender :'. $ScriptTitle .'|'.$ScriptMailAdress ."<br>\n";
+					$page[] = 'Ontvanger :'. $declaratieReplyName .'|'.$declaratieReplyAddress ."<br>\n";
+					$page[] = 'Onderwerp :'. trim($Subject) ."<br>\n";
+					$page[] = $boekstukNummer .' '. makeVoorgangerName($voorganger, 1) . ' '. date('d-m', $dienstData['start']) .' '. $dagdeel .".pdf<br>\n";
+					$page[] = implode("\n", $mailPenningsmeester) ."<br>\n";					
 				} else {
 					if(!$mail->Send()) {
 						toLog('error', '', '', "Problemen met declaratie-notificatie (dienst $dienst, voorganger $voorganger)");

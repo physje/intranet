@@ -178,6 +178,10 @@ $ConfigValue				= "value";
 $ConfigOpmerking		= "comment";
 $ConfigAdded				= "added";
 
+$TableEBBoekstuk		= "eb_boekstuk";
+$EBBoekstukJaar			= "jaar";
+$EBBoekstukVolgNr		= "volgnummer";
+
 $wijkArray			= array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J');
 $statusArray		= array('actief', 'afgemeld', 'afgevoerd', 'onttrokken', 'overleden', 'vertrokken');
 $burgelijkArray	= array('gehuwd', 'gereg. partner', 'gescheiden', 'ongehuwd', 'weduwe', 'weduwnaar');

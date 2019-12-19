@@ -1370,6 +1370,7 @@ function makeVoorgangerName($id, $type) {
 	# type = 4 : Catharinus van den Berg -> C.M. van den Berg (bij ontbreken voornaam)
 	# type = 5 : Catharinus -> ds. van den Berg (bij ontbreken voornaam)	
 	# type = 6 : Berg; van der, C.M.
+	# type = 7 : van den Berg
 	
 	
 	$voorgangerData = getVoorgangerData($id);
@@ -1387,6 +1388,10 @@ function makeVoorgangerName($id, $type) {
 	if($voorgangerData['voor'] != "") {
 		$voornaam = $voorgangerData['voor'];
 	}
+	
+	if($type == 7) {
+		return $voorgangerAchterNaam;
+	}	
 	
 	if($type == 6) {
 		return $voorgangerAchterNaamABC.', '.$voorgangerData['init'];
@@ -1497,6 +1502,25 @@ function determineAddressDistance($start, $end) {
 	}
 		
 	return $afstand;
+}
+
+function generateBoekstukNr($jaar) {
+	global $db, $TableEBBoekstuk, $EBBoekstukJaar, $EBBoekstukVolgNr;
+	
+	$sql_jaar = "SELECT $EBBoekstukVolgNr FROM $TableEBBoekstuk WHERE $EBBoekstukJaar = $jaar";
+	$result_jaar = mysqli_query($db, $sql_jaar);
+	if($row_jaar = mysqli_fetch_array($result_jaar)){
+		$volgnummer = $row_jaar[$EBBoekstukVolgNr]+1;
+		
+		$sql = "UPDATE $TableEBBoekstuk SET $EBBoekstukVolgNr = $volgnummer WHERE $EBBoekstukJaar = $jaar";
+	} else {
+		$volgnummer = 1;
+		$sql = "INSERT INTO $TableEBBoekstuk ($EBBoekstukJaar, $EBBoekstukVolgNr) VALUES ($jaar, $volgnummer)";
+	}
+	
+	mysqli_query($db, $sql);
+	
+	return $jaar.substr('0000'.$volgnummer, -4);
 }
 
 ?>

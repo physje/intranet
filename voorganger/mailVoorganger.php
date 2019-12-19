@@ -36,6 +36,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 		
 		$aanspeekNaam		= makeVoorgangerName($dienstData['voorganger_id'], 5);
 		$mailNaam 			= makeVoorgangerName($dienstData['voorganger_id'], 4);
+		$voorgangerAchterNaam = makeVoorgangerName($dienstData['voorganger_id'], 7);
 		
 		# Nieuw mail-object aanmaken
 		$mail = new PHPMailer;
