@@ -64,6 +64,8 @@ if(isset($_REQUEST['hash'])) {
 					if($errorResult) {
 						toLog('error', '', '', $errorResult);
 						$IBANChangeSucces = false;						
+					} else {
+						toLog('debug', '', '', 'IBAN van relatie '. $voorgangerData['EB-relatie'] .' aangepast van '. $_POST['oorspronkelijke_IBAN'] .' naar '. $_POST['IBAN']);
 					}
 				}			
 			} else {
@@ -72,6 +74,8 @@ if(isset($_REQUEST['hash'])) {
 				if($errorResult) {
 					toLog('error', '', '', $errorResult);
 					$IBANSearchSucces = false;
+				} else {
+					toLog('debug', '', '', 'IBAN '. $_POST['IBAN'] ' hoort bij relatie '. $EB_code);
 				}
 								
 				if(!is_numeric($EB_code)) {
@@ -80,12 +84,18 @@ if(isset($_REQUEST['hash'])) {
 						if($errorResult) {
 							toLog('error', '', '', $errorResult);
 							$addRelatieSucces = false;
+						} else {
+							toLog('debug', '', '', 'Nieuwe relatie aangemaakt in e-boekhouden voor '.makeVoorgangerName($voorganger, 6) .' -> '. $EB_code);
 						}
 						
 						if($addRelatieSucces) {
 							$sql = "UPDATE $TableVoorganger SET $VoorgangerEBRelatie = '$EB_code' WHERE $VoorgangerID = $voorganger";
-							mysqli_query($db, $sql);							
-							$voorgangerData['EB-relatie'] = $EB_code;
+							if(mysqli_query($db, $sql)) {
+								$voorgangerData['EB-relatie'] = $EB_code;
+								toLog('debug', '', '', 'In lokale database EBcode '. $EB_code .' aan voorganger '. $voorganger .' gekoppeld');
+							} else {
+								toLog('error', '', '', 'Koppelen van EBcode '. $EB_code .' aan voorganger '. $voorganger .' is mislukt');
+							}
 						}
 					} else {
 						echo 'Nieuwe relatie aanmaken voor '. $_POST['IBAN'];
@@ -154,10 +164,12 @@ if(isset($_REQUEST['hash'])) {
 				$factuurnummer = 'preekvergoeding-'.date('d-m-Y', $dienstData['start']).'-'.$dagdeel;
 				$toelichting = implode(', ', $omschrijving);
 				
-				$errorResult = eb_verstuurDeclaratie ($relatie, $boekstukNummer, $factuurnummer, $totaal, $toelichting, $mutatieId);			
+				$errorResult = eb_verstuurDeclaratie ($relatie, $boekstukNummer, $factuurnummer, $totaal, $toelichting, $mutatieId);
 				if($errorResult) {
 					toLog('error', '', '', $errorResult);
 					$sendDeclaratieSucces = false;
+				} else {
+					toLog('debug', '', '', "Declaratie aangemaakt; relatie:$relatie, boekstukNummer:$boekstukNummer, mutatieId:$mutatieId, factuurnummer:$factuurnummer");
 				}
 			} else {
 				$mutatieId = '10101';
