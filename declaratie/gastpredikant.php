@@ -11,7 +11,7 @@ $db = connect_db();
 
 $write2EB = true;
 $sendMail = true;
-$sendTestMail = true;
+$sendTestMail = false;
 
 if(isset($_REQUEST['hash'])) {
 	$hash = urldecode($_REQUEST['hash']);
@@ -224,6 +224,7 @@ if(isset($_REQUEST['hash'])) {
 				if(!$sendTestMail) {
 					$mail->AddAddress($declaratieReplyAddress, $declaratieReplyName);
 					$mail->AddCC($EBDeclaratieAddress);
+					$mail->AddBCC($ScriptMailAdress);
 				} else {
 					$mail->AddAddress($ScriptMailAdress);
 				}
@@ -279,6 +280,7 @@ if(isset($_REQUEST['hash'])) {
 				# Alle geadresseerden toevoegen
 				if(!$sendTestMail) {
 					$mail->AddAddress($voorgangerData['mail'], $mailNaam);
+					$mail->AddBCC($ScriptMailAdress);
 				} else {
 					$mail->AddAddress($ScriptMailAdress);
 				}

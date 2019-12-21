@@ -28,8 +28,9 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 			$mail->From			= $declaratieReplyAddress;
 			
 			# Geadresseerden toevoegen
-			//$mail->AddAddress($voorgangerData['mail'], $mailNaam);
-			$mail->AddAddress('internet@draijer.org');
+			$mail->AddAddress($voorgangerData['mail'], $mailNaam);
+			$mail->AddBCC($ScriptMailAdress);
+			//$mail->AddAddress('internet@draijer.org');
 			
 			# Declaratielink genereren
 			$hash = urlencode(password_hash($dienst.'$'.$randomCodeDeclaratie.'$'.$voorganger, PASSWORD_BCRYPT));
