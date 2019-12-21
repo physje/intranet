@@ -33,7 +33,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 			
 			# Declaratielink genereren
 			$hash = urlencode(password_hash($dienst.'$'.$randomCodeDeclaratie.'$'.$voorganger, PASSWORD_BCRYPT));
-			$declaratieLink = $ScriptURL ."declaratie/index.php?hash=$hash&d=$dienst&draad=". $_REQUEST['draad'] ."&v=$voorganger";
+			$declaratieLink = $ScriptURL ."declaratie/gastpredikant.php?hash=$hash&d=$dienst&v=$voorganger";
 			
 			# Mail opstellen
 			$mailText = array();

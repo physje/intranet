@@ -3,7 +3,8 @@
 define("NL", "\n");
 
 # Set locale to Dutch
-setlocale(LC_ALL, 'nl_NL');
+# e-boekhouden is kieskeurig, dus alleen de tijd
+setlocale(LC_TIME, 'nl_NL');
 
 # Tabel- en veldnamen voor de verschillende tabellen in MySQL
 $TableUsers					= "leden";

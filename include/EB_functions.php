@@ -4,7 +4,6 @@ include_once('e-boekhouden/eBoekhoudenConnect.php');
 include_once('e-boekhouden/Relation.php');
 include_once('e-boekhouden/Mutation.php');
 
-
 /**
  * Maak nieuwe relatie aan in e-boekhouden
  * @param  string $naam         naam van de nieuwe relatie
@@ -202,7 +201,7 @@ function eb_getRelatieCodeBySearch ( $searchText, &$code ) {
  * @param  string $toelichting    toelichting van de declaratie (niet langer dan 200 karakters)
  * @return string $exception      alleen in geval van error of SoapFault wordt deze string gereturned met informatie over de fout 
  */
-function eb_verstuurDeclaratie ( $code, $boekstukNummer, $factuurNummer, $bedrag, $toelichting, &$mutatieId )
+function eb_verstuurDeclaratie ( $code, $boekstukNummer, $factuurNummer, $bedragCenten, $toelichting, &$mutatieId )
 {
     try {
         global $ebUsername, $ebSecurityCode1, $ebSecurityCode2;
@@ -216,7 +215,8 @@ function eb_verstuurDeclaratie ( $code, $boekstukNummer, $factuurNummer, $bedrag
         $tegenRekeningCode = "40491";
         $btwPercentage     = 0.0;
         // Ingevoerde bedrag is in centen, omrekenen naar euro's
-        $bedrag            = (double) round($bedrag / 100, 2);
+        //$bedrag            = (double) round($bedragCenten / 100, 2);        
+        $bedrag            = number_format(($bedragCenten/100), 2, '.', '');
 
         $mutatie = new Mutation;
         $mutatie->setKind($soort);

@@ -9,8 +9,8 @@ include_once('genereerDeclaratiePdf.php');
 
 $db = connect_db();
 
-$write2EB = false;
-$sendMail = false;
+$write2EB = true;
+$sendMail = true;
 $sendTestMail = true;
 
 if(isset($_REQUEST['hash'])) {
@@ -75,7 +75,7 @@ if(isset($_REQUEST['hash'])) {
 					toLog('error', '', '', $errorResult);
 					$IBANSearchSucces = false;
 				} else {
-					toLog('debug', '', '', 'IBAN '. $_POST['IBAN'] ' hoort bij relatie '. $EB_code);
+					toLog('debug', '', '', 'IBAN '. $_POST['IBAN'] .' hoort bij relatie '. $EB_code);
 				}
 								
 				if(!is_numeric($EB_code)) {
@@ -126,7 +126,7 @@ if(isset($_REQUEST['hash'])) {
 			$mailPenningsmeester[] = "	</tr>";
 
 			$totaal = $voorgangerData['honorarium'] + $_POST['reiskosten'];
-			$omschrijving[] = 'preekvergoeding: '. formatPrice($voorgangerData['honorarium'], false);
+			$omschrijving[] = 'preekvergoeding: '. round(formatPrice($voorgangerData['honorarium'], false));
 			$omschrijving[] = 'kilometers: '. round($_POST['km']);
 			
 			$declaratieDataExtra = array();
@@ -160,13 +160,21 @@ if(isset($_REQUEST['hash'])) {
 			# In eboekhouden inschieten
 			if($write2EB AND isset($voorgangerData['EB-relatie']) AND $voorgangerData['EB-relatie'] > 0) {			
 				$relatie = $voorgangerData['EB-relatie'];	
-				$boekstukNummer = generateBoekstukNr(date('Y'));
-				$factuurnummer = 'preekvergoeding-'.date('d-m-Y', $dienstData['start']).'-'.$dagdeel;
+				$boekstukNummer = generateBoekstukNr(date('Y'));				
+				$factuurnummer = 'voorgaan-'.date('d-m-Y', $dienstData['start']).'-'.$dagdeel;
 				$toelichting = implode(', ', $omschrijving);
-				
+								
 				$errorResult = eb_verstuurDeclaratie ($relatie, $boekstukNummer, $factuurnummer, $totaal, $toelichting, $mutatieId);
+				//$page[] = "relatie:". $relatie ."<br>\n";
+				//$page[] = "boekstukNummer:". $boekstukNummer ."<br>\n";
+				//$page[] = "factuurnummer:". $factuurnummer ."<br>\n";
+				//$page[] = "totaal:". $totaal ."<br>\n";
+				//$page[] = "toelichting:". $toelichting ."<br>\n";
+				
 				if($errorResult) {
 					toLog('error', '', '', $errorResult);
+					$page[] = 'Er is iets niet goed gegaan met aanmaken van de declaratie<br>';
+					$page[] = 'Neem contact op met de webmaster zodat deze de logfiles kan uitlezen';
 					$sendDeclaratieSucces = false;
 				} else {
 					toLog('debug', '', '', "Declaratie aangemaakt; relatie:$relatie, boekstukNummer:$boekstukNummer, mutatieId:$mutatieId, factuurnummer:$factuurnummer");
