@@ -194,6 +194,7 @@ if(in_array(1, getMyGroups($_SESSION['ID']))) {
 
 	$adminLinks['declaratie/'] = 'Declaratie-pagina';
 	$adminLinks['declaratie/relatieOverview.php'] = 'Toon alle relaties';
+	$adminLinks['declaratie/mutatieOverview.php'] = 'Toon alle mutaties';
 	$adminLinks['declaratie/syncRelaties.php'] = 'Synchroniseer relaties naar lokale database';
 	$adminLinks['https://secure.e-boekhouden.nl/handleiding/Documentatie_soap.pdf'] = 'SOAP documenatie PDF';
 	
