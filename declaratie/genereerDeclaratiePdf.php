@@ -28,7 +28,7 @@ function bereken_betaal_datum($datum, $betaalDag)
         } else {
             $maand += 1;
         }
-        $betaalDatum = $betaalDag.$maand."-".$jaar;
+        $betaalDatum = $betaalDag.'-'.$maand."-".$jaar;
     }
 
     return $betaalDatum;
