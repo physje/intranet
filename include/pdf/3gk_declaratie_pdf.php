@@ -71,7 +71,7 @@ class PDF_3GK_Declaratie extends FPDF {
     $this->Cell(120,7,'KONINGSKERK DEVENTER',0,0,'R');
     $this->Ln();
     $this->SetX(($cfgMarge - $iconXOffset) + 5);
-    $this->Cell(70, 6,'penningmeester@3gk.nl',0,0,'L');
+    $this->Cell(70, 6,'penningmeester@koningskerkdeventer.nl',0,0,'L');
     $this->Ln();
     $this->SetX(($cfgMarge - $iconXOffset) + 5);
     $this->Cell(70, 6,'Marienburghstraat 4, 7415 BP Deventer',0,0,'L');
