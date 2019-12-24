@@ -30,7 +30,6 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 			# Geadresseerden toevoegen
 			$mail->AddAddress($voorgangerData['mail'], $mailNaam);
 			$mail->AddBCC($ScriptMailAdress);
-			//$mail->AddAddress('internet@draijer.org');
 			
 			# Declaratielink genereren
 			$hash = urlencode(password_hash($dienst.'$'.$randomCodeDeclaratie.'$'.$voorganger, PASSWORD_BCRYPT));
@@ -47,9 +46,10 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 			$mailText[] = "";
 			$mailText[] = "Het kan zijn dat ". ($voorgangerData['stijl'] == 0 ? 'u' : 'jij') ." 2,5 week geleden al een Excel-declaratie-formulier hebt ontvangen. Deze is nog steeds bruikbaar, maar het heeft sterk de voorkeur de digitale declaratie-omgeving te gebruiken.";
 			$mailText[] = "";
-			$mailText[] = "Om de persoonlijke digitale declaratie-omgeving te bereiken kunt u <a href='$declaratieLink'>hier</a> klikken.";
+			$mailText[] = "Om de persoonlijke digitale declaratie-omgeving te bereiken ". ($voorgangerData['stijl'] == 0 ? 'kunt u' : 'kun jij') ." <a href='$declaratieLink'>hier</a> klikken.";
 			$mailText[] = "";
-			$mailText[] = "Mochten er nog vragen zijn dan hoor ik het graag.";
+			$mailText[] = "Mochten er nog vragen zijn dan horen wij het graag.";
+			$mailText[] = "Voor technische vragen ". ($voorgangerData['stijl'] == 0 ? 'kunt u' : 'kun je') ." contact opnemen met <a href='mailto:$ScriptMailAdress'>de webmaster</a>, voor financiele vragen met de penningmeester via onderstaand mailadres.";
 			$mailText[] = "";
 			$mailText[] = "Vriendelijke groeten";
 			$mailText[] = $declaratieReplyName;
