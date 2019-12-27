@@ -32,8 +32,9 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 			$mail->AddBCC($ScriptMailAdress);
 			
 			# Declaratielink genereren
-			$hash = urlencode(password_hash($dienst.'$'.$randomCodeDeclaratie.'$'.$voorganger, PASSWORD_BCRYPT));
-			$declaratieLink = $ScriptURL ."declaratie/gastpredikant.php?hash=$hash&d=$dienst&v=$voorganger";
+			//$hash = urlencode(password_hash($dienst.'$'.$randomCodeDeclaratie.'$'.$voorganger, PASSWORD_BCRYPT));
+			//$declaratieLink = $ScriptURL ."declaratie/gastpredikant.php?hash=$hash&d=$dienst&v=$voorganger";
+			$declaratieLink = generateDeclaratieLink($dienst, $voorganger);
 			
 			# Mail opstellen
 			$mailText = array();
@@ -47,6 +48,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 			$mailText[] = "Het kan zijn dat ". ($voorgangerData['stijl'] == 0 ? 'u' : 'jij') ." 2,5 week geleden al een Excel-declaratie-formulier hebt ontvangen. Deze is nog steeds bruikbaar, maar het heeft sterk de voorkeur de digitale declaratie-omgeving te gebruiken.";
 			$mailText[] = "";
 			$mailText[] = "Om de persoonlijke digitale declaratie-omgeving te bereiken ". ($voorgangerData['stijl'] == 0 ? 'kunt u' : 'kun jij') ." <a href='$declaratieLink'>hier</a> klikken.";
+			$mailText[] = "In de digitale declaratie-omgeving is het ook mogelijk vorige diensten te declareren. Ga daarvoor naar <a href='". $ScriptURL ."declaratie/gastpredikant.php'>deze site</a> en selecteer de dienst die ". ($voorgangerData['stijl'] == 0 ? 'u' : 'je') ." wilt declararen. Neem contact op met de <a href='mailto:$ScriptMailAdress'>de webmaster</a> mocht de dienst niet meer in de lijst staan.";
 			$mailText[] = "";
 			$mailText[] = "Mochten er nog vragen zijn dan horen wij het graag.";
 			$mailText[] = "Voor technische vragen ". ($voorgangerData['stijl'] == 0 ? 'kunt u' : 'kun je') ." contact opnemen met <a href='mailto:$ScriptMailAdress'>de webmaster</a>, voor financiele vragen met de penningmeester via onderstaand mailadres.";

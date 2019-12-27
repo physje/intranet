@@ -7,27 +7,64 @@ $cfgProgDir = '../auth/';
 include($cfgProgDir. "secure.php");
 $db = connect_db();
 
+$id		= getParam('id', '');
+$groepData = getGroupDetails($id);
+
 if(isset($_POST['save'])) {
 	if(isset($_REQUEST['new'])) {
 		$sql = "INSERT INTO $TableGroups ($GroupNaam, $GroupBeheer) VALUES ('". $_POST['naam'] ."', ". $_POST['beheerder'] .")";
-		toLog('info', $_SESSION['ID'], '', 'Groep '. $_POST['naam'] .' toegevoegd');
+		$actie = 'add';
 	} else {
 		$sql = "UPDATE $TableGroups SET $GroupNaam = '". $_POST['naam'] ."', $GroupBeheer = ". $_POST['beheerder'] ." WHERE $GroupID = ". $_POST['id'];
-		toLog('info', $_SESSION['ID'], '', 'Groep '. $_POST['naam'] .' gewijzigd');
+		$actie = 'change';
 	}
 	
-	mysqli_query($db, $sql);
+	if(mysqli_query($db, $sql)) {
+		$text[] = "Groep opgeslagen";	
+		toLog('info', $_SESSION['ID'], '', 'Groep '. $_POST['naam'] .' '. ($actie == 'add' ? 'toegevoegd' : 'gewijzigd'));
+	} else {
+		$text[] = "Probleem met opslaan groep";
+		toLog('error', $_SESSION['ID'], '', 'Kon groep '. $_POST['naam'] .' niet '. ($actie == 'add' ? 'toevoegen' : 'wijzigen'));
+	}
+} elseif(isset($_POST['delete'])) {
+	$text[] = "<form action='". htmlspecialchars($_SERVER['PHP_SELF']) ."' method='post'>";
+	$text[] = "<input type='hidden' name='id' value='$id'>";
+	$text[] = "<table>";
+	$text[] = "<tr>";
+	$text[] = "	<td colspan='2'>Weet je zeker dat je de groep <i>". $groepData['naam'] ."</i> met al zijn leden wilt verwijderen?</td>";
+	$text[] = "</tr>";
+	$text[] = "<tr>";
+	$text[] = "	<td align='left'><input type='submit' name='real_delete' value='Ja'></td>";
+	$text[] = "	<td align='right'><input type='submit' name='foutje' value='Nee'></td>";
+	$text[] = "</tr>";
+	$text[] = "</table>";
+	$text[] = "</form>";
+} elseif(isset($_POST['real_delete'])) {	
+	$sql_groep = "DELETE FROM $TableGroups WHERE $GroupID = ". $_POST['id'];
+	if(mysqli_query($db, $sql_groep)) {
+		$text[] = "Groep <i>". $groepData['naam'] ."</i> verwijderd<br>";
+		toLog('info', $_SESSION['ID'], '', 'Groep '. $groepData['naam'] .' verwijderd');
+	} else {
+		$text[] = "Probleem met verwijderen groep <i>". $groepData['naam'] ."</i><br>";
+		toLog('error', $_SESSION['ID'], '', 'Kon groep '. $groepData['naam'] .' niet verwijderen');
+	}
 	
-	$text[] = "Groep opgeslagen";	
+	$sql_leden = "DELETE FROM $TableGrpUsr WHERE $GrpUsrGroup = ". $_POST['id'];
+	if(mysqli_query($db, $sql_leden)) {
+		$text[] = "Leden van <i>". $groepData['naam'] ."</i> verwijderd<br>";
+		toLog('debug', $_SESSION['ID'], '', 'leden van '. $groepData['naam'] .' verwijderd');
+	} else {
+		$text[] = "Probleem met verwijderen leden van <i>". $groepData['naam'] ."</i><br>";
+		toLog('error', $_SESSION['ID'], '', 'Kon leden van '. $groepData['naam'] .' niet verwijderen');
+	}
+	
 } elseif(isset($_REQUEST['id']) OR isset($_REQUEST['new'])) {	
-	$text[] = "<form action='". $_SERVER['PHP_SELF'] ."' method='post'>";
+	$text[] = "<form action='". htmlspecialchars($_SERVER['PHP_SELF']) ."' method='post'>";
 	
 	if(isset($_REQUEST['new'])) {
 		$text[] = "<input type='hidden' name='new' value=''>";
 		$groepData = array('naam' => '', 'beheer' => 0);
-	} else {
-		$id		= getParam('id', '');
-		$groepData = getGroupDetails($id);
+	} else {		
 		$text[] = "<input type='hidden' name='id' value='$id'>";
 	}	
 	
@@ -42,14 +79,17 @@ if(isset($_POST['save'])) {
 	$groepen = getAllGroups();
 	
 	foreach($groepen as $groep) {
-		$data = getGroupDetails($groep);
-		//$text[] = "	<option value='$groep'". ($groep == $groepData['beheer'] ? ' selected' : '').($groep == $id ? ' disabled' : '') .">". $data['naam'] ."</option>";
+		$data = getGroupDetails($groep);		
 		$text[] = "	<option value='$groep'". ($groep == $groepData['beheer'] ? ' selected' : '') .">". $data['naam'] ."</option>";
 	}
 	$text[] = "	</select></td>";
 	$text[] = "</tr>";
 	$text[] = "<tr>";
-	$text[] = "	<td rowspan='2'><input type='submit' name='save' value='Opslaan'></td>";
+	$text[] = "	<td colspan='2'>&nbsp;</td>";
+	$text[] = "</tr>";
+	$text[] = "<tr>";
+	$text[] = "	<td align='left'><input type='submit' name='save' value='Opslaan'></td>";
+	$text[] = "	<td align='right'><input type='submit' name='delete' value='Verwijderen'></td>";
 	$text[] = "</tr>";
 	$text[] = "</table>";
 	$text[] = "</form>";

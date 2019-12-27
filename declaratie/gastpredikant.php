@@ -9,9 +9,17 @@ include_once('genereerDeclaratiePdf.php');
 
 $db = connect_db();
 
-$write2EB = true;
-$sendMail = true;
-$sendTestMail = false;
+if($productieOmgeving) {
+	$write2EB = true;
+	$sendMail = true;
+	$sendTestMail = false;
+} else {
+	$write2EB = false;
+	$sendMail = false;
+	$sendTestMail = false;
+	
+	echo 'Test-omgeving';
+}
 
 if(isset($_REQUEST['hash'])) {
 	$hash = urldecode($_REQUEST['hash']);
@@ -21,7 +29,9 @@ if(isset($_REQUEST['hash'])) {
 	# De hash klopt
 	if(password_verify($dienst.'$'.$randomCodeDeclaratie.'$'.$voorganger,$hash)) {
 		$dienstData = getKerkdienstDetails($dienst);
-		$voorgangerData = getVoorgangerData($voorganger);
+		$firstData = getVoorgangerData($voorganger);
+		$secondData = getDeclaratieData($voorganger, $dienstData['start']);		
+		$voorgangerData = array_merge($firstData, $secondData);
 
 		# Schrijf de variabelen die in het hele proces verzameld worden als hidden parameters weg in het formulier
 		$page[] = "<form method='post' action='$_SERVER[PHP_SELF]'>";		
@@ -536,8 +546,9 @@ if(isset($_REQUEST['hash'])) {
 		}
 		
 		# Declaratielink genereren
-		$hash = urlencode(password_hash($dienst.'$'.$randomCodeDeclaratie.'$'.$voorganger, PASSWORD_BCRYPT));
-		$declaratieLink = $ScriptURL ."declaratie/gastpredikant.php?hash=$hash&d=$dienst&v=$voorganger";
+		//$hash = urlencode(password_hash($dienst.'$'.$randomCodeDeclaratie.'$'.$voorganger, PASSWORD_BCRYPT));
+		//$declaratieLink = $ScriptURL ."declaratie/gastpredikant.php?hash=$hash&d=$dienst&v=$voorganger";
+		$declaratieLink = generateDeclaratieLink($dienst, $voorganger);
 
 		# Mail opstellen
 		$mailText = array();

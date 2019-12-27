@@ -39,7 +39,7 @@ if(isset($_POST['opvragen'])) {
 		}
 	}	
 } else {
-	$text[] = "<form action='". $_SERVER['PHP_SELF'] ."' method='post'>\n";
+	$text[] = "<form action='". htmlspecialchars($_SERVER['PHP_SELF']) ."' method='post'>\n";
 	$text[] = "<table>";
 	$text[] = "<tr>";
 	$text[] = "	<td>Voer uw loginnaam of email-adres in. Het systeem zal dan een link sturen waarmee u een nieuw wachtwoord kunt instellen.</td>";

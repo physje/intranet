@@ -52,7 +52,7 @@ if(isset($_POST['data_opslaan']) AND $unique) {
 		toLog('info', $_SESSION['ID'], $_POST['id'], 'Accountgegevens gewijzigd');
 	}			
 } else {
-	$text[] = "<form action='". $_SERVER['PHP_SELF'] ."' method='post'>";
+	$text[] = "<form action='". htmlspecialchars($_SERVER['PHP_SELF']) ."' method='post'>";
 	$text[] = "<input type='hidden' name='id' value='$id'>";
 	if(isset($_REQUEST['hash'])) {
 		$text[] = "<input type='hidden' name='hash' value='". $_REQUEST['hash'] ."'>";

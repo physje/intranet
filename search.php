@@ -21,7 +21,7 @@ $gezin				= getParam('gezin', $gezinArray);
 $kerkelijk		= getParam('kerkelijk', $kerkelijkArray);
 $searchString	= getParam('searchString', '');
 
-$links[] = "<form action='". $_SERVER['PHP_SELF'] ."' method='post'>";
+$links[] = "<form action='". htmlspecialchars($_SERVER['PHP_SELF']) ."' method='post'>";
 $links[] = "<table border=0>";
 
 $links[] = "<tr>";

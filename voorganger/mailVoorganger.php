@@ -103,7 +103,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 			
 			if($voorgangerData['declaratie'] == 1) {
 				$mailText[] = "";
-				$mailText[] = "Op de ochtend van de dienst ontvangt u een link naar uw persoonlijke digitale declaratie-omgeving voor het declareren van uw onkosten.";
+				$mailText[] = "Op de ochtend van de dienst ". ($voorgangerData['stijl'] == 0 ? 'ontvangt u' : 'ontvang je') ." een link naar ". ($voorgangerData['stijl'] == 0 ? 'uw' : 'jouw') ." persoonlijke digitale declaratie-omgeving voor het declareren van ". ($voorgangerData['stijl'] == 0 ? 'uw' : 'jouw') ." onkosten.";
 				setVoorgangerDeclaratieStatus(1, $dienst);
 			}
 			

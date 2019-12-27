@@ -132,6 +132,9 @@ $VoorgangerOpmerking= "opmerking";
 $VoorgangerAandacht	= "aandachtspunten";
 $VoorgangerDeclaratie   = "declaratie";
 $VoorgangerHonorarium		= "honorarium";
+$VoorgangerHonorariumOld			= "honorarium_2019";
+$VoorgangerHonorariumNew			= "honorarium_2020";
+$VoorgangerHonorariumSpecial	= "honorarium_special";
 $VoorgangerKM						= "km_vergoeding";
 $VoorgangerVertrekpunt	= "vertrekpunt";
 $VoorgangerEBRelatie		= "boekhoudenID";
@@ -173,6 +176,7 @@ $EBoekhoudenNaam		= "naam";
 
 $TableConfig				= "config";
 $ConfigID						= "id";
+$ConfigGroep				= "groep";
 $ConfigName					= "name";
 $ConfigKey					= "sleutel";
 $ConfigValue				= "value";
@@ -210,6 +214,10 @@ do {
 	$row_name = mysqli_fetch_array($result_name);
 
 	do {
+		//if($name == 'configGroups') {
+		//	var_dump($configGroups);
+		//}
+		
 		# Als de key niet leeg is, is het dus een array
 		if($row_name[$ConfigKey] != '') {
 			# maak het nieuwe array-element aan
@@ -218,12 +226,16 @@ do {
 			# Als de array waar het nieuwe array-element bij hoort al bestaat
 			# worden oud en nieuw gemerged en anders is het nieuwe element de array
 			if(isset($$name)) {	
-				$$name = array_merge($$name, $newValue);
+				//$$name = array_merge($$name, $newValue);
+				$$name = $$name + $newValue;
 			} else {								
 				$$name = $newValue;
 			}
 		} else {
 			$$name = urldecode($row_name[$ConfigValue]);
+			
+			if($row_name[$ConfigValue] == 'true')		$$name = true;
+			if($row_name[$ConfigValue] == 'false')	$$name = false;		
 		}		
 	} while($row_name = mysqli_fetch_array($result_name));
 } while($row = mysqli_fetch_array($result));

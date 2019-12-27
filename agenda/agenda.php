@@ -89,7 +89,7 @@ if(isset($_POST['remove'])) {
 		}
 	}	
 } elseif(isset($_REQUEST['id']) OR isset($_REQUEST['new'])) {
-	$text[] = "<form action='". $_SERVER['PHP_SELF'] ."' method='post'>";
+	$text[] = "<form action='". htmlspecialchars($_SERVER['PHP_SELF']) ."' method='post'>";
 		
 	if(isset($_REQUEST['id'])) {		
 		$details = getAgendaDetails($_REQUEST['id']);

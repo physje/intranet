@@ -44,7 +44,7 @@ if(isset($_POST['save'])) {
 	$eMaand	= getParam('eMaand', date("m"));
 	$eJaar	= getParam('eJaar', date("Y")+1);
 
-	$text[] = "<form action='". $_SERVER['PHP_SELF'] ."' method='post'>";
+	$text[] = "<form action='". htmlspecialchars($_SERVER['PHP_SELF']) ."' method='post'>";
 	$text[] = "<table>";
 	$text[] = "<tr>";
 	$text[] = "	<td>Startdatum</td>";

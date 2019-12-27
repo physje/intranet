@@ -7,6 +7,9 @@ $cfgProgDir = '../auth/';
 include($cfgProgDir. "secure.php");
 $db = connect_db();
 
+$id		= getParam('id', '');
+$roosterData = getRoosterDetails($id);
+
 if(isset($_POST['save'])) {
 	if($_POST['text_only'] == 1) {
 		$_POST['aantal'] = 0;
@@ -18,25 +21,49 @@ if(isset($_POST['save'])) {
 		
 	if(isset($_REQUEST['new'])) {		
 		$sql = "INSERT INTO $TableRoosters ($RoostersNaam, $RoostersGroep, $RoostersBeheerder, $RoostersPlanner, $RoostersFields, $RoostersTextOnly, $RoostersReminder) VALUES ('". $_POST['naam'] ."', ". $_POST['groep'] .", ". $_POST['beheerder'] .", ". $_POST['planner'] .", ". $_POST['aantal'] .", ". $_POST['text_only'] .", '". $_POST['reminder'] ."')";
-		toLog('info', $_SESSION['ID'], '', 'Roostergegevens '. $_POST['naam'] .' toegevoegd');
+		$actie = 'add';
 	} else {
 		$sql = "UPDATE $TableRoosters SET $RoostersNaam = '". $_POST['naam'] ."', $RoostersPlanner = ". $_POST['planner'] .", $RoostersBeheerder = ". $_POST['beheerder'] .", $RoostersGroep = ". $_POST['groep'] .", $RoostersFields = ". $_POST['aantal'] .", $RoostersTextOnly = ". $_POST['text_only'] .", $RoostersReminder = '". $_POST['reminder'] ."', $RoostersAlert = '". $_POST['alert'] ."' WHERE $GroupID = ". $_POST['id'];
-		toLog('info', $_SESSION['ID'], '', 'Roostergegevens '. $_POST['naam'] .' gewijzigd');
+		$actie = 'change';
 	}
 		
-	mysqli_query($db, $sql);
-	
-	$text[] = "Groep opgeslagen";	
+	if(mysqli_query($db, $sql)) {
+		$text[] = "Rooster opgeslagen";	
+		toLog('info', $_SESSION['ID'], '', 'Rooster '. $_POST['naam'] .' '. ($actie == 'add' ? 'toegevoegd' : 'gewijzigd'));
+	} else {
+		$text[] = "Probleem met opslaan rooster";
+		toLog('error', $_SESSION['ID'], '', 'Kon rooster '. $_POST['naam'] .' niet '. ($actie == 'add' ? 'toevoegen' : 'wijzigen'));
+	}
+} elseif(isset($_POST['delete'])) {
+	$text[] = "<form action='". htmlspecialchars($_SERVER['PHP_SELF']) ."' method='post'>";
+	$text[] = "<input type='hidden' name='id' value='$id'>";
+	$text[] = "<table>";
+	$text[] = "<tr>";
+	$text[] = "	<td colspan='2'>Weet je zeker dat je het rooster <i>". $roosterData['naam'] ."</i> wilt verwijderen?<br>De bijbehorende groepen blijven wel bestaan.</td>";
+	$text[] = "</tr>";
+	$text[] = "<tr>";
+	$text[] = "	<td align='left'><input type='submit' name='real_delete' value='Ja'></td>";
+	$text[] = "	<td align='right'><input type='submit' name='foutje' value='Nee'></td>";
+	$text[] = "</tr>";
+	$text[] = "</table>";
+	$text[] = "</form>";
+} elseif(isset($_POST['real_delete'])) {	
+	$sql = "DELETE FROM $TableRoosters WHERE $RoostersID = ". $_POST['id'];
+	if(mysqli_query($db, $sql)) {
+		$text[] = "Rooster <i>". $roosterData['naam'] ."</i> verwijderd<br>";
+		toLog('info', $_SESSION['ID'], '', 'Rooster '. $roosterData['naam'] .' verwijderd');
+	} else {
+		$text[] = "Probleem met verwijderen rooster <i>". $roosterData['naam'] ."</i><br>";
+		toLog('error', $_SESSION['ID'], '', 'Kon roosterData '. $roosterData['naam'] .' niet verwijderen');
+	}	
 } elseif(isset($_REQUEST['id']) OR isset($_REQUEST['new'])) {	
-	$text[] = "<form action='". $_SERVER['PHP_SELF'] ."' method='post'>";
+	$text[] = "<form action='". htmlspecialchars($_SERVER['PHP_SELF']) ."' method='post'>";
 	
 	if(isset($_REQUEST['new'])) {
 		$text[] = "<input type='hidden' name='new' value=''>";
 		$groepData = array('naam' => '', 'groep' => 0);
 		$roosterData = array();
 	} else {
-		$id		= getParam('id', '');
-		$roosterData = getRoosterDetails($id);
 		$text[] = "<input type='hidden' name='id' value='$id'>";
 	}	
 	
@@ -110,8 +137,8 @@ if(isset($_POST['save'])) {
 	$text[] = "	<td colspan='2'>&nbsp;</td>";
 	$text[] = "</tr>";
 	$text[] = "<tr>";
-	$text[] = "	<td>&nbsp;</td>";
-	$text[] = "	<td><input type='submit' name='save' value='Opslaan'></td>";
+	$text[] = "	<td align='left'><input type='submit' name='save' value='Opslaan'></td>";
+	$text[] = "	<td align='right'><input type='submit' name='delete' value='Verwijderen'></td>";
 	$text[] = "</tr>";
 	$text[] = "</table>";
 	$text[] = "</form>";

@@ -1226,7 +1226,7 @@ function getLiturgie($id) {
 }
 
 function getVoorgangerData($id) {
-	global $TableVoorganger, $VoorgangerID, $VoorgangerTitel, $VoorgangerVoor, $VoorgangerInit, $VoorgangerTussen, $VoorgangerAchter, $VoorgangerTel, $VoorgangerTel2, $VoorgangerPVNaam, $VoorgangerPVTel, $VoorgangerMail, $VoorgangerPlaats, $VoorgangerDenom, $VoorgangerOpmerking, $VoorgangerAandacht, $VoorgangerDeclaratie, $VoorgangerLastAandacht, $VoorgangerStijl, $VoorgangerHonorarium, $VoorgangerKM, $VoorgangerVertrekpunt, $VoorgangerEBRelatie;
+	global $TableVoorganger, $VoorgangerID, $VoorgangerTitel, $VoorgangerVoor, $VoorgangerInit, $VoorgangerTussen, $VoorgangerAchter, $VoorgangerTel, $VoorgangerTel2, $VoorgangerPVNaam, $VoorgangerPVTel, $VoorgangerMail, $VoorgangerPlaats, $VoorgangerDenom, $VoorgangerOpmerking, $VoorgangerAandacht, $VoorgangerDeclaratie, $VoorgangerLastAandacht, $VoorgangerStijl, $VoorgangerLastSeen;
 	
 	$db = connect_db();
 	$sql = "SELECT * FROM $TableVoorganger WHERE $VoorgangerID = $id";
@@ -1249,12 +1249,38 @@ function getVoorgangerData($id) {
 	$data['stijl'] = $row[$VoorgangerStijl];		
 	$data['opm'] = $row[$VoorgangerOpmerking];
 	$data['aandacht'] = $row[$VoorgangerAandacht];
-	$data['declaratie'] = $row[$VoorgangerDeclaratie];	
-	$data['honorarium'] = $row[$VoorgangerHonorarium];
+	$data['declaratie'] = $row[$VoorgangerDeclaratie];
+	$data['last_aandacht'] = $row[$VoorgangerLastAandacht];
+	$data['last_voorgaan'] = $row[$VoorgangerLastSeen];
+		
+	return $data;
+}
+
+
+function getDeclaratieData($voorganger, $tijdstip) {
+	global $TableVoorganger, $VoorgangerID, $VoorgangerHonorarium, $VoorgangerHonorariumOld, $VoorgangerHonorariumNew, $VoorgangerHonorariumSpecial, $VoorgangerKM, $VoorgangerVertrekpunt, $VoorgangerEBRelatie;
+	
+	# 1577836800 = 1-1-2020 00:00:00
+	$grens = 1577836800;
+	
+	$db = connect_db();
+	$sql = "SELECT * FROM $TableVoorganger WHERE $VoorgangerID = $voorganger";
+
+	$result = mysqli_query($db, $sql);
+	$row = mysqli_fetch_array($result);
+					
+	if($tijdstip > $grens) {
+		$data['honorarium'] = $row[$VoorgangerHonorariumNew];
+	} else {
+		$data['honorarium'] = $row[$VoorgangerHonorariumOld];
+	}
+	
+	$data['honorarium_oud'] = $row[$VoorgangerHonorariumOld];
+	$data['honorarium_nieuw'] = $row[$VoorgangerHonorariumNew];
+	$data['honorarium_spec'] = $row[$VoorgangerHonorariumNew];
 	$data['km_vergoeding'] = $row[$VoorgangerKM];
 	$data['reis_van'] = urldecode($row[$VoorgangerVertrekpunt]);
 	$data['EB-relatie'] = $row[$VoorgangerEBRelatie];	
-	$data['last_aandacht'] = $row[$VoorgangerLastAandacht];
 	
 	return $data;
 }
@@ -1420,6 +1446,16 @@ function makeVoorgangerName($id, $type) {
 	if($type == 1) {
 		return $voorgangerData['init'].' '.$voorgangerAchterNaam;
 	}
+}
+
+function generateDeclaratieLink($dienst, $voorganger) {
+	global $randomCodeDeclaratie, $ScriptURL;
+	
+	# Declaratielink genereren
+	$hash = urlencode(password_hash($dienst.'$'.$randomCodeDeclaratie.'$'.$voorganger, PASSWORD_BCRYPT));
+	$declaratieLink = $ScriptURL ."declaratie/gastpredikant.php?hash=$hash&d=$dienst&v=$voorganger";
+	
+	return $declaratieLink;
 }
 
 function setVoorgangerDeclaratieStatus($status, $dienst) {
