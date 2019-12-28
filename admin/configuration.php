@@ -104,15 +104,14 @@ foreach($configGroups as $groepID => $groepNaam) {
 						$text[] = "	<option value='$groupID'". ($groep == $groupID ? ' selected' : '') .">$groupName</option>";
 					}					
 					$text[] = "	</select></td>";
-				}
-
-				
-				if($first) {
-					$text[] = "	<td". ($aantal == 1 ? '' : " rowspan='$aantal' valign='top'") ."><input type='text' name='name[$id]' value='". urldecode($name) ."'></td>";
-					if(!$configMoveGroups)	$text[] = "	<input type='hidden' name='groep[$id]' value='$groep'>";
-					$first = false;	
 				} else {
 					$text[] = "	<input type='hidden' name='groep[$id]' value='$groep'>";
+				}
+				
+				if($first) {
+					$text[] = "	<td". ($aantal == 1 ? '' : " rowspan='$aantal' valign='top'") ."><input type='text' name='name[$id]' value='". urldecode($name) ."'></td>";					
+					$first = false;	
+				} else {					
 					$text[] = "	<input type='hidden' name='name[$id]' value='$name'>";
 				}
 						
