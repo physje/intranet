@@ -239,7 +239,7 @@ if($row_unsub = mysqli_fetch_array($result_unsub)) {
 		set_time_limit(3);
 		mc_unsubscribe($row_unsub[$MCmail]);
 		toLog('info', '', $row_unsub[$MCID], 'Uitschrijving gesynced naar MailChimp');
-		mysqli_query($db, "UPDATE $TableMC SET $MCstatus = 'unsubscribed' WHERE $MCID = ". $row_unsub[$MCID]);				
+		mysqli_query($db, "UPDATE $TableMC SET $MCstatus = 'unsubscribed' WHERE $MCID = ". $row_unsub[$MCID]);
 	} while($row_unsub = mysqli_fetch_array($result_unsub));
 }
 

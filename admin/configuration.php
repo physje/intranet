@@ -35,7 +35,7 @@ if(isset($_POST['save'])) {
 		if(isset($_POST['groep'][$id])) {
 			$groep = $_POST['groep'][$id];
 		} else {
-			$groep = 0;
+			$groep = 1;
 		}
 		
 		if($id == 999 AND $value != '') {
@@ -69,6 +69,8 @@ $text[] = "	<td><b>Index</b> (bij array)</td>";
 $text[] = "	<td><b>Waarde</b></td>";
 $text[] = "	<td><b>Opmerking</b></td>";
 $text[] = "</tr>";
+
+$configGroups = array_merge(array(0 => 'Onbekend'), $configGroups);
 
 foreach($configGroups as $groepID => $groepNaam) {
 	$sql = "SELECT $ConfigName, COUNT(*) as aantal FROM $TableConfig WHERE $ConfigGroep = $groepID GROUP BY $ConfigName ORDER BY $ConfigName";
@@ -130,7 +132,7 @@ foreach($configGroups as $groepID => $groepNaam) {
 
 $text[] = "<tr>";
 $text[] = "	<td>&nbsp;</td>";
-$text[] = "	<td colspan='". ($configMoveGroups ? 5 : 4)."'><h2>nieuwe</h2></td>";
+$text[] = "	<td colspan='". ($configMoveGroups ? 5 : 4)."'><h2>Nieuwe toevoegen</h2></td>";
 $text[] = "</tr>";		
 $text[] = "<tr>";
 $text[] = "	<td>&nbsp;</td>";

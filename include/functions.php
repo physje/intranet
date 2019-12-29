@@ -329,7 +329,7 @@ function getMyGroupsBeheer($id) {
 }
 
 function getGroupDetails($id) {
-	global $TableGroups, $GroupID, $GroupNaam, $GroupHTMLIn, $GroupHTMLEx, $GroupShowIn, $GroupShowEx, $GroupBeheer;
+	global $TableGroups, $GroupID, $GroupNaam, $GroupHTMLIn, $GroupHTMLEx, $GroupShowIn, $GroupShowEx, $GroupBeheer, $GroupMCTag;
 	$db = connect_db();
 	
 	$data = array();
@@ -341,9 +341,25 @@ function getGroupDetails($id) {
 		$data['html-int']	= urldecode($row[$GroupHTMLIn]);
 		$data['html-ext']	= urldecode($row[$GroupHTMLEx]);		
 		$data['beheer']	= $row[$GroupBeheer];
+		$data['tag']	= $row[$GroupMCTag];
 	}
 	return $data;	
 }
+
+
+function getGroupIDbyMCtag($tag) {
+	global $TableGroups, $GroupID, $GroupMCTag;
+	
+	$db = connect_db();
+	$sql = "SELECT * FROM $TableGroups WHERE $GroupMCTag = '$tag'";
+	$result = mysqli_query($db, $sql);
+	if($row = mysqli_fetch_array($result)) {
+		return $row[$GroupID];
+	} else {
+		return false;
+	}
+}
+
 
 function getRoosters($id = 0) {
 	global $TableRoosters, $RoostersID, $RoostersNaam, $RoostersGroep, $TableGrpUsr, $GrpUsrGroup, $GrpUsrUser;

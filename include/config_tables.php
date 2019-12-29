@@ -214,10 +214,6 @@ do {
 	$row_name = mysqli_fetch_array($result_name);
 
 	do {
-		//if($name == 'configGroups') {
-		//	var_dump($configGroups);
-		//}
-		
 		# Als de key niet leeg is, is het dus een array
 		if($row_name[$ConfigKey] != '') {
 			# maak het nieuwe array-element aan
@@ -226,7 +222,6 @@ do {
 			# Als de array waar het nieuwe array-element bij hoort al bestaat
 			# worden oud en nieuw gemerged en anders is het nieuwe element de array
 			if(isset($$name)) {	
-				//$$name = array_merge($$name, $newValue);
 				$$name = $$name + $newValue;
 			} else {								
 				$$name = $newValue;
