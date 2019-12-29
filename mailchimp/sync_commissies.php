@@ -61,6 +61,7 @@ do {
 				}
 			}		
 		} while($row_user = mysqli_fetch_array($result_user));
+		echo "<br>\n";
 	} else {
 		echo "heeft geen mail<br>\n";
 	}

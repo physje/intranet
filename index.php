@@ -177,6 +177,7 @@ if(in_array(1, getMyGroups($_SESSION['ID']))) {
 	$adminDeel[] = "<b>Mailchimp</b>";
 
 	$adminLinks['mailchimp/sync.php'] = 'Synchroniseren Mailchimp';
+	$adminLinks['mailchimp/sync_commissies.php'] = 'Synchroniseer commissies';
 	$adminLinks['mailchimp/check.php'] = 'Controleer lokale data in Mailchimp';
 	$adminLinks['mailchimp/check_MC.php'] = 'Controleer Mailchimp-data met lokaal';
 	
