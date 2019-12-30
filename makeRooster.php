@@ -36,6 +36,10 @@ if($showLogin) {
 	include($cfgProgDir. "secure.php");
 }
 
+# Om zo de rechten te kunnen checken even opvragen in welke groepen de gebruiker zit
+$myGroups = getMyGroups($_SESSION['ID']);	
+
+
 # Als op de knop van de mail geklikt is die data wegschrijven
 if(isset($_POST['save_mail'])) {
 	$sql = "UPDATE $TableRoosters SET $RoostersMail = '". urlencode($_POST['text_mail']) ."', $RoostersSubject = '". urlencode($_POST['onderwerp_mail']) ."', $RoostersFrom = '". urlencode($_POST['naam_afzender']) ."',	$RoostersFromAddr = '". urlencode($_POST['mail_afzender']) ."' WHERE $RoostersID = ". $_POST['rooster'];
@@ -76,8 +80,10 @@ if(isset($_POST['save']) OR isset($_POST['maanden'])) {
 	
 	toLog('info', $_SESSION['ID'], '', 'Rooster '. $RoosterData['naam'] .' aangepast');
 	
-	$sql = "UPDATE $TableRoosters SET $RoostersGelijk = '". $_POST['gelijkeDiensten'] ."', $RoostersOpmerking = '". $_POST['interneOpmerking'] ."', $RoostersLastChange = '". date("Y-m-d H:i:s") ."' WHERE $RoostersID like ". $_POST['rooster'];
-	mysqli_query($db, $sql);
+	if(in_array(1, $myGroups) OR in_array($beheerder, $myGroups)) {
+		$sql = "UPDATE $TableRoosters SET $RoostersGelijk = '". $_POST['gelijkeDiensten'] ."', $RoostersOpmerking = '". $_POST['interneOpmerking'] ."', $RoostersLastChange = '". date("Y-m-d H:i:s") ."' WHERE $RoostersID like ". $_POST['rooster'];
+		mysqli_query($db, $sql);
+	}
 }
 
 # Als er op de knop van 3 maanden extra geklikt is, 3 maanden bij de eindtijd toevoegen
@@ -115,9 +121,6 @@ if($RoosterData['text_only'] == 0) {
 } else {
 	$nrFields = 1;
 }
-
-# Om zo de rechten te kunnen checken even opvragen in welke groepen de gebruiker zit
-$myGroups = getMyGroups($_SESSION['ID']);	
 
 # Haal alle kerkdiensten binnen een tijdsvak op
 $diensten = getKerkdiensten(mktime(0,0,0), mktime(date("H"),date("i"),date("s"),(date("n")+(3*$blokken))));
