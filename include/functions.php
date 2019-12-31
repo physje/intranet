@@ -168,7 +168,7 @@ function getKerkdiensten($startTijd, $eindTijd) {
 
 
 function getKerkdienstDetails($id) {
-	global $TableDiensten, $DienstID, $DienstStart, $DienstEind, $DienstVoorganger, $DienstCollecte_1, $DienstCollecte_2, $DienstOpmerking, $DienstLiturgie;
+	global $TableDiensten, $DienstID, $DienstStart, $DienstEind, $DienstVoorganger, $DienstCollecte_1, $DienstCollecte_2, $DienstOpmerking, $DienstRuiling, $DienstLiturgie;
 	$db = connect_db();
 	
 	$data = array();
@@ -187,6 +187,7 @@ function getKerkdienstDetails($id) {
 		$data['voorganger']			= strtolower($voorgangerData['titel']).' '.$voorgangerData['init'].' '.($voorgangerData['tussen'] == '' ? '' : $voorgangerData['tussen'].' ').$voorgangerData['achter'];
 		if(strtolower($voorgangerData['plaats']) != 'deventer' AND $voorgangerData['plaats'] != '')	$data['voorganger'] .= ' ('.$voorgangerData['plaats'].')';
 		$data['voorganger']			= trim($data['voorganger']);
+		$data['ruiling']				= $row[$DienstRuiling];
 		$data['liturgie']       = urldecode($row[$DienstLiturgie]);
 	}
 	return $data;

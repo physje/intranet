@@ -227,8 +227,8 @@ if(in_array(1, getMyGroups($_SESSION['ID']))) {
 
 # Hyperlinks
 $links[] = "<b>Links</b>";
-$links[] = "<a href='../../trinitas/' target='_blank'>Trinitas</a>";
-$links[] = "<a href='../gebedskalender/' target='_blank'>Gebedskalender</a>";
+//$links[] = "<a href='../../trinitas/' target='_blank'>Trinitas</a>";
+//$links[] = "<a href='../gebedskalender/' target='_blank'>Gebedskalender</a>";
 $links[] = "<a href='http://www.koningskerkdeventer.nl/' target='_blank'>koningskerkdeventer.nl</a>";
 $links[] = "<a href='agenda/agenda.php' target='_blank'>Agenda voor Scipio</a>";
 $links[] = "<a href='ical/".$memberData['username'].'-'. $memberData['hash_short'] .".ics' target='_blank'>Persoonlijke digitale agenda</a>";

@@ -77,6 +77,7 @@ $DienstVoorganger		= "voorganger";
 $DienstCollecte_1		= "collecte_1";
 $DienstCollecte_2		= "collecte_2";
 $DienstOpmerking		= "opmerking";
+$DienstRuiling			= "ruiling";
 $DienstLiturgie     = "liturgie";
 $DienstDeclStatus   = "declaratie_status";
 

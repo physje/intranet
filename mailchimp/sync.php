@@ -113,7 +113,7 @@ do {
 		}
 		
 		# De wijzigingen aan de MC kant moeten ook verwerkt worden in mijn lokale mailchimp-database
-		$sql_mc_insert = "INSERT INTO $TableMC ($MCID, $MCmail, $MCfname, $MCtname, $MClname, $MCwijk, $MCstatus, $MCrelatie, $MCdoop, $MClastChecked, $MClastSeen) VALUES ($scipioID, '". $data['mail'] ."', '". $data['voornaam'] ."', '". urlencode($data['tussenvoegsel']) ."', '". $data['achternaam'] ."', '$wijk', 'subscribed', '$relatie', '". $data['belijdenis'] ."', ". time() .", ". time() .")";
+		$sql_mc_insert = "INSERT INTO $TableMC ($MCID, $MCgeslacht, $MCmail, $MCfname, $MCtname, $MClname, $MCwijk, $MCstatus, $MCrelatie, $MCdoop, $MClastChecked, $MClastSeen) VALUES ($scipioID, '". $data['geslacht'] ."', '". $data['mail'] ."', '". $data['voornaam'] ."', '". urlencode($data['tussenvoegsel']) ."', '". $data['achternaam'] ."', '$wijk', 'subscribed', '$relatie', '". $data['belijdenis'] ."', ". time() .", ". time() .")";
 		if(mysqli_query($db, $sql_mc_insert)) {
 			toLog('debug', '', $scipioID, 'Mailchimp-data na sync toegevoegd in lokale MC-tabel');
 		} else {
@@ -150,9 +150,13 @@ do {
 				if(mc_changemail($email, $data['mail'])) {
 					toLog('info', '', $scipioID, 'Mailadres gewijzigd dus gesynced naar MailChimp');
 					$sql_update[] = "$MCmail = '". $data['mail'] ."'";
+					
+					# Het adres binnen MC is vanaf nu gewijzigd.
+					# Vanaf nu dus met gewijzigde mailadres in het script werken
+					$email = $data['mail'];
 				} else {
 					toLog('error', '', $scipioID, 'Mailadres gewijzigd naar niet gesynced naar MailChimp');
-				}			
+				}						
 			}
 		
 			# Gewijzigde naam
