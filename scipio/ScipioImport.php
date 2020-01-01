@@ -48,7 +48,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 		$velden[$UserTussenvoegsel] = implode(' ', $delen);		
 		$velden[$UserAdres] = $element->pefamilie;
 		$velden[$UserID] = $element->regnr;
-		//$velden[] = 'aanschrijfnaam';
+		//$velden[] = $element->aanschrijfnaam;
 		$velden[$UserVoornaam] = $element->roepnaam;
 		$velden[$UserGeslacht] = $element->geslacht;
 		$velden[$UserGeboorte] = substr($element->gebdatum, 0, 4).'-'.substr($element->gebdatum, 4, 2).'-'.substr($element->gebdatum, 6, 2);
@@ -59,16 +59,17 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 		$velden[$UserMail] = $element->email;
 		$velden[$UserStraat] = $element->straat;
 		$velden[$UserHuisnummer] = $element->huisnr;
-		//$velden[] = 'huisltr';
+		$velden[$UserHuisletter] = $element->huisltr;
 		$velden[$UserToevoeging] = $element->huisnrtoev;
 		$velden[$UserPC] = $element->postcode;
 		$velden[$UserPlaats] = $element->plaats;
-		//$velden[] = 'vestigingsdatum';
+		$velden[$UserVestiging] = $element->vestigingsdatum;
 		$velden[$UserWijk] = substr($element->wijk, -1);
 		//$velden[] = 'sectie';
 		//$velden[] = 'mutatiedatum';
 		$velden[$UserTelefoon] = $element->telnr;
 		
+		# Als er geen voorletters bekendd zijn, deze aanmaken
 		if($velden[$UserVoorletters] == $velden[$UserVoornaam]) {
 			$delen = explode(' ', $velden[$UserVoornaam]);
 			$velden[$UserVoorletters] = '';
@@ -76,6 +77,15 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 			foreach($delen as $naam) {
 				$velden[$UserVoorletters] .= $naam[0].'.';
 			}
+		}
+		
+		# Vestigingsdatum is een string, omzetten naar UNIX-time
+		if($velden[$UserVestiging] != '') {			
+			$jaar = substr($velden[$UserVestiging], 0, 4);
+			$maand = substr($velden[$UserVestiging], 4, 2);
+			$dag = substr($velden[$UserVestiging], 6, 2);
+			
+			$velden[$UserVestiging] = mktime(12, 0, 0, $maand, $dag, $jaar);
 		}
 		
 		# Even alle velden doorlopen om slashes toe te voegen
@@ -99,13 +109,13 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 				
 				$item = array();
 				$item[] = "<b><a href='". $ScriptURL ."profiel.php?hash=[[hash]]&id=". $element->regnr ."'>". makeName($element->regnr, 6) ."</a></b> ('". substr($element->gebdatum, 2, 2) .")";
-				$item[] = $velden[$UserStraat].' '.$velden[$UserHuisnummer];				
+				$item[] = $velden[$UserStraat].' '.$velden[$UserHuisnummer].$velden[$UserHuisletter].($velden[$UserToevoeging] != '' ? '-'.$velden[$UserToevoeging] : '');
 				if($velden[$UserTelefoon] != '')	$item[] = $velden[$UserTelefoon];
 				if($velden[$UserMail] != '')			$item[] = $velden[$UserMail];
-				$item[] = "";
-				
+				$item[] = "";				
 				$wijk = $velden[$UserWijk];
 				$mailBlockNew[$wijk][] = implode("<br>\n", $item);
+				$namenLedenNew[$wijk][] = makeName($element->regnr, 6);
 			}
 			
 		# Ja -> updaten
@@ -137,7 +147,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 			if($oldData['huisnummer'] != $velden[$UserHuisnummer]) {
 				$changedData['huisnummer'] = true;
 				toLog('info', '', $element->regnr, 'Wijziging Scipio huisnummer: '. $oldData['huisnummer'] .' -> '. $velden[$UserHuisnummer]);
-			}			
+			}	
 			
 			# Als het telefoonnummer gewijzigd is
 			if($oldData['tel'] != $velden[$UserTelefoon]) {
@@ -158,6 +168,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 			}
 			
 			# Andere variabelen
+			if($oldData['huisletter'] != $velden[$UserHuisletter])								toLog('info', '', $element->regnr, 'Wijziging Scipio huisletter: '. $oldData['huisletter'] .' -> '. $velden[$UserHuisletter]);
 			if($oldData['toevoeging'] != $velden[$UserToevoeging])								toLog('info', '', $element->regnr, 'Wijziging Scipio toevoeging: '. $oldData['toevoeging'] .' -> '. $velden[$UserToevoeging]);
 			if($oldData['burgelijk'] != $velden[$UserBurgelijk])									toLog('info', '', $element->regnr, 'Wijziging Scipio burgerlijk: '. $oldData['burgerlijk'] .' -> '. $velden[$UserBurgelijk]);
 			if($oldData['relatie'] != $velden[$UserRelatie])											toLog('info', '', $element->regnr, 'Wijziging Scipio relatie: '. $oldData['relatie'] .' -> '. $velden[$UserRelatie]);
@@ -196,7 +207,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 				if(isset($changedData['mail']) AND $oldData['mail'] == '')																	$temp[] = "Mailadres ". $velden[$UserMail] ." toegevoegd";
 				
 				# Verhuizingen
-				if(isset($changedData['straat']) OR isset($changedData['huisnummer']))											$temp[] = "Verhuisd van ". $oldData['straat'].' '.$oldData['huisnummer'] .' naar '. $velden[$UserStraat].' '.$velden[$UserHuisnummer];
+				if(isset($changedData['straat']) OR isset($changedData['huisnummer']))											$temp[] = "Verhuisd van ". $oldData['straat'].' '.$oldData['huisnummer'].$oldData['huisletter'].($oldData['toevoeging'] != '' ? '-'.$oldData['toevoeging'] : '').' naar '. $velden[$UserStraat].' '.$velden[$UserHuisnummer].$velden[$UserHuisletter].($velden[$UserToevoeging] != '' ? '-'.$velden[$UserToevoeging] : '');
 				if(isset($changedData['wijk']) AND !isset($changedData['status'])) {
 					$oudeWijk = $oldData['wijk'];
 					$nieuweWijk = $velden[$UserWijk];
@@ -208,10 +219,12 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 					$item = $temp;
 					$item[] = "Binnengekomen vanuit wijk ". $oudeWijk;					
 					$mailBlockChange[$nieuweWijk][] = implode("<br>\n", $item)."<br>\n";
+					$namenLedenChange[$nieuweWijk][] = makeName($element->regnr, 6);
 				} else {
 					$wijk = $oldData['wijk'];
 					$mailBlockChange[$wijk][] = implode("<br>\n", $temp)."<br>\n";
-				}
+					$namenLedenChange[$wijk][] = makeName($element->regnr, 6);
+				}				
 			}
 			
 			# Nieuwe gegevens inladen (of er nu iets gewijzigd is of niet)				
@@ -224,7 +237,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 			}
 		}
 	}
-	
+		
 	if(count($mailBlockNew) > 0 OR count($mailBlockChange) > 0) {
 		foreach($wijkArray as $wijk) {
 			$mailBericht = $subject = $namenWijkteam = $wijkTeam = $andereOntvangers = array();
@@ -243,13 +256,23 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 				if(isset($mailBlockNew[$wijk])) {
 					$mailBericht[] = "<h3>Nieuwe wijk". (count($mailBlockNew[$wijk]) > 1 ? 'genoten' : 'genoot') ."</h3>";
 					$mailBericht[] = implode("<br>\n", $mailBlockNew[$wijk]);
-					$subject[] = 'nieuwe wijk'. (count($mailBlockNew[$wijk]) > 1 ? 'genoten' : 'genoot');
+					
+					if(count($namenLedenNew[$wijk]) < 4) {
+						$subject[] = makeOpsomming($namenLedenNew[$wijk]) .' '. (count($namenLedenNew[$wijk]) > 1 ? 'zijn' : 'is een') .' nieuwe wijk'. (count($namenLedenNew[$wijk]) > 1 ? 'genoten' : 'genoot');
+					} else {
+						$subject[] = count($namenLedenNew[$wijk]) .' nieuwe wijkgenoten';
+					}
 				}
 			
 				if(isset($mailBlockChange[$wijk])) {
 					$mailBericht[] = "<h3>Gewijzigde gegevens</h3>";
 					$mailBericht[] = implode("<br>\n", $mailBlockChange[$wijk]);
-					$subject[] = 'gewijzigde gegevens wijk'. (count($mailBlockChange[$wijk]) > 1 ? 'genoten' : 'genoot');
+					
+					if(count($namenLedenChange[$wijk]) < 4) {
+						$subject[] = 'de gegevens van '. makeOpsomming($namenLedenChange[$wijk]) .' zijn gewijzigd';
+					} else {
+						$subject[] = 'de gegevens van '. count($namenLedenChange[$wijk]) .' wijkgenoten zijn gewijzigd';
+					}
 				}
 				
 				foreach($wijkTeam as $lid => $rol) {
@@ -268,7 +291,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 						$variabele['BCC_mail'] = '';
 						$KB_in_CC = false;
 					}
-												
+										
 					if(sendMail($lid, implode(' en ', $subject), $replacedBericht, $variabele)) {					
 						toLog('info', '', $lid, "Wijzigingsmail wijkteam wijk $wijk verstuurd");
 						echo "Mail verstuurd naar ". makeName($lid, 1) ." (wijkteam wijk $wijk)<br>\n";
@@ -276,6 +299,9 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 						toLog('error', '', $lid, "Problemen met wijzigingsmail ". makeName($lid, 1) ." (wijkteam wijk $wijk)");
 						echo "Problemen met mail versturen<br>\n";
 					}
+					
+					//echo 'Onderwerp :'. implode(' en ', $subject) .'<br>';
+					//echo 'Bericht :'. $replacedBericht .'<br>';
 					
 					# Om te zorgen dat kerkelijk bureau niet tig mailtjes krijgt direct BCC-tag verwijderen
 					unset($variabele);

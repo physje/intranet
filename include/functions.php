@@ -237,7 +237,7 @@ function getMemberDetails($id) {
 	global $TableUsers, $UserID, $UserStatus, $UserAdres, $UserGeslacht, $UserVoorletters, $UserVoornaam, $UserTussenvoegsel,
 	$UserAchternaam, $UserMeisjesnaam, $UserUsername, $UserHashShort, $UserGeboorte, $UserTelefoon, $UserMail,
 	$UserFormeelMail, $UserBelijdenis, $UserLastChange, $UserLastVisit, $UserBurgelijk, $UserRelatie, $UserStraat, $UserHuisnummer,
-	$UserToevoeging, $UserPC, $UserPlaats, $UserWijk, $UserHashLong;
+	$UserHuisletter, $UserToevoeging, $UserPC, $UserPlaats, $UserWijk, $UserHashLong, $UserVestiging, $UserLastChange, $UserLastVisit;
 	
 	$db = connect_db();
 	
@@ -267,6 +267,7 @@ function getMemberDetails($id) {
 	$data['geb_unix']				= mktime(0,0,0,$data['maand'],$data['dag'],$data['jaar']);
 	$data['straat']					= $row[$UserStraat];
 	$data['huisnummer']			= $row[$UserHuisnummer];
+	$data['huisletter']			= $row[$UserHuisletter];
 	$data['toevoeging']			= $row[$UserToevoeging];
 	$data['PC']							= $row[$UserPC];
 	$data['plaats']					= $row[$UserPlaats];
@@ -276,6 +277,9 @@ function getMemberDetails($id) {
 	$data['tel']						= $row[$UserTelefoon];
 	$data['mail']						= $row[$UserMail];
 	$data['form_mail']			= $row[$UserFormeelMail];
+	$data['vestiging']			= $row[$UserVestiging];
+	$data['change']					= $row[$UserLastChange];
+	$data['visit']					= $row[$UserLastVisit];
 	
 	return $data;
 }

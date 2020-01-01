@@ -54,10 +54,10 @@ if(in_array(1, getMyGroups($_SESSION['ID']))) {
 echo "	<table>".NL;
 echo "	<tr>".NL;
 echo "		<td><b>Adres</b></td>".NL;
-echo "		<td><a href='https://www.google.nl/maps/place/". urlencode($personData['straat'] .' '. $personData['huisnummer'] .', '. $personData['PC'] .' '. $personData['plaats']) ."' target='_blank'>". $personData['straat'] .' '. $personData['huisnummer'].$personData['toevoeging']."</a>";
+echo "		<td><a href='https://www.google.nl/maps/place/". urlencode($personData['straat'] .' '. $personData['huisnummer'].$personData['huisletter'] .', '. $personData['PC'] .' '. $personData['plaats']) ."' target='_blank'>". $personData['straat'] .' '. $personData['huisnummer'].$personData['huisletter'].($personData['toevoeging'] != '' ? '-'.$personData['toevoeging'] : '')."</a>";
 if(!in_array($_SESSION['ID'], $familie)) {
 	$ownData = getMemberDetails($_SESSION['ID']);
-	echo " <a href='https://www.google.nl/maps/dir/". urlencode($ownData['straat'] .' '. $ownData['huisnummer'] .', '. $ownData['PC'] .' '. $ownData['plaats']) ."/". urlencode($personData['straat'] .' '. $personData['huisnummer'] .', '. $personData['PC'] .' '. $personData['plaats']) ."' title='klik hier om de route te tonen' target='_blank'><img src='images/GoogleMaps.png'></a>";
+	echo " <a href='https://www.google.nl/maps/dir/". urlencode($ownData['straat'] .' '. $ownData['huisnummer'].$ownData['huisletter'] .', '. $ownData['PC'] .' '. $ownData['plaats']) ."/". urlencode($personData['straat'] .' '. $personData['huisnummer'].$personData['huisletter'] .', '. $personData['PC'] .' '. $personData['plaats']) ."' title='klik hier om de route te tonen' target='_blank'><img src='images/GoogleMaps.png'></a>";
 }
 echo "	</td>".NL;
 echo "	</tr>".NL;
@@ -114,7 +114,25 @@ if(in_array(1, getMyGroups($_SESSION['ID']))) {
 	echo "	<tr>".NL;
 	echo "		<td><b>Gebruikersnaam</b></td>".NL;
 	echo "		<td><a href='account.php?id=$id'>". $personData['username'] ."</a></td>".NL;
-	echo "	</tr>".NL;
+	echo "	</tr>".NL;	
+	if($personData['vestiging'] > 0) {
+		echo "	<tr>".NL;
+		echo "		<td><b>Vestingsdatum</b></td>".NL;
+		echo "		<td>". strftime("%d %B '%y", $personData['vestiging']) ."</td>".NL;
+		echo "	</tr>".NL;
+	}
+	if($personData['change'] > 0) {
+		echo "	<tr>".NL;
+		echo "		<td><b>Laatste wijziging</b></td>".NL;
+		echo "		<td>". strftime("%d %B '%y", $personData['change']) ."</td>".NL;
+		echo "	</tr>".NL;
+	}
+	if($personData['visit'] > 0) {
+		echo "	<tr>".NL;
+		echo "		<td><b>Laatste login</b></td>".NL;
+		echo "		<td>". strftime("%d %B '%y", $personData['visit']) ."</td>".NL;
+		echo "	</tr>".NL;	
+	}
 	echo "	<tr>".NL;
 	echo "		<td colspan='2'>&nbsp;</td>".NL;
 	echo "	</tr>".NL;
