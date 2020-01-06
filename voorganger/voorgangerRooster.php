@@ -11,11 +11,24 @@ include($cfgProgDir. "secure.php");
 # Als er op een knop gedrukt is, het rooster wegschrijven
 if(isset($_POST['save']) OR isset($_POST['maanden'])) {	
 	foreach($_POST['voorganger'] as $dienst => $voorgangerID) {
-		$sql = "UPDATE $TableDiensten SET $DienstVoorganger = $voorgangerID WHERE $DienstID = ". $dienst;		
+		$oldData = getKerkdienstDetails($dienst);
+		
+		if(isset($_POST['ruiling'][$dienst])) {
+			$ruiling = 1;
+		} else {
+			$ruiling = 0;
+		}
+		$sql = "UPDATE $TableDiensten SET $DienstVoorganger = $voorgangerID, $DienstRuiling = '$ruiling' WHERE $DienstID = ". $dienst;		
 			
 		if(!mysqli_query($db, $sql)) {
 			$text[] = "Ging iets niet goed met geegevens opslaan";
 			toLog('error', $_SESSION['ID'], '', 'Gegevens voorganger ('. $_REQUEST['voorgangerID'] .") konden niet worden gekoppeld aan dienst $dienst");
+		}
+		
+		# Mocht een voorganger wijzigen, zet dat dan ook even in de logfiles
+		if($oldData['voorganger_id'] != '' AND $oldData['voorganger_id'] != $voorgangerID) {
+			$dienstData = getKerkdienstDetails($dienst);
+			toLog('info', $_SESSION['ID'], '', "Voorganger van ". date("d-m-y", $dienstData['start']) ." gewijzigd van ". makeVoorgangerName($oldData['voorganger_id'], 1) ." naar ". makeVoorgangerName($voorgangerID, 1));
 		}
 	}
 	toLog('info', $_SESSION['ID'], '', 'Diensten bijgewerkt');
@@ -60,11 +73,12 @@ if($row = mysqli_fetch_array($result)) {
 # Bouw formulier op
 $text[] = "<form method='post' action='$_SERVER[PHP_SELF]'>";
 $text[] = "<input type='hidden' name='blokken' value='$blokken'>";
-$text[] = "<table>";
+$text[] = "<table border=0>";
 $text[] = "<tr>";
 $text[] = "	<td>Datum</td>";
 $text[] = "	<td>Start</td>";
 $text[] = "	<td colspan='2'>Voorganger</td>";
+$text[] = "	<td>Ruiling</td>";
 $text[] = "	<td>Bijzonderheid</td>";
 $text[] = "</tr>";
 
@@ -72,7 +86,7 @@ foreach($diensten as $dienst) {
 	$data = getKerkdienstDetails($dienst);
 	
 	$text[] = "<tr>";
-	//$text[] = "	<td align='right'>". strftime("%a %e %b", $data['start']) ."</td>";
+	//$text[] = "	<td align='right'>". strftime("%a %#d %b", $data['start']) ."</td>";
 	$text[] = "	<td align='right'>". date("d-m-Y", $data['start']) ."</td>";
 	$text[] = "	<td>". date('H:i', $data['start']) ."</td>";
 	$text[] = "	<td>";
@@ -96,15 +110,17 @@ foreach($diensten as $dienst) {
 	$text[] = "	</td>";
 	if($data['voorganger_id'] > 0) {
 		$text[] = "	<td>&nbsp;</td>";
+		$voorgangersData = getVoorgangerData($data['voorganger_id']);
 	} else {
 		$text[] = "	<td align='right'><a href='editVoorganger.php?new=ja' target='_blank'><img src='../images/invite.gif' title='Open een nieuw scherm om missende voorganger toe te voegen'></a></td>";
 	}
+	$text[] = "	<td><input type='checkbox' name='ruiling[$dienst]' value='1'". ($data['ruiling'] == 1 ? ' checked': '').($voorgangersData['plaats'] == 'Deventer' ? ' disabled' : '') ."></td>";
 	$text[] = "	<td>". $data['bijzonderheden'] ."</td>";
 	$text[] = "</tr>";
 }
 
 $text[] = "<tr>";
-$text[] = "	<td colspan='5' align='middle'><input type='submit' name='save' value='Diensten opslaan'>&nbsp;<input type='submit' name='maanden' value='Volgende 3 maanden'></td>";
+$text[] = "	<td colspan='6' align='middle'><input type='submit' name='save' value='Diensten opslaan'>&nbsp;<input type='submit' name='maanden' value='Volgende 3 maanden'></td>";
 $text[] = "</tr>";
 $text[] = "</table>";
 $text[] = "</form>";
