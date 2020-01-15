@@ -16,8 +16,8 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 		$dienstData	= getKerkdienstDetails($dienst);
 		$voorganger = $dienstData['voorganger_id'];
 		$voorgangerData = getVoorgangerData($voorganger);
-		
-		if($voorgangerData['declaratie'] == 1) {
+				
+		if($voorgangerData['declaratie'] == 1 AND $dienstData['ruiling'] == 0) {
 			$dagdeel		= formatDagdeel($dienstData['start']);
 			$aanspeekNaam		= makeVoorgangerName($voorganger, 5);
 			$mailNaam 			= makeVoorgangerName($voorganger, 4);

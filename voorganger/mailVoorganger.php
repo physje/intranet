@@ -101,7 +101,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 				$mailText[] = "In de bijlage ".($voorgangerData['stijl'] == 0 ? 'treft u' : 'tref je')." ". implode(' en ', $bijlageText) ." aan.";
 			}
 			
-			if($voorgangerData['declaratie'] == 1) {
+			if($voorgangerData['declaratie'] == 1 AND $dienstData['ruiling'] == 0) {
 				$mailText[] = "";
 				$mailText[] = "Op ". strftime ('%A %e %B', $dienstData['start']).' '.($voorgangerData['stijl'] == 0 ? 'ontvangt u' : 'ontvang je') ." in de ochtend een link naar ". ($voorgangerData['stijl'] == 0 ? 'uw' : 'jouw') ." persoonlijke digitale declaratie-omgeving voor het declareren van ". ($voorgangerData['stijl'] == 0 ? 'uw' : 'jouw') ." onkosten.";
 				setVoorgangerDeclaratieStatus(1, $dienst);

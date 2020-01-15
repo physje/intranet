@@ -53,10 +53,13 @@ $diensten = getKerkdiensten(mktime(0,0,0), mktime(date("H"),date("i"),date("s"),
 $voorgangers = getVoorgangers();
 
 foreach($voorgangers as $voorgangerID) {
+	/*
 	$voorgangerData = getVoorgangerData($voorgangerID);
 	$voor = ($voorgangerData['voor'] == '' ? $voorgangerData['init'] : $voorgangerData['voor']);
 	//$voorgangersNamen[$voorgangerID] = $voor.' '.($voorgangerData['tussen'] == '' ? '' : $voorgangerData['tussen']. ' ').$voorgangerData['achter'];
 	$voorgangersNamen[$voorgangerID] = $voorgangerData['achter'].', '.$voor.($voorgangerData['tussen'] == '' ? '' : '; '.$voorgangerData['tussen']);
+	*/
+	$voorgangersNamen[$voorgangerID] = makeVoorgangerName($voorgangerID, 8);
 }
 
 # Zoek voorgangers die vaker dan 3 keer in de database staan

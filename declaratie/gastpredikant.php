@@ -270,7 +270,7 @@ if(isset($_REQUEST['hash'])) {
 				$mailPredikant[] = "Beste ". makeVoorgangerName($voorganger, 5) .",";
 				$mailPredikant[] = "";
 				$mailPredikant[] = ($voorgangerData['stijl'] == 0 ? 'u heeft' : 'jij hebt')." online een declaratie ingediend voor het voorgaan in de $dagdeel van ". strftime ('%e %B', $dienstData['start'])." in de Koningskerk te Deventer.";
-				$mailPredikant[] = "Een samenvatting van deze declaratie voor in ". ($voorgangerData['stijl'] == 0 ? 'uw administratie treft u' : 'in je administratie tref je')." aan de bijlage";
+				$mailPredikant[] = "Een samenvatting van deze declaratie voor in ". ($voorgangerData['stijl'] == 0 ? 'uw administratie treft u' : 'in je administratie tref je')." aan in de bijlage";
 				$mailPredikant[] = "";
 				$mailPredikant[] = "Declaratie worden over het algemeen rond de 20ste van de maand uitbetaald.";
 				$mailPredikant[] = "";
@@ -290,7 +290,7 @@ if(isset($_REQUEST['hash'])) {
 				# Alle geadresseerden toevoegen
 				if(!$sendTestMail) {
 					$mail->AddAddress($voorgangerData['mail'], $mailNaam);
-					$mail->AddBCC($ScriptMailAdress);
+					//$mail->AddBCC($ScriptMailAdress);
 				} else {
 					$mail->AddAddress($ScriptMailAdress);
 				}

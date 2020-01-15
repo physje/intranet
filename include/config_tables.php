@@ -171,6 +171,21 @@ $CommMCGroupID			= "group_id";
 $ComMClastSeen			= "last_seen";
 $ComMClastChecked		= "last_checked";
 
+$TableLP						= "lp_data";
+$LPID								= "scipio_id";
+$LPgeslacht					= "geslacht";
+$LPVoornaam					= "voornaam";
+$LPTussenvoegsel		= "tussenvoegsel";
+$LPAchternaam				= "achternaam";
+$LPmail							= "mail";
+$LPwijk							= "wijk";
+$LPmark							= "mark";
+$LPstatus						= "status"; 
+$LPrelatie					= "relatie";
+$LPdoop							= "doop";
+$LPlastSeen					= "last_seen";
+$LPlastChecked			= "last_checked";
+
 $TableEBoekhouden 	= "eboekhouden";
 $EBoekhoudenID			= "id";
 $EBoekhoudenCode		= "code";

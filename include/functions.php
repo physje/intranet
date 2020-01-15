@@ -1418,7 +1418,7 @@ function makeVoorgangerName($id, $type) {
 	# type = 5 : Catharinus -> ds. van den Berg (bij ontbreken voornaam)	
 	# type = 6 : Berg; van der, C.M.
 	# type = 7 : van den Berg
-	
+	# type = 8 : Berg; van der, Catharinus -> Berg; van der, C.M. (bij ontbreken voornaam)
 	
 	$voorgangerData = getVoorgangerData($id);
 	
@@ -1434,6 +1434,12 @@ function makeVoorgangerName($id, $type) {
 	# Voornaam
 	if($voorgangerData['voor'] != "") {
 		$voornaam = $voorgangerData['voor'];
+	}
+	
+	if($type == 8 AND isset($voornaam)) {
+		return $voorgangerAchterNaamABC.', '.$voornaam;
+	} elseif($type == 8 AND !isset($voornaam)) {
+		$type = 6;
 	}
 	
 	if($type == 7) {
