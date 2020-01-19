@@ -1,5 +1,5 @@
 <?php
-require_once('Laposta/Laposta.php');
+require_once('laposta/Laposta.php');
 
 # https://api.laposta.nl/doc/?lib=php
 # https://github.com/laposta/laposta-api-php

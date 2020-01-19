@@ -1,7 +1,7 @@
 <?php
 include_once('../include/functions.php');
-include_once('../include/LP_functions.php');
 include_once('../include/config.php');
+include_once('../include/LP_functions.php');
 
 /*
 $start = getParam('start', 0);
@@ -26,7 +26,9 @@ $listIDs = $listIDs+$LPWijkListID;
 
 # Ga op zoek naar alle personen met een mailadres
 # Mailadres is daarbij alles met een @-teken erin
-$sql = "SELECT * FROM $TableUsers WHERE $UserMail like '%@%' AND $UserStatus = 'actief' LIMIT $start, $stap";
+$sql = "SELECT * FROM $TableUsers WHERE $UserMail like '%@%' AND $UserStatus = 'actief'";
+//$sql = "SELECT * FROM $TableUsers WHERE $UserMail like '%@%' AND $UserStatus = 'actief' LIMIT $start, $stap";
+//$sql = "SELECT * FROM $TableUsers WHERE $UserMail like '%@%' LIMIT $start, $stap";
 $result = mysqli_query($db, $sql);
 $row = mysqli_fetch_array($result);
 do {
@@ -46,7 +48,8 @@ do {
 	$custom_fields['geslacht'] = ($data['geslacht'] == 'M'?'Man':'Vrouw');
 	$custom_fields_short = $custom_fields;
 	
-	$custom_fields['wijk'] = $wijk = $data['wijk'];
+	$wijk = $data['wijk'];
+	$custom_fields['wijk'] = array($wijk);
 	$custom_fields['geboortedatum'] = $data['geboorte'];
 	$custom_fields['relatie'] = $data['relatie'];
 	$custom_fields['status'] = $data['belijdenis'];
@@ -65,8 +68,7 @@ do {
 	#  en alle variabelen ingesteld
 	if(mysqli_num_rows($result_lp) == 0) {
 		# Komt ook niet voor in LP
-		if(!lp_onList($LPLedenListID, $email)) {
-			
+		if(!lp_onList($LPLedenListID, $email)) {			
 			# Toevoegen aan de leden-lijst
 			if(lp_addMember($LPLedenListID, $email, $custom_fields)) {
 				toLog('info', '', $scipioID, 'Toegevoegd aan LaPosta ledenlijst');
@@ -136,10 +138,10 @@ do {
 		# bij LaPosta geblokeerd en mag ik er niks aan wijzigen
 		if($row_lp[$LPstatus] != 'opgezegd') {
 			# Stond in de tabel als niet ingeschreven
-			if($row_lp[$LPstatus] == 'uitgeschreven') {
+			if($row_lp[$LPstatus] == 'uitgeschreven') {				
 				if(lp_resubscribeMember($LPLedenListID, $email)) {
 					toLog('info', '', $scipioID, 'Opnieuw ingeschreven in de LaPosta ledenlijst');
-					$sql_update[] = "$LPlastSeen = 'actief'";
+					$sql_update[] = "$LPstatus = 'actief'";
 				} else {
 					toLog('error', '', $scipioID, 'Kon niet opnieuw inschrijven in de LaPosta ledenlijst');
 				}				
@@ -269,23 +271,34 @@ do {
 		# De wijzigingen aan de LP kant moeten ook verwerkt worden in mijn lokale mailchimp-database
 		$sql_lp_update = "UPDATE $TableLP SET ". implode(', ', $sql_update)." WHERE $LPID like $scipioID";
 		mysqli_query($db, $sql_lp_update);
+		echo $sql_lp_update .'<br>';
 	}
 } while($row = mysqli_fetch_array($result));
 
 toLog('info', '', '', 'Synchronisatie naar LaPosta uitgevoerd');
 
-/*
-# Verwijder adressen die al sinds eergisteren niet meer gezien zijn
-$dagen = mktime (0, 0, 0, date("n"), (date("j")-2));
-$sql_mc_unsub = "SELECT * FROM $TableMC WHERE $MCstatus like 'subscribed' AND $MClastSeen < ". $dagen;
-$result_unsub = mysqli_query($db, $sql_mc_unsub);
+# Verwijder adressen die al even niet meer gezien zijn
+//$deadline = mktime (0, 0, 0, date("n"), (date("j")-1));
+$deadline = mktime ((date('H')-13));
+$sql_lp_unsub = "SELECT * FROM $TableLP WHERE $LPstatus like 'actief' AND $LPlastSeen < ". $deadline;
+$result_unsub = mysqli_query($db, $sql_lp_unsub);
 if($row_unsub = mysqli_fetch_array($result_unsub)) {
 	do {
-		set_time_limit(3);
-		mc_unsubscribe($row_unsub[$MCmail]);
-		toLog('info', '', $row_unsub[$MCID], 'Uitschrijving gesynced naar MailChimp');
-		mysqli_query($db, "UPDATE $TableMC SET $MCstatus = 'unsubscribed' WHERE $MCID = ". $row_unsub[$MCID]);
+		set_time_limit(5);
+		$email = $row_unsub[$LPmail];
+		
+		foreach($listIDs as $naam => $listID) {
+			if(lp_onList($listID, $email)) {
+				if(lp_unsubscribeMember($listID, $email)) {
+					toLog('debug', '', $row_unsub[$LPID], 'Uitgeschreven voor '. $naam);
+				} else {
+					toLog('error', '', $row_unsub[$LPID], 'Kon niet uitschrijven voor '. $naam);
+				}
+			}
+		}
+		
+		toLog('info', '', $row_unsub[$LPID], 'Uitschrijving gesynced naar LaPosta');
+		mysqli_query($db, "UPDATE $TableLP SET $LPstatus = 'uitgeschreven' WHERE $LPID = ". $row_unsub[$LPID]);
 	} while($row_unsub = mysqli_fetch_array($result_unsub));
 }
-*/
 ?>
