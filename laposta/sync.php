@@ -271,7 +271,7 @@ do {
 		# De wijzigingen aan de LP kant moeten ook verwerkt worden in mijn lokale mailchimp-database
 		$sql_lp_update = "UPDATE $TableLP SET ". implode(', ', $sql_update)." WHERE $LPID like $scipioID";
 		mysqli_query($db, $sql_lp_update);
-		echo $sql_lp_update .'<br>';
+		//echo $sql_lp_update .'<br>';
 	}
 } while($row = mysqli_fetch_array($result));
 
@@ -287,18 +287,24 @@ if($row_unsub = mysqli_fetch_array($result_unsub)) {
 		set_time_limit(5);
 		$email = $row_unsub[$LPmail];
 		
-		foreach($listIDs as $naam => $listID) {
-			if(lp_onList($listID, $email)) {
-				if(lp_unsubscribeMember($listID, $email)) {
-					toLog('debug', '', $row_unsub[$LPID], 'Uitgeschreven voor '. $naam);
-				} else {
-					toLog('error', '', $row_unsub[$LPID], 'Kon niet uitschrijven voor '. $naam);
+		$sql_unique = "SELECT * FROM $TableLP WHERE $LPmail like '$email' AND $LPlastSeen > ". $deadline;
+		$result_unique = mysqli_query($db, $sql_unique);
+		if(mysqli_num_rows($result_unique) == 0) {
+			foreach($listIDs as $naam => $listID) {
+				if(lp_onList($listID, $email)) {
+					if(lp_unsubscribeMember($listID, $email)) {
+						toLog('debug', '', $row_unsub[$LPID], 'Uitgeschreven voor '. $naam);
+					} else {
+						toLog('error', '', $row_unsub[$LPID], 'Kon niet uitschrijven voor '. $naam);
+					}
 				}
-			}
-		}
+			}	
 		
-		toLog('info', '', $row_unsub[$LPID], 'Uitschrijving gesynced naar LaPosta');
-		mysqli_query($db, "UPDATE $TableLP SET $LPstatus = 'uitgeschreven' WHERE $LPID = ". $row_unsub[$LPID]);
+			toLog('info', '', $row_unsub[$LPID], 'Uitschrijving gesynced naar LaPosta');
+			mysqli_query($db, "UPDATE $TableLP SET $LPstatus = 'uitgeschreven' WHERE $LPID = ". $row_unsub[$LPID]);
+		} else {
+			toLog('info', '', $row_unsub[$LPID], $email.' lijkt vaker voor te komen, niet uitgeschreven bij LaPosta');
+		}
 	} while($row_unsub = mysqli_fetch_array($result_unsub));
 }
 ?>
