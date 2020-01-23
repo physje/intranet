@@ -225,6 +225,21 @@ if(in_array(1, getMyGroups($_SESSION['ID']))) {
 	$blockArray[] = implode("<br>".NL, $koppelDeel);
 }
 
+$gebedsDeel[] = "<b>Gebedskalender</b>";
+$gebedsLinks['gebedskalender/overzicht.php#'. date('d')] = 'Gebedskalender';
+
+if(in_array(1, getMyGroups($_SESSION['ID']))) {
+	$gebedsLinks['gebedskalender/import.php'] = 'Import';
+	$gebedsLinks['gebedskalender/edit.php'] = 'Wijzig';
+}
+
+foreach($gebedsLinks as $link => $naam) {
+		$gebedsDeel[] = "<a href='$link' target='_blank'>$naam</a>";
+	}
+
+$blockArray[] = implode("<br>".NL, $gebedsDeel);
+
+
 # Hyperlinks
 $links[] = "<b>Links</b>";
 //$links[] = "<a href='../../trinitas/' target='_blank'>Trinitas</a>";

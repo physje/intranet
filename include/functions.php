@@ -1586,4 +1586,58 @@ function generateBoekstukNr($jaar) {
 	return $jaar.substr('0000'.$volgnummer, -4);
 }
 
+
+function getGebedspunten($start, $eind) {
+	global $db, $PuntenID, $TablePunten, $PuntenDatum;
+	
+	$sql = "SELECT $PuntenID FROM $TablePunten WHERE $PuntenDatum BETWEEN '$start' AND '$eind' ORDER BY $PuntenDatum";
+	$result = mysqli_query($db, $sql);
+
+	if($row = mysqli_fetch_array($result)) {
+		do {
+			$data[] = $row[$PuntenID];
+		} while($row = mysqli_fetch_array($result));
+	}
+	
+	return $data;
+}
+
+function getGebedspunt($ID) {
+	global $db, $PuntenID, $TablePunten, $PuntenDatum, $PuntenPunt;
+	
+	$sql = "SELECT * FROM $TablePunten WHERE $PuntenID = $ID";
+
+	$result = mysqli_query($db, $sql);	
+	$row = mysqli_fetch_array($result);
+	
+	//$tijdArray = strptime($row[$PuntenDatum], "%Y-%m-%d");
+	
+	$tijdArray["tm_hour"] = 0;
+	$tijdArray["tm_min"] = 0;
+	$tijdArray["tm_sec"] = 0;
+	$tijdArray["tm_mon"] = substr($row[$PuntenDatum], 5, 2);
+	$tijdArray["tm_mday"]= substr($row[$PuntenDatum], 8, 2);
+	$tijdArray["tm_year"]= substr($row[$PuntenDatum], 0, 4);
+	
+	$data['id'] = $row[$PuntenID];
+	$data['datum'] = $row[$PuntenDatum];
+	$data['unix'] = mktime($tijdArray["tm_hour"], $tijdArray["tm_min"], $tijdArray["tm_sec"], $tijdArray["tm_mon"], $tijdArray["tm_mday"], $tijdArray["tm_year"]);
+	$data['gebedspunt'] = urldecode($row[$PuntenPunt]);
+	
+	return $data;
+}
+
+function time2str($format, $time = 0) {
+	if($time == 0) {
+		$time = time();
+	}	
+	
+	// Check for Windows to find and replace the %e 
+	// modifier correctly
+	if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN') {
+		$format = preg_replace('#(?<!%)((?:%%)*)%e#', '\1%#d', $format);
+	}
+	return strftime($format, $time);
+}
+
 ?>
