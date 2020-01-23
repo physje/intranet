@@ -8,9 +8,12 @@ define('EURO',chr(128));
  * Berken de betaal datum op basis van de declaratie datum
  * @param  string $datum             datum al vergkregen door de date() functie
  * @param  int    $betaalDag         dag van uitbetalen
+ * @param  int    $betaalDagMarge    aantal dagen marge voor het uitbetalen, vb: als betaaldag 20ste is, en declaratie 16e 
+ *                                   wordt ingeschoten bij een marge van 5 dagen, niet de eerstvolgende 20ste uitbetalen zoals 
+ *                                   verwacht maar een maand later om wat meer speling te geven
  * @return string $betaalDatum       betaal datum string formaat "d-m-Y"
  */
-function bereken_betaal_datum($datum, $betaalDag) 
+function bereken_betaal_datum($datum, $betaalDag, $betaalDagMarge) 
 {
     $timestamp = strtotime($datum);
     $betaalDatum = "";
@@ -19,7 +22,7 @@ function bereken_betaal_datum($datum, $betaalDag)
     $maand = date('m', $timestamp);
     $jaar = date('Y', $timestamp);
 
-    if ( $dag < $betaalDag ) {
+    if ( $dag <= ( $betaalDag - $betaalDagMarge ) ) {
         $betaalDatum = $betaalDag.date('-m-Y', $timestamp);
     } else {
         if ( $maand == 12 ) {
@@ -58,8 +61,8 @@ function genereer_declaratie_pdf($mutatieNr, $mutatieDatum, $naam, $adres, $mail
     $pdf->SetFont("Helvetica",'',$fontSize);
     $breedte = $pdf->GetPageWidth();
 
-    # Maak tabel met basis informatie over de declaratie
-    $betaalDatum = bereken_betaal_datum($mutatieDatum, 20);
+    # Maak tabel met basis informatie over de declaratie, uitbetaaldatum 20ste, marge van 5 dagen
+    $betaalDatum = bereken_betaal_datum($mutatieDatum, 20, 5);
 
     $header = ["Declaratie Nr.", "Declaratie datum", "Verwachte betaaldatum"];
     $data = [['ID: '.$mutatieNr, $mutatieDatum, $betaalDatum]];
