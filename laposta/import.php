@@ -18,11 +18,7 @@ foreach($regels as $persoon) {
 	set_time_limit(5);
 	
 	$velden = str_getcsv ($persoon, ",",'"');
-	
-	//foreach($velden as $key => $value) {
-	//	echo $key .' -> '. $value .'<br>';
-	//}
-	
+		
 	$email					= $velden[0];
 	$voornaam				= $velden[1];
 	$tussenvoegsel	= $velden[2];
@@ -37,43 +33,83 @@ foreach($regels as $persoon) {
 	$custom_fields_short['tussenvoegsel'] = $tussenvoegsel;
 	$custom_fields_short['achternaam'] = $achternaam;
 	
+	if(in_array('"man"', $tags)) {
+		$custom_fields_short['geslacht'] = 'Man';
+	} elseif(in_array('"vrouw"', $tags)) {
+		$custom_fields_short['geslacht'] = 'Vrouw';
+	} else {
+		$custom_fields_short['geslacht'] = '';
+	}
+	
 	echo $voornaam .' '. $achternaam;
 			
 	foreach($mailings as $list) {
 		$list = trim($list);
 		
+		if(lp_onList($LPLedenListID, $email)) {
+			$custom_fields_short['3gkadres'] = 'Ja';
+		} else {
+			$custom_fields_short['3gkadres'] = 'Nee';
+		}
+		
+		
 		if($list == 'Wijkmail') {
 			foreach($tags as $tag) {				
 				if(substr($tag, 1, 4) == 'Wijk' AND strlen($tag) == 8) {				
 					$wijk = substr($tag, -2, 1);
-					lp_addMember($LPWijkListID[$wijk], $email, $custom_fields_short);
+					if(lp_onList($LPWijkListID[$wijk], $email)) {
+						lp_updateMember($LPWijkListID[$wijk], $email, $custom_fields_short);
+					} else {
+						lp_addMember($LPWijkListID[$wijk], $email, $custom_fields_short);
+					}					
 					echo ', wijk '. $wijk;
 				}
 			}			
 		}
 		
 		if($list == 'Trinitas') {
-			lp_addMember($LPTrinitasListID, $email, $custom_fields_short);
+			if(lp_onList($LPTrinitasListID, $email)) {
+				lp_updateMember($LPTrinitasListID, $email, $custom_fields_short);
+			} else {
+				lp_addMember($LPTrinitasListID, $email, $custom_fields_short);
+			}
+			
 			echo ', trinitas';
 		}
 		
 		if($list == 'Koningsmail') {
-			lp_addMember($LPKoningsmailListID, $email, $custom_fields_short);
+			if(lp_onList($LPKoningsmailListID, $email)) {
+				lp_updateMember($LPKoningsmailListID, $email, $custom_fields_short);
+			} else {
+				lp_addMember($LPKoningsmailListID, $email, $custom_fields_short);
+			}			
 			echo ', koningsmail';
 		}
 		
 		if($list == 'Maandelijkse gebedskalender') {
-			lp_addMember($LPGebedMaandListID, $email, $custom_fields_short);
+			if(lp_onList($LPGebedMaandListID, $email)) {
+				lp_updateMember($LPGebedMaandListID, $email, $custom_fields_short);
+			} else {
+				lp_addMember($LPGebedMaandListID, $email, $custom_fields_short);
+			}
 			echo ', gebed (m)';
 		}
 
 		if($list == 'Wekelijkse gebedskalender') {
-			lp_addMember($LPGebedWeekListID, $email, $custom_fields_short);
+			if(lp_onList($LPGebedWeekListID, $email)) {
+				lp_updateMember($LPGebedWeekListID, $email, $custom_fields_short);
+			} else {
+				lp_addMember($LPGebedWeekListID, $email, $custom_fields_short);
+			}
 			echo ', gebed (w)';
 		}
 		
 		if($list == 'Dagelijkse gebedskalender') {
-			lp_addMember($LPGebedDagListID, $email, $custom_fields_short);
+			if(lp_onList($LPGebedDagListID, $email)) {
+				lp_updateMember($LPGebedDagListID, $email, $custom_fields_short);
+			} else {
+				lp_addMember($LPGebedDagListID, $email, $custom_fields_short);
+			}
 			echo ', gebed (d)';
 		}		
 	}

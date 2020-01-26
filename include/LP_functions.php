@@ -29,7 +29,7 @@ function lp_addMember($list, $email, $custom_fields) {
 		));		
 		return true;
 	} catch (Exception $e) {
-		return $output = array('error' => $e);
+		return array('error' => $e);
 	}
 }
 
@@ -46,10 +46,10 @@ function lp_updateMember($list, $email, $custom_fields) {
 	try {
 		# update member, insert info as argument
 		# $result will contain een array with the response from the server
-		$result = $member->update($email, array('custom_fields' => $custom_fields));
+		$result = $member->update($email, array('custom_fields' => $custom_fields));		
 		return true;
 	} catch (Exception $e) {
-		return $output = array('error' => $e);
+		return array('error' => $e);
 	}
 }
 
@@ -69,7 +69,7 @@ function lp_changeMailAddress($list, $oldEmail, $newEmail) {
 		$result = $member->update($oldEmail, array('email' => $newEmail));
 		return true;
 	} catch (Exception $e) {
-		return $output = array('error' => $e);
+		return array('error' => $e);
 	}
 }
 
@@ -89,7 +89,7 @@ function lp_unsubscribeMember($list, $email) {
 		$result = $member->update($email, array('state' => 'unsubscribed'));		
 		return true;
 	} catch (Exception $e) {
-		return $output = array('error' => $e);
+		return array('error' => $e);
 	}
 }
 
@@ -109,7 +109,7 @@ function lp_resubscribeMember($list, $email) {
 		$result = $member->update($email, array('state' => 'active'));		
 		return true;
 	} catch (Exception $e) {
-		return $output = array('error' => $e);
+		return array('error' => $e);
 	}
 }
 
@@ -130,7 +130,7 @@ function lp_getMembers($list) {
 					
 		print '<pre>';print_r($result);print '</pre>';
 	} catch (Exception $e) {
-		return $output = array('error' => $e);
+		return array('error' => $e);
 	}
 }
 
@@ -170,14 +170,21 @@ function lp_getMemberData($list, $mail) {
 		$result = $member->get($mail);		
 		return $result['member'];		
 	} catch (Exception $e) {
-		return $output = array('error' => $e);
+		return array('error' => $e);
 	}
 }
 
 
 
-
-function lp_createMail($info) {
+# $input['name'] (verplicht)
+# $input['subject'] (verplicht)
+# $input['from']['name'] (verplicht)
+# $input['from']['email'] (verplicht)
+# $input['reply_to']
+# $input['list_ids'] (verplicht)
+# $input['stats']['ga'] = false
+# $input['stats']['mtrack'] = false
+function lp_createMail($input) {
 	global $LaPostaAPIKey;
 	Laposta::setApiKey($LaPostaAPIKey);
 	Laposta::setHttpsDisableVerifyPeer(true);
@@ -186,23 +193,14 @@ function lp_createMail($info) {
 	$campaign = new Laposta_Campaign();
 	
 	$input['type'] = 'regular';
-	$input['name'] = $info['name'];
-	$input['subject'] = $info['subject'];
-	$input['from'] = $info['from'];
-	//$input['reply_to'] = 'reply@example.net';
-	$input['list_ids'] = $info['list_ids'];
-	//$input['stats'] = array('ga' => 'false','mtrack' => 'false');
-	
+		
 	try {
 		# create new campaign, insert info as argument
 		# $result will contain een array with the response from the server
 		$result = $campaign->create($input);
-		//print '<pre>';print_r($result);print '</pre>';
 		return $result['campaign']['campaign_id'];
 	} catch (Exception $e) {
-		# you can use the information in $e to react to the exception
-		//print '<pre>';print_r($e);print '</pre>';
-		return false;
+		return array('error' => $e);
 	}
 }
 
@@ -218,13 +216,10 @@ function lp_populateMail($campaign_id, $html) {
 	try {
 		# create new campaign, insert info as argument
 		# $result will contain een array with the response from the server
-		$result = $campaign->update($campaign_id, array('html' => $html), 'content');
-		#print '<pre>';print_r($result);print '</pre>';		
+		$result = $campaign->update($campaign_id, array('html' => $html), 'content');		
 		return true;
 	} catch (Exception $e) {
-		# you can use the information in $e to react to the exception
-		//print '<pre>';print_r($e);print '</pre>';
-		return false;
+		return array('error' => $e);
 	}
 }
 
@@ -240,12 +235,53 @@ function lp_scheduleMail($campaign_id, $time) {
 		# create new campaign, insert info as argument
 		# $result will contain een array with the response from the server
 		$result = $campaign->update($campaign_id, array('delivery_requested' => date('Y-m-d H:i', $time)), 'action', 'schedule');
-		#print '<pre>';print_r($result);print '</pre>';		
 		return true;
 	} catch (Exception $e) {
-		# you can use the information in $e to react to the exception
-		//print '<pre>';print_r($e);print '</pre>';
-		return false;
+		return array('error' => $e);
+	}
+}
+
+
+# $info['name'] (verplicht)
+# $info['remarks']
+# $info['subscribe_notification_email']
+# $info['unsubscribe_notification_email']
+function lp_createList($info) {
+	global $LaPostaAPIKey;
+	Laposta::setApiKey($LaPostaAPIKey);
+	Laposta::setHttpsDisableVerifyPeer(true);
+
+	$list = new Laposta_List();
+	
+	try {
+		$result = $list->create($info);
+		return $result['list']['list_id'];
+	} catch (Exception $e) {
+		return array('error' => $e);
+	}
+}
+
+
+# $data['name']			(verplicht)
+# $data['defaultvalue']
+# $data['datatype']	(verplicht)
+# $data['datatype_display']
+# $data['options']
+# $data['required'] (verplicht)
+# $data['in_form']	(verplicht)
+# $data['in_list']	(verplicht)
+function lp_addFieldToList($list, $data) {
+	global $LaPostaAPIKey;
+	Laposta::setApiKey($LaPostaAPIKey);
+	Laposta::setHttpsDisableVerifyPeer(true);
+	
+	$field = new Laposta_Field($list);
+	
+	try {
+		$result = $field->create($data);		
+		return true;		
+	} catch (Exception $e) {
+		return array('error' => $e);
 	}
 }
 
