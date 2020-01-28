@@ -210,14 +210,21 @@ $PuntenID						= "id";
 $PuntenDatum				= "datum";
 $PuntenPunt					= "gebedspunt";
 
-//$TableLog						= "gebed_log";
-//$LogID							= "id";
-//$LogTime						= "tijd";
-//$LogType						= "type";
-//$LogUser						= "dader";
-//$LogSubject					= "slachtoffer";
-//$LogMessage					= "message";
+$TableArchief				= "trinitas_archief";
+$ArchiefID					= "id";
+$ArchiefJaar				= "jaargang";
+$ArchiefNr					= "exemplaar";
+//$ArchiefSend				= "send_link";
+//$ArchiefSendAtt			= "send_attach";
+$ArchiefDownload		= "download";
+$ArchiefPubDate			= "pubDate";
+$ArchiefName				= "filename";
 
+$TablePlainText	= "trinitas_plaintext";
+$PlainTextID		= "id";
+$PlainTextText	= "plain";
+
+$ArchiveDir			= 'trinitas';
 
 
 $wijkArray			= array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J');

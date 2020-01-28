@@ -24,15 +24,15 @@ foreach($diensten as $dienst) {
  	$data = getKerkdienstDetails($dienst);
  	
  	$veld = array();
-	$veld[] = '1e collecte '. strftime('%e %B', $data['start']) .': '. $data['collecte_1'];
-	$veld[] = strftime('%d-%m-%Y', $data['start']-$dag);
-	$veld[] = strftime('%d-%m-%Y', $data['eind']+$dag);	
+	$veld[] = '1e collecte '. time2str('%e %B', $data['start']) .': '. $data['collecte_1'];
+	$veld[] = time2str('%d-%m-%Y', $data['start']-$dag);
+	$veld[] = time2str('%d-%m-%Y', $data['eind']+$dag);	
 	$output .= implode(";", $veld)."\n";
 	
 	$veld = array();
-	$veld[] = '2e collecte '. strftime('%e %B', $data['start']) .': '. $data['collecte_2'];
-	$veld[] = strftime('%d-%m-%Y', $data['start']-$dag);
-	$veld[] = strftime('%d-%m-%Y', $data['eind']+$dag);	
+	$veld[] = '2e collecte '. time2str('%e %B', $data['start']) .': '. $data['collecte_2'];
+	$veld[] = time2str('%d-%m-%Y', $data['start']-$dag);
+	$veld[] = time2str('%d-%m-%Y', $data['eind']+$dag);	
 	$output .= implode(";", $veld)."\n";	 	
 }
 

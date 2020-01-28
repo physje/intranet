@@ -118,7 +118,7 @@ try {
   		foreach($veld as $key => $dummy) {  			
   			if($key == 'Datum') {
   				$tijdstip = strtotime($Mutatie->Datum);
-  				$cel[] = strftime('%#d&nbsp;%b', $tijdstip);  			
+  				$cel[] = time2str('%e %b', $tijdstip);  			
   			} else {
   				$cel[] = $Mutatie-> $key;
   			}

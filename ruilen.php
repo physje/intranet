@@ -41,7 +41,7 @@ if(isset($_REQUEST['dader']) AND isset($_REQUEST['slachtoffer'])) {
 	$mail[] = "Dag ". makeName($slachtoffer, 1) .",";
 	$mail[] = "";
 	$mail[] = makeName($dader, 5) ." heeft zojuist met jou geruild op het rooster '". $roosterData['naam'] ."'.";
-	$mail[] = "Jij staat nu ingepland op ". strftime("%e %B", $details_d['start']) ." en ". makeName($dader, 1) ." op ". strftime("%e %B", $details_s['start']);
+	$mail[] = "Jij staat nu ingepland op ". time2str("%e %B", $details_d['start']) ." en ". makeName($dader, 1) ." op ". time2str("%e %B", $details_s['start']);
 	$mail[] = "";
 	$mail[] = "Klik <a href='".$ScriptURL."showRooster.php?rooster=$rooster'>hier</a> voor het meest recente rooster";	
 	
@@ -53,7 +53,7 @@ if(isset($_REQUEST['dader']) AND isset($_REQUEST['slachtoffer'])) {
 	$mail[] = "Dag ". makeName($dader, 1) .",";
 	$mail[] = "";
 	$mail[] = "Jij hebt zojuist met ". makeName($slachtoffer, 5) ." geruild op het rooster '". $roosterData['naam'] ."'.";
-	$mail[] = "Jij staat nu ingepland op ". strftime("%e %B", $details_s['start']) ." en ". makeName($slachtoffer, 1) ." op ". strftime("%e %B", $details_d['start']);
+	$mail[] = "Jij staat nu ingepland op ". time2str("%e %B", $details_s['start']) ." en ". makeName($slachtoffer, 1) ." op ". time2str("%e %B", $details_d['start']);
 	$mail[] = "";
 	$mail[] = "Klik <a href='". $ScriptURL ."showRooster.php?rooster=$rooster'>hier</a> voor het meest recente rooster";	
 	

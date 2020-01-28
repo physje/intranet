@@ -63,8 +63,8 @@ if(isset($_REQUEST['dienstID'])) {
         $data = getKerkdienstDetails($dienst);
         
         $text[] = "<tr>";
-        //$text[] = "	<td align='right'>". strftime("%a %e %b", $data['start']) ."</td>";
-        $text[] = "	<td align='right'>". date("d-m-Y", $data['start']) ."</td>";
+        $text[] = "	<td align='right'>". time2str("%a %e %b", $data['start']) ."</td>";
+        //$text[] = "	<td align='right'>". date("d-m-Y", $data['start']) ."</td>";
         $text[] = "	<td>". date('H:i', $data['start']) ."</td>";
         $text[] = "	<td>". $data['bijzonderheden'] ."</td>";
         $text[] = " <td><a href='?dienstID=$dienst'>edit</a></td>";

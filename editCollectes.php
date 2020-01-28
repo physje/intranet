@@ -88,7 +88,7 @@ foreach($diensten as $dienst) {
 	$data = getKerkdienstDetails($dienst);
 	
 	$text[] = "<tr>";
-	$text[] = "	<td align='right'>". strftime("%a %e %b", $data['start']) ."</td>";
+	$text[] = "	<td align='right'>". time2str("%a %e %b", $data['start']) ."</td>";
 	$text[] = "	<td>". date('H:i', $data['start']) ."</td>";	
 	$text[] = "	<td><input type='text' name='collecte[$dienst][1]' value='". addslashes($data['collecte_1']) ."'></td>";
 	$text[] = "	<td><input type='text' name='collecte[$dienst][2]' value='". addslashes($data['collecte_2']) ."'></td>";		

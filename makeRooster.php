@@ -175,7 +175,7 @@ foreach($diensten as $dienst) {
 		}
 				
 		$block_1[] = "<tr>";
-		$block_1[] = "	<td align='right'>". ($korteDatum ? strftime("%A %d %b", $details['start']) : strftime("%A %d %b %H:%M", $details['start'])) ."</td>";
+		$block_1[] = "	<td align='right'>". ($korteDatum ? time2str("%A %d %b", $details['start']) : time2str("%A %d %b %H:%M", $details['start'])) ."</td>";
 				
 		if($RoosterData['text_only'] == 0) {
 			$selected = current($vulling);

@@ -122,20 +122,20 @@ foreach($roosters as $rooster) {
 						$alert[] = "";
 				  
 						if(!$lastWarning AND $roosterData['text_only'] == 0) {
-							$alert[] = "Om te zorgen dat iedereen op tijd remindermails krijgt/er geen lege mails verstuurd worden, moet je v&oacute;&oacute;r ". strftime('%A %e %B', $deadline) ." het nieuwe rooster invoeren.";
+							$alert[] = "Om te zorgen dat iedereen op tijd remindermails krijgt/er geen lege mails verstuurd worden, moet je v&oacute;&oacute;r ". time2str('%A %e %B', $deadline) ." het nieuwe rooster invoeren.";
 						} elseif($lastWarning AND $roosterData['text_only'] == 0) {
 							if($firstMissed['start'] < time()) {
-								$alert[] = "Voor afgelopen ". strftime('%A', $firstMissed['start']) ." zijn geen reminder-mails verstuurd. Zodra het rooster weer is ingevoerd zal iedereen weer remindermails krijgen en zal deze o.a. weer in de scipio-app verschijnen.";
+								$alert[] = "Voor afgelopen ". time2str('%A', $firstMissed['start']) ." zijn geen reminder-mails verstuurd. Zodra het rooster weer is ingevoerd zal iedereen weer remindermails krijgen en zal deze o.a. weer in de scipio-app verschijnen.";
 							} else {
-								$alert[] = "Het rooster van ". strftime('%A %e %B', $firstMissed['start']) ." heeft een lege plek en is niet meegenomen in de mails die daarover verstuurd zijn. Zodra het rooster weer is ingevoerd zal iedereen weer de juiste mails krijgen en zal deze o.a. weer in de scipio-app verschijnen.";
+								$alert[] = "Het rooster van ". time2str('%A %e %B', $firstMissed['start']) ." heeft een lege plek en is niet meegenomen in de mails die daarover verstuurd zijn. Zodra het rooster weer is ingevoerd zal iedereen weer de juiste mails krijgen en zal deze o.a. weer in de scipio-app verschijnen.";
 							}
 						} elseif(!$lastWarning AND $roosterData['text_only'] == 1) {
-							$alert[] = "Om te zorgen dat er geen plekken in het rooster ontstaan, moet je v&oacute;&oacute;r ". strftime('%A %e %B', $deadline) ." het nieuwe rooster invoeren.";
+							$alert[] = "Om te zorgen dat er geen plekken in het rooster ontstaan, moet je v&oacute;&oacute;r ". time2str('%A %e %B', $deadline) ." het nieuwe rooster invoeren.";
 						} elseif($lastWarning AND $roosterData['text_only'] == 1) {
 							if($firstMissed['start'] < time()) {
-								$alert[] = "Het rooster voor afgelopen ". strftime('%A', $firstMissed['start']) ." was leeg. Zodra het rooster weer is ingevoerd zal deze o.a. weer in de scipio-app verschijnen.";
+								$alert[] = "Het rooster voor afgelopen ". time2str('%A', $firstMissed['start']) ." was leeg. Zodra het rooster weer is ingevoerd zal deze o.a. weer in de scipio-app verschijnen.";
 							} else {
-								$alert[] = "Het rooster van ". strftime('%A %e %B', $firstMissed['start']) ." was leeg. Zodra het rooster weer is ingevoerd zal deze o.a. weer in de scipio-app verschijnen.";
+								$alert[] = "Het rooster van ". time2str('%A %e %B', $firstMissed['start']) ." was leeg. Zodra het rooster weer is ingevoerd zal deze o.a. weer in de scipio-app verschijnen.";
 							}
 						}
       	

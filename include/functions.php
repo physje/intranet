@@ -1640,4 +1640,144 @@ function time2str($format, $time = 0) {
 	return strftime($format, $time);
 }
 
+function generateFilename() { 
+    $s = strtoupper(md5(uniqid(rand(),true))); 
+    $guidText = substr($s,0,4) . '-'. date('dmyHis').'-'. substr($s,4); 
+    return $guidText;
+}
+
+function getJaargangen() {
+	global $db, $TableArchief, $ArchiefJaar;
+	
+	$sql = "SELECT * FROM $TableArchief GROUP BY $ArchiefJaar ORDER BY $ArchiefJaar DESC";
+	$result	= mysqli_query($db, $sql);
+	$row		= mysqli_fetch_array($result);
+	
+	do {
+		$Jaargangen[] = $row[$ArchiefJaar];
+	} while($row = mysqli_fetch_array($result));
+	
+	return $Jaargangen;	
+}
+
+function getNrInJaargang($jaargang) {
+	global $db, $TableArchief, $ArchiefPubDate, $ArchiefJaar, $ArchiefID;
+	
+	$sql = "SELECT * FROM $TableArchief WHERE $ArchiefJaar = $jaargang ORDER BY $ArchiefPubDate DESC";
+	$result	= mysqli_query($db, $sql);
+	$row		= mysqli_fetch_array($result);
+	
+	do {
+		$Nummers[] = $row[$ArchiefID];
+	} while($row = mysqli_fetch_array($result));
+	
+	return $Nummers;	
+}
+
+function getTrinitasData($id) {
+	global $db, $TableArchief, $ArchiefJaar, $ArchiefNr, $ArchiefPubDate, $ArchiefName, $ArchiefID;
+	
+	$sql = "SELECT * FROM $TableArchief WHERE $ArchiefID like '$id'";
+	$result	= mysqli_query($db, $sql);
+	$row		= mysqli_fetch_array($result);
+		
+	$data['id']				= $row[$ArchiefID];
+	$data['jaar']			= $row[$ArchiefJaar];
+	$data['nr']				= $row[$ArchiefNr];
+	$data['pubDate']	= $row[$ArchiefPubDate];
+	$data['filename']	= $row[$ArchiefName];
+	
+	return $data;
+}
+
+function makeTrinitasName($id, $type) {
+	if($id == '') {
+		return $id;
+	} else {
+		$data = getTrinitasData($id);
+	
+		# 1 = 2015-05-10
+		# 2 = 10 mei 2015
+		# 3 = nr. 12 - 10 mei 2015
+		# 4 = jr. 9; nr. 12 - 10 mei 2015
+		# 5 = nr. 02 - 10 mei 2015
+		# 6 = jr. 09; nr. 02 - 10 mei 2015
+		# 7 = J09N12 - 10 mei 2015
+		# 8 = nr. 12
+		# 9 = jr. 9; nr. 12
+		# 10 = nr. 12
+		# 11 = jr. 09; nr. 02
+		# 12 = J09N12
+		# 13 = J09N12 - 10.05.15
+		# 14 = mei 2014
+		
+		if($type == 1) {
+			return time2str("%Y-%m-%d", $data['pubDate']);
+		} elseif($type == 2) {
+			return time2str("%e %B %Y", $data['pubDate']);
+		} elseif($type == 3) {
+			return 'nr. '. $data['nr'] .' - '.time2str("%e %B %Y", $data['pubDate']);
+		} elseif($type == 4) {
+			return 'jr. '. $data['jaar'] .' nr. '. $data['nr'] .' - '.time2str("%e %B %Y", $data['pubDate']);
+		} elseif($type == 5) {
+			return 'nr. '. substr('0'.$data['nr'], -2) .' - '.time2str("%d %B %Y", $data['pubDate']);
+		} elseif($type == 6) {
+			return 'jr. '. substr('0'.$data['jaar'], -2) .' nr. '. substr('0'.$data['nr'], -2) .' - '.time2str("%d %B %Y", $data['pubDate']);
+		} elseif($type == 7) {
+			return 'J'. substr('0'.$data['jaar'], -2) .'N'. substr('0'.$data['nr'], -2) .' - '.time2str("%d %B %Y", $data['pubDate']);
+		} elseif($type == 8) {
+			return 'nr. '. $data['nr'];
+		} elseif($type == 9) {
+			return 'jr. '. $data['jaar'] .' nr. '. $data['nr'];
+		} elseif($type == 10) {
+			return 'nr. '. substr('0'.$data['nr'], -2);
+		} elseif($type == 11) {
+			return 'jr. '. substr('0'.$data['jaar'], -2) .' nr. '. substr('0'.$data['nr'], -2);
+		} elseif($type == 12) {
+			return 'J'. substr('0'.$data['jaar'], -2) .'N'. substr('0'.$data['nr'], -2);
+		} elseif($type == 13) {
+			return 'J'. substr('0'.$data['jaar'], -2) .'N'. substr('0'.$data['nr'], -2) .' - '.time2str("%d.%m.%y", $data['pubDate']);
+		} elseif($type == 14) {
+			return time2str("%B %Y", $data['pubDate']);
+		} else {
+			return 'Trinitas';
+		}
+	}
+}
+
+# Functie om text uit een PDF te lezen
+# Gejat van http://www.tero.co.uk/scripts/extract-text-from-pdf.php
+function ExtractTextFromPdf ($pdfdata) {
+	if (strlen ($pdfdata) < 1000 && file_exists ($pdfdata)) $pdfdata = file_get_contents ($pdfdata); //get the data from file
+	if (!trim ($pdfdata)) echo "Error: there is no PDF data or file to process.";
+	$result = ''; //this will store the results
+	//Find all the streams in FlateDecode format (not sure what this is), and then loop through each of them
+	if (preg_match_all ('/<<[^>]*FlateDecode[^>]*>>\s*stream(.+)endstream/Uis', $pdfdata, $m)) foreach ($m[1] as $chunk) {
+		$chunk = gzuncompress (ltrim ($chunk)); //uncompress the data using the PHP gzuncompress function
+		//If there are [] in the data, then extract all stuff within (), or just extract () from the data directly
+		$a = preg_match_all ('/\[([^\]]+)\]/', $chunk, $m2) ? $m2[1] : array ($chunk); //get all the stuff within []
+		foreach ($a as $subchunk) if (preg_match_all ('/\(([^\)]+)\)/', $subchunk, $m3)) $result .= join ('', $m3[1]); //within ()
+	}
+	else echo "Error: there is no FlateDecode text in this PDF file that I can process.";
+	return $result; //return what was found
+}
+
+
+function getLastNrsTrinitas($number = 3) {
+	global $db, $TableArchief, $ArchiefID, $ArchiefPubDate;
+	$data = array();
+	
+	$grens = time() + (24*60*60);
+	$sql = "SELECT * FROM $TableArchief WHERE $ArchiefPubDate < $grens ORDER BY $ArchiefPubDate DESC LIMIT 0,$number";
+	
+	$result	= mysqli_query($db, $sql);
+	if($row	= mysqli_fetch_array($result)) {
+		do {
+			$data[] = $row[$ArchiefID]; 
+		} while($row = mysqli_fetch_array($result));
+	}
+	
+	return $data;	
+}
+
 ?>

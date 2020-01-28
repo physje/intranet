@@ -18,7 +18,7 @@ $roosters = getRoosters();
 $block_1 = array();
 $block_1[] = "<table width='100%' border=0>";
 $block_1[] = "<tr>";
-$block_1[] = "	<td valign='top' colspan='2'><h1>Diensten tussen ". strftime("%d %B", $start) ." en ". strftime("%d %B", $eind) ."</h1></td>";
+$block_1[] = "	<td valign='top' colspan='2'><h1>Diensten tussen ". time2str("%d %B", $start) ." en ". time2str("%d %B", $eind) ."</h1></td>";
 $block_1[] = "</tr>".NL;
 $block_1[] = "</table>";
 $dienstBlocken[] = implode(NL, $block_1);
@@ -30,7 +30,7 @@ foreach($diensten as $dienst) {
 	$block_1 = array();
 	$block_1[] = "<table width='100%' border=0>";
 	$block_1[] = "<tr>";
-	$block_1[] = "	<td valign='top' colspan='2'><h2>". $dagdeel .' '. strftime("%d %b", $details['start']).($details['bijzonderheden'] != "" ? ' ('.$details['bijzonderheden'].')' : '').'; '.$details['voorganger']."</h2></td>";
+	$block_1[] = "	<td valign='top' colspan='2'><h2>". $dagdeel .' '. time2str("%d %b", $details['start']).($details['bijzonderheden'] != "" ? ' ('.$details['bijzonderheden'].')' : '').'; '.$details['voorganger']."</h2></td>";
 	$block_1[] = "</tr>".NL;
 	$block_1[] = "<tr>";
 	$block_1[] = "	<td valign='top' width='250'>1ste collecte</td>";

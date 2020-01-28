@@ -65,8 +65,8 @@ if(isset($_POST['remove'])) {
 			$mail[] = "De volgende gegevens zijn daarbij opgeslagen :";
 			$mail[] = "Titel: ". $_POST['titel'];
 			$mail[] = "Beschrijving: ". $_POST['omschrijving'];
-			$mail[] = "Datum : ". strftime("%A %d %B", $startTijd);
-			$mail[] = "Tijd: ". strftime("%H:%M", $startTijd) ." tot ". strftime("%H:%M", $eindTijd);
+			$mail[] = "Datum : ". time2str("%A %d %B", $startTijd);
+			$mail[] = "Tijd: ". time2str("%H:%M", $startTijd) ." tot ". time2str("%H:%M", $eindTijd);
 			$mail[] = "";
 			$mail[] = "Om deze afspraak te beheren kan je <a href='". $ScriptURL ."agenda/agenda.php?id=". mysqli_insert_id($db) ."&hash=". $UserData['hash_long'] ."'>deze link</a> gebruiken, daarmee kom je direct weer bij deze afspraak terecht";
 			

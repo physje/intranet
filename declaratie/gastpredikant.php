@@ -234,6 +234,7 @@ if(isset($_REQUEST['hash'])) {
 				if(!$sendTestMail) {
 					$mail->AddAddress($declaratieReplyAddress, $declaratieReplyName);
 					$mail->AddCC($EBDeclaratieAddress);
+					$mail->AddCC($FinAdminAddress);
 					$mail->AddBCC($ScriptMailAdress);
 				} else {
 					$mail->AddAddress($ScriptMailAdress);
@@ -269,7 +270,7 @@ if(isset($_REQUEST['hash'])) {
 				$mailPredikant = array();
 				$mailPredikant[] = "Beste ". makeVoorgangerName($voorganger, 5) .",";
 				$mailPredikant[] = "";
-				$mailPredikant[] = ($voorgangerData['stijl'] == 0 ? 'u heeft' : 'jij hebt')." online een declaratie ingediend voor het voorgaan in de $dagdeel van ". strftime ('%e %B', $dienstData['start'])." in de Koningskerk te Deventer.";
+				$mailPredikant[] = ($voorgangerData['stijl'] == 0 ? 'u heeft' : 'jij hebt')." online een declaratie ingediend voor het voorgaan in de $dagdeel van ". time2str ('%e %B', $dienstData['start'])." in de Koningskerk te Deventer.";
 				$mailPredikant[] = "Een samenvatting van deze declaratie voor in ". ($voorgangerData['stijl'] == 0 ? 'uw administratie treft u' : 'in je administratie tref je')." aan in de bijlage";
 				$mailPredikant[] = "";
 				$mailPredikant[] = "Declaratie worden over het algemeen rond de 20ste van de maand uitbetaald.";
@@ -355,7 +356,7 @@ if(isset($_REQUEST['hash'])) {
 			$page[] = "	<tr>";
 			$page[] = "		<td>Dienst</td>";
 			$page[] = "		<td>&nbsp;</td>";
-			$page[] = "		<td colspan='2'>". formatDagdeel($dienstData['start']) ." ". strftime('%e %B %Y', $dienstData['start']) ."</td>";
+			$page[] = "		<td colspan='2'>". formatDagdeel($dienstData['start']) ." ". time2str('%e %B %Y', $dienstData['start']) ."</td>";
 			$page[] = "	</tr>";
 			$page[] = "	<tr>";
 			$page[] = "		<td>Declaratie</td>";
@@ -413,7 +414,7 @@ if(isset($_REQUEST['hash'])) {
 			$page[] = "	</tr>";
 			$page[] = "	<tr>";
 			$page[] = "		<td width='20'>&nbsp;</td>";
-			$page[] = "		<td colspan='3'>".formatDagdeel($dienstData['start']) ." ". strftime('%e %B %Y', $dienstData['start']) ."</td>";
+			$page[] = "		<td colspan='3'>".formatDagdeel($dienstData['start']) ." ". time2str('%e %B %Y', $dienstData['start']) ."</td>";
 			$page[] = "		<td>&nbsp;</td>";
 			$page[] = "		<td align='right'>". formatPrice($voorgangerData['honorarium']) ."</td>";
 			$page[] = "	</tr>";
@@ -554,7 +555,7 @@ if(isset($_REQUEST['hash'])) {
 		$mailText = array();
 		$mailText[] = "Beste $aanspeekNaam,";
 		$mailText[] = "";
-		$mailText[] = ($voorgangerData['stijl'] == 0 ? 'u heeft' : 'jij hebt')." online aangegeven een declaratie te willen indienen voor het voorgaan in de $dagdeel van ". strftime ('%e %B', $dienstData['start'])." in de Koningskerk te Deventer.";
+		$mailText[] = ($voorgangerData['stijl'] == 0 ? 'u heeft' : 'jij hebt')." online aangegeven een declaratie te willen indienen voor het voorgaan in de $dagdeel van ". time2str ('%e %B', $dienstData['start'])." in de Koningskerk te Deventer.";
 		$mailText[] = "";
 		$mailText[] = "Om zeker te weten dat alleen de juiste persoon de declaratie kan indienen wordt ".($voorgangerData['stijl'] == 0 ? 'u' : 'je')." verzocht onderstaande link te volgen, ".($voorgangerData['stijl'] == 0 ? 'u' : 'je')." wordt dat doorgeleid naar de juiste pagina.";
 		$mailText[] = "<a href='$declaratieLink'>invoeren online declaratie</a>";
@@ -567,7 +568,7 @@ if(isset($_REQUEST['hash'])) {
 		$mailText[] = $declaratieReplyAddress;
 
 		# Onderwerp maken
-		$Subject = "Declaratie $dagdeel ". strftime('%e %b %y', $dienstData['start']);
+		$Subject = "Declaratie $dagdeel ". time2str('%e %b %y', $dienstData['start']);
 
 		$mail->Subject	= trim($Subject);
 		$mail->IsHTML(true);
@@ -612,7 +613,7 @@ if(isset($_REQUEST['hash'])) {
 	foreach(array_reverse($diensten) as $dienst) {
 		$dienstData = getKerkdienstDetails($dienst);
 		$dagdeel = formatDagdeel($dienstData['start']);
-		$page[] = "<option value='$dienst'>$dagdeel ". strftime('%e %b', $dienstData['start']) ."</option>";		
+		$page[] = "<option value='$dienst'>$dagdeel ". time2str('%e %b', $dienstData['start']) ."</option>";		
 	}
 	$page[] = "</select><br>";
 	$page[] = "<br>";

@@ -89,8 +89,8 @@ foreach($diensten as $dienst) {
 	$data = getKerkdienstDetails($dienst);
 	
 	$text[] = "<tr>";
-	//$text[] = "	<td align='right'>". strftime("%a %#d %b", $data['start']) ."</td>";
-	$text[] = "	<td align='right'>". date("d-m-Y", $data['start']) ."</td>";
+	$text[] = "	<td align='right'>". time2str("%a %#d %b", $data['start']) ."</td>";
+	//$text[] = "	<td align='right'>". date("d-m-Y", $data['start']) ."</td>";
 	$text[] = "	<td>". date('H:i', $data['start']) ."</td>";
 	$text[] = "	<td>";
 	$text[] = "<select name='voorganger[$dienst]'>";

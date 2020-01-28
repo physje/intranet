@@ -118,7 +118,7 @@ foreach($diensten as $dienst) {
 		}		
 		$text[] = "	</select></td>";				
 	} else {
-		$text[] = "	<td align='right'>". strftime("%a %e %b", $data['start']) ."</td>";
+		$text[] = "	<td align='right'>". time2str("%a %e %b", $data['start']) ."</td>";
 	}
 	//$text[] = "	<td align='right'>". date("d m Y", $data['start']) ."</td>";
 	$text[] = "	<td><select name='sUur[$dienst]'>";

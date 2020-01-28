@@ -54,7 +54,7 @@ if(date('w') == 0) {
 	
 	foreach($wPunten as $punt) {
 		$wData = getGebedspunt($punt);		
-		$week[] = "<tr><td valign='top'>".strftime("%A", $wData['unix']) .'</td><td>'. $wData['gebedspunt'] .'</td></tr>'.NL;
+		$week[] = "<tr><td valign='top'>".time2str("%A", $wData['unix']) .'</td><td>'. $wData['gebedspunt'] .'</td></tr>'.NL;
 	}
 	$week[] = "</table>".NL;
 	
@@ -91,7 +91,7 @@ if(date('j') == 1) {
 
 	foreach($mPunten as $punt) {
 		$mData = getGebedspunt($punt);		
-		$maand[] = "<tr><td valign='top'>".strftime("%e", $mData['unix']) .'</td><td>'. $mData['gebedspunt'] .'</td></tr>'. NL;
+		$maand[] = "<tr><td valign='top'>".time2str("%e", $mData['unix']) .'</td><td>'. $mData['gebedspunt'] .'</td></tr>'. NL;
 	}
 	$maand[] = "</table>".NL;
 

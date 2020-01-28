@@ -86,7 +86,7 @@ echo "		<td><a href='ledenlijst.php?wijk=". $personData['wijk'] ."'>".$personDat
 echo "	</tr>".NL;
 echo "	<tr>".NL;
 echo "		<td><b>Geboortedatum</b></td>".NL;
-echo "		<td>". strftime("%d %B '%y", $personData['geb_unix']) ."</td>".NL;
+echo "		<td>". time2str("%d %B '%y", $personData['geb_unix']) ."</td>".NL;
 echo "	</tr>".NL;
 echo "	<tr>".NL;
 echo "		<td><b>Kerkelijke staat</b></td>".NL;
@@ -118,19 +118,19 @@ if(in_array(1, getMyGroups($_SESSION['ID']))) {
 	if($personData['vestiging'] > 0) {
 		echo "	<tr>".NL;
 		echo "		<td><b>Vestingsdatum</b></td>".NL;
-		echo "		<td>". strftime("%d %B '%y", $personData['vestiging']) ."</td>".NL;
+		echo "		<td>". time2str("%d %B '%y", $personData['vestiging']) ."</td>".NL;
 		echo "	</tr>".NL;
 	}
 	if($personData['change'] > 0) {
 		echo "	<tr>".NL;
 		echo "		<td><b>Laatste wijziging</b></td>".NL;
-		echo "		<td>". strftime("%d %B '%y", $personData['change']) ."</td>".NL;
+		echo "		<td>". time2str("%d %B '%y", $personData['change']) ."</td>".NL;
 		echo "	</tr>".NL;
 	}
 	if($personData['visit'] > 0) {
 		echo "	<tr>".NL;
 		echo "		<td><b>Laatste login</b></td>".NL;
-		echo "		<td>". strftime("%d %B '%y", $personData['visit']) ."</td>".NL;
+		echo "		<td>". time2str("%d %B '%y", $personData['visit']) ."</td>".NL;
 		echo "	</tr>".NL;	
 	}
 	echo "	<tr>".NL;
