@@ -766,6 +766,7 @@ function sendMail($ontvanger, $subject, $bericht, $var) {
 
 function sendMail_new($parameter) {
 	global $ScriptURL, $ScriptMailAdress, $ScriptTitle, $SubjectPrefix, $MailHeader, $MailFooter;
+	global $db, $TableMail, $MailTime, $MailMail;
 	
 	# Controleer of er wel een ontvanger bekend is
 	if(isset($parameter['to'])) {
@@ -807,6 +808,13 @@ function sendMail_new($parameter) {
 		$formeel = false;
 	}
 	
+	# Even checken of ouders in de CC moeten
+	if(!isset($parameter['ouderCC'])) {
+		$ouderCC = false;
+	} else {
+		$ouderCC = $parameter['ouderCC'];
+	}	
+	
 	# Als er een reply-adres ingesteld moet worden		
 	if(isset($parameter['ReplyTo']) AND $parameter['ReplyTo'] != '') {
 		if(isset($parameter['ReplyToName']) AND $parameter['ReplyToName'] != '') {
@@ -829,7 +837,7 @@ function sendMail_new($parameter) {
 		
 		# Als de ouders ook een CC moeten
 		# Alleen bij mensen die als relatie 'zoon' of 'dochter' hebben
-		if(isset($parameter['ouderCC']) AND ($UserData['relatie'] == 'zoon' OR $UserData['relatie'] == 'dochter')) {
+		if($ouderCC AND ($UserData['relatie'] == 'zoon' OR $UserData['relatie'] == 'dochter')) {
 			$ouders = getParents($ontvanger);
 			foreach($ouders as $ouder){
 				$OuderData = getMemberDetails($ouder);
@@ -894,12 +902,21 @@ function sendMail_new($parameter) {
 	$mail->Subject	= $SubjectPrefix . trim($subject);
 	$mail->IsHTML(true);
 	$mail->Body			= $HTMLMail;
-			
+	
+	/*		
 	if(!$mail->Send()) {
 		return false;
 	} else {
 		return true;
 	}
+	*/
+		
+	$sql = "INSERT INTO $TableMail ($MailTime, $MailMail) VALUES (". time() .", '". json_encode($parameter)."')";
+	if(!mysqli_query($db, $sql)) {	
+		return false;
+	} else {
+		return true;
+	}	
 }
 
 

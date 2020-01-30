@@ -158,7 +158,12 @@ foreach($roosters as $rooster) {
 						} else {
 							toLog('error', '', $beheerder, "Kon geen rooster-alert ". $roosterData['naam'] ." versturen");
 							echo "Kon geen rooster-alert ". $roosterData['naam'] ." versturen<br>";
-						}						
+						}
+						
+						$param['to']			= $beheerder;
+						$param['message']	= implode("<br>\n", $alert);
+						$param['subject']	= "Rooster-alert '". $roosterData['naam'] ."'";
+						sendMail_new($param);										
 					}
 				}
 			}

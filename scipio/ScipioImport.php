@@ -300,11 +300,18 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 						echo "Problemen met mail versturen<br>\n";
 					}
 					
+					$param['to']			= $lid;
+					$param['message']	= $replacedBericht;
+					$param['subject']	= implode(' en ', $subject);
+					$param['formeel'] = true;
+					sendMail_new($param);	
+					
 					//echo 'Onderwerp :'. implode(' en ', $subject) .'<br>';
 					//echo 'Bericht :'. $replacedBericht .'<br>';
 					
 					# Om te zorgen dat kerkelijk bureau niet tig mailtjes krijgt direct BCC-tag verwijderen
 					unset($variabele);
+					unset($param);
 				}
 			}
 		}

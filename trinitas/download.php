@@ -5,12 +5,11 @@ include_once('../include/HTML_TopBottom.php');
 
 if(isset($_REQUEST['fileID'])) {
 	$showLogin = true;
+	$data = getTrinitasData($_REQUEST['fileID']);
 
-	if(isset($_REQUEST['key'])) {
-		$data = getTrinitasData($_REQUEST['fileID']);
-				
+	if(isset($_REQUEST['key'])) {				
 		if($_REQUEST['key'] != $data['hash']) {			
-			toLog('error', '', '', 'ongeldige Trinitas file-hash-combinatie');
+			toLog('error', '', '', 'Ongeldige Trinitas file-hash-combinatie');
 			$showLogin = true;
 		} else {
 			$showLogin = false;			

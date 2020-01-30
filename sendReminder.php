@@ -121,8 +121,21 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 							}					
 						}
 						
-						//echo $FinalHTMLMail;
-												
+						$param['to']					= $lid;
+						$param['message']			= $FinalHTMLMail;
+						$param['subject']			= $FinalSubject;
+						$param['ReplyToName']	= $roosterData['naam_afzender'];
+						$param['ReplyTo']			= $roosterData['mail_afzender'];						
+						$param['ouderCC']			= true;
+						sendMail_new($param);
+			
+						//if(sendMail_new($param)) {
+						//	toLog('debug', '', $lid, 'reminder-mail '. $roosterData['naam'] .' verstuurd');
+						//} else {
+						//	toLog('error', '', $lid, 'problemen met reminder-mail '. $roosterData['naam'] .' versturen');
+						//}
+						
+						//echo $FinalHTMLMail;												
 						if(sendMail($lid, $FinalSubject, $FinalHTMLMail, $var)) {
 							toLog('debug', '', $lid, 'reminder-mail '. $roosterData['naam'] .' verstuurd');
 						} else {

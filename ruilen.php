@@ -48,7 +48,12 @@ if(isset($_REQUEST['dader']) AND isset($_REQUEST['slachtoffer'])) {
 	if(sendMail($slachtoffer, "Er is met jou geruild voor '". $roosterData['naam'] ."'", implode("<br>\n", $mail), array())) {
 		toLog('debug', $dader, '', 'verplaatst van dienst '. $dienst_d .' naar '. $dienst_s); 
 	}
-		
+	
+	$param_dader['to']			= $slachtoffer;
+	$param_dader['message']	= implode("<br>\n", $mail);
+	$param_dader['subject']	= "Er is met jou geruild voor '". $roosterData['naam'] ."'";
+	sendMail_new($param_dader);
+			
 	$mail = array();
 	$mail[] = "Dag ". makeName($dader, 1) .",";
 	$mail[] = "";
@@ -61,6 +66,11 @@ if(isset($_REQUEST['dader']) AND isset($_REQUEST['slachtoffer'])) {
 		toLog('debug', $slachtoffer, '', 'verplaatst van dienst '. $dienst_s .' naar '. $dienst_d); 
 	}
 	
+	$param_slachtoffer['to']			= $dader;
+	$param_slachtoffer['message']	= implode("<br>\n", $mail);
+	$param_slachtoffer['subject']	= "Je hebt geruild voor '". $roosterData['naam'] ."'";
+	sendMail_new($param_slachtoffer);
+		
 	$text[] = 'Er is een bevestigingsmail naar jullie allebei gestuurd.';
 	toLog('info', $dader, $slachtoffer, "geruild voor '". $roosterData['naam'] ."'"); 
 } elseif($slachtoffer != '' OR $dader != '') {

@@ -220,12 +220,16 @@ $ArchiefPubDate			= "pubDate";
 $ArchiefName				= "filename";
 $ArchiefSend				= "send";
 
-$TablePlainText	= "trinitas_plaintext";
-$PlainTextID		= "id";
-$PlainTextText	= "plain";
+$TablePlainText			= "trinitas_plaintext";
+$PlainTextID				= "id";
+$PlainTextText			= "plain";
 
-$ArchiveDir			= 'trinitas';
+$TableMail					= "mail_log";
+$MailID							= "id";
+$MailTime						= "tijd";
+$MailMail						= "bericht";
 
+$ArchiveDir					= 'trinitas';
 
 $wijkArray			= array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J');
 $statusArray		= array('actief', 'afgemeld', 'afgevoerd', 'onttrokken', 'overleden', 'vertrokken');
