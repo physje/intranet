@@ -2,12 +2,27 @@
 include_once('../include/functions.php');
 include_once('../include/config.php');
 include_once('../include/HTML_TopBottom.php');
-$cfgProgDir = '../auth/';
-include($cfgProgDir. "secure.php");
-$db = connect_db();
 
 if(isset($_REQUEST['fileID'])) {
-	$data = getTrinitasData($_REQUEST['fileID']);
+	$showLogin = true;
+
+	if(isset($_REQUEST['key'])) {
+		$data = getTrinitasData($_REQUEST['fileID']);
+				
+		if($_REQUEST['key'] != $data['hash']) {			
+			toLog('error', '', '', 'ongeldige Trinitas file-hash-combinatie');
+			$showLogin = true;
+		} else {
+			$showLogin = false;			
+			toLog('info', '', '', 'Download Trinitas '. $data['jaar'] .' - '. $data['nr'] .' mbv hash');
+		}
+	}
+	
+	if($showLogin) {
+		$minUserLevel = 1;
+		$cfgProgDir = 'auth/';
+		include($cfgProgDir. "secure.php");
+	}
 	
 	$file_name = makeTrinitasName($_REQUEST['fileID'], 3).'.pdf';
 	$file = $ArchiveDir .'/'. $data['filename'];
@@ -15,8 +30,10 @@ if(isset($_REQUEST['fileID'])) {
 	# Als iemand geen login-window heeft gehad (en dus een hash heeft gebruikt)
 	# hoeft niet gelogd te worden dat hij/zij iets download
 	# dat is hierboven namelijk al gebeurd		
-	toLog('info', $_SESSION['ID'], $_REQUEST['fileID'], 'download');
-		
+	if($showLogin) {
+		toLog('info', $_SESSION['ID'], '', 'Download Trinitas '. $data['jaar'] .' - '. $data['nr']);
+	}
+	
 	# In de database opnemen dat dit exemplaar een keer gedownload is
 	$sql = "UPDATE $TableArchief SET $ArchiefDownload = $ArchiefDownload+1 WHERE $ArchiefID like '". $_REQUEST['fileID'] ."'";
 	mysqli_query($db, $sql);

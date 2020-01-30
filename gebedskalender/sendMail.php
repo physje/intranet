@@ -22,9 +22,10 @@ $dData = getGebedspunt($dPunt[0]);
 $dag[] = "Het gebedspunt voor vandaag is :<br>".NL;
 $dag[] = '<blockquote>'.$dData['gebedspunt'] .'</blockquote><br>'.NL;
 
-$verzendtijd = mktime(5, 57);
+//$verzendtijd = mktime(5, 57);
+$verzendtijd = time()+(365*24*60*60);
 
-$info['name']			= 'Gebedskalender - '. date('ymd');
+$info['name']			= 'Gebedskalender - '. date('y.m.d');
 $info['subject']	= 'Gebedspunt voor '. time2str('%A %e %B');
 $info['from']			= array('name' => 'Gebedskalender','email' => 'matthijs.draijer@koningskerkdeventer.nl');
 $info['list_ids']	= array($LPGebedDagListID);
@@ -47,18 +48,20 @@ if(lp_populateMail($campaignDag, $bericht)) {
 
 
 # weekelijkse mailtjes
-if(date('w') == 0) {
+//if(date('w') == 0) {
+if(true) {
 	$wPunten = getGebedspunten(date("Y-m-d"), date("Y-m-d", (time()+(6*24*60*60))));
 	$week[] = "De gebedspunten voor komende week zijn :<br>".NL;
 	$week[] = "<table>".NL;
 	
 	foreach($wPunten as $punt) {
 		$wData = getGebedspunt($punt);		
-		$week[] = "<tr><td valign='top'>".time2str("%A", $wData['unix']) .'</td><td>'. $wData['gebedspunt'] .'</td></tr>'.NL;
+		$week[] = "<tr><td valign='top' width='100'>".time2str("%A", $wData['unix']) .'</td><td>'. $wData['gebedspunt'] .'</td></tr>'.NL;
 	}
 	$week[] = "</table>".NL;
 	
-	$verzendtijd = mktime(5, 58);
+	//$verzendtijd = mktime(5, 58);
+	$verzendtijd = time()+(365*24*60*60);
 
 	$info['name']			= 'Gebedskalender - week '. date('W');
 	$info['subject']	= 'Gebedspunten week '. time2str('%U');
@@ -84,18 +87,20 @@ if(date('w') == 0) {
 
 
 #  maandelijkse mailtjes
-if(date('j') == 1) {
+//if(date('j') == 1) {
+if(true) {
 	$mPunten = getGebedspunten(date("Y-m-d"), date("Y-m-d", mktime(0,0,1,(date("n")+1),date("j"), date("Y"))));
 	$maand[] = "De gebedspunten voor deze maand zijn :<br>".NL;
 	$maand[] = "<table>".NL;
 
 	foreach($mPunten as $punt) {
 		$mData = getGebedspunt($punt);		
-		$maand[] = "<tr><td valign='top'>".time2str("%e", $mData['unix']) .'</td><td>'. $mData['gebedspunt'] .'</td></tr>'. NL;
+		$maand[] = "<tr><td valign='top' width='25'>".time2str("%e", $mData['unix']) .'</td><td>'. $mData['gebedspunt'] .'</td></tr>'. NL;
 	}
 	$maand[] = "</table>".NL;
 
-	$verzendtijd = mktime(5, 59);
+	//$verzendtijd = mktime(5, 59);
+	$verzendtijd = time()+(365*24*60*60);
 
 	$info['name']			= 'Gebedskalender - '. time2str('%B');
 	$info['subject']	= 'Gebedspunten '. time2str('%B');

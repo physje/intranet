@@ -13,11 +13,7 @@ foreach($jaargangen as $jaargang) {
 	$Code[] = "<h1>Jaargang $jaargang</h1>";
 	foreach($nummers as $nummer) {
 		$data = getTrinitasData($nummer);
-		if($data['pubDate'] < time()) {
-			$Code[] = "<a href='download.php?fileID=$nummer'>". makeTrinitasName($nummer, 3) ."</a>". (in_array(1, getMyGroups($_SESSION['ID'])) ? " (<a href='exemplaar.php?fileID=$nummer'>edit</a>)" : '');
-		} elseif($_SESSION['level'] >= 2) {
-			$Code[] = "<a href='download.php?fileID=$nummer' class='inactief'>". makeTrinitasName($nummer, 3) ."</a>". ($_SESSION['level'] >= 2 ? " (<a href='exemplaar.php?fileID=$nummer' class='inactief'>edit</a>)" : '');
-		}
+		$Code[] = "<a href='download.php?fileID=$nummer'>". makeTrinitasName($nummer, 3) ."</a>". (in_array(1, getMyGroups($_SESSION['ID'])) ? " (<a href='exemplaar.php?fileID=$nummer'>edit</a>)" : '');		
 	}
 	
 	$HTML[] = implode("<br>\n", $Code);

@@ -214,11 +214,11 @@ $TableArchief				= "trinitas_archief";
 $ArchiefID					= "id";
 $ArchiefJaar				= "jaargang";
 $ArchiefNr					= "exemplaar";
-//$ArchiefSend				= "send_link";
-//$ArchiefSendAtt			= "send_attach";
+$ArchiefHash				= "hash";
 $ArchiefDownload		= "download";
 $ArchiefPubDate			= "pubDate";
 $ArchiefName				= "filename";
+$ArchiefSend				= "send";
 
 $TablePlainText	= "trinitas_plaintext";
 $PlainTextID		= "id";

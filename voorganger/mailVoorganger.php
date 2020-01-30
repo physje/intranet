@@ -39,7 +39,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 		$voorgangerAchterNaam = makeVoorgangerName($dienstData['voorganger_id'], 7);
 		
 		# Als er geen mailadres van de voorganger bekend is
-		if($voorgangerData['mail'] != '') {			
+		if(isValidEmail($voorgangerData['mail'])) {			
 			# Nieuw mail-object aanmaken
 			$mail = new PHPMailer;
 			$mail->FromName	= 'Preekvoorziening Koningskerk Deventer';
@@ -147,7 +147,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 		
 			setVoorgangerLastSeen($dienstData['voorganger_id'], $dienstData['start']);
 		} else {
-			toLog('error', '', '', "Kon geen voorgangersmail versturen voor ". date('j-n-Y', $dienstData['start']) .", geen mailadres bekend");
+			toLog('error', '', '', "Kon geen voorgangersmail versturen voor ". $dagdeel .' van ' date('j-n', $dienstData['start']) .", ongeldig mailadres");
 		}
 	}
 } else {

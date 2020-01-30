@@ -1675,7 +1675,7 @@ function getNrInJaargang($jaargang) {
 }
 
 function getTrinitasData($id) {
-	global $db, $TableArchief, $ArchiefJaar, $ArchiefNr, $ArchiefPubDate, $ArchiefName, $ArchiefID;
+	global $db, $TableArchief, $ArchiefJaar, $ArchiefNr, $ArchiefHash, $ArchiefPubDate, $ArchiefName, $ArchiefID;
 	
 	$sql = "SELECT * FROM $TableArchief WHERE $ArchiefID like '$id'";
 	$result	= mysqli_query($db, $sql);
@@ -1684,8 +1684,9 @@ function getTrinitasData($id) {
 	$data['id']				= $row[$ArchiefID];
 	$data['jaar']			= $row[$ArchiefJaar];
 	$data['nr']				= $row[$ArchiefNr];
+	$data['hash']			= $row[$ArchiefHash];
 	$data['pubDate']	= $row[$ArchiefPubDate];
-	$data['filename']	= $row[$ArchiefName];
+	$data['filename']	= $row[$ArchiefName];	
 	
 	return $data;
 }
@@ -1780,4 +1781,10 @@ function getLastNrsTrinitas($number = 3) {
 	return $data;	
 }
 
+function isValidEmail($email) {
+	if(filter_var($email, FILTER_VALIDATE_EMAIL)) {
+		return true;
+	}
+	return false;
+}
 ?>

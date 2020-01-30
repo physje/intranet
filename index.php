@@ -244,6 +244,10 @@ $trinitasDeel[] = "<b>Trinitas</b>";
 $TrinitasLinks['trinitas/archief.php']	= 'Archief';
 $TrinitasLinks['trinitas/search.php']	= 'Zoeken op woorden';
 
+if(in_array(1, getMyGroups($_SESSION['ID'])) OR in_array(37, getMyGroups($_SESSION['ID']))) {
+	$TrinitasLinks['trinitas/exemplaar.php']	= 'Exemplaar toevoegen';
+}
+
 foreach($TrinitasLinks as $url => $titel) {
 	$trinitasDeel[] = "<a href='$url' target='_blank'>$titel</a>";
 }

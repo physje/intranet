@@ -1,13 +1,13 @@
 <?php
-include_once('../general_include/shared_functions.php');
-include_once('../general_include/general_config.php');
-include_once('include/functions.php');
-include_once('include/config.php');
-include_once('include/HTML_TopBottom.php');
-$minUserLevel = 2;
-$cfgProgDir = 'auth/';
+include_once('../include/functions.php');
+include_once('../include/config.php');
+include_once('../include/HTML_TopBottom.php');
+
+$cfgProgDir = '../auth/';
+$requiredUserGroups = array(1, 37);
 include($cfgProgDir. "secure.php");
 $db = connect_db();
+
 
 if(isset($_POST['toevoegen'])) {	
 	if(!file_exists($ArchiveDir)) {
@@ -17,36 +17,30 @@ if(isset($_POST['toevoegen'])) {
 	$uniqeFilename = generateFilename().'.pdf';
 	while(file_exists($ArchiveDir.'/'.$uniqeFilename)){
 		$uniqeFilename = generateFilename().'.pdf';
-	}		
+	}
 	
 	move_uploaded_file($_FILES['trinitas_bestand']['tmp_name'], $ArchiveDir.'/'.$uniqeFilename);
-	$pubDate = mktime(9,30,0,$_POST['maand'],$_POST['dag'],$_POST['jaar']);
 	
-	$sql = "INSERT INTO $TableArchief ($ArchiefID, $ArchiefJaar, $ArchiefNr, $ArchiefName, $ArchiefPubDate) VALUES ('". generateID() ."', '". $_POST['jaargang'] ."', '". $_POST['nummer'] ."', '$uniqeFilename', $pubDate)";
+	$pubDate	= mktime(9,30,0,$_POST['maand'],$_POST['dag'],$_POST['jaar']);
+	$hash			= generateID(64);	
+	$sql			= "INSERT INTO $TableArchief ($ArchiefID, $ArchiefJaar, $ArchiefNr, $ArchiefName, $ArchiefHash, $ArchiefPubDate) VALUES ('". generateID() ."', '". $_POST['jaargang'] ."', '". $_POST['nummer'] ."', '$uniqeFilename', '$hash', $pubDate)";
 	if(mysqli_query($db, $sql)) {
 		$HTML[] = "Gelukt, <a href='main.php'>startpagina</a>";
-		toLog('info', $_SESSION['UserID'], '', $_POST['jaargang'] .' - '. $_POST['nummer'] .' toegevoegd');
+		toLog('info', $_SESSION['ID'], '', $_POST['jaargang'] .' - '. $_POST['nummer'] .' toegevoegd');
 	} else {
 		$HTML[] = "Daar ging iets verkeerd";
-		toLog('error', $_SESSION['UserID'], '', 'Problemen met toevoegen '.$_POST['jaargang'] .' - '. $_POST['nummer'] .' toegevoegd');
+		toLog('error', $_SESSION['ID'], '', 'Problemen met toevoegen '.$_POST['jaargang'] .' - '. $_POST['nummer'] .' toegevoegd');
 	}
 } else {
 	$sql = "SELECT MAX($ArchiefJaar) as max FROM $TableArchief";
 	$result = mysqli_query($db, $sql);
 	$row = mysqli_fetch_array($result);
-	$max_jaargang = $row[max];
-	
-	/*
-	$sql = "SELECT MIN($ArchiefJaar) as min FROM $TableArchief";
-	$result = mysqli_query($db, $sql);
-	$row = mysqli_fetch_array($result);
-	$min_jaargang = $row[min];
-	*/
-	
+	$max_jaargang = $row['max'];
+
 	$sql = "SELECT MAX($ArchiefNr) as max FROM $TableArchief WHERE $ArchiefJaar = $max_jaargang";
 	$result = mysqli_query($db, $sql);
 	$row = mysqli_fetch_array($result);
-	$max_nummer = $row[max];
+	$max_nummer = $row['max'];
 		
 	if(isset($_REQUEST['fileID'])) {
 		$data = getTrinitasData($_REQUEST['fileID']);
@@ -101,16 +95,6 @@ if(isset($_POST['toevoegen'])) {
 	}
 	$HTML[] = "	</select></td>";
 	$HTML[] = "</tr>";
-	/*
-	$HTML[] = "<tr>";
-	$HTML[] = "	<td>Nummer</td>";
-	$HTML[] = "	<td><select name='nummer'>";
-	for($n=1;$n<=25;$n++) {
-		$HTML[] = "	<option value='$n'". ($n == $nummer ? ' selected' : '') .">$n</value>";
-	}
-	$HTML[] = "	</select></td>";
-	$HTML[] = "</tr>";
-	*/
 	$HTML[] = "<tr>";
 	$HTML[] = "	<td>Bestand</td>";
 	$HTML[] = "	<td><input name='trinitas_bestand' type='file'>". (isset($_REQUEST['fileID']) ? " (<a href='download.php?fileID=". $_REQUEST['fileID'] ."'>huidig</a>)</td>" : '');
@@ -124,7 +108,7 @@ if(isset($_POST['toevoegen'])) {
 	$HTML[] = "	</select>\n";	
 	$HTML[] = "	<select name='maand'>\n";
 	for($m=1 ; $m<=12 ; $m++) {
-		$HTML[] = "	<option value='$m'". ($m == $maand ? ' selected' : '') .">". $maandNamen[$m] ."</option>\n";
+		$HTML[] = "	<option value='$m'". ($m == $maand ? ' selected' : '') .">". $maandArrayLang[$m] ."</option>\n";
 	}
 	$HTML[] = "	</select>\n";
 	$HTML[] = "	<select name='jaar'>\n";
@@ -144,6 +128,17 @@ if(isset($_POST['toevoegen'])) {
 	
 }
 
-verdeelBlokken(implode("\n", $HTML));
+# Pagina tonen
+echo $HTMLHeader;
+echo '<table border=0 width=100%>'.NL;
+echo '<tr>'.NL;
+echo '	<td valign="top" width="50">&nbsp;</td>'.NL;
+echo '	<td valign="top">'.NL;
+echo showBlock(implode("\n", $HTML), 100);
+echo '	</td>'.NL;
+echo '	<td valign="top" width="50">&nbsp;</td>'.NL;
+echo '</tr>'.NL;
+echo '</table>'.NL;
+echo $HTMLFooter;
 
 ?>
