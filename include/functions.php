@@ -796,10 +796,6 @@ function sendMail_new($parameter) {
 		exit;
 	}	
 	
-	$mail = new PHPMailer;	
-	$mail->From     = $ScriptMailAdress;
-	$mail->FromName = $ScriptTitle;
-	
 	# Er staat ook een formeel mailadres in de database
 	# Met de variabele formeel kan worden aangegeven of deze gebruikt moet worden
 	if(isset($parameter['formeel'])) {
@@ -815,6 +811,11 @@ function sendMail_new($parameter) {
 		$ouderCC = $parameter['ouderCC'];
 	}	
 	
+	/*
+	$mail = new PHPMailer;	
+	$mail->From     = $ScriptMailAdress;
+	$mail->FromName = $ScriptTitle;
+
 	# Als er een reply-adres ingesteld moet worden		
 	if(isset($parameter['ReplyTo']) AND $parameter['ReplyTo'] != '') {
 		if(isset($parameter['ReplyToName']) AND $parameter['ReplyToName'] != '') {
@@ -902,8 +903,7 @@ function sendMail_new($parameter) {
 	$mail->Subject	= $SubjectPrefix . trim($subject);
 	$mail->IsHTML(true);
 	$mail->Body			= $HTMLMail;
-	
-	/*		
+			
 	if(!$mail->Send()) {
 		return false;
 	} else {

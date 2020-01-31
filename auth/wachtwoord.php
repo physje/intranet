@@ -37,6 +37,11 @@ if(isset($_POST['opvragen'])) {
 			toLog('info', $id, '', "Inloggegevens verstuurd naar ". makeName($id, 5));
 			$text[] = "Inloggegevens zijn verstuurd";
 		}
+		
+		$param['to']				= $id;
+		$param['message']		= $HTMLMail;
+		$param['subject']		= "Nieuw wachtwoord voor $ScriptTitle";			
+		sendMail_new($param);
 	}	
 } else {
 	$text[] = "<form action='". htmlspecialchars($_SERVER['PHP_SELF']) ."' method='post'>\n";

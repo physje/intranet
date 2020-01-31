@@ -53,6 +53,15 @@ if(isset($_POST['send_mail'])) {
 		toLog('error', '', $lid, "Problemen met versturen mail met onderwerp '$FinalSubject'");
 	}
 	
+	$param['to']				= $lid;
+	$param['message']		= $FinalHTMLMail;
+	$param['subject']		= $FinalSubject;
+	$param['from']			= $_POST['mail_afzender'];
+	$param['FromName']	= $_POST['naam_afzender'];
+	$param['BCC']				= true;
+	$param['BCC_mail']	= 'matthijs@draijer.org';
+	sendMail_new($param);	
+	
 	//echo $FinalHTMLMail;
 } else {
 	$leden = getMembers();

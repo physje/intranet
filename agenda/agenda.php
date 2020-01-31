@@ -83,6 +83,11 @@ if(isset($_POST['remove'])) {
 				//$text[] = "";
 				//$text[] = implode("<br>\n", $mail);
 			}
+			
+			$param['to']				= $_SESSION['ID'];
+			$param['message']		= implode("<br>\n", $mail);
+			$param['subject']		= "De afspraak '". $_POST['titel'] ."'";			
+			sendMail_new($param);			
 		} else {
 			$text[] = "Het opslaan van de afspraak is niet gelukt.";
 			toLog('error', $_SESSION['ID'], '', "Kan agenda-item '". $_POST['titel'] ."' niet opslaan");
