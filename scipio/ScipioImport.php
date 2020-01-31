@@ -33,7 +33,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 	foreach ($xml->persoon as $element) {
 		set_time_limit(10);
 		
-		$namen = explode(' - ', $element->aanschrijfnaam);
+		$namen = explode(' - ', trim($element->aanschrijfnaam));
 		
 		if(count($namen) == 2) {
 			$velden[$UserMeisjesnaam] = trim($namen[1]);
@@ -46,28 +46,28 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 		$velden[$UserVoorletters] = array_shift($delen);
 		$velden[$UserAchternaam] = array_pop($delen);
 		$velden[$UserTussenvoegsel] = implode(' ', $delen);		
-		$velden[$UserAdres] = $element->pefamilie;
-		$velden[$UserID] = $element->regnr;
+		$velden[$UserAdres] = trim($element->pefamilie);
+		$velden[$UserID] = trim($element->regnr);
 		//$velden[] = $element->aanschrijfnaam;
-		$velden[$UserVoornaam] = $element->roepnaam;
-		$velden[$UserGeslacht] = $element->geslacht;
+		$velden[$UserVoornaam] = trim($element->roepnaam);
+		$velden[$UserGeslacht] = trim($element->geslacht);
 		$velden[$UserGeboorte] = substr($element->gebdatum, 0, 4).'-'.substr($element->gebdatum, 4, 2).'-'.substr($element->gebdatum, 6, 2);
-		$velden[$UserStatus] = $element->status;
-		$velden[$UserBurgelijk] = $element->burgstaat;
-		$velden[$UserBelijdenis] = $element->kerkstaat;
-		$velden[$UserRelatie] = $element->gezinsrelatie;
-		$velden[$UserMail] = $element->email;
-		$velden[$UserStraat] = $element->straat;
-		$velden[$UserHuisnummer] = $element->huisnr;
-		$velden[$UserHuisletter] = $element->huisltr;
-		$velden[$UserToevoeging] = $element->huisnrtoev;
-		$velden[$UserPC] = $element->postcode;
-		$velden[$UserPlaats] = $element->plaats;
-		$velden[$UserVestiging] = $element->vestigingsdatum;
+		$velden[$UserStatus] = trim($element->status);
+		$velden[$UserBurgelijk] = trim($element->burgstaat);
+		$velden[$UserBelijdenis] = trim($element->kerkstaat);
+		$velden[$UserRelatie] = trim($element->gezinsrelatie);
+		$velden[$UserMail] = trim($element->email);
+		$velden[$UserStraat] = trim($element->straat);
+		$velden[$UserHuisnummer] = trim($element->huisnr);
+		$velden[$UserHuisletter] = trim($element->huisltr);
+		$velden[$UserToevoeging] = trim($element->huisnrtoev);
+		$velden[$UserPC] = trim($element->postcode);
+		$velden[$UserPlaats] = trim($element->plaats);
+		$velden[$UserVestiging] = trim($element->vestigingsdatum);
 		$velden[$UserWijk] = substr($element->wijk, -1);
 		//$velden[] = 'sectie';
 		//$velden[] = 'mutatiedatum';
-		$velden[$UserTelefoon] = $element->telnr;
+		$velden[$UserTelefoon] = trim($element->telnr);
 		
 		# Als er geen voorletters bekendd zijn, deze aanmaken
 		if($velden[$UserVoorletters] == $velden[$UserVoornaam]) {
