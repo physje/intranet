@@ -72,6 +72,13 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 				toLog('info', '', '', "Online declaratie-formulier verstuurd naar $mailNaam");
 			}
 			
+			$param['to'] = array($voorgangerData['mail'], $mailNaam);
+			$param['from'] = $declaratieReplyAddress;
+			$param['fromName'] = $declaratieReplyName;
+			$param['subject'] = trim($Subject);
+			$param['message'] = implode("<br>\n", $mailText);
+			sendMail_new($param);	
+			
 			setVoorgangerDeclaratieStatus(2, $dienst);			
 		}		
 	}

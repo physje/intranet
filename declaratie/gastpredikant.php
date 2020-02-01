@@ -261,6 +261,13 @@ if(isset($_REQUEST['hash'])) {
 					} else {
 						toLog('debug', '', '', "Declaratie-notificatie naar penningsmeester voor ". date('j-n-Y', $dienstData['start']));
 					}
+					
+					$param_penning['to'] = array($declaratieReplyAddress, $declaratieReplyName);
+					$param_penning['subject'] = trim($Subject);
+					$param_penning['message'] = implode("\n", $mailPenningsmeester);					
+					$param_penning['file'] = 'PDF/'. $mutatieNr .'.pdf';
+					$param_penning['fileName'] = $boekstukNummer .' '. makeVoorgangerName($voorganger, 1) . ' '. date('d-m', $dienstData['start']) .' '. $dagdeel .'.pdf';
+					sendMail_new($param_penning);					
 				}
 				
 				
@@ -317,6 +324,15 @@ if(isset($_REQUEST['hash'])) {
 						toLog('debug', '', '', "Declaratie-afschrift naar $mailNaam voor ". date('j-n-Y', $dienstData['start']));
 						$page[] = "Er is een afschrift van de declaratie naar ". ($voorgangerData['stijl'] == 0 ? 'u' : 'jou') ." verstuurd.";
 					}
+					
+					$param_predikant['to'] = array($voorgangerData['mail'], $mailNaam);
+					$param_predikant['from'] = $declaratieReplyAddress;
+					$param_predikant['fromName'] = $declaratieReplyName;
+					$param_predikant['subject'] = trim($Subject);
+					$param_predikant['message'] = implode("<br>\n", $mailPredikant);
+					$param_predikant['file'] = 'PDF/'. $mutatieNr .'.pdf';
+					$param_predikant['fileName'] = "Declaratie $dagdeel ". date('j-n-Y', $dienstData['start']) ." Koningskerk Deventer.pdf";
+					sendMail_new($param_predikant);					
 				}					
 				
 				# -------						
@@ -587,6 +603,13 @@ if(isset($_REQUEST['hash'])) {
 				toLog('debug', '', '', "Declaratie-link verstuurd naar $mailNaam voor ". date('j-n-y', $dienstData['start']));
 				$page[] = "Er is een mail gestuurd.";
 			}
+			
+			$param['to'] = array($voorgangerData['mail'], $mailNaam);
+			$param['from'] = $declaratieReplyAddress;
+			$param['fromName'] = $declaratieReplyName;
+			$param['subject'] = trim($Subject);
+			$param['message'] = implode("<br>\n", $mailText);
+			sendMail_new($param);			
 		}
 	}
 } else {

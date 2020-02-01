@@ -9,7 +9,7 @@ $db = connect_db();
 
 # Ga op zoek naar alle personen met een mailadres
 # Mailadres is daarbij alles met een @-teken erin
-$sql = "SELECT * FROM $TableUsers WHERE $UserMail like '%@%' AND $UserStatus = 'actief'";
+$sql = "SELECT * FROM $TableUsers WHERE $UserMail like '%@%' AND $UserStatus = 'actief' GROUP BY $UserMail";
 $result = mysqli_query($db, $sql);
 $row = mysqli_fetch_array($result);
 do {

@@ -58,8 +58,7 @@ if(isset($_POST['send_mail'])) {
 	$param['subject']		= $FinalSubject;
 	$param['from']			= $_POST['mail_afzender'];
 	$param['FromName']	= $_POST['naam_afzender'];
-	$param['BCC']				= true;
-	$param['BCC_mail']	= 'matthijs@draijer.org';
+	$param['bcc']				= 'matthijs@draijer.org';
 	sendMail_new($param);	
 	
 	//echo $FinalHTMLMail;

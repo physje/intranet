@@ -52,6 +52,11 @@ if(isset($_POST['save']) OR isset($_POST['maanden'])) {
 		}		
 	}
 	
+	$param['to'] = array('scipiobeheer@koningskerkdeventer.nl', 'Scipio beheer');
+	$param['subject'] = count($bericht).' '.(count($bericht) > 1 ? 'gewijzigde collectedoelen' : 'gewijzigd collectedoel');
+	$param['message'] = implode('<br>', $bericht);
+	sendMail_new($param);
+	
 	toLog('info', $_SESSION['ID'], '', 'Collectes bijgewerkt');
 }
 

@@ -768,13 +768,28 @@ function sendMail_new($parameter) {
 	global $ScriptURL, $ScriptMailAdress, $ScriptTitle, $SubjectPrefix, $MailHeader, $MailFooter;
 	global $db, $TableMail, $MailTime, $MailMail;
 	
+	# $parameter['to']
+	# $parameter['subject']
+	# $parameter['message']
+	# $parameter['formeel']
+	# $parameter['ouderCC']
+	# $parameter['from']
+	# $parameter['fromName']
+	# $parameter['ReplyTo']
+	# $parameter['ReplyToName']
+	# $parameter['cc']
+	# $parameter['bcc']
+	# $parameter['file']
+	# $parameter['fileName']
+	
 	# Controleer of er wel een ontvanger bekend is
 	if(isset($parameter['to'])) {
-		if(is_array($parameter['to'])) {
-			$ontvangers = $parameter['to'];
-		} else {
+		if(!is_array($parameter['to'])) {
+			echo 'Ontvangers dient een array te zijn';
 			$ontvangers = array($parameter['to']);
-		}
+		} else {
+			$ontvangers = $parameter['to'];
+		}						
 	} else {
 		echo 'Geen ontvangers bekend';
 		exit;
@@ -812,10 +827,20 @@ function sendMail_new($parameter) {
 	}	
 	
 	/*
-	$mail = new PHPMailer;	
-	$mail->From     = $ScriptMailAdress;
-	$mail->FromName = $ScriptTitle;
-
+	$mail = new PHPMailer;
+	
+	if(isset($parameter['from']) AND $parameter['from'] != '') {
+		$mail->From = $parameter['from'];
+	} else {
+		$mail->From = $ScriptMailAdress;
+	}
+	
+	if(isset($parameter['fromName']) AND $parameter['fromName'] != '') {
+		$mail->FromName = $parameter['fromName'];
+	} else {
+		$mail->FromName = $ScriptTitle;
+	}
+	
 	# Als er een reply-adres ingesteld moet worden		
 	if(isset($parameter['ReplyTo']) AND $parameter['ReplyTo'] != '') {
 		if(isset($parameter['ReplyToName']) AND $parameter['ReplyToName'] != '') {
@@ -828,26 +853,36 @@ function sendMail_new($parameter) {
 	# De personen die in de 'Aan' moeten
 	# Met de check of ouders in de 'CC' moeten
 	foreach($ontvangers as $ontvanger) {
-		# Haal de data van de ontvanger op
-		# Zoek ook direct de mail op van de ontvanger
-		$UserData = getMemberDetails($ontvanger);
-		$UserMail	= getMailAdres($ontvanger, $formeel);
+		if(!is_array($ontvanger) AND is_numeric($ontvanger)) {
+			# Haal de data van de ontvanger op
+			# Zoek ook direct de mail op van de ontvanger
+			$UserData = getMemberDetails($ontvanger);
+			$UserMail	= getMailAdres($ontvanger, $formeel);
 		
-		$mail->AddAddress($UserMail, makeName($ontvanger, 5));
-		toLog('debug', '', $ontvanger, makeName($ontvanger, 5) .' in de Aan opgenomen');
-		
-		# Als de ouders ook een CC moeten
-		# Alleen bij mensen die als relatie 'zoon' of 'dochter' hebben
-		if($ouderCC AND ($UserData['relatie'] == 'zoon' OR $UserData['relatie'] == 'dochter')) {
-			$ouders = getParents($ontvanger);
-			foreach($ouders as $ouder){
-				$OuderData = getMemberDetails($ouder);
-				if($OuderData['mail'] != $UserMail AND $OuderData['mail'] != '') {
-					$mail->AddCC($OuderData['mail']);
-					toLog('debug', '', $ontvanger, makeName($ouder, 5) .' ('. $OuderData['mail'] .') als ouder in CC opgenomen');
+			$mail->AddAddress($UserMail, makeName($ontvanger, 5));
+			toLog('debug', '', $ontvanger, makeName($ontvanger, 5) .' in de Aan opgenomen');
+			
+			# Als de ouders ook een CC moeten
+			# Alleen bij mensen die als relatie 'zoon' of 'dochter' hebben
+			if($ouderCC AND ($UserData['relatie'] == 'zoon' OR $UserData['relatie'] == 'dochter')) {
+				$ouders = getParents($ontvanger);
+				foreach($ouders as $ouder){
+					$OuderData = getMemberDetails($ouder);
+					if($OuderData['mail'] != $UserMail AND $OuderData['mail'] != '') {
+						$mail->AddCC($OuderData['mail']);
+						toLog('debug', '', $ontvanger, makeName($ouder, 5) .' ('. $OuderData['mail'] .') als ouder in CC opgenomen');
+					}
 				}
 			}
-		}		
+		} elseif(is_array($ontvanger)) {
+			$naam = $ontvanger[0];
+			$mail = $ontvanger[1];
+			$mail->AddAddress($mail, $naam);
+			toLog('debug', '', '', $naam .' ('. $mail .') in de Aan opgenomen');
+		} else {
+			$mail->AddAddress($ontvanger);
+			toLog('debug', '', '', $ontvanger .' in de Aan opgenomen');
+		}
 	}
 	
 	# De personen die in de 'CC' moeten
@@ -859,12 +894,19 @@ function sendMail_new($parameter) {
 		}		
 		
 		foreach($cc_ontvangers as $ontvanger) {
-			if(is_numeric($ontvanger)) {
+			if(!is_array($ontvanger) AND is_numeric($ontvanger)) {			
 				$UserData = getMemberDetails($ontvanger);
 				$UserMail	= getMailAdres($ontvanger, $formeel);
-				$mail->AddCC($UserMail, makeName($ontvanger, 5));				
+				$mail->AddCC($UserMail, makeName($ontvanger, 5));
+				toLog('debug', '', $ontvanger, makeName($ontvanger, 5) .' in de CC opgenomen');
+			} elseif(is_array($ontvanger)) {
+				$naam = $ontvanger[0];
+				$mail = $ontvanger[1];
+				$mail->AddCC($mail, $naam);
+				toLog('debug', '', '', $naam .' ('. $mail .') in de CC opgenomen');
 			} else {
 				$mail->AddCC($ontvanger);
+				toLog('debug', '', '', $ontvanger .' in de CC opgenomen');
 			}
 		}
 	}
@@ -889,8 +931,8 @@ function sendMail_new($parameter) {
 	
 	# Controle op bijlages
 	if(isset($parameter['file']) AND $parameter['file'] != "") {
-		if(isset($parameter['name']) AND $parameter['name'] != "") {
-			$mail->addAttachment($parameter['file'], $parameter['name']);
+		if(isset($parameter['fileName']) AND $parameter['fileName'] != "") {
+			$mail->addAttachment($parameter['file'], $parameter['fileName']);
 		} else {
 			$mail->addAttachment($parameter['file']);
 		}

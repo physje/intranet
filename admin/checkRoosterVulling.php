@@ -108,12 +108,6 @@ foreach($roosters as $rooster) {
 					$beheerders[] = 984285;
       	
 					foreach($beheerders as $beheerder) {
-						# $parameters['to'] = ;
-						# $parameters['cc'] = ;
-						# $parameters['bcc'] = ;
-						# $parameters['message'] = ;
-						# $parameters['subject'] = ;
-      	
 						# Mail opstellen
 						$alert = array();
 						$alert[] = "Goedemorgen ". makeName($beheerder, 1) .",";
@@ -160,6 +154,11 @@ foreach($roosters as $rooster) {
 							echo "Kon geen rooster-alert ". $roosterData['naam'] ." versturen<br>";
 						}
 						
+						# $parameters['to'] = ;
+						# $parameters['cc'] = ;
+						# $parameters['bcc'] = ;
+						# $parameters['message'] = ;
+						# $parameters['subject'] = ;						
 						$param['to']			= $beheerder;
 						$param['message']	= implode("<br>\n", $alert);
 						$param['subject']	= "Rooster-alert '". $roosterData['naam'] ."'";
