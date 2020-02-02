@@ -18,11 +18,11 @@ $listIDs = $listIDs+$LPWijkListID;
 
 # Ga op zoek naar alle personen met een mailadres
 # Mailadres is daarbij alles met een @-teken erin
-$sql = "SELECT * FROM $TableUsers WHERE $UserMail like '%@%' AND $UserStatus = 'actief'";
+$sql = "SELECT * FROM $TableUsers WHERE $UserMail like '%@%' AND $UserStatus = 'actief' GROUP BY $UserMail";
 $result = mysqli_query($db, $sql);
 $row = mysqli_fetch_array($result);
 do {
-	# 3 seconden per persoon moet voldoende zijn
+	# 5 seconden per persoon moet voldoende zijn
 	set_time_limit(5);
 	
 	# identifier is het id binnen scipio

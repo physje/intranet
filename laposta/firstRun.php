@@ -22,7 +22,7 @@ $listIDs = $listIDs+$LPWijkListID;
 
 # Ga op zoek naar alle personen met een mailadres
 # Mailadres is daarbij alles met een @-teken erin
-$sql = "SELECT * FROM $TableUsers WHERE $UserMail like '%@%' LIMIT $start, $stap";
+$sql = "SELECT * FROM $TableUsers WHERE $UserMail like '%@%' GROUP BY $UserMail LIMIT $start, $stap";
 $result = mysqli_query($db, $sql);
 $row = mysqli_fetch_array($result);
 

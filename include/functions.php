@@ -953,7 +953,7 @@ function sendMail_new($parameter) {
 	}
 	*/
 		
-	$sql = "INSERT INTO $TableMail ($MailTime, $MailMail) VALUES (". time() .", '". json_encode($parameter)."')";
+	$sql = "INSERT INTO $TableMail ($MailTime, $MailMail) VALUES (". time() .", '". urlencode(json_encode($parameter))."')";
 	if(!mysqli_query($db, $sql)) {	
 		return false;
 	} else {

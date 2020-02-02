@@ -32,8 +32,6 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 			$mail->AddBCC($ScriptMailAdress);
 			
 			# Declaratielink genereren
-			//$hash = urlencode(password_hash($dienst.'$'.$randomCodeDeclaratie.'$'.$voorganger, PASSWORD_BCRYPT));
-			//$declaratieLink = $ScriptURL ."declaratie/gastpredikant.php?hash=$hash&d=$dienst&v=$voorganger";
 			$declaratieLink = generateDeclaratieLink($dienst, $voorganger);
 			
 			# Mail opstellen
@@ -71,7 +69,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 			} else {
 				toLog('info', '', '', "Online declaratie-formulier verstuurd naar $mailNaam");
 			}
-			
+						
 			$param['to'] = array($voorgangerData['mail'], $mailNaam);
 			$param['from'] = $declaratieReplyAddress;
 			$param['fromName'] = $declaratieReplyName;
