@@ -215,6 +215,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 					$item = $temp;
 					$item[] = "Overgegaan naar wijk ". $nieuweWijk;					
 					$mailBlockChange[$oudeWijk][] = implode("<br>\n", $item)."<br>\n";
+					$namenLedenChange[$oudeWijk][] = makeName($element->regnr, 6);
 					
 					$item = $temp;
 					$item[] = "Binnengekomen vanuit wijk ". $oudeWijk;					
@@ -249,9 +250,9 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 				
 				foreach($wijkTeam as $lid => $dummy)	$namenWijkteam[$lid] = makeName($lid, 1);
 				
-				$mailBericht[] = "Beste [[voornaam]],<br>\n";
-				$mailBericht[] = "<br>\n";
-				$mailBericht[] = "In de ledenadministratie zijn zaken veranderd voor wijk $wijk<br>\n";
+				$mailBericht[] = "Beste [[voornaam]],<br>";
+				$mailBericht[] = "<br>";
+				$mailBericht[] = "In de ledenadministratie zijn zaken veranderd voor wijk $wijk<br>";
 				
 				if(isset($mailBlockNew[$wijk])) {
 					$mailBericht[] = "<h3>Nieuwe wijk". (count($mailBlockNew[$wijk]) > 1 ? 'genoten' : 'genoot') ."</h3>";

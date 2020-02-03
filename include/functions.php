@@ -784,8 +784,7 @@ function sendMail_new($parameter) {
 	
 	# Controleer of er wel een ontvanger bekend is
 	if(isset($parameter['to'])) {
-		if(!is_array($parameter['to'])) {
-			echo 'Ontvangers dient een array te zijn';
+		if(!is_array($parameter['to'])) {			
 			$ontvangers = array($parameter['to']);
 		} else {
 			$ontvangers = $parameter['to'];

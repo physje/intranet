@@ -7,229 +7,229 @@ define("NL", "\n");
 setlocale(LC_TIME, 'nl_NL');
 
 # Tabel- en veldnamen voor de verschillende tabellen in MySQL
-$TableUsers					= "leden";
-$UserID							= "scipio_id";
-$UserStatus					= "status";
-$UserAdres					= "kerk_adres";
-$UserGeslacht				= "geslacht";
-$UserVoorletters		= "voorletters";
-$UserVoornaam				= "voornaam";
-$UserTussenvoegsel	= "tussenvoegsel";
-$UserAchternaam			= "achternaam";
-$UserMeisjesnaam		= "meisjesnaam";
-$UserStraat					= "straat";
-$UserHuisnummer			= "nummer";
-$UserHuisletter			= "letter";
-$UserToevoeging			= "toevoeging";
-$UserPC							= "postcode";
-$UserPlaats					= "plaats";
-$UserGeboorte				= "geboortedatum";
-$UserTelefoon				= "telefoon";
-$UserMail						= "email";
-$UserFormeelMail		= "formeel";
-$UserBelijdenis			= "belijdenis";
-$UserBurgelijk			= "burgstaat";
-$UserRelatie				= "relatie";
-$UserVestiging			= "vestiging";
-$UserLastChange			= "last_change";
-$UserLastVisit			= "last_visit";
-$UserWijk						= "wijk";
-$UserUsername				= "username";
-$UserPassword				= "password";
-$UserNewPassword		= "password_new";
-$UserHash						= "hash";
-$UserHashShort			= "hash_short";
-$UserHashLong				= "hash_long";
+$TableUsers										= "leden";
+$UserID												= "scipio_id";
+$UserStatus										= "status";
+$UserAdres										= "kerk_adres";
+$UserGeslacht									= "geslacht";
+$UserVoorletters							= "voorletters";
+$UserVoornaam									= "voornaam";
+$UserTussenvoegsel						= "tussenvoegsel";
+$UserAchternaam								= "achternaam";
+$UserMeisjesnaam							= "meisjesnaam";
+$UserStraat										= "straat";
+$UserHuisnummer								= "nummer";
+$UserHuisletter								= "letter";
+$UserToevoeging								= "toevoeging";
+$UserPC												= "postcode";
+$UserPlaats										= "plaats";
+$UserGeboorte									= "geboortedatum";
+$UserTelefoon									= "telefoon";
+$UserMail											= "email";
+$UserFormeelMail							= "formeel";
+$UserBelijdenis								= "belijdenis";
+$UserBurgelijk								= "burgstaat";
+$UserRelatie									= "relatie";
+$UserVestiging								= "vestiging";
+$UserLastChange								= "last_change";
+$UserLastVisit								= "last_visit";
+$UserWijk											= "wijk";
+$UserUsername									= "username";
+$UserPassword									= "password";
+$UserNewPassword							= "password_new";
+$UserHash											= "hash";
+$UserHashShort								= "hash_short";
+$UserHashLong									= "hash_long";
+                    					
+$TableGroups									= "groepen";
+$GroupID											= "id";
+$GroupNaam										= "naam";
+$GroupHTMLIn									= "html_intern";
+$GroupHTMLEx									= "html_extern";
+$GroupBeheer									= "beheerder";
+$GroupMCTag										= "tag";
+                    					
+$TableRoosters								= "roosters";
+$RoostersID										= "id";
+$RoostersNaam									= "naam";
+$RoostersBeheerder						= "beheerder";
+$RoostersGroep								= "groep";
+$RoostersPlanner							= "planner";
+$RoostersFields								= "aantal";
+$RoostersReminder							= "reminder";
+$RoostersMail									= "mail";
+$RoostersSubject							= "onderwerp";
+$RoostersFrom									= "naam_afzender";
+$RoostersFromAddr							= "mail_afzender";
+$RoostersGelijk								= "gelijke_diensten";
+$RoostersOpmerking						= "opmerking";
+$RoostersTextOnly							= "text_only";
+$RoostersAlert								= "alert";
+$RoostersLastChange						= "last_change";
+                    					
+$TableGrpUsr									= "group_member";
+$GrpUsrGroup									= "commissie";
+$GrpUsrUser										= "lid";
+                    					
+$TableDiensten								= "kerkdiensten";
+$DienstID											= "id";
+$DienstStart									= "start";
+$DienstEind										= "eind";
+$DienstVoorganger							= "voorganger";
+$DienstCollecte_1							= "collecte_1";
+$DienstCollecte_2							= "collecte_2";
+$DienstOpmerking							= "opmerking";
+$DienstRuiling								= "ruiling";
+$DienstLiturgie     					= "liturgie";
+$DienstDeclStatus   					= "declaratie_status";
+                    					
+$TablePlanning								= "planning";
+$PlanningDienst								= "dienst";
+$PlanningGroup								= "commissie";
+$PlanningUser									= "lid";
+$PlanningPositie							= "positie";
+                    					
+$TablePlanningTxt							= "planning_tekst";
+$PlanningTxTDienst						= "dienst";
+$PlanningTxTGroup							= "rooster";
+$PlanningTxTText							= "text";
+                    					
+$TableAgenda									= "agenda";
+$AgendaID 										= "id";
+$AgendaStart 									= "start";
+$AgendaEind 									= "eind";
+$AgendaTitel									= "titel";
+$AgendaDescr 									= "beschrijving";
+$AgendaOwner									= "eigenaar";
+                    					
+$TableLog											= "log";
+$LogID												= "id";
+$LogTime											= "tijd";
+$LogType											= "type";
+$LogUser											= "dader";
+$LogSubject										= "slachtoffer";
+$LogMessage										= "message";
+                    					
+$TableRoosOpm									= "rooster_opmerkingen";
+$RoosOpmID										= "id";
+$RoosOpmRoos									= "rooster";
+$RoosOpmDienst								= "dienst";
+$RoosOpmOpmerking							= "opmerking";
 
-$TableGroups				= "groepen";
-$GroupID						= "id";
-$GroupNaam					= "naam";
-$GroupHTMLIn				= "html_intern";
-$GroupHTMLEx				= "html_extern";
-$GroupBeheer				= "beheerder";
-$GroupMCTag					= "tag";
-
-$TableRoosters			= "roosters";
-$RoostersID					= "id";
-$RoostersNaam				= "naam";
-$RoostersBeheerder	= "beheerder";
-$RoostersGroep			= "groep";
-$RoostersPlanner		= "planner";
-$RoostersFields			= "aantal";
-$RoostersReminder		= "reminder";
-$RoostersMail				= "mail";
-$RoostersSubject		= "onderwerp";
-$RoostersFrom				= "naam_afzender";
-$RoostersFromAddr		= "mail_afzender";
-$RoostersGelijk			= "gelijke_diensten";
-$RoostersOpmerking	= "opmerking";
-$RoostersTextOnly		= "text_only";
-$RoostersAlert			= "alert";
-$RoostersLastChange	= "last_change";
-
-$TableGrpUsr				= "group_member";
-$GrpUsrGroup				= "commissie";
-$GrpUsrUser					= "lid";
-
-$TableDiensten			= "kerkdiensten";
-$DienstID						= "id";
-$DienstStart				= "start";
-$DienstEind					= "eind";
-$DienstVoorganger		= "voorganger";
-$DienstCollecte_1		= "collecte_1";
-$DienstCollecte_2		= "collecte_2";
-$DienstOpmerking		= "opmerking";
-$DienstRuiling			= "ruiling";
-$DienstLiturgie     = "liturgie";
-$DienstDeclStatus   = "declaratie_status";
-
-$TablePlanning			= "planning";
-$PlanningDienst			= "dienst";
-$PlanningGroup			= "commissie";
-$PlanningUser				= "lid";
-$PlanningPositie		= "positie";
-
-$TablePlanningTxt		= "planning_tekst";
-$PlanningTxTDienst	= "dienst";
-$PlanningTxTGroup		= "rooster";
-$PlanningTxTText		= "text";
-
-$TableAgenda				= "agenda";
-$AgendaID 					= "id";
-$AgendaStart 				= "start";
-$AgendaEind 				= "eind";
-$AgendaTitel				= "titel";
-$AgendaDescr 				= "beschrijving";
-$AgendaOwner				= "eigenaar";
-
-$TableLog						= "log";
-$LogID							= "id";
-$LogTime						= "tijd";
-$LogType						= "type";
-$LogUser						= "dader";
-$LogSubject					= "slachtoffer";
-$LogMessage					= "message";
-
-$TableRoosOpm				= "rooster_opmerkingen";
-$RoosOpmID					= "id";
-$RoosOpmRoos				= "rooster";
-$RoosOpmDienst			= "dienst";
-$RoosOpmOpmerking		= "opmerking";
-
-$TableVoorganger 		= "predikanten";
-$VoorgangerID 			= "id";
-$VoorgangerTitel 		= "titel";
-$VoorgangerVoor			= "voornaam";
-$VoorgangerInit 		= "initialen";
-$VoorgangerTussen 	= "tussen";
-$VoorgangerAchter 	= "achternaam";
-$VoorgangerTel 			= "telefoon";
-$VoorgangerTel2 		= "mobiel";
-$VoorgangerPVNaam 	= "naam_pv";
-$VoorgangerPVTel 		= "tel_pv";
-$VoorgangerMail 		= "mail";
-$VoorgangerPlaats 	= "plaats";
-$VoorgangerDenom		= "kerk";
-$VoorgangerStijl		= "stijl";
-$VoorgangerOpmerking= "opmerking";
-$VoorgangerAandacht	= "aandachtspunten";
-$VoorgangerDeclaratie   = "declaratie";
-$VoorgangerHonorarium		= "honorarium";
+$TableVoorganger 							= "predikanten";
+$VoorgangerID 								= "id";
+$VoorgangerTitel 							= "titel";
+$VoorgangerVoor								= "voornaam";
+$VoorgangerInit 							= "initialen";
+$VoorgangerTussen 						= "tussen";
+$VoorgangerAchter 						= "achternaam";
+$VoorgangerTel 								= "telefoon";
+$VoorgangerTel2 							= "mobiel";
+$VoorgangerPVNaam 						= "naam_pv";
+$VoorgangerPVTel 							= "tel_pv";
+$VoorgangerMail 							= "mail";
+$VoorgangerPlaats 						= "plaats";
+$VoorgangerDenom							= "kerk";
+$VoorgangerStijl							= "stijl";
+$VoorgangerOpmerking					= "opmerking";
+$VoorgangerAandacht						= "aandachtspunten";
+$VoorgangerDeclaratie   			= "declaratie";
+$VoorgangerHonorarium					= "honorarium";
 $VoorgangerHonorariumOld			= "honorarium_2019";
 $VoorgangerHonorariumNew			= "honorarium_2020";
 $VoorgangerHonorariumSpecial	= "honorarium_special";
-$VoorgangerKM						= "km_vergoeding";
-$VoorgangerVertrekpunt	= "vertrekpunt";
-$VoorgangerEBRelatie		= "boekhoudenID";
-$VoorgangerLastSeen     = "laatst_voorgaan";
-$VoorgangerLastAandacht = "laatst_aandacht";
+$VoorgangerKM									= "km_vergoeding";
+$VoorgangerVertrekpunt				= "vertrekpunt";
+$VoorgangerEBRelatie					= "boekhoudenID";
+$VoorgangerLastSeen     			= "laatst_voorgaan";
+$VoorgangerLastAandacht 			= "laatst_aandacht";
 
-$TableWijkteam			= "wijkteams";
-$WijkteamID					= "id";
-$WijkteamWijk				= "wijk";
-$WijkteamLid				= "lid";
-$WijkteamRol				= "rol";
-
-$TableMC						= "mc_data";
-$MCID								= "scipio_id";
-$MCgeslacht					= "geslacht";
-$MCfname						= "fname";
-$MCtname						= "tname";
-$MClname						= "lname";
-$MCmail							= "mail";
-$MCwijk							= "wijk";
-$MCmark							= "mark";
-$MCstatus						= "status"; 
-$MCrelatie					= "relatie";
-$MCdoop							= "doop";
-$MClastSeen					= "last_seen";
-$MClastChecked			= "last_checked";
-
-$TableCommMC				= "mc_comm";
-$CommMCID						= "scipio_id";
-$CommMCGroupID			= "group_id";
-$ComMClastSeen			= "last_seen";
-$ComMClastChecked		= "last_checked";
-
-$TableLP						= "lp_data";
-$LPID								= "scipio_id";
-$LPgeslacht					= "geslacht";
-$LPVoornaam					= "voornaam";
-$LPTussenvoegsel		= "tussenvoegsel";
-$LPAchternaam				= "achternaam";
-$LPmail							= "mail";
-$LPwijk							= "wijk";
-$LPmark							= "mark";
-$LPstatus						= "status"; 
-$LPrelatie					= "relatie";
-$LPdoop							= "doop";
-$LPlastSeen					= "last_seen";
-$LPlastChecked			= "last_checked";
-
-$TableEBoekhouden 	= "eboekhouden";
-$EBoekhoudenID			= "id";
-$EBoekhoudenCode		= "code";
-$EBoekhoudenIBAN		= "iban";
-$EBoekhoudenNaam		= "naam";
-
-$TableConfig				= "config";
-$ConfigID						= "id";
-$ConfigGroep				= "groep";
-$ConfigName					= "name";
-$ConfigKey					= "sleutel";
-$ConfigValue				= "value";
-$ConfigOpmerking		= "comment";
-$ConfigAdded				= "added";
-
-$TableEBBoekstuk		= "eb_boekstuk";
-$EBBoekstukJaar			= "jaar";
-$EBBoekstukVolgNr		= "volgnummer";
-
-$TablePunten				= "gebed_punten";
-$PuntenID						= "id";
-$PuntenDatum				= "datum";
-$PuntenPunt					= "gebedspunt";
-
-$TableArchief				= "trinitas_archief";
-$ArchiefID					= "id";
-$ArchiefJaar				= "jaargang";
-$ArchiefNr					= "exemplaar";
-$ArchiefHash				= "hash";
-$ArchiefDownload		= "download";
-$ArchiefPubDate			= "pubDate";
-$ArchiefName				= "filename";
-$ArchiefSend				= "send";
-
-$TablePlainText			= "trinitas_plaintext";
-$PlainTextID				= "id";
-$PlainTextText			= "plain";
-
-$TableMail					= "mail_log";
-$MailID							= "id";
-$MailTime						= "tijd";
-$MailMail						= "bericht";
-
-$ArchiveDir					= 'trinitas';
+$TableWijkteam								= "wijkteams";
+$WijkteamID										= "id";
+$WijkteamWijk									= "wijk";
+$WijkteamLid									= "lid";
+$WijkteamRol									= "rol";
+                    					
+$TableMC											= "mc_data";
+$MCID													= "scipio_id";
+$MCgeslacht										= "geslacht";
+$MCfname											= "fname";
+$MCtname											= "tname";
+$MClname											= "lname";
+$MCmail												= "mail";
+$MCwijk												= "wijk";
+$MCmark												= "mark";
+$MCstatus											= "status"; 
+$MCrelatie										= "relatie";
+$MCdoop												= "doop";
+$MClastSeen										= "last_seen";
+$MClastChecked								= "last_checked";
+                    					
+$TableCommMC									= "mc_comm";
+$CommMCID											= "scipio_id";
+$CommMCGroupID								= "group_id";
+$ComMClastSeen								= "last_seen";
+$ComMClastChecked							= "last_checked";
+                    					
+$TableLP											= "lp_data";
+$LPID													= "scipio_id";
+$LPgeslacht										= "geslacht";
+$LPVoornaam										= "voornaam";
+$LPTussenvoegsel							= "tussenvoegsel";
+$LPAchternaam									= "achternaam";
+$LPmail												= "mail";
+$LPwijk												= "wijk";
+$LPmark												= "mark";
+$LPstatus											= "status"; 
+$LPrelatie										= "relatie";
+$LPdoop												= "doop";
+$LPlastSeen										= "last_seen";
+$LPlastChecked								= "last_checked";
+                    					
+$TableEBoekhouden 						= "eboekhouden";
+$EBoekhoudenID								= "id";
+$EBoekhoudenCode							= "code";
+$EBoekhoudenIBAN							= "iban";
+$EBoekhoudenNaam							= "naam";
+                    					
+$TableConfig									= "config";
+$ConfigID											= "id";
+$ConfigGroep									= "groep";
+$ConfigName										= "name";
+$ConfigKey										= "sleutel";
+$ConfigValue									= "value";
+$ConfigOpmerking							= "comment";
+$ConfigAdded									= "added";
+                    					
+$TableEBBoekstuk							= "eb_boekstuk";
+$EBBoekstukJaar								= "jaar";
+$EBBoekstukVolgNr							= "volgnummer";
+                    					
+$TablePunten									= "gebed_punten";
+$PuntenID											= "id";
+$PuntenDatum									= "datum";
+$PuntenPunt										= "gebedspunt";
+                    					
+$TableArchief									= "trinitas_archief";
+$ArchiefID										= "id";
+$ArchiefJaar									= "jaargang";
+$ArchiefNr										= "exemplaar";
+$ArchiefHash									= "hash";
+$ArchiefDownload							= "download";
+$ArchiefPubDate								= "pubDate";
+$ArchiefName									= "filename";
+$ArchiefSend									= "send";
+                    					
+$TablePlainText								= "trinitas_plaintext";
+$PlainTextID									= "id";
+$PlainTextText								= "plain";
+                    					
+$TableMail										= "mail_log";
+$MailID												= "id";
+$MailTime											= "tijd";
+$MailMail											= "bericht";
+                    					
+$ArchiveDir										= 'trinitas';
 
 $wijkArray			= array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J');
 $statusArray		= array('actief', 'afgemeld', 'afgevoerd', 'onttrokken', 'overleden', 'vertrokken');

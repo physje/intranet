@@ -7,17 +7,31 @@ $cfgProgDir = '../auth/';
 include($cfgProgDir. "secure.php");
 $db = connect_db();
 
-$eind = time();
-$start = $eind - (24*60*60);
+if(isset($_POST['id'])) {
+	$id = key($_POST['id']);
+}
 
-$sql = "SELECT * FROM $TableMail WHERE $MailTime BETWEEN $start AND $eind";
+if(isset($_POST['send'])) {
+	$parameters = $_POST;
+	unset($parameters['send']);	
+	sendMail_new($parameters);
+}
+
+//$eind = time();
+//$start = $eind - (48*60*60);
+//$sql = "SELECT * FROM $TableMail WHERE $MailTime BETWEEN $start AND $eind ORDER BY $MailTime DESC";
+
+$sql = "SELECT * FROM $TableMail ORDER BY $MailTime DESC LIMIT 0,25";
+
 $result = mysqli_query($db, $sql);
 if($row = mysqli_fetch_array($result)) {
+	$block[] = "<form method='post' action='$_SERVER[PHP_SELF]'>";
 	$block[] = "<table>";
 	$block[] = "<tr>";
 	$block[] = "	<td><b>Tijdstip</b></td>";
 	$block[] = "	<td><b>Ontvanger</b></td>";
 	$block[] = "	<td><b>Onderwerp</b></td>";
+	$block[] = "	<td>&nbsp;</td>";
 	$block[] = "</tr>";
 	
 	do {
@@ -32,37 +46,45 @@ if($row = mysqli_fetch_array($result)) {
 		} else {
 			$block[] = "	<td>". $param['to'] ."</td>";
 		}
-		$block[] = "	<td><a href='?id=". $row[$MailID] ."'>". $param['subject'] ."</a></td>";
+		$block[] = "	<td>". $param['subject'] ."</td>";
+		if(isset($id) AND $id == $row[$MailID]) {	
+			$block[] = "	<td><input type='submit' name='id[0]' value='-'></td>";
+		} else {
+			$block[] = "	<td><input type='submit' name='id[".$row[$MailID]."]' value='+'></td>";
+		}
 		$block[] = "</tr>";
-		if(isset($_REQUEST['id']) AND $_REQUEST['id'] == $row[$MailID]) {			
-			foreach($param as $key => $value) {
+		if(isset($id) AND $id == $row[$MailID]) {			
+			foreach($mailVariabele as $key) {			
 				$block[] = "<tr>";
 				$block[] = "	<td valign='top'>". $key ."</td>";
-				if(is_array($value)) {
-					$block[] = "	<td colspan='2'>";
-					foreach($value as $subkey => $subvalue) {
-						$block[] = "<input type='text' name='$key[$subkey]' value='$subvalue' size=35> ";
-					}
-					$block[] = "</td>";
+				$block[] = "	<td colspan='3'>";
+				if(!isset($param[$key])) {
+					$block[] = "<input type='text' name='$key' size=75>";
 				} else {
-					$block[] = "<td colspan='2'>";
-					if($key != 'message') {
-						$block[] = "<input type='text' name='$key' value='$value' size=75>";
+					$value = $param[$key];
+					if(is_array($value)) {
+						foreach($value as $subkey => $subvalue) {
+							$block[] = "<input type='text' name='". $key ."[$subkey]' value='$subvalue' size=35> ";
+						}					
 					} else {
-						$block[] = "	<textarea name='$key' cols=75 rows=25>". $value ."</textarea>";
+						if($key != 'message') {
+							$block[] = "<input type='text' name='$key' value='$value' size=75>";
+						} else {
+							$block[] = "	<textarea name='$key' cols=75 rows=25>". $value ."</textarea>";
+						}					
 					}
-					$block[] = "</td>";
 				}
+				$block[] = "	</td>";
 				$block[] = "</tr>";
 			}
-			//echo "	<td colspan='3'>". str_replace('\/', '/', urldecode($row[$MailMail])) ."</td>";
-			
-		$block[] = "<tr>";
-		$block[] = "<td colspan='3' align='center'><input type='submit' name='send' value='Versturen'></td>";
-		$block[] = "</tr>";
+						
+			$block[] = "<tr>";
+			$block[] = "<td colspan='3' align='center'><input type='submit' name='send' value='Versturen'></td>";
+			$block[] = "</tr>";
 		}		
 	} while($row = mysqli_fetch_array($result));		
 	$block[] = "</table>";
+	$block[] = "</form>";
 }
 
 echo $HTMLHeader;
