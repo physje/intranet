@@ -159,7 +159,7 @@ foreach($roosters as $rooster) {
 						# $parameters['bcc'] = ;
 						# $parameters['message'] = ;
 						# $parameters['subject'] = ;						
-						$param['to']			= $beheerder;
+						$param['to'][]			= array($beheerder);
 						$param['message']	= implode("<br>\n", $alert);
 						$param['subject']	= "Rooster-alert '". $roosterData['naam'] ."'";
 						sendMail_new($param);										

@@ -236,17 +236,27 @@ if(isset($_REQUEST['hash'])) {
 					$mail->AddCC($EBDeclaratieAddress);
 					$mail->AddCC($FinAdminAddress);
 					$mail->AddBCC($ScriptMailAdress);
+					
+					$param_penning['to'][] = array($declaratieReplyAddress, $declaratieReplyName);
+					$param_penning['cc'][] = array($EBDeclaratieAddress);
+					$param_penning['cc'][] = array($FinAdminAddress);
+					$param_penning['bcc'][] = array($ScriptMailAdress);					
 				} else {
 					$mail->AddAddress($ScriptMailAdress);
+					$param_penning['to'][] = array($ScriptMailAdress);
 				}
 							
 				# Onderwerp maken
 				$Subject = "Declaratie $dagdeel ". date('j-n-Y', $dienstData['start']);
+				$param_penning['subject'] = trim($Subject);
 				
 				$mail->Subject	= trim($Subject);
 				$mail->IsHTML(true);
 				$mail->Body	= $MailHeader.implode("\n", $mailPenningsmeester).$MailFooter;
 				$mail->AddAttachment('PDF/'. $mutatieNr .'.pdf', $boekstukNummer .' '. makeVoorgangerName($voorganger, 1) . ' '. date('d-m', $dienstData['start']) .' '. $dagdeel .'.pdf');
+				
+				$param_penning['file'] = 'PDF/'. $mutatieNr .'.pdf';
+				$param_penning['fileName'] = $boekstukNummer .' '. makeVoorgangerName($voorganger, 1) . ' '. date('d-m', $dienstData['start']) .' '. $dagdeel .'.pdf';
 				
 				if(!$sendMail) {
 					$page[] = 'Afzender :'. $ScriptTitle .'|'.$ScriptMailAdress ."<br>\n";
@@ -261,12 +271,8 @@ if(isset($_REQUEST['hash'])) {
 					} else {
 						toLog('debug', '', '', "Declaratie-notificatie naar penningsmeester voor ". date('j-n-Y', $dienstData['start']));
 					}
-					
-					$param_penning['to'] = array($declaratieReplyAddress, $declaratieReplyName);
-					$param_penning['subject'] = trim($Subject);
+															
 					$param_penning['message'] = implode("\n", $mailPenningsmeester);					
-					$param_penning['file'] = 'PDF/'. $mutatieNr .'.pdf';
-					$param_penning['fileName'] = $boekstukNummer .' '. makeVoorgangerName($voorganger, 1) . ' '. date('d-m', $dienstData['start']) .' '. $dagdeel .'.pdf';
 					sendMail_new($param_penning);					
 				}
 				
@@ -299,8 +305,10 @@ if(isset($_REQUEST['hash'])) {
 				if(!$sendTestMail) {
 					$mail->AddAddress($voorgangerData['mail'], $mailNaam);
 					//$mail->AddBCC($ScriptMailAdress);
+					$param_predikant['to'][] = array($voorgangerData['mail'], $mailNaam);
 				} else {
 					$mail->AddAddress($ScriptMailAdress);
+					$param_predikant['to'][] = array($ScriptMailAdress);
 				}
 							
 				# Onderwerp maken
@@ -325,7 +333,7 @@ if(isset($_REQUEST['hash'])) {
 						$page[] = "Er is een afschrift van de declaratie naar ". ($voorgangerData['stijl'] == 0 ? 'u' : 'jou') ." verstuurd.";
 					}
 					
-					$param_predikant['to'] = array($voorgangerData['mail'], $mailNaam);
+					
 					$param_predikant['from'] = $declaratieReplyAddress;
 					$param_predikant['fromName'] = $declaratieReplyName;
 					$param_predikant['subject'] = trim($Subject);
@@ -604,7 +612,7 @@ if(isset($_REQUEST['hash'])) {
 				$page[] = "Er is een mail gestuurd.";
 			}
 			
-			$param['to'] = array($voorgangerData['mail'], $mailNaam);
+			$param['to'][] = array($voorgangerData['mail'], $mailNaam);
 			$param['from'] = $declaratieReplyAddress;
 			$param['fromName'] = $declaratieReplyName;
 			$param['subject'] = trim($Subject);

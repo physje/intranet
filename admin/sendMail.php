@@ -53,7 +53,7 @@ if(isset($_POST['send_mail'])) {
 		toLog('error', '', $lid, "Problemen met versturen mail met onderwerp '$FinalSubject'");
 	}
 	
-	$param['to']				= $lid;
+	$param['to'][]			= array($lid);
 	$param['message']		= $FinalHTMLMail;
 	$param['subject']		= $FinalSubject;
 	$param['from']			= $_POST['mail_afzender'];

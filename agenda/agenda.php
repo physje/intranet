@@ -84,7 +84,7 @@ if(isset($_POST['remove'])) {
 				//$text[] = implode("<br>\n", $mail);
 			}
 			
-			$param['to']				= $_SESSION['ID'];
+			$param['to'][]			= array($_SESSION['ID']);
 			$param['message']		= implode("<br>\n", $mail);
 			$param['subject']		= "De afspraak '". $_POST['titel'] ."'";			
 			sendMail_new($param);			

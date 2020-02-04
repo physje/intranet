@@ -121,7 +121,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 							}					
 						}
 						
-						$param['to']					= $lid;
+						$param['to'][]				= array($lid);
 						$param['message']			= $FinalHTMLMail;
 						$param['subject']			= $FinalSubject;
 						$param['ReplyToName']	= $roosterData['naam_afzender'];

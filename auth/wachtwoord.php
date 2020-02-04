@@ -38,7 +38,7 @@ if(isset($_POST['opvragen'])) {
 			$text[] = "Inloggegevens zijn verstuurd";
 		}
 		
-		$param['to']				= $id;
+		$param['to'][]			= array($id);
 		$param['message']		= $HTMLMail;
 		$param['subject']		= "Nieuw wachtwoord voor $ScriptTitle";			
 		sendMail_new($param);

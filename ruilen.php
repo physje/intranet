@@ -49,7 +49,7 @@ if(isset($_REQUEST['dader']) AND isset($_REQUEST['slachtoffer'])) {
 		toLog('debug', $dader, '', 'verplaatst van dienst '. $dienst_d .' naar '. $dienst_s); 
 	}
 	
-	$param_dader['to']			= $slachtoffer;
+	$param_dader['to'][]			= array($slachtoffer);
 	$param_dader['message']	= implode("<br>\n", $mail);
 	$param_dader['subject']	= "Er is met jou geruild voor '". $roosterData['naam'] ."'";
 	sendMail_new($param_dader);
@@ -66,7 +66,7 @@ if(isset($_REQUEST['dader']) AND isset($_REQUEST['slachtoffer'])) {
 		toLog('debug', $slachtoffer, '', 'verplaatst van dienst '. $dienst_s .' naar '. $dienst_d); 
 	}
 	
-	$param_slachtoffer['to']			= $dader;
+	$param_slachtoffer['to'][]			= array($dader);
 	$param_slachtoffer['message']	= implode("<br>\n", $mail);
 	$param_slachtoffer['subject']	= "Je hebt geruild voor '". $roosterData['naam'] ."'";
 	sendMail_new($param_slachtoffer);
