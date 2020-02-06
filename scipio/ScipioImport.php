@@ -215,16 +215,16 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 					$item = $temp;
 					$item[] = "Overgegaan naar wijk ". $nieuweWijk;					
 					$mailBlockChange[$oudeWijk][] = implode("<br>\n", $item)."<br>\n";
-					$namenLedenChange[$oudeWijk][] = makeName($element->regnr, 6);
+					$namenLedenChange[$oudeWijk][] = makeName($element->regnr, 5);
 					
 					$item = $temp;
 					$item[] = "Binnengekomen vanuit wijk ". $oudeWijk;					
 					$mailBlockChange[$nieuweWijk][] = implode("<br>\n", $item)."<br>\n";
-					$namenLedenChange[$nieuweWijk][] = makeName($element->regnr, 6);
+					$namenLedenChange[$nieuweWijk][] = makeName($element->regnr, 5);
 				} else {
 					$wijk = $oldData['wijk'];
 					$mailBlockChange[$wijk][] = implode("<br>\n", $temp)."<br>\n";
-					$namenLedenChange[$wijk][] = makeName($element->regnr, 6);
+					$namenLedenChange[$wijk][] = makeName($element->regnr, 5);
 				}				
 			}
 			
@@ -301,7 +301,8 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 						echo "Problemen met mail versturen<br>\n";
 					}
 					
-					$param['to']			= $lid;
+					unset($param);
+					$param['to'][]		= $lid;
 					$param['message']	= $replacedBericht;
 					$param['subject']	= implode(' en ', $subject);
 					$param['formeel'] = true;

@@ -159,6 +159,7 @@ if(in_array(1, getMyGroups($_SESSION['ID']))) {
 	$adminLinks['admin/editWijkteams.php'] = 'Wijkteams wijzigen';	
 	$adminLinks['admin/crossCheck.php'] = 'Check databases';
 	$adminLinks['admin/log.php'] = 'Bekijk logfiles';
+	$adminLinks['admin/mailLog.php'] = 'Bekijk mail-files';
 	$adminLinks['admin/sendMail.php'] = 'Verstuur mail';
 	$adminLinks['admin/configuration.php'] = 'Configuratie-variabelen';
 	$adminLinks['onderhoud/cleanUpDb.php'] = 'Verwijder oude diensten';

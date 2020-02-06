@@ -121,6 +121,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 							}					
 						}
 						
+						unset($param);
 						$param['to'][]				= array($lid);
 						$param['message']			= $FinalHTMLMail;
 						$param['subject']			= $FinalSubject;

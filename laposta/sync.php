@@ -120,7 +120,7 @@ do {
 		} else {
 			$changed_short = $changedMail = false;
 			$oldMail = $newMail = '';
-			$affectedLists = array();	
+			$affectedLists = $changed_part = array();	
 			unset($changed_field);
 							
 			$row_lp = mysqli_fetch_array($result_lp);
@@ -150,7 +150,8 @@ do {
 					$changed_field['tussenvoegsel'] = $data['tussenvoegsel'];
 					$changed_field['achternaam']		= $data['achternaam'];
 					$changed_short = true;
-					toLog('info', '', $scipioID, "Naam gewijzigd in LaPosta '". $naam ."'");
+					$changed_part[] = 'naam';
+					toLog('info', '', $scipioID, "Naam gewijzigd in LaPosta");
 					
 					$sql_update[] = "$LPVoornaam = '". urlencode($data['voornaam']) ."'";
 					$sql_update[] = "$LPTussenvoegsel = '". urlencode($data['tussenvoegsel']) ."'";
@@ -162,7 +163,8 @@ do {
 				if($row_lp[$LPgeslacht] != $data['geslacht']) {				
 					$changed_field['geslacht'] = ($data['geslacht'] == 'M'?'Man':'Vrouw');					
 					$changed_short = true;
-					toLog('info', '', $scipioID, "Geslacht gewijzigd dus ook gewijzigd in LaPosta");
+					$changed_part[] = 'geslacht';
+					toLog('info', '', $scipioID, "Geslacht gewijzigd in LaPosta");
 					$sql_update[] = "$LPgeslacht = '". $data['geslacht'] ."'";
 				}
 							
@@ -203,11 +205,10 @@ do {
 				if($changed_short) {								
 					foreach($affectedLists as $naam => $list) {
 						$updateMember = lp_updateMember($list, $email, $custom_fields_short);
-						if($updateMember === true) {
-							toLog('info', '', $scipioID, "Relatie gewijzigd in LaPosta lijst '". $naam ."'");
+						if($updateMember === true) {							
+							toLog('info', '', $scipioID, implode(' en ', $changed_part) ." gewijzigd in LaPosta lijst '". $naam ."'");
 						} else {
-							//toLog('error', '', $scipioID, "Relatie gewijzigd maar niet gewijzigd in LaPosta '". $naam ."'");
-							toLog('error', '', $scipioID, "wijzig relatie voor '". $naam ."': ". $updateMember['error']);
+							toLog('error', '', $scipioID, 'Wijzigen '. implode(' en ', $changed_part) ." in LaPosta lijst '". $naam ."' mislukt: ". $updateMember['error']);
 						}
 					}
 				}

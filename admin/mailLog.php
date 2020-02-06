@@ -26,7 +26,7 @@ $sql = "SELECT * FROM $TableMail ORDER BY $MailTime DESC LIMIT 0,25";
 $result = mysqli_query($db, $sql);
 if($row = mysqli_fetch_array($result)) {
 	$block[] = "<form method='post' action='$_SERVER[PHP_SELF]'>";
-	$block[] = "<table>";
+	$block[] = "<table border=1>";
 	$block[] = "<tr>";
 	$block[] = "	<td><b>Tijdstip</b></td>";
 	$block[] = "	<td><b>Ontvanger</b></td>";
@@ -39,12 +39,14 @@ if($row = mysqli_fetch_array($result)) {
 		
 		$block[] = "<tr>";
 		$block[] = "	<td>". time2str('%a %e %b %H:%M ', $row[$MailTime]) ."</td>";
-		if(is_numeric($param['to'])) {
-			$block[] = "	<td>". makeName($param['to'], 5)."</td>";
-		} elseif(is_array($param['to'])) {
-			$block[] = "	<td>". $param['to'][1] ."</td>";
+		$eersteOntvanger = current($param['to']);
+		
+		if(count($eersteOntvanger) == 1 AND is_numeric(current($eersteOntvanger))) {
+			$block[] = "	<td>". makeName(current($eersteOntvanger), 5)."</td>";
+		} elseif(count($eersteOntvanger) == 2) {
+			$block[] = "	<td>". $eersteOntvanger[1] ."</td>";
 		} else {
-			$block[] = "	<td>". $param['to'] ."</td>";
+			$block[] = "	<td>". $eersteOntvanger ."</td>";
 		}
 		$block[] = "	<td>". $param['subject'] ."</td>";
 		if(isset($id) AND $id == $row[$MailID]) {	
@@ -62,9 +64,16 @@ if($row = mysqli_fetch_array($result)) {
 					$block[] = "<input type='text' name='$key' size=75>";
 				} else {
 					$value = $param[$key];
-					if(is_array($value)) {
+					if(is_array($value)) {						
 						foreach($value as $subkey => $subvalue) {
-							$block[] = "<input type='text' name='". $key ."[$subkey]' value='$subvalue' size=35> ";
+							if(is_array($subvalue)) {
+								foreach($subvalue as $subsubkey => $subsubvalue) {
+									$block[] = "<input type='text' name='". $key ."[$subkey][$subsubkey]' value='$subsubvalue' size=35>";
+								}
+							} else {
+								$block[] = "<input type='text' name='". $key ."[$subkey]' value='$subvalue' size=35> ";
+							}
+							$block[] = "<br>";
 						}					
 					} else {
 						if($key != 'message') {
@@ -77,9 +86,15 @@ if($row = mysqli_fetch_array($result)) {
 				$block[] = "	</td>";
 				$block[] = "</tr>";
 			}
+			
+			$block[] = "<tr>";
+			$block[] = "	<td>&nbsp;</td>";
+			$block[] = "	<td colspan='3'>".urldecode($row[$MailMail])."</td>";
+			$block[] = "</tr>";
 						
 			$block[] = "<tr>";
-			$block[] = "<td colspan='3' align='center'><input type='submit' name='send' value='Versturen'></td>";
+			$block[] = "	<td>&nbsp;</td>";
+			$block[] = "	<td colspan='3' align='center'><input type='submit' name='send' value='Versturen'></td>";
 			$block[] = "</tr>";
 		}		
 	} while($row = mysqli_fetch_array($result));		

@@ -16,7 +16,8 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 	$eindTijd		= mktime(23, 59, 59, date("n"), (date("j")+18), date("Y"));	
 	$diensten		= getKerkdiensten($startTijd, $eindTijd);
 	
-	foreach($diensten as $dienst) {		
+	foreach($diensten as $dienst) {
+		$param					= array();		
 		$dienstData			= getKerkdienstDetails($dienst);
 		$voorgangerData = getVoorgangerData($dienstData['voorganger_id']);
 				
@@ -129,14 +130,14 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 			
 			# HTML- en plaintext-mail maken en deze toekennen aan het mail-object
 			$HTMLMail = $MailHeader.implode("<br>\n", $mailText).$MailFooter;	
-			$html =& new html2text($HTMLMail);
-			$html->set_base_url($ScriptURL);
-			$PlainMail = $html->get_text();
+			//$html =& new html2text($HTMLMail);
+			//$html->set_base_url($ScriptURL);
+			//$PlainMail = $html->get_text();
 			
 			$mail->Subject	= trim($Subject);
 			$mail->IsHTML(true);
 			$mail->Body	= $HTMLMail;
-			$mail->AltBody	= $PlainMail;
+			//$mail->AltBody	= $PlainMail;
 			
 			if($sendMail) {
 				if(!$mail->Send()) {
@@ -159,7 +160,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 		
 			setVoorgangerLastSeen($dienstData['voorganger_id'], $dienstData['start']);
 		} else {
-			toLog('error', '', '', "Kon geen voorgangersmail versturen voor ". $dagdeel .' van ' date('j-n', $dienstData['start']) .", ongeldig mailadres");
+			toLog('error', '', '', "Kon geen voorgangersmail versturen voor ". $dagdeel .' van '. date('j-n', $dienstData['start']) .", ongeldig mailadres");
 		}
 	}
 } else {

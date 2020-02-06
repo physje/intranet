@@ -159,6 +159,8 @@ foreach($roosters as $rooster) {
 						# $parameters['bcc'] = ;
 						# $parameters['message'] = ;
 						# $parameters['subject'] = ;						
+						
+						unset($param);
 						$param['to'][]			= array($beheerder);
 						$param['message']	= implode("<br>\n", $alert);
 						$param['subject']	= "Rooster-alert '". $roosterData['naam'] ."'";
