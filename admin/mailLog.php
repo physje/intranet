@@ -26,7 +26,7 @@ $sql = "SELECT * FROM $TableMail ORDER BY $MailTime DESC LIMIT 0,25";
 $result = mysqli_query($db, $sql);
 if($row = mysqli_fetch_array($result)) {
 	$block[] = "<form method='post' action='$_SERVER[PHP_SELF]'>";
-	$block[] = "<table border=1>";
+	$block[] = "<table border=0>";
 	$block[] = "<tr>";
 	$block[] = "	<td><b>Tijdstip</b></td>";
 	$block[] = "	<td><b>Ontvanger</b></td>";
@@ -68,10 +68,10 @@ if($row = mysqli_fetch_array($result)) {
 						foreach($value as $subkey => $subvalue) {
 							if(is_array($subvalue)) {
 								foreach($subvalue as $subsubkey => $subsubvalue) {
-									$block[] = "<input type='text' name='". $key ."[$subkey][$subsubkey]' value='$subsubvalue' size=35>";
+									$block[] = "<input type='text' name='". $key ."[$subkey][$subsubkey]' value='". addslashes ($subsubvalue) ."' size=35>";
 								}
 							} else {
-								$block[] = "<input type='text' name='". $key ."[$subkey]' value='$subvalue' size=35> ";
+								$block[] = "<input type='text' name='". $key ."[$subkey]' value='". addslashes($subvalue) ."' size=35> ";
 							}
 							$block[] = "<br>";
 						}					

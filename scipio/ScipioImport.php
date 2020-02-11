@@ -302,7 +302,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 					}
 					
 					unset($param);
-					$param['to'][]		= $lid;
+					$param['to'][]		= array($lid);
 					$param['message']	= $replacedBericht;
 					$param['subject']	= implode(' en ', $subject);
 					$param['formeel'] = true;
