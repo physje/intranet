@@ -1568,6 +1568,31 @@ function setVoorgangerDeclaratieStatus($status, $dienst) {
 	}	
 }
 
+function setDeclaratieStatus($status, $declaratie, $lid) {
+	global $db, $TableEBDeclaratie, $EBDeclaratieID, $EBDeclaratieStatus;
+	
+	$descr[0] = 'geen';
+	$descr[1] = 'open';
+	$descr[2] = 'link verstuurd';
+	$descr[3] = 'link bezocht';
+	$descr[4] = 'opgeslagen';
+	$descr[5] = 'bij CluCo';
+	$descr[6] = 'bij lid';
+	$descr[7] = 'afgekeurd';
+	$descr[8] = 'afgerond';
+	$descr[9] = 'afgezien';
+	
+	$sql = "UPDATE $TableEBDeclaratie SET $EBDeclaratieStatus = $status WHERE $EBDeclaratieID = $declaratie";
+		
+	if(mysqli_query($db, $sql)) {
+		toLog('debug', $lid, '', "Declaratie-status van declaratie $declaratie veranderd in ". $descr[$status]);
+		return true;
+	} else {
+		toLog('error', $lid, '', "Aanpassen van declaratie-status van declaratie $declaratie naar ". $descr[$status] ." is mislukt");
+		return false;
+	}	
+}
+
 function getCoordinates($q) {
 	global $locationIQkey;
 		

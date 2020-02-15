@@ -77,7 +77,7 @@ if($row = mysqli_fetch_array($result)) {
 						}					
 					} else {
 						if($key != 'message') {
-							$block[] = "<input type='text' name='$key' value='$value' size=75>";
+							$block[] = "<input type='text' name='$key' value='". addslashes($value) ."' size=75>";
 						} else {
 							$block[] = "	<textarea name='$key' cols=75 rows=25>". $value ."</textarea>";
 						}					

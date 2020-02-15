@@ -34,10 +34,11 @@ $UserVestiging								= "vestiging";
 $UserLastChange								= "last_change";
 $UserLastVisit								= "last_visit";
 $UserWijk											= "wijk";
+$UserEBRelatie								= "eb_code";
 $UserUsername									= "username";
 $UserPassword									= "password";
 $UserNewPassword							= "password_new";
-$UserHash											= "hash";
+#$UserHash											= "hash";
 $UserHashShort								= "hash_short";
 $UserHashLong									= "hash_long";
                     					
@@ -186,11 +187,23 @@ $LPdoop												= "doop";
 $LPlastSeen										= "last_seen";
 $LPlastChecked								= "last_checked";
                     					
-$TableEBoekhouden 						= "eboekhouden";
+$TableEBoekhouden 						= "eb_relatie";
 $EBoekhoudenID								= "id";
 $EBoekhoudenCode							= "code";
 $EBoekhoudenIBAN							= "iban";
 $EBoekhoudenNaam							= "naam";
+
+$TableEBBoekstuk							= "eb_boekstuk";
+$EBBoekstukJaar								= "jaar";
+$EBBoekstukVolgNr							= "volgnummer";
+
+$TableEBDeclaratie 						= "eb_declaraties";
+$EBDeclaratieID								= "id";
+$EBDeclaratieIndiener					= "indiener";
+$EBDeclaratieCluster					= "cluster";
+$EBDeclaratieStatus						= "status";
+$EBDeclaratieDeclaratie				= "declaratie";
+$EBDeclaratieTijd							= "tijd";
                     					
 $TableConfig									= "config";
 $ConfigID											= "id";
@@ -200,10 +213,6 @@ $ConfigKey										= "sleutel";
 $ConfigValue									= "value";
 $ConfigOpmerking							= "comment";
 $ConfigAdded									= "added";
-                    					
-$TableEBBoekstuk							= "eb_boekstuk";
-$EBBoekstukJaar								= "jaar";
-$EBBoekstukVolgNr							= "volgnummer";
                     					
 $TablePunten									= "gebed_punten";
 $PuntenID											= "id";
