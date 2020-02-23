@@ -120,6 +120,8 @@ if(isset($_POST['insturen'])) {
 		$parameter['fileName'][] = $_POST['originalName'][$key];
 	}	
 	
+	sendMail_new($parameter);	
+	
 	$page[] = "Je declaratie is naar ". makeName($cluco, 5) ." als CluCo van ". $clusters[$cluster] .' gestuurd';
 } elseif(isset($_POST['last_check'])) {	
 	# Scherm 6
