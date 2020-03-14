@@ -825,139 +825,139 @@ function sendMail_new($parameter) {
 		$ouderCC = $parameter['ouderCC'];
 	}	
 	
-	/*
-	$mail = new PHPMailer;
-	
-	if(isset($parameter['from']) AND $parameter['from'] != '') {
-		$mail->From = $parameter['from'];
-	} else {
-		$mail->From = $ScriptMailAdress;
-	}
-	
-	if(isset($parameter['fromName']) AND $parameter['fromName'] != '') {
-		$mail->FromName = $parameter['fromName'];
-	} else {
-		$mail->FromName = $ScriptTitle;
-	}
-	
-	# Als er een reply-adres ingesteld moet worden		
-	if(isset($parameter['ReplyTo']) AND $parameter['ReplyTo'] != '') {
-		if(isset($parameter['ReplyToName']) AND $parameter['ReplyToName'] != '') {
-			$mail->AddReplyTo($parameter['ReplyTo'], $parameter['ReplyToName']);
-		} else {
-			$mail->AddReplyTo($parameter['ReplyTo']);
-		}
-	}
-	
-	# De personen die in de 'Aan' moeten
-	# Met de check of ouders in de 'CC' moeten
-	foreach($ontvangers as $ontvanger) {
-		if(!is_array($ontvanger) AND is_numeric($ontvanger)) {
-			# Haal de data van de ontvanger op
-			# Zoek ook direct de mail op van de ontvanger
-			$UserData = getMemberDetails($ontvanger);
-			$UserMail	= getMailAdres($ontvanger, $formeel);
+	if(isset($parameter['test'])) {
+		$mail = new PHPMailer;
 		
-			$mail->AddAddress($UserMail, makeName($ontvanger, 5));
-			toLog('debug', '', $ontvanger, makeName($ontvanger, 5) .' in de Aan opgenomen');
-			
-			# Als de ouders ook een CC moeten
-			# Alleen bij mensen die als relatie 'zoon' of 'dochter' hebben
-			if($ouderCC AND ($UserData['relatie'] == 'zoon' OR $UserData['relatie'] == 'dochter')) {
-				$ouders = getParents($ontvanger);
-				foreach($ouders as $ouder){
-					$OuderData = getMemberDetails($ouder);
-					if($OuderData['mail'] != $UserMail AND $OuderData['mail'] != '') {
-						$mail->AddCC($OuderData['mail']);
-						toLog('debug', '', $ontvanger, makeName($ouder, 5) .' ('. $OuderData['mail'] .') als ouder in CC opgenomen');
-					}
-				}
+		if(isset($parameter['from']) AND $parameter['from'] != '') {
+			$mail->From = $parameter['from'];
+		} else {
+			$mail->From = $ScriptMailAdress;
+		}
+		
+		if(isset($parameter['fromName']) AND $parameter['fromName'] != '') {
+			$mail->FromName = $parameter['fromName'];
+		} else {
+			$mail->FromName = $ScriptTitle;
+		}
+		
+		# Als er een reply-adres ingesteld moet worden		
+		if(isset($parameter['ReplyTo']) AND $parameter['ReplyTo'] != '') {
+			if(isset($parameter['ReplyToName']) AND $parameter['ReplyToName'] != '') {
+				$mail->AddReplyTo($parameter['ReplyTo'], $parameter['ReplyToName']);
+			} else {
+				$mail->AddReplyTo($parameter['ReplyTo']);
 			}
-		} elseif(is_array($ontvanger)) {
-			$naam = $ontvanger[0];
-			$mail = $ontvanger[1];
-			$mail->AddAddress($mail, $naam);
-			toLog('debug', '', '', $naam .' ('. $mail .') in de Aan opgenomen');
-		} else {
-			$mail->AddAddress($ontvanger);
-			toLog('debug', '', '', $ontvanger .' in de Aan opgenomen');
 		}
-	}
-	
-	# De personen die in de 'CC' moeten
-	if(isset($parameter['cc'])) {
-		if(is_array($parameter['cc'])) {
-			$cc_ontvangers	= $parameter['cc'];
-		} else {
-			$cc_ontvangers	= array($parameter['cc']);
-		}		
 		
-		foreach($cc_ontvangers as $ontvanger) {
-			if(!is_array($ontvanger) AND is_numeric($ontvanger)) {			
+		# De personen die in de 'Aan' moeten
+		# Met de check of ouders in de 'CC' moeten
+		foreach($ontvangers as $ontvanger) {
+			if(!is_array($ontvanger) AND is_numeric($ontvanger)) {
+				# Haal de data van de ontvanger op
+				# Zoek ook direct de mail op van de ontvanger
 				$UserData = getMemberDetails($ontvanger);
 				$UserMail	= getMailAdres($ontvanger, $formeel);
-				$mail->AddCC($UserMail, makeName($ontvanger, 5));
-				toLog('debug', '', $ontvanger, makeName($ontvanger, 5) .' in de CC opgenomen');
+			
+				$mail->AddAddress($UserMail, makeName($ontvanger, 5));
+				toLog('debug', '', $ontvanger, makeName($ontvanger, 5) .' in de Aan opgenomen');
+				
+				# Als de ouders ook een CC moeten
+				# Alleen bij mensen die als relatie 'zoon' of 'dochter' hebben
+				if($ouderCC AND ($UserData['relatie'] == 'zoon' OR $UserData['relatie'] == 'dochter')) {
+					$ouders = getParents($ontvanger);
+					foreach($ouders as $ouder){
+						$OuderData = getMemberDetails($ouder);
+						if($OuderData['mail'] != $UserMail AND $OuderData['mail'] != '') {
+							$mail->AddCC($OuderData['mail']);
+							toLog('debug', '', $ontvanger, makeName($ouder, 5) .' ('. $OuderData['mail'] .') als ouder in CC opgenomen');
+						}
+					}
+				}
 			} elseif(is_array($ontvanger)) {
 				$naam = $ontvanger[0];
 				$mail = $ontvanger[1];
-				$mail->AddCC($mail, $naam);
-				toLog('debug', '', '', $naam .' ('. $mail .') in de CC opgenomen');
+				$mail->AddAddress($mail, $naam);
+				toLog('debug', '', '', $naam .' ('. $mail .') in de Aan opgenomen');
 			} else {
-				$mail->AddCC($ontvanger);
-				toLog('debug', '', '', $ontvanger .' in de CC opgenomen');
+				$mail->AddAddress($ontvanger);
+				toLog('debug', '', '', $ontvanger .' in de Aan opgenomen');
 			}
-		}
-	}
-	
-	# De personen die in de 'BCC' moeten		
-	if(isset($parameter['bcc'])) {
-		if(is_array($parameter['bcc'])) {
-			$bcc_ontvangers	= $parameter['bcc'];
-		} else {
-			$bcc_ontvangers	= array($parameter['bcc']);
 		}
 		
-		foreach($bcc_ontvangers as $ontvanger) {
-			if(is_numeric($ontvanger)) {				
-				$UserMail	= getMailAdres($ontvanger, $formeel);
-				$mail->AddBCC($UserMail);
+		# De personen die in de 'CC' moeten
+		if(isset($parameter['cc'])) {
+			if(is_array($parameter['cc'])) {
+				$cc_ontvangers	= $parameter['cc'];
 			} else {
-				$mail->AddBCC($ontvanger);
-			}
-		}		
-	}
-	
-	# Controle op bijlages
-	if(isset($parameter['file']) AND $parameter['file'] != "") {
-		if(isset($parameter['fileName']) AND $parameter['fileName'] != "") {
-			$mail->addAttachment($parameter['file'], $parameter['fileName']);
-		} else {
-			$mail->addAttachment($parameter['file']);
-		}
-	}
-	
-	# Bericht opstellen
-	$HTMLMail = $MailHeader.$bericht.$MailFooter;
-	
-	# Onderwerp instellen
-	$mail->Subject	= $SubjectPrefix . trim($subject);
-	$mail->IsHTML(true);
-	$mail->Body			= $HTMLMail;
+				$cc_ontvangers	= array($parameter['cc']);
+			}		
 			
-	if(!$mail->Send()) {
-		return false;
-	} else {
-		return true;
-	}
-	*/
+			foreach($cc_ontvangers as $ontvanger) {
+				if(!is_array($ontvanger) AND is_numeric($ontvanger)) {			
+					$UserData = getMemberDetails($ontvanger);
+					$UserMail	= getMailAdres($ontvanger, $formeel);
+					$mail->AddCC($UserMail, makeName($ontvanger, 5));
+					toLog('debug', '', $ontvanger, makeName($ontvanger, 5) .' in de CC opgenomen');
+				} elseif(is_array($ontvanger)) {
+					$naam = $ontvanger[0];
+					$mail = $ontvanger[1];
+					$mail->AddCC($mail, $naam);
+					toLog('debug', '', '', $naam .' ('. $mail .') in de CC opgenomen');
+				} else {
+					$mail->AddCC($ontvanger);
+					toLog('debug', '', '', $ontvanger .' in de CC opgenomen');
+				}
+			}
+		}
 		
-	$sql = "INSERT INTO $TableMail ($MailTime, $MailMail) VALUES (". time() .", '". urlencode(json_encode($parameter))."')";
-	if(!mysqli_query($db, $sql)) {	
-		return false;
-	} else {
-		return true;
-	}	
+		# De personen die in de 'BCC' moeten		
+		if(isset($parameter['bcc'])) {
+			if(is_array($parameter['bcc'])) {
+				$bcc_ontvangers	= $parameter['bcc'];
+			} else {
+				$bcc_ontvangers	= array($parameter['bcc']);
+			}
+			
+			foreach($bcc_ontvangers as $ontvanger) {
+				if(is_numeric($ontvanger)) {				
+					$UserMail	= getMailAdres($ontvanger, $formeel);
+					$mail->AddBCC($UserMail);
+				} else {
+					$mail->AddBCC($ontvanger);
+				}
+			}		
+		}
+		
+		# Controle op bijlages
+		if(isset($parameter['file']) AND $parameter['file'] != "") {
+			if(isset($parameter['fileName']) AND $parameter['fileName'] != "") {
+				$mail->addAttachment($parameter['file'], $parameter['fileName']);
+			} else {
+				$mail->addAttachment($parameter['file']);
+			}
+		}
+		
+		# Bericht opstellen
+		$HTMLMail = $MailHeader.$bericht.$MailFooter;
+		
+		# Onderwerp instellen
+		$mail->Subject	= $SubjectPrefix . trim($subject);
+		$mail->IsHTML(true);
+		$mail->Body			= $HTMLMail;
+				
+		if(!$mail->Send()) {
+			return false;
+		} else {
+			return true;
+		}
+	} else {		
+		$sql = "INSERT INTO $TableMail ($MailTime, $MailMail) VALUES (". time() .", '". urlencode(json_encode($parameter))."')";
+		if(!mysqli_query($db, $sql)) {	
+			return false;
+		} else {
+			return true;
+		}	
+	}
 }
 
 
