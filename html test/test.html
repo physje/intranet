@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel='stylesheet' type='text/css' href='styletest.css'>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+
+<div class="container" id="intranetContainer">
+
+<div class="header" id="intranetHeader">
+	<div class="logo">
+		<img src="logo.png" height="80px">
+	</div>
+	<div class="text">
+		<h2>INTRANET</h2>
+	</div>
+</div>
+
+<div class="navbar" id="intranetNavbar">
+  <a href="#home" class="active">Home</a>
+  <a href="#Ledenlijst">Ledenlijst</a>
+  <a href="#Roosters">Roosters</a>
+  <a href="#Links">Links</a>
+  
+  <div class="navbar-right">
+	  <div class="dropdown" id="dropdownAccount">
+		<button class="dropbtn">Ingelogd als Tim Meijer 
+		  <i class="fa fa-caret-down"></i>
+		</button>
+		<div class="dropdown-content">
+		  <a href="#">Link 1</a>
+		  <a href="#">Link 2</a>
+		  <a href="#">Link 3</a>
+		</div>
+	  </div> 
+	  <a href="#logout" class="fa fa-sign-out"></a>
+	</div> 
+  <a href="javascript:void(0);" style="font-size:15px;" class="icon" onclick="myFunction()">&#9776;</a>
+</div>
+
+<div style="padding-left:16px">
+  <h2>This is a testline</h2>
+  <h2>This is a testline</h2>
+  <h2>This is a testline</h2>
+  <h2>This is a testline</h2>
+  <h2>This is a testline</h2>
+  <h2>This is a testline</h2>
+  <h2>This is a testline</h2>
+  <h2>This is a testline</h2>
+  <h2>This is a testline</h2>
+  <h2>This is a testline</h2>
+  <h2>This is a testline</h2>
+  <h2>This is a testline</h2>
+  <h2>This is a testline</h2>
+  <h2>This is a testline</h2>
+  <h2>This is a testline</h2>
+  <h2>This is a testline</h2>
+  <p>BLABLABLABLA</p>
+</div>
+
+<div class="footer" id="intranetFooter">
+	<img src="logo.png">
+	<p>Intranet Koningskerk Deventer - 2020</p>
+</div>
+</div>
+</body>
+
+<script>
+
+function myFunction() {
+  var x = document.getElementById("intranetNavbar");
+  if (x.className === "navbar") {
+    x.className += " responsive";
+  } else {
+    x.className = "navbar";
+  }
+}
+</script>
