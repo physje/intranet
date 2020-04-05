@@ -5,7 +5,7 @@ include_once('../include/HTML_TopBottom.php');
 
 $cfgProgDir = '../auth/';
 $requiredUserGroups = array(1, 37);
-include($cfgProgDir. "secure.php");
+include_once($cfgProgDir. "secure.php");
 $db = connect_db();
 
 

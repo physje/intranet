@@ -4,7 +4,7 @@ include_once('../include/config.php');
 include_once('../include/HTML_TopBottom.php');
 $requiredUserGroups = array(1);
 $cfgProgDir = '../auth/';
-include($cfgProgDir. "secure.php");
+include_once($cfgProgDir. "secure.php");
 $db = connect_db();
 
 $sql = "SELECT $TablePlanning.$PlanningUser FROM $TablePlanning, $TableUsers, $TableAdres WHERE  $TablePlanning.$PlanningUser = $TableUsers.$UserID AND $TableUsers.$UserAdres = $TableAdres.$AdresID AND $TableAdres.$AdresMail like '' AND $TableUsers.$UserMail like '' GROUP BY $TablePlanning.$PlanningUser";

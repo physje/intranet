@@ -5,7 +5,7 @@ include_once('include/HTML_TopBottom.php');
 include_once('../../general_include/class.phpmailer.php');
 include_once('../../general_include/class.html2text.php');
 $cfgProgDir = 'auth/';
-include($cfgProgDir. "secure.php");
+include_once($cfgProgDir. "secure.php");
 $db = connect_db();
 
 $rooster			= getParam('rooster', '');

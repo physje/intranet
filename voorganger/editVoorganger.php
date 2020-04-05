@@ -6,7 +6,7 @@ include_once('../include/HTML_TopBottom.php');
 $db = connect_db();
 $cfgProgDir = '../auth/';
 $requiredUserGroups = array(1, 20);
-include($cfgProgDir. "secure.php");
+include_once($cfgProgDir. "secure.php");
 
 if(isset($_REQUEST['new'])) {
 	$sql = "INSERT INTO $TableVoorganger ($VoorgangerVoor, $VoorgangerAchter) VALUES ('nieuwe', 'voorganger')";

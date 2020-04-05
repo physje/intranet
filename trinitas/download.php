@@ -20,7 +20,7 @@ if(isset($_REQUEST['fileID'])) {
 	if($showLogin) {
 		$minUserLevel = 1;
 		$cfgProgDir = 'auth/';
-		include($cfgProgDir. "secure.php");
+		include_once($cfgProgDir. "secure.php");
 	}
 	
 	$file_name = makeTrinitasName($_REQUEST['fileID'], 3).'.pdf';

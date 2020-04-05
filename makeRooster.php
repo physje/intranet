@@ -33,7 +33,7 @@ if($showLogin) {
 	# Ken kijk- en schrijf-rechten voor admin, beheerder en planner
 	$requiredUserGroups = array(1, $beheerder, $planner);
 	$cfgProgDir = 'auth/';
-	include($cfgProgDir. "secure.php");
+	include_once($cfgProgDir. "secure.php");
 }
 
 # Om zo de rechten te kunnen checken even opvragen in welke groepen de gebruiker zit

@@ -5,7 +5,7 @@ include_once('../include/HTML_TopBottom.php');
 
 $db = connect_db();
 $cfgProgDir = '../auth/';
-include($cfgProgDir. "secure.php");
+include_once($cfgProgDir. "secure.php");
 
 $maand = getParam('maand', date('n'));
 $punten = getGebedspunten(date("Y-m-d", mktime(0,0,1,$maand,1,date("Y"))), date("Y-m-d", mktime(0,0,1,($maand+1),0,date("Y"))));

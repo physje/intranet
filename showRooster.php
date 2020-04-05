@@ -19,7 +19,7 @@ if(isset($_REQUEST['hash'])) {
 
 if($showLogin) {
 	$cfgProgDir = 'auth/';
-	include($cfgProgDir. "secure.php");
+	include_once($cfgProgDir. "secure.php");
 	$db = connect_db();
 }
 

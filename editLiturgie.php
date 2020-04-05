@@ -4,7 +4,7 @@ include_once('include/config.php');
 include_once('include/HTML_TopBottom.php');
 
 $cfgProgDir = 'auth/';
-include($cfgProgDir. "secure.php");
+include_once($cfgProgDir. "secure.php");
 $db = connect_db();
 
 $aantalMaanden = 1;

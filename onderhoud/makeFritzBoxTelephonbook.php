@@ -2,7 +2,7 @@
 include_once('../include/functions.php');
 include_once('../include/config.php');
 $cfgProgDir = '../auth/';
-include($cfgProgDir. "secure.php");
+include_once($cfgProgDir. "secure.php");
 $db = connect_db();
 
 $xml[] = '<?xml version="1.0" encoding="utf-8"?>';

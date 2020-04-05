@@ -14,7 +14,7 @@ $beheerder = getBeheerder($_REQUEST['groep']);
 		
 $requiredUserGroups = array_merge(array(1), $beheerder);
 $cfgProgDir = 'auth/';
-include($cfgProgDir. "secure.php");
+include_once($cfgProgDir. "secure.php");
 
 $groupData = getGroupDetails($_REQUEST['groep']);
 	

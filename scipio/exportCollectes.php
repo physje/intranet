@@ -4,7 +4,7 @@ include_once('../include/config.php');
 include_once('../include/HTML_TopBottom.php');
 $requiredUserGroups = array(1);
 $cfgProgDir = '../auth/';
-include($cfgProgDir. "secure.php");
+include_once($cfgProgDir. "secure.php");
 $db = connect_db();
 
 $start = mktime(0, 0, 0, 1, 1, 2020);

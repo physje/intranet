@@ -6,7 +6,7 @@ include_once('../include/HTML_TopBottom.php');
 $db = connect_db();
 $requiredUserGroups = array(1, 20);
 $cfgProgDir = '../auth/';
-include($cfgProgDir. "secure.php");
+include_once($cfgProgDir. "secure.php");
 
 # Als er op een knop gedrukt is, het rooster wegschrijven
 if(isset($_POST['save']) OR isset($_POST['maanden'])) {	

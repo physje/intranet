@@ -8,7 +8,7 @@ include_once('../include/HTML_HeaderFooter.php');
 include_once('genereerDeclaratiePdf.php');
 
 $cfgProgDir = '../auth/';
-include($cfgProgDir. "secure.php");
+include_once($cfgProgDir. "secure.php");
 $db = connect_db();
 
 if($productieOmgeving) {

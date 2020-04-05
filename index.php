@@ -2,8 +2,9 @@
 include_once('include/functions.php');
 include_once('include/config.php');
 include_once('include/HTML_TopBottom.php');
+
 $cfgProgDir = 'auth/';
-include($cfgProgDir. "secure.php");
+include_once($cfgProgDir. "secure.php");
 $db = connect_db();
 
 $memberData = getMemberDetails($_SESSION['ID']);
@@ -201,7 +202,7 @@ if(in_array(1, getMyGroups($_SESSION['ID']))) {
 	$adminLinks['https://secure.e-boekhouden.nl/handleiding/Documentatie_soap.pdf'] = 'SOAP documenatie PDF';
 	
 	foreach($adminLinks as $link => $naam) {
-		$adminDeel[] = "<a href='$link' target='_blank'>$naam</a>";
+		$adminDeel[] = "<a href='$link' target='_blank'  width='50' >$naam</a>";
 	}
 	
 	$blockArray[] = implode("<br>".NL, $adminDeel);
@@ -268,19 +269,6 @@ $links[] = "<a href='http://www.koningskerkdeventer.nl/' target='_blank'>konings
 $links[] = "<a href='agenda/agenda.php' target='_blank'>Agenda voor Scipio</a>";
 $links[] = "<a href='ical/".$memberData['username'].'-'. $memberData['hash_short'] .".ics' target='_blank'>Persoonlijke digitale agenda</a>";
 $blockArray[] = implode("<br>".NL, $links);
-
-
-
-# Site
-$site[] = "<b>Ingelogd als ". makeName($_SESSION['ID'], 5)."</b>";
-$site[] = "<a href='account.php' target='_blank'>Account</a>";
-$site[] = "<a href='profiel.php' target='_blank'>Profiel</a>";
-$site[] = "<a href='ledenlijst.php' target='_blank'>Ledenlijst</a>";
-if(in_array(1, getMyGroups($_SESSION['ID']))) {
-	$site[] = "<a href='search.php' target='_blank'>Zoeken</a>";
-}
-$site[] = "<a href='auth/objects/logout.php' target='_blank'>Uitloggen</a>";
-$blockArray[] = implode("<br>".NL, $site);
 
 
 # Jarigen

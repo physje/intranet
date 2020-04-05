@@ -6,7 +6,7 @@ include_once('../include/HTML_TopBottom.php');
 $db = connect_db();
 $cfgProgDir = '../auth/';
 $requiredUserGroups = array(1, 36);
-include($cfgProgDir. "secure.php");
+include_once($cfgProgDir. "secure.php");
 
 if($_POST['text'] != '') {	
 	$regels = explode("\n", $_POST['text']);

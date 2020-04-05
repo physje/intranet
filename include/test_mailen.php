@@ -8,7 +8,7 @@ $db = connect_db();
 
 $FinalHTMLMail = '<b>hoi</b> na wat vet ook wat anders';
 $FinalSubjec = 'Leuk onderwerp';
-$roosterData['naam_afzender'] = 'Test-mail'
+$roosterData['naam_afzender'] = 'Test-mail';
 $roosterData['mail_afzender'] = '';
 
 unset($parameter);

@@ -5,7 +5,7 @@ include_once('include/pdf/config.php');
 include_once('include/pdf/3gk_table.php');
 include_once('include/HTML_TopBottom.php');
 $cfgProgDir = 'auth/';
-include($cfgProgDir. "secure.php");
+include_once($cfgProgDir. "secure.php");
 $db = connect_db();
 
 $roosters = array();

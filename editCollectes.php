@@ -8,7 +8,7 @@ include_once('../../general_include/class.phpmailer.php');
 $db = connect_db();
 $cfgProgDir = 'auth/';
 $requiredUserGroups = array(1, 22);
-include($cfgProgDir. "secure.php");
+include_once($cfgProgDir. "secure.php");
 
 # Als er op een knop gedrukt is, het rooster wegschrijven
 if(isset($_POST['save']) OR isset($_POST['maanden'])) {	

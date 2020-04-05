@@ -6,7 +6,7 @@ include_once('../include/HTML_HeaderFooter.php');
 include_once('../../../general_include/class.phpmailer.php');
 $requiredUserGroups = array(1);
 $cfgProgDir = '../auth/';
-include($cfgProgDir. "secure.php");
+include_once($cfgProgDir. "secure.php");
 $db = connect_db();
 
 if(isset($_POST['send_mail'])) {

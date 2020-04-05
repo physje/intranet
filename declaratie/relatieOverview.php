@@ -5,7 +5,7 @@ include_once('../include/EB_functions.php');
 include_once('../include/HTML_TopBottom.php');
 $requiredUserGroups = array(1);
 $cfgProgDir = '../auth/';
-include($cfgProgDir. "secure.php");
+include_once($cfgProgDir. "secure.php");
 //$db = connect_db();
 
 //$veld['ID']							= 'ID';
