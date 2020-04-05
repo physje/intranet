@@ -42,10 +42,10 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 		# Als er geen mailadres van de voorganger bekend is
 		if(isValidEmail($voorgangerData['mail'])) {			
 			# Nieuw mail-object aanmaken
-			$mail = new PHPMailer;
-			$mail->FromName	= 'Preekvoorziening Koningskerk Deventer';
-			$mail->From			= $ScriptMailAdress;
-			$mail->AddReplyTo($voorgangerReplyAddress, $voorgangerReplyName);
+			//$mail = new PHPMailer;
+			//$mail->FromName	= 'Preekvoorziening Koningskerk Deventer';
+			//$mail->From			= $ScriptMailAdress;
+			//$mail->AddReplyTo($voorgangerReplyAddress, $voorgangerReplyName);
 			
 			$param['fromName'] = 'Preekvoorziening Koningskerk Deventer';
 			$param['ReplyTo'] = $voorgangerReplyAddress;
@@ -54,9 +54,9 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 			# Als er niet getest wordt 
 			if(!$sendTestMail) {
 				# Alle geadresseerden toevoegen
-				$mail->AddAddress($voorgangerData['mail'], $mailNaam);		
-				$mail->AddCC($adresBand, makeName($bandleider, 6));
-				$mail->AddCC($adresSchrift, makeName($schriftlezer, 6));
+				//$mail->AddAddress($voorgangerData['mail'], $mailNaam);		
+				//$mail->AddCC($adresBand, makeName($bandleider, 6));
+				//$mail->AddCC($adresSchrift, makeName($schriftlezer, 6));
 				
 				$param['to'][] = array($voorgangerData['mail'], $mailNaam);
 				$param['cc'][] = array($adresBand, makeName($bandleider, 6));
@@ -64,17 +64,17 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 								
 				# CC toevoegen
 				foreach($voorgangerCC as $adres => $naam) {
-					$mail->AddCC($adres, $naam);
+					//$mail->AddCC($adres, $naam);
 					$param['cc'][] = array($adres, $naam);
 				}
 				
 				# BCC toevoegen
 				foreach($voorgangerBCC as $adres => $naam) {
-					$mail->AddBCC($adres, $naam);
+					//$mail->AddBCC($adres, $naam);
 					$param['bcc'][] = $adres;
 				}
 			} else {
-				$mail->AddAddress($ScriptMailAdress);
+				//$mail->AddAddress($ScriptMailAdress);
 				$param['to'][] = array($ScriptMailAdress);	
 			}
 							
@@ -99,7 +99,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 			
 			if($voorgangerData['aandacht'] == 1 AND ($voorgangerData['last_aandacht'] < $aandachtPeriode OR $voorgangerData['last_aandacht'] < $lastUpdate)) {
 				$bijlageText[] = "de aandachtspunten van de dienst";
-				$mail->AddAttachment('../download/aandachtspunten.pdf', 'Aandachtspunten Liturgie Deventer (dd 29-11-2019).pdf');
+				//$mail->AddAttachment('../download/aandachtspunten.pdf', 'Aandachtspunten Liturgie Deventer (dd 29-11-2019).pdf');
 				$param['file'] = '../download/aandachtspunten.pdf';
 				$param['fileName'] = 'Aandachtspunten Liturgie Deventer (dd 29-11-2019).pdf';
 				setLastAandachtspunten($dienstData['voorganger_id']);
@@ -129,28 +129,37 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 			$Subject = "Preken $dagdeel ". date('j-n-Y', $dienstData['start']);
 			
 			# HTML- en plaintext-mail maken en deze toekennen aan het mail-object
-			$HTMLMail = $MailHeader.implode("<br>\n", $mailText).$MailFooter;	
+			//$HTMLMail = $MailHeader.implode("<br>\n", $mailText).$MailFooter;	
 			//$html =& new html2text($HTMLMail);
 			//$html->set_base_url($ScriptURL);
 			//$PlainMail = $html->get_text();
 			
-			$mail->Subject	= trim($Subject);
-			$mail->IsHTML(true);
-			$mail->Body	= $HTMLMail;
+			//$mail->Subject	= trim($Subject);
+			//$mail->IsHTML(true);
+			//$mail->Body	= $HTMLMail;
 			//$mail->AltBody	= $PlainMail;
 			
 			if($sendMail) {
+				/*
 				if(!$mail->Send()) {
 					toLog('error', '', '', "Problemen met voorgangersmail versturen naar $mailNaam voor ". date('j-n-Y', $dienstData['start']));
 					echo "Problemen met mail versturen<br>\n";
 				} else {
 					toLog('info', '', '', "Voorgangersmail verstuurd naar $mailNaam voor ". date('j-n-Y', $dienstData['start']));
 					echo "Mail verstuurd naar $mailNaam<br>\n";
-				}																
+				}	
+				*/
 				
 				$param['subject'] = trim($Subject);
-				$param['message'] = implode("<br>\n", $mailText);								
-				sendMail_new($param);				
+				$param['message'] = implode("<br>\n", $mailText);
+				
+				if(!sendMail_new($param)) {
+					toLog('error', '', '', "Problemen met voorgangersmail versturen naar $mailNaam voor ". date('j-n-Y', $dienstData['start']));
+					echo "Problemen met mail versturen<br>\n";
+				} else {
+					toLog('info', '', '', "Voorgangersmail verstuurd naar $mailNaam voor ". date('j-n-Y', $dienstData['start']));
+					echo "Mail verstuurd naar $mailNaam<br>\n";
+				}								
 			} else {
 				echo 'Afzender : Preekvoorziening Koningskerk Deventer |'.$ScriptMailAdress .'<br>';
 				echo 'Ontvanger :'. $mailNaam .'|'.$voorgangerData['mail'] .'<br>';

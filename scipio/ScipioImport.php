@@ -293,6 +293,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 						$KB_in_CC = false;
 					}
 										
+					/*
 					if(sendMail($lid, implode(' en ', $subject), $replacedBericht, $variabele)) {					
 						toLog('info', '', $lid, "Wijzigingsmail wijkteam wijk $wijk verstuurd");
 						echo "Mail verstuurd naar ". makeName($lid, 1) ." (wijkteam wijk $wijk)<br>\n";
@@ -300,14 +301,22 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 						toLog('error', '', $lid, "Problemen met wijzigingsmail ". makeName($lid, 1) ." (wijkteam wijk $wijk)");
 						echo "Problemen met mail versturen<br>\n";
 					}
+					*/
 					
 					unset($param);
 					$param['to'][]		= array($lid);
 					$param['message']	= $replacedBericht;
 					$param['subject']	= implode(' en ', $subject);
 					$param['formeel'] = true;
-					sendMail_new($param);	
 					
+					if(sendMail_new($param)) {
+						toLog('info', '', $lid, "Wijzigingsmail wijkteam wijk $wijk verstuurd");
+						echo "Mail verstuurd naar ". makeName($lid, 1) ." (wijkteam wijk $wijk)<br>\n";
+					} else {
+						toLog('error', '', $lid, "Problemen met wijzigingsmail ". makeName($lid, 1) ." (wijkteam wijk $wijk)");
+						echo "Problemen met mail versturen<br>\n";
+					}
+															
 					//echo 'Onderwerp :'. implode(' en ', $subject) .'<br>';
 					//echo 'Bericht :'. $replacedBericht .'<br>';
 					

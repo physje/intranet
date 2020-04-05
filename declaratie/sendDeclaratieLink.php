@@ -23,13 +23,13 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 			$mailNaam 			= makeVoorgangerName($voorganger, 4);
 			
 			# Nieuw mail-object aanmaken
-			$mail = new PHPMailer;
-			$mail->FromName	= $declaratieReplyName;
-			$mail->From			= $declaratieReplyAddress;
+			//$mail = new PHPMailer;
+			//$mail->FromName	= $declaratieReplyName;
+			//$mail->From			= $declaratieReplyAddress;
 			
 			# Geadresseerden toevoegen
-			$mail->AddAddress($voorgangerData['mail'], $mailNaam);
-			$mail->AddBCC($ScriptMailAdress);
+			//$mail->AddAddress($voorgangerData['mail'], $mailNaam);
+			//$mail->AddBCC($ScriptMailAdress);
 			
 			# Declaratielink genereren
 			$declaratieLink = generateDeclaratieLink($dienst, $voorganger);
@@ -60,23 +60,24 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 			# Onderwerp maken
 			$Subject = "Online declaratie-formulier $dagdeel ". date('j-n-Y', $dienstData['start']);
 			
+			/*
 			$mail->Subject	= trim($Subject);
 			$mail->IsHTML(true);
 			$mail->Body	= $MailHeader.implode("<br>\n", $mailText).$MailFooter;
-			
-			if(!$mail->Send()) {
-				toLog('error', '', '', "Problemen met versturen online declaratie-formulier naar $mailNaam");
-			} else {
-				toLog('info', '', '', "Online declaratie-formulier verstuurd naar $mailNaam");
-			}
+			*/
 						
 			$param['to'][] = array($voorgangerData['mail'], $mailNaam);
 			$param['from'] = $declaratieReplyAddress;
 			$param['fromName'] = $declaratieReplyName;
 			$param['subject'] = trim($Subject);
 			$param['message'] = implode("<br>\n", $mailText);
-			sendMail_new($param);	
 			
+			if(!sendMail_new($param)) {
+				toLog('error', '', '', "Problemen met versturen online declaratie-formulier naar $mailNaam");
+			} else {
+				toLog('info', '', '', "Online declaratie-formulier verstuurd naar $mailNaam");
+			}
+						
 			setVoorgangerDeclaratieStatus(2, $dienst);			
 		}		
 	}

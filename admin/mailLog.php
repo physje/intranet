@@ -11,11 +11,13 @@ if(isset($_POST['id'])) {
 	$id = key($_POST['id']);
 }
 
+/*
 if(isset($_POST['send'])) {
 	$parameters = $_POST;
 	unset($parameters['send']);	
 	sendMail_new($parameters);
 }
+*/
 
 //$eind = time();
 //$start = $eind - (48*60*60);

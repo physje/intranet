@@ -146,6 +146,7 @@ foreach($roosters as $rooster) {
 						//echo implode("<br>\n", $alert);
 						//echo '<hr>';
 												
+						/*
 						if(sendMail($beheerder, "Rooster-alert '". $roosterData['naam'] ."'", implode("<br>\n", $alert), array())) {
 							toLog('info', '', $beheerder, "Rooster-alert ". $roosterData['naam'] ." verstuurd");
 							echo 'Mail verstuurd<br>';
@@ -153,6 +154,7 @@ foreach($roosters as $rooster) {
 							toLog('error', '', $beheerder, "Kon geen rooster-alert ". $roosterData['naam'] ." versturen");
 							echo "Kon geen rooster-alert ". $roosterData['naam'] ." versturen<br>";
 						}
+						*/
 						
 						# $parameters['to'] = ;
 						# $parameters['cc'] = ;
@@ -161,10 +163,18 @@ foreach($roosters as $rooster) {
 						# $parameters['subject'] = ;						
 						
 						unset($param);
-						$param['to'][]			= array($beheerder);
+						$param['to'][]		= array($beheerder);
 						$param['message']	= implode("<br>\n", $alert);
 						$param['subject']	= "Rooster-alert '". $roosterData['naam'] ."'";
-						sendMail_new($param);										
+												
+						if(sendMail_new($param)) {
+							toLog('info', '', $beheerder, "Rooster-alert ". $roosterData['naam'] ." verstuurd");
+							echo 'Mail verstuurd<br>';
+						} else {
+							toLog('error', '', $beheerder, "Kon geen rooster-alert ". $roosterData['naam'] ." versturen");
+							echo "Kon geen rooster-alert ". $roosterData['naam'] ." versturen<br>";
+						}
+											
 					}
 				}
 			}

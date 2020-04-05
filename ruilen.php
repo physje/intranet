@@ -45,14 +45,19 @@ if(isset($_REQUEST['dader']) AND isset($_REQUEST['slachtoffer'])) {
 	$mail[] = "";
 	$mail[] = "Klik <a href='".$ScriptURL."showRooster.php?rooster=$rooster'>hier</a> voor het meest recente rooster";	
 	
+	/*
 	if(sendMail($slachtoffer, "Er is met jou geruild voor '". $roosterData['naam'] ."'", implode("<br>\n", $mail), array())) {
 		toLog('debug', $dader, '', 'verplaatst van dienst '. $dienst_d .' naar '. $dienst_s); 
 	}
+	*/
 	
 	$param_dader['to'][]			= array($slachtoffer);
 	$param_dader['message']	= implode("<br>\n", $mail);
 	$param_dader['subject']	= "Er is met jou geruild voor '". $roosterData['naam'] ."'";
-	sendMail_new($param_dader);
+	
+	if(sendMail_new($param_dader)) {
+		toLog('debug', $dader, '', 'verplaatst van dienst '. $dienst_d .' naar '. $dienst_s); 
+	}
 			
 	$mail = array();
 	$mail[] = "Dag ". makeName($dader, 1) .",";
@@ -62,14 +67,19 @@ if(isset($_REQUEST['dader']) AND isset($_REQUEST['slachtoffer'])) {
 	$mail[] = "";
 	$mail[] = "Klik <a href='". $ScriptURL ."showRooster.php?rooster=$rooster'>hier</a> voor het meest recente rooster";	
 	
+	/*
 	if(sendMail($dader, "Je hebt geruild voor '". $roosterData['naam'] ."'", implode("<br>\n", $mail), array())) {
 		toLog('debug', $slachtoffer, '', 'verplaatst van dienst '. $dienst_s .' naar '. $dienst_d); 
 	}
+	*/
 	
 	$param_slachtoffer['to'][]			= array($dader);
 	$param_slachtoffer['message']	= implode("<br>\n", $mail);
 	$param_slachtoffer['subject']	= "Je hebt geruild voor '". $roosterData['naam'] ."'";
-	sendMail_new($param_slachtoffer);
+		
+	if(sendMail_new($param_slachtoffer)) {
+		toLog('debug', $slachtoffer, '', 'verplaatst van dienst '. $dienst_s .' naar '. $dienst_d); 
+	}
 		
 	$text[] = 'Er is een bevestigingsmail naar jullie allebei gestuurd.';
 	toLog('info', $dader, $slachtoffer, "geruild voor '". $roosterData['naam'] ."'"); 

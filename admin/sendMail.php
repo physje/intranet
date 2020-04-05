@@ -42,6 +42,7 @@ if(isset($_POST['send_mail'])) {
 		}					
 	}
 	
+	/*
 	$var['from']			= $_POST['mail_afzender'];
 	$var['FromName']	= $_POST['naam_afzender'];
 	$var['BCC']				= true;
@@ -52,6 +53,7 @@ if(isset($_POST['send_mail'])) {
 	} else {
 		toLog('error', '', $lid, "Problemen met versturen mail met onderwerp '$FinalSubject'");
 	}
+	*/
 
 	unset($param);
 	$param['to'][]			= array($lid);
@@ -59,8 +61,13 @@ if(isset($_POST['send_mail'])) {
 	$param['subject']		= $FinalSubject;
 	$param['from']			= $_POST['mail_afzender'];
 	$param['FromName']	= $_POST['naam_afzender'];
-	$param['bcc']				= 'matthijs@draijer.org';
-	sendMail_new($param);	
+	$param['bcc']				= 'matthijs.draijer@koningskerkdeventer.nl';
+		
+	if(sendMail_new($param)) {
+		toLog('debug', '', $lid, "Mail met als onderwerp '$FinalSubject' verstuurd");
+	} else {
+		toLog('error', '', $lid, "Problemen met versturen mail met onderwerp '$FinalSubject'");
+	}
 	
 	//echo $FinalHTMLMail;
 } else {

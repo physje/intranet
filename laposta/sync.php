@@ -236,6 +236,7 @@ do {
 						}
 					} else {
 						toLog('info', '', $scipioID, "Wijk gewijzigd ($oudeWijk -> $wijk) maar was onbekend in $oudeWijk");
+						$sql_update[] = "$LPwijk = '$wijk'";
 					}
 				}
 				

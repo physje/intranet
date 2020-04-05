@@ -225,24 +225,25 @@ if(isset($_REQUEST['hash'])) {
 			
 				# -------		
 				# Mail naar penningmeester versturen
-				unset($mail);
-				$mail = new PHPMailer;
-				$mail->FromName	= $ScriptTitle;
-				$mail->From			= $ScriptMailAdress;
+				unset($param_penning);
+				//unset($mail);
+				//$mail = new PHPMailer;
+				//$mail->FromName	= $ScriptTitle;
+				//$mail->From			= $ScriptMailAdress;
     	
 				# Alle geadresseerden toevoegen
 				if(!$sendTestMail) {
-					$mail->AddAddress($declaratieReplyAddress, $declaratieReplyName);
-					$mail->AddCC($EBDeclaratieAddress);
-					$mail->AddCC($FinAdminAddress);
-					$mail->AddBCC($ScriptMailAdress);
+					//$mail->AddAddress($declaratieReplyAddress, $declaratieReplyName);
+					//$mail->AddCC($EBDeclaratieAddress);
+					//$mail->AddCC($FinAdminAddress);
+					//$mail->AddBCC($ScriptMailAdress);
 					
 					$param_penning['to'][] = array($declaratieReplyAddress, $declaratieReplyName);
 					$param_penning['cc'][] = array($EBDeclaratieAddress);
 					$param_penning['cc'][] = array($FinAdminAddress);
 					$param_penning['bcc'][] = array($ScriptMailAdress);					
 				} else {
-					$mail->AddAddress($ScriptMailAdress);
+					//$mail->AddAddress($ScriptMailAdress);
 					$param_penning['to'][] = array($ScriptMailAdress);
 				}
 							
@@ -250,10 +251,10 @@ if(isset($_REQUEST['hash'])) {
 				$Subject = "Declaratie $dagdeel ". date('j-n-Y', $dienstData['start']);
 				$param_penning['subject'] = trim($Subject);
 				
-				$mail->Subject	= trim($Subject);
-				$mail->IsHTML(true);
-				$mail->Body	= $MailHeader.implode("\n", $mailPenningsmeester).$MailFooter;
-				$mail->AddAttachment('PDF/'. $mutatieNr .'.pdf', $boekstukNummer .' '. makeVoorgangerName($voorganger, 1) . ' '. date('d-m', $dienstData['start']) .' '. $dagdeel .'.pdf');
+				//$mail->Subject	= trim($Subject);
+				//$mail->IsHTML(true);
+				//$mail->Body	= $MailHeader.implode("\n", $mailPenningsmeester).$MailFooter;
+				//$mail->AddAttachment('PDF/'. $mutatieNr .'.pdf', $boekstukNummer .' '. makeVoorgangerName($voorganger, 1) . ' '. date('d-m', $dienstData['start']) .' '. $dagdeel .'.pdf');
 				
 				$param_penning['file'] = 'PDF/'. $mutatieNr .'.pdf';
 				$param_penning['fileName'] = $boekstukNummer .' '. makeVoorgangerName($voorganger, 1) . ' '. date('d-m', $dienstData['start']) .' '. $dagdeel .'.pdf';
@@ -265,15 +266,23 @@ if(isset($_REQUEST['hash'])) {
 					$page[] = $boekstukNummer .' '. makeVoorgangerName($voorganger, 1) . ' '. date('d-m', $dienstData['start']) .' '. $dagdeel .".pdf<br>\n";
 					$page[] = implode("\n", $mailPenningsmeester) ."<br>\n";					
 				} else {
+					/*
 					if(!$mail->Send()) {
 						toLog('error', '', '', "Problemen met declaratie-notificatie (dienst $dienst, voorganger $voorganger)");
 						$page[] = "Er zijn problemen met het versturen van de notificatie-mail naar penningsmeester.";
 					} else {
 						toLog('debug', '', '', "Declaratie-notificatie naar penningsmeester voor ". date('j-n-Y', $dienstData['start']));
 					}
-															
-					$param_penning['message'] = implode("\n", $mailPenningsmeester);					
-					sendMail_new($param_penning);					
+					*/
+					
+					$param_penning['message'] = implode("\n", $mailPenningsmeester);
+					
+					if(!sendMail_new($param_penning)) {
+						toLog('error', '', '', "Problemen met declaratie-notificatie (dienst $dienst, voorganger $voorganger)");
+						$page[] = "Er zijn problemen met het versturen van de notificatie-mail naar penningsmeester.";
+					} else {
+						toLog('debug', '', '', "Declaratie-notificatie naar penningsmeester voor ". date('j-n-Y', $dienstData['start']));
+					}					
 				}
 				
 				
@@ -296,28 +305,29 @@ if(isset($_REQUEST['hash'])) {
 				$mailPredikant[] = $declaratieReplyAddress;
 				
 				# Nieuw mail-object aanmaken
-				unset($mail);
-				$mail = new PHPMailer;
-				$mail->FromName	= $declaratieReplyName;
-				$mail->From			= $declaratieReplyAddress;
+				unset($param_predikant);
+				//unset($mail);
+				//$mail = new PHPMailer;
+				//$mail->FromName	= $declaratieReplyName;
+				//$mail->From			= $declaratieReplyAddress;
     	
 				# Alle geadresseerden toevoegen
 				if(!$sendTestMail) {
-					$mail->AddAddress($voorgangerData['mail'], $mailNaam);
+					//$mail->AddAddress($voorgangerData['mail'], $mailNaam);
 					//$mail->AddBCC($ScriptMailAdress);
 					$param_predikant['to'][] = array($voorgangerData['mail'], $mailNaam);
 				} else {
-					$mail->AddAddress($ScriptMailAdress);
+					//$mail->AddAddress($ScriptMailAdress);
 					$param_predikant['to'][] = array($ScriptMailAdress);
 				}
 							
 				# Onderwerp maken
 				$Subject = "Declaratie $dagdeel ". date('j-n-Y', $dienstData['start']);
 				
-				$mail->Subject	= trim($Subject);
-				$mail->IsHTML(true);
-				$mail->Body	= $MailHeader.implode("<br>\n", $mailPredikant).$MailFooter;
-				$mail->AddAttachment('PDF/'. $mutatieNr .'.pdf',"Declaratie $dagdeel ". date('j-n-Y', $dienstData['start']) ." Koningskerk Deventer.pdf");
+				//$mail->Subject	= trim($Subject);
+				//$mail->IsHTML(true);
+				//$mail->Body	= $MailHeader.implode("<br>\n", $mailPredikant).$MailFooter;
+				//$mail->AddAttachment('PDF/'. $mutatieNr .'.pdf',"Declaratie $dagdeel ". date('j-n-Y', $dienstData['start']) ." Koningskerk Deventer.pdf");
 				
 				if(!$sendMail) {
 					$page[] = 'Afzender :'. $declaratieReplyName .'|'.$declaratieReplyAddress;
@@ -325,6 +335,7 @@ if(isset($_REQUEST['hash'])) {
 					$page[] = 'Onderwerp :'.trim($Subject);
 					$page[] = implode("<br>\n", $mailPredikant);
 				} else {
+					/*
 					if(!$mail->Send()) {
 						toLog('error', '', '', "Problemen met declaratie-afschrift (dienst $dienst, voorganger $voorganger)");
 						$page[] = "Er zijn problemen met het versturen van een afschrift van de declaratie.";
@@ -332,7 +343,7 @@ if(isset($_REQUEST['hash'])) {
 						toLog('debug', '', '', "Declaratie-afschrift naar $mailNaam voor ". date('j-n-Y', $dienstData['start']));
 						$page[] = "Er is een afschrift van de declaratie naar ". ($voorgangerData['stijl'] == 0 ? 'u' : 'jou') ." verstuurd.";
 					}
-					
+					*/					
 					
 					$param_predikant['from'] = $declaratieReplyAddress;
 					$param_predikant['fromName'] = $declaratieReplyName;
@@ -340,8 +351,15 @@ if(isset($_REQUEST['hash'])) {
 					$param_predikant['message'] = implode("<br>\n", $mailPredikant);
 					$param_predikant['file'] = 'PDF/'. $mutatieNr .'.pdf';
 					$param_predikant['fileName'] = "Declaratie $dagdeel ". date('j-n-Y', $dienstData['start']) ." Koningskerk Deventer.pdf";
-					sendMail_new($param_predikant);					
-				}					
+					
+					if(!sendMail_new($param_predikant)) {
+						toLog('error', '', '', "Problemen met declaratie-afschrift (dienst $dienst, voorganger $voorganger)");
+						$page[] = "Er zijn problemen met het versturen van een afschrift van de declaratie.";
+					} else {
+						toLog('debug', '', '', "Declaratie-afschrift naar $mailNaam voor ". date('j-n-Y', $dienstData['start']));
+						$page[] = "Er is een afschrift van de declaratie naar ". ($voorgangerData['stijl'] == 0 ? 'u' : 'jou') ." verstuurd.";
+					}									
+				}
 				
 				# -------						
 				# update reis_van voor volgende keer
@@ -559,16 +577,17 @@ if(isset($_REQUEST['hash'])) {
 		$mailNaam 			= makeVoorgangerName($voorganger, 4);
 
 		# Nieuw mail-object aanmaken
-		$mail = new PHPMailer;
-		$mail->FromName	= $declaratieReplyName;
-		$mail->From			= $declaratieReplyAddress;
+		unset($param);
+		//$mail = new PHPMailer;
+		//$mail->FromName	= $declaratieReplyName;
+		//$mail->From			= $declaratieReplyAddress;
 
 		# Alle geadresseerden toevoegen
-		if(!$sendTestMail) {		
-			$mail->AddAddress($voorgangerData['mail'], $mailNaam);
-		} else {
-			$mail->AddAddress($ScriptMailAdress);
-		}
+		//if(!$sendTestMail) {		
+			//$mail->AddAddress($voorgangerData['mail'], $mailNaam);
+		//} else {
+			//$mail->AddAddress($ScriptMailAdress);
+		//}
 		
 		# Declaratielink genereren
 		//$hash = urlencode(password_hash($dienst.'$'.$randomCodeDeclaratie.'$'.$voorganger, PASSWORD_BCRYPT));
@@ -594,9 +613,9 @@ if(isset($_REQUEST['hash'])) {
 		# Onderwerp maken
 		$Subject = "Declaratie $dagdeel ". time2str('%e %b %y', $dienstData['start']);
 
-		$mail->Subject	= trim($Subject);
-		$mail->IsHTML(true);
-		$mail->Body	= $MailHeader.implode("<br>\n", $mailText).$MailFooter;
+		//$mail->Subject	= trim($Subject);
+		//$mail->IsHTML(true);
+		//$mail->Body	= $MailHeader.implode("<br>\n", $mailText).$MailFooter;
 		
 		if(!$sendMail) {
 			$page[] = 'Afzender :'. $declaratieReplyName .'|'.$declaratieReplyAddress;
@@ -604,6 +623,7 @@ if(isset($_REQUEST['hash'])) {
 			$page[] = trim($Subject);
 			$page[] = implode("<br>\n", $mailText);
 		} else {
+			/*
 			if(!$mail->Send()) {
 				toLog('error', '', '', "Problemen met declaratie-link versturen naar $mailNaam voor ". date('j-n-Y', $dienstData['start']));
 				$page[] = "Er zijn problemen met het versturen van de mail.";			
@@ -611,13 +631,21 @@ if(isset($_REQUEST['hash'])) {
 				toLog('debug', '', '', "Declaratie-link verstuurd naar $mailNaam voor ". date('j-n-y', $dienstData['start']));
 				$page[] = "Er is een mail gestuurd.";
 			}
+			*/
 			
 			$param['to'][] = array($voorgangerData['mail'], $mailNaam);
 			$param['from'] = $declaratieReplyAddress;
 			$param['fromName'] = $declaratieReplyName;
 			$param['subject'] = trim($Subject);
 			$param['message'] = implode("<br>\n", $mailText);
-			sendMail_new($param);			
+			
+			if(!sendMail_new($param)) {
+				toLog('error', '', '', "Problemen met declaratie-link versturen naar $mailNaam voor ". date('j-n-Y', $dienstData['start']));
+				$page[] = "Er zijn problemen met het versturen van de mail.";			
+			} else {
+				toLog('debug', '', '', "Declaratie-link verstuurd naar $mailNaam voor ". date('j-n-y', $dienstData['start']));
+				$page[] = "Er is een mail gestuurd.";
+			}
 		}
 	}
 } else {

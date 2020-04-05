@@ -1,13 +1,13 @@
 #!/usr/local/bin/php -q
 <?
-error_reporting(E_ALL);
-ini_set("display_errors", 1);
+#error_reporting(E_ALL);
+#ini_set("display_errors", 1);
 include ('/home/draije1a/public_html/extern/3GK/intranet/include/functions.php');
 include ('/home/draije1a/public_html/extern/3GK/intranet/include/config.php');
 include ('/home/draije1a/public_html/extern/3GK/intranet/include/LP_functions.php');
 include ('/home/draije1a/public_html/extern/3GK/intranet/include/PlancakeEmailParser.php');
 
-$test = true;
+$test = false;
 
 if(!$test) {
 	/* Read the message from STDIN */
@@ -17,8 +17,13 @@ if(!$test) {
 		$email .= fread($fd, 2048);
 	}
 	fclose($fd);
+
+	$filename = '/home/draije1a/public_html/extern/3GK/intranet/laposta/archief/mail_'. date('Y.m.d.H.i.s') .'.txt';
+	$handle = fopen($filename, 'w+');
+	fwrite($handle, $email);
+	fclose($handle);
 } else {
-	$filename = 'mail_met_bijlage.txt';
+	$filename = 'mail_1.txt';
 	$handle = fopen($filename, 'r');
 	$email = fread($handle, filesize($filename));
 	fclose($handle);
@@ -26,96 +31,104 @@ if(!$test) {
 
 $emailParser = new PlancakeEmailParser($email);
 
-//echo '<br>getPlainBody : '. $emailParser->getPlainBody();
-//echo '<br>getHTMLBody : '. $emailParser->getHTMLBody();
-//echo '<br>getTo : '. implode('|', $emailParser->getTo());
-//echo '<br>getSubject : '. $emailParser->getSubject();
-//echo '<br>getCc : '. implode('|', $emailParser->getCc());
+$data['html']				= $emailParser->getHTMLBody();
+$data['plain']			= $emailParser->getPlainBody();
+$data['subject']		= $emailParser->getSubject();
+$data['to_all']			= $emailParser->getTo();
+$data['from']				= $emailParser->getHeader('From');
+$data['reply']			= $emailParser->getHeader('Reply-To');
 
-$data['bijlage']	= false;
-$data['html']			= $emailParser->getHTMLBody();
-$data['plain']		= $emailParser->getPlainBody();
-$data['subject']	= $emailParser->getSubject();
-//$data['fromName']
-//$data['fromAdres']
-//$data['toName']
-//$data['toAdres']
+$fromArray					= seperateAdress($data['from']);
+$data['fromAdres']	= $fromArray['adres'];
+if(count($fromArray) == 2) {
+	$data['fromName']	= $fromArray['naam'];
+}
 
-//$data = parseMail($email);
+$replyArray					= seperateAdress($data['reply']);
+$data['replyAdres']	= $replyArray['adres'];
+if(count($replyArray) == 2) {
+	$data['replyName']	= $replyArray['naam'];
+}
+
+if($data['replyAdres'] != '') {
+	$antwoordAdres = $data['replyAdres'];
+} else {
+	$antwoordAdres = $data['fromAdres'];
+}
 
 # Als er een bijlage bijzit gaat het hele feest niet door
 if(!isset($data['bijlage'])) {	
-	$ontvanger = getString('', '@', $data['toAdres']);
+	foreach($data['to_all'] as $to) {
+		$data['to']			= $to;
+		$toArray					= seperateAdress($data['to']);
 	
-	if($ontvanger[0] == 'wijka') {
-		$laPostaGroup = 'wzkffisyod';
-		$Name = 'Wijkmail A';
-	} elseif($ontvanger[0] == 'wijkb') {
-		$laPostaGroup = 'wzkffisyod';
-		$Name = 'Wijkmail B';
-	} elseif($ontvanger[0] == 'wijkc') {
-		$laPostaGroup = 'wzkffisyod';
-		$Name = 'Wijkmail C';
-	} elseif($ontvanger[0] == 'wijkd') {
-		$laPostaGroup = 'wzkffisyod';
-		$Name = 'Wijkmail D';
-	} elseif($ontvanger[0] == 'wijke') {
-		$laPostaGroup = 'wzkffisyod';
-		$Name = 'Wijkmail E';
-	} elseif($ontvanger[0] == 'wijkf') {
-		$laPostaGroup = 'wzkffisyod';
-		$Name = 'Wijkmail F';
-	} elseif($ontvanger[0] == 'wijkg') {
-		$laPostaGroup = 'wzkffisyod';
-		$Name = 'Wijkmail G';
-	} elseif($ontvanger[0] == 'wijkh') {
-		$laPostaGroup = 'wzkffisyod';
-		$Name = 'Wijkmail H';
-	} elseif($ontvanger[0] == 'wijki') {
-		$laPostaGroup = 'wzkffisyod';
-		$Name = 'Wijkmail I';
-	} elseif($ontvanger[0] == 'wijkj') {
-		$laPostaGroup = 'wzkffisyod';
-		$Name = 'Wijkmail J';
-	}
-	
-	
-	if(lp_onList($laPostaGroup, $data['fromAdres'])) {
-		//echo 'Onderwerp : '. $data['subject'] .'<br>';
-		//echo 'From : '. $data['from'] .'<br>';
-		//echo 'To : '. $data['to'] .'<br>';
-		//echo 'Bericht : '. $data['plain'];
-		
-		$input['name'] = $Name .' '. date('d.m.y');
-		$input['subject'] = $data['subject'];
-		$input['from']['name'] = $data['fromName'];
-		$input['from']['email'] = 'matthijs.draijer@koningskerkdeventer.nl';
-		$input['list_ids'] = array($laPostaGroup);
-		//$input['stats']['ga'] = false;
-		//$input['stats']['mtrack'] = false;
-		$campaignID = lp_createMail($input);
-			
-		if(is_array($campaignID)) {
-			mail('matthijs@draijer.org', $data['subject'], $campaignID['error']);
-		} else {
-			if(isset($data['html'])) {
-				$bericht = $data['html'];
-			} else {
-				$bericht = $data['plain'];
-			}
-			if(lp_populateMail($campaignID, $bericht)) {
-				$verzendtijd = time()+3;
-				//lp_scheduleMail($campaignID, $verzendtijd);
-			}
-			//mail('matthijs@draijer.org', $data['subject'], $email);
+		$data['toAdres']	= $toArray['adres'];
+		if(count($toArray) == 2) {
+			$data['toName'] = $toArray['naam'];
 		}
-	} else {
-		mail($data['fromAdres'], 'Re: '. $data['subject'], 'Het adres '. $data['fromAdres'] .' is niet bekend als geldig adres als afzender.');
+		
+		$to3GK = true;
+		$ontvanger = getString('', '@', $data['toAdres']);
+			
+		if($ontvanger[0] == 'wijka') {
+			$wijk = 'A';
+		} elseif($ontvanger[0] == 'wijkb') {
+			$wijk = 'B';
+		} elseif($ontvanger[0] == 'wijkc') {
+			$wijk = 'C';
+		} elseif($ontvanger[0] == 'wijkd') {
+			$wijk = 'D';
+		} elseif($ontvanger[0] == 'wijke') {
+			$wijk = 'E';
+		} elseif($ontvanger[0] == 'wijkf') {
+			$wijk = 'F';
+		} elseif($ontvanger[0] == 'wijkg') {
+			$wijk = 'G';
+		} elseif($ontvanger[0] == 'wijkh') {
+			$wijk = 'H';
+		} elseif($ontvanger[0] == 'wijki') {
+			$wijk = 'I';
+		} elseif($ontvanger[0] == 'wijkj') {
+			$wijk = 'J';
+		} else {
+			$to3GK = false;
+		}
+		
+		if($to3GK) {
+			$laPostaGroup = $LPWijkListID[$wijk];
+			
+			//if(lp_onList($laPostaGroup, $data['fromAdres'])) {
+			if(true) {
+				$input['name']					= '[Wijk '. $wijk .']  '. $data['subject'];
+				$input['subject']				= $data['subject'];
+				$input['from']['name']	= $data['fromName'];
+				$input['from']['email']	= $data['toAdres'];
+				$input['list_ids'] = array($laPostaGroup);
+				//$input['stats']['ga'] = false;
+				//$input['stats']['mtrack'] = false;
+				$campaignID = lp_createMail($input);
+					
+				if(is_array($campaignID)) {
+					mail($ScriptMailAdress, $data['subject'], $campaignID['error']);
+				} else {
+					if(isset($data['html'])) {
+						$bericht = cleanMail($data['html']);
+					} else {
+						$bericht = cleanMail($data['plain']);
+					}
+					if(lp_populateMail($campaignID, $bericht)) {
+						$verzendtijd = time()+3;
+						//lp_scheduleMail($campaignID, $verzendtijd);
+					}
+				}
+			} else {
+				mail($antwoordAdres, 'Re: '. $data['subject'], 'Het adres '. $data['fromAdres'] .' is niet bekend als adres binnen wijk '. $wijk .'. De mail is dus niet doorgestuurd.');
+			}
+		}
 	}
 } else {
-	mail($data['fromAdres'], 'Re: '. $data['subject'], 'Het lijkt erop dat je een bijlage probeert te sturen. Dat wordt niet ondersteund in LaPosta. Je mail is dus niet verstuurd.');
+	mail($antwoordAdres, 'Re: '. $data['subject'], 'Het lijkt erop dat je een bijlage probeert te sturen. Dat wordt niet ondersteund in LaPosta. Je mail is dus niet verder verstuurd.');
 }
-
 
 #
 # FUNCTIONS
@@ -212,7 +225,7 @@ function parseMail($input) {
 		
 	return $out;
 }
-
+*/
 
 function cleanMail($input) {
 	$cleanMail = $input;
@@ -229,7 +242,7 @@ function cleanMail($input) {
 	
 	return $cleanMail;
 }
-*/
+
 
 function getString($start, $end, $string) {
 	if ($start != '') {

@@ -33,8 +33,9 @@ if(isset($_POST['save']) OR isset($_POST['maanden'])) {
 	}
 	
 	if(isset($bericht)){
+		/*
 		$HTMLMail = $MailHeader.implode('<br>', $bericht).$MailFooter;
-		
+				
 		$mail = new PHPMailer;
 	
 		$mail->From     = $ScriptMailAdress;
@@ -49,13 +50,21 @@ if(isset($_POST['save']) OR isset($_POST['maanden'])) {
 			toLog('error', $_SESSION['ID'], '', 'Kon geen mail sturen naar Scipio-beheer voor gewijzigde collectes');
 		} else {
 			toLog('debug', $_SESSION['ID'], '', 'Mail gestuurd naar Scipio-beheer voor gewijzigde collectes');
+		}
+		*/		
+		
+		$param['to'][] = array('scipiobeheer@koningskerkdeventer.nl', 'Scipio beheer');
+		$param['subject'] = count($bericht).' '.(count($bericht) > 1 ? 'gewijzigde collectedoelen' : 'gewijzigd collectedoel');
+		$param['message'] = implode('<br>', $bericht);
+				
+		if(!sendMail_new($param)) {
+			toLog('error', $_SESSION['ID'], '', 'Kon geen mail sturen naar Scipio-beheer voor gewijzigde collectes');
+		} else {
+			toLog('debug', $_SESSION['ID'], '', 'Mail gestuurd naar Scipio-beheer voor gewijzigde collectes');
 		}		
 	}
 	
-	$param['to'][] = array('scipiobeheer@koningskerkdeventer.nl', 'Scipio beheer');
-	$param['subject'] = count($bericht).' '.(count($bericht) > 1 ? 'gewijzigde collectedoelen' : 'gewijzigd collectedoel');
-	$param['message'] = implode('<br>', $bericht);
-	sendMail_new($param);
+	
 	
 	toLog('info', $_SESSION['ID'], '', 'Collectes bijgewerkt');
 }
