@@ -257,20 +257,6 @@ foreach($TrinitasLinks as $url => $titel) {
 $blockArray[] = implode("<br>".NL, $trinitasDeel);
 
 
-# Hyperlinks
-$links[] = "<b>Links</b>";
-//$links[] = "<a href='../../trinitas/' target='_blank'>Trinitas</a>";
-
-if(!in_array(1, getMyGroups($_SESSION['ID'])) AND !in_array(36, getMyGroups($_SESSION['ID']))) {
-	$links[] = "<a href='../gebedskalender/' target='_blank'>Gebedskalender</a>";
-}
-
-$links[] = "<a href='http://www.koningskerkdeventer.nl/' target='_blank'>koningskerkdeventer.nl</a>";
-$links[] = "<a href='agenda/agenda.php' target='_blank'>Agenda voor Scipio</a>";
-$links[] = "<a href='ical/".$memberData['username'].'-'. $memberData['hash_short'] .".ics' target='_blank'>Persoonlijke digitale agenda</a>";
-$blockArray[] = implode("<br>".NL, $links);
-
-
 # Jarigen
 $jarigen = getJarigen(date("d"), date("m"));
 if(count($jarigen) > 0) {

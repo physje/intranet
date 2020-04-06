@@ -7,6 +7,8 @@ include($cfgProgDir. "secure.php");
 
 $db = connect_db();
 
+$memberData = getMemberDetails($_SESSION['ID']);
+
 # HTML Header
 $HTMLHead	= "<!--     Deze pagina is onderdeel van $ScriptTitle $Version gemaakt door Matthijs Draijer     -->\n\n";
 $HTMLHead	.= '<html>'.NL;
@@ -35,11 +37,25 @@ $HTMLBody .= '<div class="navbar" id="intranetNavbar">'.NL;
 $HTMLBody .=   '<a href="index.php" class="active">Home</a>'.NL;
 $HTMLBody .=   '<a href="ledenlijst.php">Ledenlijst</a>'.NL;
 $HTMLBody .=   '<a href="#Roosters">Roosters</a>'.NL;
-$HTMLBody .=   '<a href="#Links">Links</a>'.NL;
-$HTMLBody .= ''.NL;
+
+$HTMLBody .=   '<div class="dropdown" id="dropdownLinks">'.NL;
+$HTMLBody .=     '<div class="dropbtn" onclick="dropDownAccount(\'dropdownLinksContent\')">Links'.NL;
+$HTMLBody .=       '<i class="fa fa-caret-down"></i>'.NL;
+$HTMLBody .=     '</div>'.NL;
+$HTMLBody .=     '<div class="dropdown-content" id="dropdownLinksContent">'.NL;
+
+if(!in_array(1, getMyGroups($_SESSION['ID'])) AND !in_array(36, getMyGroups($_SESSION['ID']))) {
+	$HTMLBody .= "<a href='../gebedskalender/'>Gebedskalender</a>".NL;
+}
+$HTMLBody .=       "<a href='ical/".$memberData['username'].'-'. $memberData['hash_short'] .".ics' target='_blank'>Persoonlijke digitale agenda</a>".NL;
+$HTMLBody .=       "<a href='http://www.koningskerkdeventer.nl/' target='_blank'>koningskerkdeventer.nl</a>".NL;
+$HTMLBody .=       "<a href='agenda/agenda.php'>Agenda voor Scipio</a>".NL;
+$HTMLBody .=     '</div>'.NL;
+$HTMLBody .=   '</div>'.NL;
+
 $HTMLBody .=     '<div class="navbar-right">'.NL;
 $HTMLBody .=       '<div class="dropdown" id="dropdownAccount">'.NL;
-$HTMLBody .=         '<div class="dropbtn" onclick="dropDownAccount()">Ingelogd als '. makeName($_SESSION['ID'], 5).''.NL;
+$HTMLBody .=         '<div class="dropbtn" onclick="dropDownAccount(\'dropdownAccountContent\')">Ingelogd als '. makeName($_SESSION['ID'], 5).''.NL;
 $HTMLBody .=           '<i class="fa fa-caret-down"></i>'.NL;
 $HTMLBody .=         '</div>'.NL;
 $HTMLBody .=       '<div class="dropdown-content" id="dropdownAccountContent">'.NL;
@@ -108,17 +124,26 @@ function responsiveNavbar() {
 }
 
 /** When user clicks on the dropdown button toggle between hiding and showing the dropdown content */
-function dropDownAccount() {
-  document.getElementById("dropdownAccountContent").classList.toggle("show");
+function dropDownAccount(id) {
+  var el = document.getElementById(id);
+
+  el.style.visibility = "visible";
+  el.style.display = el.style.display === "none" ? "inline" : "visible";
+
+  el.classList.toggle("show");
 }
 
 /** When the user clicks outside the dropdown window the dropdown menu will be closed */
 window.onclick = function(e) {
-  matches = event.target.matches ? event.target.matches('.dropbtn') : event.target.msMatchesSelector('.dropbtn');
+  matches = e.target.matches ? event.target.matches('.dropbtn') : e.target.msMatchesSelector('.dropbtn');
   if (!matches) {
-  var dropdown = document.getElementById("dropdownAccountContent");
-    if (dropdown.classList.contains('show')) {
-      dropdown.classList.remove('show');
+  var dropdownAccount = document.getElementById("dropdownAccountContent");
+  var dropdownLink = document.getElementById("dropdownLinksContent");
+    if (dropdownAccount.classList.contains('show')) {
+      dropdownAccount.classList.remove('show');
+    }
+    if (dropdownLink.classList.contains('show')) {
+      dropdownLink.classList.remove('show');
     }
   }
 }
