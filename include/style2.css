@@ -53,8 +53,8 @@ a.ontrokken {
 	position: relative;
 	margin-left: 1%;
 	margin-right: 1%;
-  background: #FFFFFF;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	background: #FFFFFF;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 /* HEADER SECTION */
@@ -62,56 +62,64 @@ a.ontrokken {
 	background: #ddd;
 	color:white;
 	margin-bottom: 8px;
-	display: -ms-flexbox; /* IE10 */
-	display: flex;
-	/*-ms-flex-wrap: wrap;
-	flex-wrap: wrap;*/
 	border-bottom-style: solid;
 	border-bottom-color: #8C1974;
 	border-bottom-width: 4px;
 }
 
-.header .logo {
-	/*text-align: center;*/
-	-ms-flex: 30%; /* IE10 */
-	flex: 30%;
+.column {
+	float: left;
+}
+
+.column.logo {
+	width: 40%;
 	padding: 20px;
 }
 
-.header .text {
-    -ms-flex: 70%; /* IE10 */
-	flex: 70%;
+.column.text {
+    width: 60%;
 	padding: 20px;
 	text-align: right;
 	color: #8C1974;
 	font-size: 40px;
+	margin-top: 8px;
+	margin-bottom: 8px;
 }
 
-.header .text h2 {
+.column.text h2 {
 	margin: 0px;
 	margin-right: 20px;
 }
 
+/* Clear floats after the header */
+.header:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
 @media screen and (max-width: 750px) {
-  .header {   
-    flex-direction: column;
+  .column.logo {   
+    text-align: center;
+    width: 100%;
   }
   
-  .header .text {
+  .column.text {
 	text-align: center;
 	font-size: 20px;
+	width: 100%;
   }
 }
+
 
 /* NAVIGATION BAR SECTION */
 .navbar {
   overflow: hidden;
   background-color: #333;
-}
-
-.navbar img {
-	height: 75px;
-	text-align: center;
+  /*let the navbar stick on the top of the webpage
+  position: sticky;
+  position: -webkit-sticky;
+  top: 0;*/
 }
 
 .navbar a{
@@ -157,7 +165,7 @@ a.ontrokken {
   display: none;
   position: absolute;
   background-color: #f9f9f9;
-  min-width: 200px;
+  min-width: 160px;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
   z-index: 1;
 }
@@ -202,12 +210,13 @@ a.ontrokken {
     right: 0;
     top: 0;
   }
+
   .navbar.responsive a {
     float: none;
     display: block;
     text-align: left;
   }
-  
+
   .navbar.responsive .dropdown {float: none;}
   .navbar.responsive .dropdown-content {position: relative;}
   .navbar.responsive .navbar-right {float: none;}
@@ -220,7 +229,7 @@ a.ontrokken {
 
 /* FOOTER SECTION */
 .footer {
-	padding: 20px;
+	padding: 30px;
 	text-align: center;
 	background: #ddd;
 	border-top-style: solid;

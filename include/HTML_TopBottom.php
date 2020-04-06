@@ -21,11 +21,11 @@ $HTMLBody = '<body>'.NL;
 $HTMLBody = '<div class="container" id="intranetContainer">'.NL;
 
 # ------- Webpage HEADER ------- #
-$HTMLBody .= '<div class="header" id="intranetHead">'.NL;
-$HTMLBody .=   '<div class="logo">'.NL;
-$HTMLBody .=     '<img src="'. $ScriptURL .'images/logoKoningsKerk.png" height="100px" href="index.php">'.NL;
+$HTMLBody .= '<div class="header" id="intranetHeader">'.NL;
+$HTMLBody .=   '<div class="column logo">'.NL;
+$HTMLBody .=     '<a href="index.php"><img src="'. $ScriptURL .'images/logoKoningsKerk.png" height="100px"></a>'.NL;
 $HTMLBody .=   '</div>'.NL;
-$HTMLBody .=   '<div class="text">'.NL;
+$HTMLBody .=   '<div class="column text">'.NL;
 $HTMLBody .=     '<h2>INTRANET</h2>'.NL;
 $HTMLBody .=   '</div>'.NL;
 $HTMLBody .= '</div>'.NL;
@@ -39,9 +39,9 @@ $HTMLBody .=   '<a href="#Links">Links</a>'.NL;
 $HTMLBody .= ''.NL;
 $HTMLBody .=     '<div class="navbar-right">'.NL;
 $HTMLBody .=       '<div class="dropdown">'.NL;
-$HTMLBody .=         '<button class="dropbtn">Ingelogd als '. makeName($_SESSION['ID'], 5).''.NL;
+$HTMLBody .=         '<div class="dropbtn">Ingelogd als '. makeName($_SESSION['ID'], 5).''.NL;
 $HTMLBody .=           '<i class="fa fa-caret-down"></i>'.NL;
-$HTMLBody .=         '</button>'.NL;
+$HTMLBody .=         '</div>'.NL;
 $HTMLBody .=       '<div class="dropdown-content">'.NL;
 $HTMLBody .=         '<a href="account.php">Account</a>'.NL;
 $HTMLBody .=         '<a href="profiel.php">Profiel</a>'.NL;
@@ -97,7 +97,7 @@ $HTMLHeader = $HTMLHead.$HTMLBody;
 ?>
 <script>
 function responsiveNavbar() {
-  var x = document.getElementById("responsiveNavbar");
+  var x = document.getElementById("intranetNavbar");
   if (x.className === "navbar") {
     x.className += " responsive";
   } else {
