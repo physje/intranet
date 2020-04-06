@@ -38,11 +38,11 @@ $HTMLBody .=   '<a href="#Roosters">Roosters</a>'.NL;
 $HTMLBody .=   '<a href="#Links">Links</a>'.NL;
 $HTMLBody .= ''.NL;
 $HTMLBody .=     '<div class="navbar-right">'.NL;
-$HTMLBody .=       '<div class="dropdown">'.NL;
-$HTMLBody .=         '<div class="dropbtn">Ingelogd als '. makeName($_SESSION['ID'], 5).''.NL;
+$HTMLBody .=       '<div class="dropdown" id="dropdownAccount">'.NL;
+$HTMLBody .=         '<div class="dropbtn" onclick="dropDownAccount()">Ingelogd als '. makeName($_SESSION['ID'], 5).''.NL;
 $HTMLBody .=           '<i class="fa fa-caret-down"></i>'.NL;
 $HTMLBody .=         '</div>'.NL;
-$HTMLBody .=       '<div class="dropdown-content">'.NL;
+$HTMLBody .=       '<div class="dropdown-content" id="dropdownAccountContent">'.NL;
 $HTMLBody .=         '<a href="account.php">Account</a>'.NL;
 $HTMLBody .=         '<a href="profiel.php">Profiel</a>'.NL;
 if(in_array(1, getMyGroups($_SESSION['ID']))) {
@@ -90,18 +90,36 @@ $HTMLFooter .= '</div>'.NL;
 $HTMLFooter .= ''.NL;
 $HTMLFooter .= '</div>'.NL;
 $HTMLFooter .= '</body>'.NL;
+$HTMLFooter .= '</html>'.NL;
 $HTMLFooter .= "\n\n<!--     Deze pagina is onderdeel van $ScriptTitle $Version gemaakt door Matthijs Draijer     -->";
 
 $HTMLHeader = $HTMLHead.$HTMLBody;
 
 ?>
 <script>
+/** When user clicks on the three strypes the css settings for the navbar will be changed for responsive functionality */
 function responsiveNavbar() {
   var x = document.getElementById("intranetNavbar");
   if (x.className === "navbar") {
     x.className += " responsive";
   } else {
     x.className = "navbar";
+  }
+}
+
+/** When user clicks on the dropdown button toggle between hiding and showing the dropdown content */
+function dropDownAccount() {
+  document.getElementById("dropdownAccountContent").classList.toggle("show");
+}
+
+/** When the user clicks outside the dropdown window the dropdown menu will be closed */
+window.onclick = function(e) {
+  matches = event.target.matches ? event.target.matches('.dropbtn') : event.target.msMatchesSelector('.dropbtn');
+  if (!matches) {
+  var dropdown = document.getElementById("dropdownAccountContent");
+    if (dropdown.classList.contains('show')) {
+      dropdown.classList.remove('show');
+    }
   }
 }
 </script>
