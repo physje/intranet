@@ -11,23 +11,21 @@ if(isset($_POST['id'])) {
 	$id = key($_POST['id']);
 }
 
-/*
-if(isset($_POST['send'])) {
-	$parameters = $_POST;
-	unset($parameters['send']);	
-	sendMail_new($parameters);
+if(isset($_POST['volgende'])) {
+	$start = ($_POST['start']+25);
+} elseif(isset($_POST['start'])) {
+	$start = $_POST['start'];
+} else {
+	$start = 0;
 }
-*/
 
-//$eind = time();
-//$start = $eind - (48*60*60);
-//$sql = "SELECT * FROM $TableMail WHERE $MailTime BETWEEN $start AND $eind ORDER BY $MailTime DESC";
 
-$sql = "SELECT * FROM $TableMail ORDER BY $MailTime DESC LIMIT 0,25";
+$sql = "SELECT * FROM $TableMail ORDER BY $MailTime DESC LIMIT $start,25";
 
 $result = mysqli_query($db, $sql);
 if($row = mysqli_fetch_array($result)) {
 	$block[] = "<form method='post' action='$_SERVER[PHP_SELF]'>";
+	$block[] = "<input type='hidden' name='start' value='$start'>";
 	$block[] = "<table border=0>";
 	$block[] = "<tr>";
 	$block[] = "	<td><b>Tijdstip</b></td>";
@@ -57,49 +55,59 @@ if($row = mysqli_fetch_array($result)) {
 			$block[] = "	<td><input type='submit' name='id[".$row[$MailID]."]' value='+'></td>";
 		}
 		$block[] = "</tr>";
-		if(isset($id) AND $id == $row[$MailID]) {			
+		if(isset($id) AND $id == $row[$MailID]) {
+			$block[] = "<tr>";
+			$block[] = "	<td>&nbsp;</td>";
+			$block[] = "	<td colspan='2'>";
+			$block[] = "	<table border=1>";
+			
 			foreach($mailVariabele as $key) {			
-				$block[] = "<tr>";
-				$block[] = "	<td valign='top'>". $key ."</td>";
-				$block[] = "	<td colspan='3'>";
-				if(!isset($param[$key])) {
-					$block[] = "<input type='text' name='$key' size=75>";
-				} else {
+				if(isset($param[$key])) {
 					$value = $param[$key];
+					
+					$block[] = "<tr>";
+					$block[] = "	<td valign='top'>". $key ."</td>";
+					$block[] = "	<td>";
+					
 					if(is_array($value)) {						
 						foreach($value as $subkey => $subvalue) {
 							if(is_array($subvalue)) {
 								foreach($subvalue as $subsubkey => $subsubvalue) {
-									$block[] = "<input type='text' name='". $key ."[$subkey][$subsubkey]' value='". addslashes ($subsubvalue) ."' size=35>";
+									$block[] = addslashes ($subsubvalue);
 								}
 							} else {
-								$block[] = "<input type='text' name='". $key ."[$subkey]' value='". addslashes($subvalue) ."' size=35> ";
+								$block[] = addslashes ($subsubvalue);
 							}
 							$block[] = "<br>";
 						}					
 					} else {
 						if($key != 'message') {
-							$block[] = "<input type='text' name='$key' value='". addslashes($value) ."' size=75>";
+							$block[] = addslashes($value);
 						} else {
-							$block[] = "	<textarea name='$key' cols=75 rows=25>". $value ."</textarea>";
-						}					
+							$block[] = $value;
+						}
 					}
+					
+					$block[] = "	</td>";
+					$block[] = "</tr>";
 				}
-				$block[] = "	</td>";
-				$block[] = "</tr>";
 			}
-			
-			$block[] = "<tr>";
-			$block[] = "	<td>&nbsp;</td>";
-			$block[] = "	<td colspan='3'>".urldecode($row[$MailMail])."</td>";
-			$block[] = "</tr>";
 						
-			$block[] = "<tr>";
-			$block[] = "	<td>&nbsp;</td>";
-			$block[] = "	<td colspan='3' align='center'><input type='submit' name='send' value='Versturen'></td>";
+			$block[] = "	<tr>";
+			$block[] = "		<td>&nbsp;</td>";
+			$block[] = "		<td align='center'><a href='composeMail.php?id=$id'>Bewerk deze mail</a></td>";
+			$block[] = "	</tr>";
+			$block[] = "	</table>";
+			$block[] = "</td>";
 			$block[] = "</tr>";
 		}		
-	} while($row = mysqli_fetch_array($result));		
+	} while($row = mysqli_fetch_array($result));
+	
+	$block[] = "<tr>";
+	$block[] = "	<td>&nbsp;</td>";
+	$block[] = "	<td colspan='3' align='center'><input type='submit' name='volgende' value='Volgende'></td>";
+	$block[] = "</tr>";
+		
 	$block[] = "</table>";
 	$block[] = "</form>";
 }

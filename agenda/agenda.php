@@ -3,7 +3,7 @@ include_once('../include/functions.php');
 include_once('../include/config.php');
 include_once('../include/HTML_TopBottom.php');
 include_once('../../../general_include/class.phpmailer.php');
-include_once('../../../general_include/class.html2text.php');
+#include_once('../../../general_include/class.html2text.php');
 
 $db = connect_db();
 $showLogin = true;
