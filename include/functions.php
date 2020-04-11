@@ -888,8 +888,8 @@ function sendMail_new($parameter) {
 				}
 			}
 		} elseif(count($ontvanger) == 2) {
-			$naam			= $ontvanger[0];
-			$address	= $ontvanger[1];			
+			$address	= $ontvanger[0];
+			$naam			= $ontvanger[1];			
 			$mail->AddAddress($address, $naam);
 			toLog('debug', '', '', $naam .' ('. $address .') in de Aan opgenomen');
 		} elseif(count($ontvanger) == 1 AND !is_numeric($ontvanger[0])) {  
