@@ -788,25 +788,30 @@ function sendMail_new($parameter) {
 			$ontvangers = array($parameter['to']);
 		} else {
 			$ontvangers = $parameter['to'];
-		}						
+		}				
 	} else {
 		echo 'Geen ontvangers bekend';
+		toLog('error', '', '', 'Geen ontvangers bekend');
 		exit;
 	}
 	
 	# Controleer of er wel een bericht bekend is
 	if(isset($parameter['message'])) {
 		$bericht = $parameter['message'];
+		toLog('debug', '', '', 'bericht toegevoegd (lengte '. strlen($bericht) .')');
 	} else {
 		echo 'Geen bericht bekend';
+		toLog('error', '', '', 'Geen bericht bekend');
 		exit;
 	}	
 	
 	# Controleer of er wel een onderwerp bekend is
 	if(isset($parameter['subject'])) {
 		$subject = $parameter['subject'];
+		toLog('debug', '', '', 'onderwerp toegevoegd (lengte '. strlen($subject) .')');
 	} else {
 		echo 'Geen onderwerp bekend';
+		toLog('error', '', '', 'Geen onderwerp bekend');
 		exit;
 	}	
 	
@@ -814,43 +819,53 @@ function sendMail_new($parameter) {
 	# Met de variabele formeel kan worden aangegeven of deze gebruikt moet worden
 	if(isset($parameter['formeel'])) {
 		$formeel = $parameter['formeel'];
+		toLog('debug', '', '', 'formeel = '. $formeel);
 	} else {
 		$formeel = false;
+		toLog('debug', '', '', 'geen formeel adres');
 	}
 	
 	# Even checken of ouders in de CC moeten
 	if(!isset($parameter['ouderCC'])) {
 		$ouderCC = false;
+		toLog('debug', '', '', 'ouders niet in de CC');
 	} else {
 		$ouderCC = $parameter['ouderCC'];
+		toLog('debug', '', '', 'ouders in de CC = '. $ouderCC);
 	}	
 	
 	$mail = new PHPMailer;
 	
 	if(isset($parameter['from']) AND $parameter['from'] != '') {
 		$mail->From = $parameter['from'];
+		toLog('debug', '', '', 'Afzenderadres is gezet op '. $parameter['from']);
 	} else {
 		$mail->From = $ScriptMailAdress;
+		toLog('debug', '', '', 'Afzenderadres is gezet op '. $ScriptMailAdress);
 	}
 	
 	if(isset($parameter['fromName']) AND $parameter['fromName'] != '') {
 		$mail->FromName = $parameter['fromName'];
+		toLog('debug', '', '', 'Afzendernaam is gezet op '. $parameter['fromName']);
 	} else {
 		$mail->FromName = $ScriptTitle;
+		toLog('debug', '', '', 'Afzendernaam is gezet op '. $ScriptTitle);
 	}
 	
 	# Als er een reply-adres ingesteld moet worden		
 	if(isset($parameter['ReplyTo']) AND $parameter['ReplyTo'] != '') {
 		if(isset($parameter['ReplyToName']) AND $parameter['ReplyToName'] != '') {
 			$mail->AddReplyTo($parameter['ReplyTo'], $parameter['ReplyToName']);
+			toLog('debug', '', '', 'Reply-adres is gezet op '. $parameter['ReplyToName'] .' ('. $parameter['ReplyTo'] .')');
 		} else {
 			$mail->AddReplyTo($parameter['ReplyTo']);
+			toLog('debug', '', '', 'Reply-adres is gezet op '. $parameter['ReplyTo']);
 		}
 	}
 	
 	# De personen die in de 'Aan' moeten
 	# Met de check of ouders in de 'CC' moeten
-	foreach($ontvangers as $ontvanger) {
+	foreach($ontvangers as $ontvanger) {		
 		if(count($ontvanger) == 1 AND is_numeric($ontvanger[0])) {
 			# Haal de data van de ontvanger op
 			# Zoek ook direct de mail op van de ontvanger
@@ -874,7 +889,7 @@ function sendMail_new($parameter) {
 			}
 		} elseif(count($ontvanger) == 2) {
 			$naam			= $ontvanger[0];
-			$address	= $ontvanger[1];
+			$address	= $ontvanger[1];			
 			$mail->AddAddress($address, $naam);
 			toLog('debug', '', '', $naam .' ('. $address .') in de Aan opgenomen');
 		} elseif(count($ontvanger) == 1 AND !is_numeric($ontvanger[0])) {  
@@ -921,8 +936,10 @@ function sendMail_new($parameter) {
 			if(is_numeric($ontvanger)) {				
 				$UserMail	= getMailAdres($ontvanger, $formeel);
 				$mail->AddBCC($UserMail);
+				toLog('debug', '', $ontvanger, makeName($ontvanger, 5) .' in de BCC opgenomen');
 			} else {
 				$mail->AddBCC($ontvanger);
+				toLog('debug', '', '', $ontvanger .' in de BCC opgenomen');
 			}
 		}		
 	}
@@ -931,8 +948,10 @@ function sendMail_new($parameter) {
 	if(isset($parameter['file']) AND $parameter['file'] != "") {
 		if(isset($parameter['fileName']) AND $parameter['fileName'] != "") {
 			$mail->addAttachment($parameter['file'], $parameter['fileName']);
+			toLog('debug', '', '', $parameter['file'] .' is als '. $parameter['fileName'] .' opgenomen als bijlage');
 		} else {
 			$mail->addAttachment($parameter['file']);
+			toLog('debug', '', '', $parameter['file'] .' is opgenomen als bijlage');
 		}
 	}
 	
@@ -943,13 +962,15 @@ function sendMail_new($parameter) {
 	$mail->Subject	= $SubjectPrefix . trim($subject);
 	$mail->IsHTML(true);
 	$mail->Body			= $HTMLMail;
+	
+	//echo json_encode($parameter);
 			
-	if(!$mail->Send()) {
-		return false;
+	if(!$mail->Send()) {		
+		return false;		
 	} else {
 		$sql = "INSERT INTO $TableMail ($MailTime, $MailMail) VALUES (". time() .", '". urlencode(json_encode($parameter))."')";
-		if(!mysqli_query($db, $sql)) {	
-			return false;
+		if(!mysqli_query($db, $sql)) {			
+			return false;			
 		} else {
 			return true;
 		}
