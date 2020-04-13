@@ -134,15 +134,6 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 						} else {
 							toLog('error', '', $lid, 'problemen met reminder-mail '. $roosterData['naam'] .' versturen');
 						}
-						
-						//echo $FinalHTMLMail;												
-						/*
-						if(sendMail($lid, $FinalSubject, $FinalHTMLMail, $var)) {
-							toLog('debug', '', $lid, 'reminder-mail '. $roosterData['naam'] .' verstuurd');
-						} else {
-							toLog('error', '', $lid, 'problemen met reminder-mail '. $roosterData['naam'] .' versturen');
-						}
-						*/
 					}
 				}
 			}

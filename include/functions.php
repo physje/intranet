@@ -694,7 +694,7 @@ function makeName($id, $type) {
 	}
 }
 
-
+/*
 function sendMail($ontvanger, $subject, $bericht, $var) {
 	global $ScriptURL, $ScriptMailAdress, $ScriptTitle, $SubjectPrefix, $MailHeader, $MailFooter;
 	
@@ -762,6 +762,7 @@ function sendMail($ontvanger, $subject, $bericht, $var) {
 		return true;
 	}
 }
+*/
 
 
 function sendMail_new($parameter) {
@@ -962,14 +963,14 @@ function sendMail_new($parameter) {
 	$mail->Subject	= $SubjectPrefix . trim($subject);
 	$mail->IsHTML(true);
 	$mail->Body			= $HTMLMail;
-	
-	//echo json_encode($parameter);
-			
-	if(!$mail->Send()) {		
+					
+	if(!$mail->Send()) {
+		toLog('debug', '', '', 'Problemen met verzenden');
 		return false;		
 	} else {
 		$sql = "INSERT INTO $TableMail ($MailTime, $MailMail) VALUES (". time() .", '". urlencode(json_encode($parameter))."')";
 		if(!mysqli_query($db, $sql)) {			
+			toLog('debug', '', '', 'Problemen met wegschrijven mail');
 			return false;			
 		} else {
 			return true;

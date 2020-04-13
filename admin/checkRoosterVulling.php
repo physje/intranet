@@ -143,25 +143,6 @@ foreach($roosters as $rooster) {
 						$alert[] = "<!-- lastDienst: ". date('d-m-Y', $row_last['lastDienst']). "; firstMissed: ". date('d-m-Y', $firstMissed['start']). "; deadline: ". date('d-m-Y', $deadline) ." -->";
 						$alert[] = "<!-- ". ($verlopen ? 'verlopen' : 'niet verlopen') . "; ". ($lastWarning ? 'laatste waarschuwing' : 'nog geen laatste waarschuwing') ." -->";
 						
-						//echo implode("<br>\n", $alert);
-						//echo '<hr>';
-												
-						/*
-						if(sendMail($beheerder, "Rooster-alert '". $roosterData['naam'] ."'", implode("<br>\n", $alert), array())) {
-							toLog('info', '', $beheerder, "Rooster-alert ". $roosterData['naam'] ." verstuurd");
-							echo 'Mail verstuurd<br>';
-						} else {
-							toLog('error', '', $beheerder, "Kon geen rooster-alert ". $roosterData['naam'] ." versturen");
-							echo "Kon geen rooster-alert ". $roosterData['naam'] ." versturen<br>";
-						}
-						*/
-						
-						# $parameters['to'] = ;
-						# $parameters['cc'] = ;
-						# $parameters['bcc'] = ;
-						# $parameters['message'] = ;
-						# $parameters['subject'] = ;						
-						
 						unset($param);
 						$param['to'][]		= array($beheerder);
 						$param['message']	= implode("<br>\n", $alert);

@@ -42,18 +42,6 @@ if(isset($_POST['send_mail'])) {
 		}					
 	}
 	
-	/*
-	$var['from']			= $_POST['mail_afzender'];
-	$var['FromName']	= $_POST['naam_afzender'];
-	$var['BCC']				= true;
-	$var['BCC_mail']	= 'matthijs@draijer.org';
-	
-	if(sendMail($lid, $FinalSubject, $FinalHTMLMail, $var)) {
-		toLog('debug', '', $lid, "Mail met als onderwerp '$FinalSubject' verstuurd");
-	} else {
-		toLog('error', '', $lid, "Problemen met versturen mail met onderwerp '$FinalSubject'");
-	}
-	*/
 
 	unset($param);
 	$param['to'][]			= array($lid);

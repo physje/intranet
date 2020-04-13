@@ -276,8 +276,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 					}
 				}
 				
-				foreach($wijkTeam as $lid => $rol) {
-					$variabele['formeel'] = true;
+				foreach($wijkTeam as $lid => $rol) {					
 					$data = getMemberDetails($lid);					
 					$andereOntvangers = excludeID($namenWijkteam, $lid);
 					
@@ -287,27 +286,15 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 					$replacedBericht = str_replace('[[hash]]', $data['hash_long'], $replacedBericht);
 					$replacedBericht = str_replace('[[voornaam]]', $data['voornaam'], $replacedBericht);
 					
-					if($KB_in_CC) {
-						$variabele['BCC'] = true;
-						$variabele['BCC_mail'] = '';
-						$KB_in_CC = false;
-					}
-										
-					/*
-					if(sendMail($lid, implode(' en ', $subject), $replacedBericht, $variabele)) {					
-						toLog('info', '', $lid, "Wijzigingsmail wijkteam wijk $wijk verstuurd");
-						echo "Mail verstuurd naar ". makeName($lid, 1) ." (wijkteam wijk $wijk)<br>\n";
-					} else {
-						toLog('error', '', $lid, "Problemen met wijzigingsmail ". makeName($lid, 1) ." (wijkteam wijk $wijk)");
-						echo "Problemen met mail versturen<br>\n";
-					}
-					*/
-					
 					unset($param);
 					$param['to'][]		= array($lid);
 					$param['message']	= $replacedBericht;
 					$param['subject']	= implode(' en ', $subject);
 					$param['formeel'] = true;
+					
+					if($lid == 984323) {
+						$param['cc'] = 984285;
+					}
 					
 					if(sendMail_new($param)) {
 						toLog('info', '', $lid, "Wijzigingsmail wijkteam wijk $wijk verstuurd");
@@ -320,8 +307,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 					//echo 'Onderwerp :'. implode(' en ', $subject) .'<br>';
 					//echo 'Bericht :'. $replacedBericht .'<br>';
 					
-					# Om te zorgen dat kerkelijk bureau niet tig mailtjes krijgt direct BCC-tag verwijderen
-					unset($variabele);
+					# Alle parameters voor mailen resetten
 					unset($param);
 				}
 			}

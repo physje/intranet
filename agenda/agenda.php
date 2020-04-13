@@ -72,20 +72,7 @@ if(isset($_POST['remove'])) {
 			
 			$text[] = "De afspraak '". $_POST['titel'] ."' is toegevoegd.<br>";
 			toLog('info', $_SESSION['ID'], '', "Agenda-item '". $_POST['titel'] ."' toegevoegd");
-			
-			/*
-			if(sendMail($_SESSION['ID'], "De afspraak '". $_POST['titel'] ."'", implode("<br>\n", $mail), array())) {
-				$text[] = "Je hebt een bevestigingsmail ontvangen.";
-				toLog('debug', $_SESSION['ID'], '', "Bevestigingsmail voor '". $_POST['titel'] ."' verstuurd");
-			} else {
-				$text[] = "Het versturen van een bevestigingsmail is helaas mislukt.<br>";
-				toLog('error', $_SESSION['ID'], '', "Kan geen bevestigingsmail voor '". $_POST['titel'] ."' versturen");
-				//$text[] = "";
-				//$text[] = "";
-				//$text[] = implode("<br>\n", $mail);
-			}
-			*/
-			
+						
 			$param['to'][]			= array($_SESSION['ID']);
 			$param['message']		= implode("<br>\n", $mail);
 			$param['subject']		= "De afspraak '". $_POST['titel'] ."'";			

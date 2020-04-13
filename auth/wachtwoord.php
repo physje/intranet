@@ -30,16 +30,6 @@ if(isset($_POST['opvragen'])) {
 		
 		$HTMLMail = implode("\n", $Mail);
 		
-		/*
-		if(!sendMail($id, "Nieuw wachtwoord voor $ScriptTitle", $HTMLMail, $var)) {			
-			toLog('error', $id, '', 'problemen met wachtwoord-mail versturen');
-			$text[] = "Inloggegevens konden helaas niet verstuurd worden";			
-		} else {
-			toLog('info', $id, '', "Inloggegevens verstuurd naar ". makeName($id, 5));
-			$text[] = "Inloggegevens zijn verstuurd";
-		}
-		*/
-		
 		$param['to'][]			= array($id);
 		$param['message']		= $HTMLMail;
 		$param['subject']		= "Nieuw wachtwoord voor $ScriptTitle";			
