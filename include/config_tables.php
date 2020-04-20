@@ -237,6 +237,13 @@ $TableMail										= "mail_log";
 $MailID												= "id";
 $MailTime											= "tijd";
 $MailMail											= "bericht";
+
+$TableGebedKalMailOverzicht                     = "GebedKal_mailoverzicht";
+$GebedsKalId                                    = "id";
+$GebedKalCategorie                              = "categorie";
+$GebedKalContactPersoon                         = "contactpersoon";
+$GebedKalMailadres                              = "mailadres";
+$GebedKalOpmerkingen                            = "opmerking";
                     					
 $ArchiveDir										= 'trinitas';
 

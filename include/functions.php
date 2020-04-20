@@ -463,6 +463,54 @@ function getBeheerder($groep) {
 #	return $row[$GroupBeheer];	
 #}
 
+function addGebedkalItem($categorie, $contactpersoon, $mailadres, $opmerking) {
+	global $TableGebedKalMailOverzicht, $GebedKalCategorie, $GebedKalContactPersoon, $GebedKalMailadres, $GebedKalOpmerkingen;
+	$db = connect_db();
+
+	$sql = "INSERT INTO $TableGebedKalMailOverzicht ($GebedKalCategorie, $GebedKalContactPersoon, $GebedKalMailadres, $GebedKalOpmerkingen) VALUES ($categorie, $contactpersoon, $mailadres, $opmerking)";
+				
+	if(mysqli_query($db, $sql)) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+function getGebedkalItemById($id) {
+	global $TableGebedKalMailOverzicht, $GebedsKalId, $GebedKalCategorie, $GebedKalContactPersoon, $GebedKalMailadres, $GebedKalOpmerkingen;
+
+	$data = array();	
+	$db = connect_db();
+		
+	$sql = "SELECT * FROM $TableGebedKalMailOverzicht WHERE $GebedsKalId = $id";
+
+	$result = mysqli_query($db, $sql);
+
+	if($row = mysqli_fetch_array($result)) {		
+		$data['categorie']	= $row[$GebedKalCategorie];
+		$data['contactpersoon']	= $row[$GebedKalContactPersoon];		
+		$data['mailadres']	= $row[$GebedKalMailadres];
+		$data['opmerking']	= $row[$GebedKalOpmerkingen];		
+	}
+	return $data;	
+}
+
+function getGebedkalAllItems() {
+	global $TableGebedKalMailOverzicht, $GebedsKalId, $GebedKalCategorie, $GebedKalContactPersoon, $GebedKalMailadres, $GebedKalOpmerkingen;
+
+	$data = array();	
+	$db = connect_db();
+		
+	$sql = "SELECT * FROM $TableGebedKalMailOverzicht ORDER BY $GebedKalCategorie";
+
+	$result = mysqli_query($db, $sql);
+	if($row = mysqli_fetch_array($result)) {
+		do {
+			$data[] = $row;
+		} while($row = mysqli_fetch_array($result));		
+	}
+	return $data;	
+}
 
 function addGroupLid($lidID, $commID) {
 	global $TableGrpUsr, $GrpUsrGroup, $GrpUsrUser;	
@@ -1632,7 +1680,7 @@ function determineAddressDistance($start, $end) {
 	$service = 'matrix';
 	$profile = 'driving';
 	
-	if($end == 'Mariënburghstraat 4, Deventer') {		
+	if($end == 'Mariï¿½nburghstraat 4, Deventer') {		
 		$latitude_end = '52.267184';
 		$longitude_end = '6.159086';
 	} else {

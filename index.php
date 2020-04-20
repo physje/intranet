@@ -232,6 +232,7 @@ if(in_array(1, getMyGroups($_SESSION['ID'])) OR in_array(36, getMyGroups($_SESSI
 	$gebedsLinks['gebedskalender/overzicht.php#'. date('d')] = 'Gebedskalender';
 	$gebedsLinks['gebedskalender/import.php'] = 'Import';
 	$gebedsLinks['gebedskalender/edit.php'] = 'Wijzig';
+	$gebedsLinks['gebedskalender/mailadressenOverzicht.php'] = 'Mailadressen overzicht';
 	
 	foreach($gebedsLinks as $link => $naam) {
 		$gebedsDeel[] = "<a href='$link' target='_blank'>$naam</a>";
