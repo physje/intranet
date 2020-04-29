@@ -84,6 +84,14 @@ do {
 			toLog('error', '', $scipioID, 'Kon inschrijving Trinitas niet syncen naar MailChimp');
 		}
 		
+		# + toevoegen aan Wekelijkse Trinitas
+		if(mc_addinterest($data['mail'], $ID_week_trinitas)) {
+			toLog('debug', '', $scipioID, 'Inschrijving wekelijkse Trinitas gesynced naar MailChimp');
+		} else {
+			toLog('error', '', $scipioID, 'Kon inschrijving wekelijkse Trinitas niet syncen naar MailChimp');
+		}
+		
+		
 		# + toevoegen aan wijkmails
 		if(mc_addinterest($data['mail'], $ID_wijkmails)) {
 			toLog('debug', '', $scipioID, 'Inschrijving wijkmails gesynced naar MailChimp');
