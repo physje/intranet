@@ -216,7 +216,6 @@ if(in_array(1, getMyGroups($_SESSION['ID']))) {
 	$koppelLinks['extern/makeiCal.php'] = 'Persoonlijke iCals aanmaken';
 	$koppelLinks['extern/makeiCalScipio.php'] = 'iCal voor Scipio aanmaken';
 	$koppelLinks['onderhoud/importOuderlingen.php'] = 'Importeer ambtsdragers';
-	//$koppelLinks['onderhoud/importSchriftlezer.php'] = 'Importeer schriftlezers';
 	$koppelLinks['scipio/ScipioImport.php'] = 'Scipio-data inladen';
 	
 	foreach($koppelLinks as $link => $naam) {
@@ -227,9 +226,10 @@ if(in_array(1, getMyGroups($_SESSION['ID']))) {
 }
 
 # Gebedskalender
-if(in_array(1, getMyGroups($_SESSION['ID'])) OR in_array(36, getMyGroups($_SESSION['ID']))) {
-	$gebedsDeel[] = "<b>Gebedskalender</b>";
-	$gebedsLinks['gebedskalender/overzicht.php#'. date('d')] = 'Gebedskalender';
+$gebedsDeel[] = "<b>Gebedskalender</b>";
+$gebedsLinks['gebedskalender/overzicht.php#'. date('d')] = 'Gebedskalender';
+
+if(in_array(1, getMyGroups($_SESSION['ID'])) OR in_array(36, getMyGroups($_SESSION['ID']))) {	
 	$gebedsLinks['gebedskalender/import.php'] = 'Import';
 	$gebedsLinks['gebedskalender/edit.php'] = 'Wijzig';
 	$gebedsLinks['gebedskalender/mailadressenOverzicht.php'] = 'Mailadressen overzicht';
@@ -259,7 +259,6 @@ $blockArray[] = implode("<br>".NL, $trinitasDeel);
 
 # Hyperlinks
 $links[] = "<b>Links</b>";
-//$links[] = "<a href='../../trinitas/' target='_blank'>Trinitas</a>";
 
 if(!in_array(1, getMyGroups($_SESSION['ID'])) AND !in_array(36, getMyGroups($_SESSION['ID']))) {
 	$links[] = "<a href='../gebedskalender/' target='_blank'>Gebedskalender</a>";
@@ -284,7 +283,7 @@ $site[] = "<a href='auth/objects/logout.php' target='_blank'>Uitloggen</a>";
 $blockArray[] = implode("<br>".NL, $site);
 
 
-# Jarigen
+# Jarigen vandaag
 $jarigen = getJarigen(date("d"), date("m"));
 if(count($jarigen) > 0) {
 	$jarig[] = "<b>Jarigen vandaag</b>";
@@ -296,7 +295,7 @@ if(count($jarigen) > 0) {
 }
 
 
-# Jarigen
+# Jarigen morgen
 $jarigen = getJarigen(date("d", (time()+(24*60*60))), date("m", (time()+(24*60*60))));
 if(count($jarigen) > 0) {
 	$morgen[] = "<b>Jarigen morgen</b>";
@@ -331,99 +330,4 @@ echo '</tr>'.NL;
 echo '</table>'.NL;
 echo $HTMLFooter;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//echo $_SESSION['ID'];
-
-/*
-# LINKS
-$links['account.php']					= 'Account';
-$links['archief.php']						= 'Archief';
-$links['search.php']						= 'Zoeken op woorden';
-$links['auth/objects/logout.php']										= 'Uitloggen';	
-
-foreach($links as $url => $titel) {
-	$blockLinks .= "<a href='$url' target='_blank'>$titel</a><br>\n";
-}
-
-$blockArray[] = $blockLinks;
-
-# BEHEERDER & ADMIN
-if($_SESSION['level'] >= 2) {
-	$beheer['exemplaar.php']	= 'Voeg exemplaar Trinitas toe';
-	$beheer['sendMail.php']	= 'Verstuur klaarstaande mail';
-	$beheer['stats.php']	= 'Bekijk download-statistieken';
-	$beheer['stats_user.php']	= 'Bekijk statistieken per gebruiker';
-			
-	$admin['new_account.php?adminAdd']	= 'Voeg account toe';
-		
-	if($_SESSION['level'] >= 3) {
-		$beheer['sendMail.php?testRun=true']	= 'Test klaarstaande mail';
-		
-		$admin['account.php?all']	= 'Toon alle accounts';
-		//$admin['renewHash.php']	= 'Vernieuw gebruikers-hash';
-		$admin['generateURL.php']	= 'Genereer URL';
-		$admin['log.php']	= 'Bekijk logfiles';
-	}
-		
-	foreach($beheer as $url => $titel) {
-		$blockBeheer .= "<a href='$url' target='_blank'>$titel</a><br>\n";
-	}
-
-	foreach($admin as $url => $titel) {
-		$blockAdmin .= "<a href='$url' target='_blank'>$titel</a><br>\n";
-	}
-		
-	$blockArray[] = $blockBeheer;
-	$blockArray[] = $blockAdmin;
-}
-
-//echo $HTMLHeader;
-//echo "<tr>\n";
-//
-//# Als er maar 1 blok is, is het mooier die gecentreerd te hebben
-//if($_SESSION['level'] == 1) {
-//	echo "<td width='25%' valign='top' align='center'>&nbsp;</td>\n";
-//	echo "<td width='50%' valign='center' align='center'>\n";
-//# Als er meer blokken zijn, dan gewoon in 2 kolommen bovenaan
-//} else {
-//	echo "<td width='50%' valign='top' align='center'>\n";
-//}
-//echo showBlock($blockLinks);
-//if($_SESSION['level'] == 1) {
-//	echo "</td>\n";
-//	echo "<td width='25%' valign='top' align='center'>&nbsp;</td>\n";
-//} else {
-//	echo "</td><td width='50%' valign='top' align='center'>\n";
-//	if(isset($blockBeheer)) {
-//		echo showBlock($blockBeheer);
-//	}	
-//	if(isset($blockAdmin)) {
-//		echo "<p>\n";
-//		echo showBlock($blockAdmin);
-//	}	
-//	echo "</td>\n";	
-//}
-//echo "</tr>\n";
-//echo $HTMLFooter;
-
-verdeelBlokken($blockArray);
-*/
 ?>

@@ -167,11 +167,15 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 				toLog('info', '', $element->regnr, 'Wijziging Scipio wijk: '. $oldData['wijk'] .' -> '. $velden[$UserWijk]);
 			}
 			
+			if($oldData['relatie'] != $velden[$UserRelatie]) {
+				$changedData['relatie'] = true;
+				toLog('info', '', $element->regnr, 'Wijziging Scipio relatie: '. $oldData['relatie'] .' -> '. $velden[$UserRelatie]);
+			}
+			
 			# Andere variabelen
 			if($oldData['huisletter'] != $velden[$UserHuisletter])								toLog('info', '', $element->regnr, 'Wijziging Scipio huisletter: '. $oldData['huisletter'] .' -> '. $velden[$UserHuisletter]);
 			if($oldData['toevoeging'] != $velden[$UserToevoeging])								toLog('info', '', $element->regnr, 'Wijziging Scipio toevoeging: '. $oldData['toevoeging'] .' -> '. $velden[$UserToevoeging]);
-			if($oldData['burgelijk'] != $velden[$UserBurgelijk])									toLog('info', '', $element->regnr, 'Wijziging Scipio burgerlijk: '. $oldData['burgerlijk'] .' -> '. $velden[$UserBurgelijk]);
-			if($oldData['relatie'] != $velden[$UserRelatie])											toLog('info', '', $element->regnr, 'Wijziging Scipio relatie: '. $oldData['relatie'] .' -> '. $velden[$UserRelatie]);
+			if($oldData['burgelijk'] != $velden[$UserBurgelijk])									toLog('info', '', $element->regnr, 'Wijziging Scipio burgerlijk: '. $oldData['burgerlijk'] .' -> '. $velden[$UserBurgelijk]);			
 			if($oldData['belijdenis'] != $velden[$UserBelijdenis])								toLog('info', '', $element->regnr, 'Wijziging Scipio belijdenis: '. $oldData['belijdenis'] .' -> '. $velden[$UserBelijdenis]);
 			if(addslashes($oldData['achternaam']) != $velden[$UserAchternaam])		toLog('info', '', $element->regnr, 'Wijziging Scipio achternaam: '. $oldData['achternaam'] .' -> '. $velden[$UserAchternaam]);
 			if(addslashes($oldData['meisjesnaam']) != $velden[$UserMeisjesnaam])	toLog('info', '', $element->regnr, 'Wijziging Scipio meisjesnaam: '. $oldData['meisjesnaam'] .' -> '. $velden[$UserMeisjesnaam]);
@@ -196,6 +200,9 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 				//if(isset($changedData['status']) AND $velden[$UserStatus] == 'overleden')										$temp[] = "Overleden";
 				if(isset($changedData['status']))																														$temp[] = ucfirst($velden[$UserStatus]);
 								
+				# relatie
+				if(isset($changedData['relatie']))																													$temp[] = "Kerkelijke status gewijzigd van ". $oldData['relatie'] .' naar '. $velden[$UserRelatie];
+				
 				# Ander telefoonnummer
 				if(isset($changedData['tel']) AND $velden[$UserTelefoon] != '' AND $oldData['tel'] !== '')	$temp[] = "Telefoonnummer gewijzigd van ".$oldData['tel'] .' naar '. $velden[$UserTelefoon];
 				if(isset($changedData['tel']) AND $velden[$UserTelefoon] == '')															$temp[] = "Telefoonnummer ". $oldData['tel'] ." verwijderd";
