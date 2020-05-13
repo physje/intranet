@@ -467,7 +467,7 @@ function addGebedkalItem($categorie, $contactpersoon, $mailadres, $opmerking) {
 	global $TableGebedKalMailOverzicht, $GebedKalCategorie, $GebedKalContactPersoon, $GebedKalMailadres, $GebedKalOpmerkingen;
 	$db = connect_db();
 
-	$sql = "INSERT INTO $TableGebedKalMailOverzicht ($GebedKalCategorie, $GebedKalContactPersoon, $GebedKalMailadres, $GebedKalOpmerkingen) VALUES ($categorie, $contactpersoon, $mailadres, $opmerking)";
+	$sql = "INSERT INTO $TableGebedKalMailOverzicht ($GebedKalCategorie, $GebedKalContactPersoon, $GebedKalMailadres, $GebedKalOpmerkingen) VALUES ('$categorie', '$contactpersoon', '$mailadres', '$opmerking')";
 				
 	if(mysqli_query($db, $sql)) {
 		return true;

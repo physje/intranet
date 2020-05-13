@@ -8,6 +8,17 @@ $cfgProgDir = '../auth/';
 $requiredUserGroups = array(1, 36);
 include($cfgProgDir. "secure.php");
 
+// Opslaan van het nieuw ingevoerde contact
+if (isset($_REQUEST['save_new_contact'])) {
+    $categorie = $_POST["fcategorie"];
+    if ($categorie == 'Kies een categorie'|| $categorie =='anders...') {
+        $categorie = $_POST['fcategorienew'];
+    }
+    if (!addGebedkalItem($categorie, $_POST["fnaam"], $_POST["fmailadres"], $_POST["fopmerking"])) {
+        echo "failed to save contact";
+    }
+}
+
 // Get gebedskalender contacten
 $contacten = getGebedkalAllItems();
 
@@ -17,7 +28,25 @@ $kalContactpersoon = array_column($contacten, $GebedKalContactPersoon);
 array_multisort($kalCategorie, SORT_ASC, $kalContactpersoon, SORT_ASC, $contacten);
 
 if(isset($_REQUEST['edit'])) {
-    $block[] = "TODO: webpagina met mogelijkheid tot toevoegen van nieuwe contactpersonen en wijzigen van bestaande contactpersonen";
+    $block[] = "In progress: webpagina met mogelijkheid tot toevoegen van nieuwe contactpersonen en wijzigen van bestaande contactpersonen";
+    $categories = array_unique($kalCategorie);
+    
+    // Voeg nieuwe contact toe formulier
+    $block[] = "<form method='post' action='$_SERVER[PHP_SELF]'>";
+    $block[] = "<select name='fcategorie' onchange='CheckCategorie(this.value);'>";
+    $block[] = "<option>Kies een categorie</option>";
+    foreach ($categories as $categorie) {
+        $block[] = "<option>".$categorie."</option>";
+    }
+    $block[] = "<option>anders...</option>";
+    $block[] = "</select>";
+    $block[] = "<input type='text' name='fcategorienew' id='categorie' style='display:none;'>";
+    $block[] = "<input type='text' value='Naam' name='fnaam'>";
+    $block[] = "<input type='text' value='Mailadres' name='fmailadres'>";
+    $block[] = "<input type='text' value='Opmerking' name='fopmerking'>";
+    $block[] = "<input type='submit' value='Nieuw contact opslaan' name='save_new_contact'>";
+    $block[] = "</form>";
+
 } else {
     // Maak html block met de contactgegevens
     $block[] = '<h3>Gebedskalender mailadressen overzicht</h3>';
@@ -71,3 +100,13 @@ echo '</table>'.NL;
 echo $HTMLFooter;
 
 ?>
+
+<script type="text/javascript">
+function CheckCategorie(val){
+ var element=document.getElementById('categorie');
+ if(val=='Kies een categorie'||val=='anders...')
+   element.style.display='block';
+ else  
+   element.style.display='none';
+}
+</script>
