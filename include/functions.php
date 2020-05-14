@@ -463,6 +463,20 @@ function getBeheerder($groep) {
 #	return $row[$GroupBeheer];	
 #}
 
+function updateGebedkalItemById($id, $categorie, $contactpersoon, $mailadres, $opmerking)
+{
+	global $GebedsKalId, $TableGebedKalMailOverzicht, $GebedKalCategorie, $GebedKalContactPersoon, $GebedKalMailadres, $GebedKalOpmerkingen;
+	$db = connect_db();
+
+	$sql = "UPDATE $TableGebedKalMailOverzicht SET $GebedKalCategorie='$categorie', $GebedKalContactPersoon='$contactpersoon', $GebedKalMailadres='$mailadres', $GebedKalOpmerkingen='$opmerking' WHERE $GebedsKalId=$id";
+				
+	if(mysqli_query($db, $sql)) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
 function addGebedkalItem($categorie, $contactpersoon, $mailadres, $opmerking) {
 	global $TableGebedKalMailOverzicht, $GebedKalCategorie, $GebedKalContactPersoon, $GebedKalMailadres, $GebedKalOpmerkingen;
 	$db = connect_db();
@@ -510,6 +524,18 @@ function getGebedkalAllItems() {
 		} while($row = mysqli_fetch_array($result));		
 	}
 	return $data;	
+}
+
+function removeGebedkalItem($ID) {
+	global $TableGebedKalMailOverzicht, $GebedsKalId;	
+	$db = connect_db();
+	
+	$sql = "DELETE FROM $TableGebedKalMailOverzicht WHERE $GebedsKalId = '$ID'";
+	if(mysqli_query($db, $sql)) {
+		return true;
+	} else {
+		return false;
+	}
 }
 
 function addGroupLid($lidID, $commID) {
