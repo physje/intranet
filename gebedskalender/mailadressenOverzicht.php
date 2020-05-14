@@ -10,12 +10,16 @@ include($cfgProgDir. "secure.php");
 
 // Opslaan van het nieuw ingevoerde contact
 if (isset($_REQUEST['save_new_contact'])) {
-    $categorie = $_POST["fcategorie"];
-    if ($categorie == 'Kies een categorie'|| $categorie =='anders...') {
-        $categorie = $_POST['fcategorienew'];
-    }
-    if (!addGebedkalItem($categorie, $_POST["fnaam"], $_POST["fmailadres"], $_POST["fopmerking"])) {
-        echo "failed to save contact";
+    if(!empty($_POST["fcategorie"]) AND !empty($_POST["fnaam"]) AND !empty($_POST["fmailadres"])) {
+        $categorie = $_POST["fcategorie"];
+        if ($categorie == 'Kies een categorie'|| $categorie =='anders...') {
+            $categorie = $_POST['fcategorienew'];
+        }
+        if (!addGebedkalItem($categorie, $_POST["fnaam"], $_POST["fmailadres"], $_POST["fopmerking"])) {
+            echo "failed to save contact";
+        }
+    } else {
+        echo "Missende variabelen";
     }
 }
 
@@ -28,28 +32,40 @@ $kalContactpersoon = array_column($contacten, $GebedKalContactPersoon);
 array_multisort($kalCategorie, SORT_ASC, $kalContactpersoon, SORT_ASC, $contacten);
 
 if(isset($_REQUEST['edit'])) {
-    $block[] = "In progress: webpagina met mogelijkheid tot toevoegen van nieuwe contactpersonen en wijzigen van bestaande contactpersonen";
+    $block[] = "<h1>Gebedskalender mailadressen overzicht - edit</h1>";
+    $block[] = "In het eerste veld kan een nieuw contactpersoon opgeslagen worden, in het tweede veld kan de lijst met contactpersonen worden aangepast. <br><br>";
     $categories = array_unique($kalCategorie);
     
     // Voeg nieuwe contact toe formulier
-    $block[] = "<form method='post' action='$_SERVER[PHP_SELF]'>";
-    $block[] = "<select name='fcategorie' onchange='CheckCategorie(this.value);'>";
+    $block[] = "<form method='post' action='$_SERVER[PHP_SELF]' >";
+    $block[] = "<fieldset><legend><b>Nieuw contact toevoegen</b></legend>";
+    $block[] = "<br><table>";
+    $block[] = "<tr><td><label type='label'>Categorie</label></td>";
+    $block[] = "<td></td><td><select name='fcategorie' onchange='CheckCategorie(this.value);'>";
     $block[] = "<option>Kies een categorie</option>";
     foreach ($categories as $categorie) {
         $block[] = "<option>".$categorie."</option>";
     }
     $block[] = "<option>anders...</option>";
-    $block[] = "</select>";
-    $block[] = "<input type='text' name='fcategorienew' id='categorie' style='display:none;'>";
-    $block[] = "<input type='text' value='Naam' name='fnaam'>";
-    $block[] = "<input type='text' value='Mailadres' name='fmailadres'>";
-    $block[] = "<input type='text' value='Opmerking' name='fopmerking'>";
-    $block[] = "<input type='submit' value='Nieuw contact opslaan' name='save_new_contact'>";
-    $block[] = "</form>";
+    $block[] = "</select></td>";
+    $block[] = "<td><input type='text' name='fcategorienew' id='categorie' style='display:none;'></td></tr>";
+    $block[] = "<tr><td><label type='label'>Naam</label></td>";
+    $block[] = "<td width=50></td><td colspan=2><input type='text' name='fnaam' size=45></td></tr>";
+    $block[] = "<tr><td><label type='label'>Mailadres</label></td>";
+    $block[] = "<td></td><td colspan=2><input type='text' name='fmailadres' size=45></td></tr>";
+    $block[] = "<tr><td><label type='label'>Opmerking</label></td>";
+    $block[] = "<td></td><td colspan=2><input type='text' name='fopmerking' size=45></td></tr>";
+    $block[] = "<tr><td></td><td></td><td><input type='submit' value='Nieuw contact opslaan' name='save_new_contact'></td></tr>";
+    $block[] = "</table>";
+    $block[] = "</fieldset></form>";
 
+    // Knop om naar mailadressen overzicht te gaan
+    $block[] = "<form method='post' action='$_SERVER[PHP_SELF]'>";
+    $block[] = "<br><input type='submit' value='Annuleer' name='main'>";
+    $block[] = "</form>";
 } else {
     // Maak html block met de contactgegevens
-    $block[] = '<h3>Gebedskalender mailadressen overzicht</h3>';
+    $block[] = '<h1>Gebedskalender mailadressen overzicht</h1>';
     $block[] = 'Overzicht met contactpersonen en bijbehorende emailadressen die gebruikt kunnen worden voor het vragen naar input voor de gebedskalender<br><br><br>';
     $block[] = "<table border=1>";
     $block[] = "<tr><th>".ucfirst($GebedKalCategorie)."</th><th>".ucfirst($GebedKalContactPersoon)."</th><th>".ucfirst($GebedKalMailadres)."</th><th>".ucfirst($GebedKalOpmerkingen)."</th></tr>";
