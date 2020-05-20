@@ -988,8 +988,8 @@ function sendMail_new($parameter) {
 				$mail->AddCC($UserMail, makeName($ontvanger[0], 5));
 				toLog('debug', '', $ontvanger[0], makeName($ontvanger[0], 5) .' in de CC opgenomen');
 			} elseif(count($ontvanger) == 2) {
-				$naam = $ontvanger[0];
-				$address = $ontvanger[1];
+				$address = $ontvanger[0];
+				$naam = $ontvanger[1];				
 				$mail->AddCC($address, $naam);
 				toLog('debug', '', '', $naam .' ('. $address .') in de CC opgenomen');
 			} elseif(count($ontvanger) == 1 AND !is_numeric($ontvanger[0])) {  

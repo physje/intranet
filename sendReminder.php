@@ -8,8 +8,11 @@ $db = connect_db();
 
 # Omdat de server deze dagelijks moet draaien wordt toegang niet gedaan op basis
 # van naam+wachtwoord maar op basis van IP-adres
-if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
-//if(true) {
+
+# In verband met Corona moeten er even geen mails verstuurd worden.
+# Daarom de boel hard uitgezet
+if(false) {
+//if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 	$startTijd = mktime(0, 0, 0, date("n"), (date("j")+3), date("Y"));
 	$eindTijd = mktime(23, 59, 59, date("n"), (date("j")+3), date("Y"));
 
@@ -140,7 +143,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 		}
 	}
 } else {
-	toLog('error', '', 'Poging handmatige run remindermail, IP:'.$_SERVER['REMOTE_ADDR']);
+	//toLog('error', '', 'Poging handmatige run remindermail, IP:'.$_SERVER['REMOTE_ADDR']);
 }
 
 ?>
