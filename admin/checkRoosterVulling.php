@@ -101,7 +101,11 @@ foreach($roosters as $rooster) {
 				# 2-12 mail -> $verlopen = true; lastWarning = true
 				# 9-12 geen mail -> $verlopen = true; lastWarning = false
       	
-				if((!$verlopen OR $lastWarning) AND $deadline> 0) {
+      	
+				# In verband met Corona moeten er even geen mails verstuurd worden.
+				# Daarom de boel hard uitgezet
+				if(false) {
+				//if((!$verlopen OR $lastWarning) AND $deadline> 0) {
 					# geadresseerden
 					$beheerders = array();
 					$beheerders = getGroupMembers($roosterData['beheerder']);
