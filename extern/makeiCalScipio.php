@@ -60,13 +60,13 @@ if($row_dienst = mysqli_fetch_array($result_dienst)) {
 		if($data_dienst['collecte_2'] != '')	{ $CollecteString .= '\n2. '. $data_dienst['collecte_2']; }
 		
 		
-		$DESCRIPTION = "Voorganger: ". makeVoorgangerName($data_dienst['voorganger_id'], 4) ."\n";
-		$DESCRIPTION .= "Muziek: Erik Janssen\n";
-		$DESCRIPTION .= "Collecte: ". $data_dienst['collecte_1'] ."\n";
-		$DESCRIPTION .= "Voorbede: Gerard Zijlstra\n";
-		$DESCRIPTION .= "Techniek: Ronald Oomen\n";
-		$DESCRIPTION .= "Montage: Barend Schimmel\n";
-		$DESCRIPTION .= "Cluster/contact: Aleida Heres";
+		$DESCRIPTION = 'Voorganger: '. makeVoorgangerName($data_dienst['voorganger_id'], 4) .'\n';
+		$DESCRIPTION .= 'Muziek: Erik Janssen\n';
+		$DESCRIPTION .= 'Collecte: '. $data_dienst['collecte_1'] .'\n';
+		$DESCRIPTION .= 'Voorbede: Gerard Zijlstra\n';
+		$DESCRIPTION .= 'Techniek: Ronald Oomen\n';
+		$DESCRIPTION .= 'Montage: Barend Schimmel\n';
+		$DESCRIPTION .= 'Cluster/contact: Aleida Heres';
 		
 		if($data_dienst['liturgie'] != '') {
 			$DESCRIPTION .= 'LITURGIE\n'. str_replace("\r\n", '\n', $data_dienst['liturgie']);
