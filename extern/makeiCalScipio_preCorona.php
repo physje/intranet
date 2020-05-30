@@ -50,8 +50,14 @@ if($row_dienst = mysqli_fetch_array($result_dienst)) {
 		
 		if($data_dienst['bijzonderheden'] != "") { $postfix = ' - '.$data_dienst['bijzonderheden']; } else { $postfix = ''; }
 				
-		$ics[] = "SUMMARY:Kerkdienst";
-				
+		if(date("H", $data_dienst['start']) < 12) {
+			$ics[] = "SUMMARY:Ochtenddienst ". $data_dienst['voorganger'].$postfix;
+		} elseif(date("H", $data_dienst['start']) < 18) {
+			$ics[] = "SUMMARY:Middagdienst ". $data_dienst['voorganger'].$postfix;
+		} else {
+			$ics[] = "SUMMARY:Avonddienst ". $data_dienst['voorganger'].$postfix;
+		}
+		
 		# Initialiseer
 		$DESCRIPTION = $CollecteString = '';
 		
@@ -59,19 +65,77 @@ if($row_dienst = mysqli_fetch_array($result_dienst)) {
 		if($data_dienst['collecte_1'] != '')	{ $CollecteString .= '1. '. $data_dienst['collecte_1']; }
 		if($data_dienst['collecte_2'] != '')	{ $CollecteString .= '\n2. '. $data_dienst['collecte_2']; }
 		
+		# Controleren op gelijke diensten
+		$tmpDienst = array();
+		foreach($diensten as $tmp) { $tmpDienst[] = "$PlanningDienst = $tmp"; }
 		
-		$DESCRIPTION = "Voorganger: ". makeVoorgangerName($data_dienst['voorganger_id'], 4) ."\n";
-		$DESCRIPTION .= "Muziek: Erik Janssen\n";
-		$DESCRIPTION .= "Collecte: ". $data_dienst['collecte_1'] ."\n";
-		$DESCRIPTION .= "Voorbede: Gerard Zijlstra\n";
-		$DESCRIPTION .= "Techniek: Ronald Oomen\n";
-		$DESCRIPTION .= "Montage: Barend Schimmel\n";
-		$DESCRIPTION .= "Cluster/contact: Aleida Heres";
+		# Roosters (leden) opvragen
+		$sql_roosters = "SELECT * FROM $TableRoosters, $TablePlanning WHERE (". implode(' OR ', $tmpDienst) .") AND $TablePlanning.$PlanningGroup = $TableRoosters.$RoostersID GROUP BY $TablePlanning.$PlanningGroup ORDER BY $TableRoosters.$RoostersNaam";	
+		$result_roosters = mysqli_query($db, $sql_roosters);
+		if($row_roosters = mysqli_fetch_array($result_roosters)) {			
+			$RoosterString = '';
 		
-		if($data_dienst['liturgie'] != '') {
-			$DESCRIPTION .= 'LITURGIE\n'. str_replace("\r\n", '\n', $data_dienst['liturgie']);
-		}
+			do {
+				$rooster = $row_roosters[$PlanningGroup];			
+				$data_rooster = getRoosterDetails($rooster);
 				
+				if($data_rooster['gelijk'] == 1) {					
+					$sql_persoon = "SELECT * FROM $TablePlanning WHERE $PlanningGroup = $rooster AND (". implode(' OR ', $tmpDienst) .")";
+				} else {
+					$sql_persoon = "SELECT * FROM $TablePlanning WHERE $PlanningGroup = $rooster AND $PlanningDienst = $dienst";
+				}
+				$result_persoon = mysqli_query($db, $sql_persoon);
+								
+				if($row_persoon = mysqli_fetch_array($result_persoon)) {
+					$personen = array();
+					
+					do {
+						$personen[] = makeName($row_persoon[$PlanningUser], 5);
+					} while($row_persoon = mysqli_fetch_array($result_persoon));
+					
+					$RoosterString .= $data_rooster[$RoostersNaam] .'\n- '. implode('\n- ', $personen) .'\n\n';
+				}
+			} while($row_roosters = mysqli_fetch_array($result_roosters));
+			
+			
+			# Roosters (tekst) opvragen
+			# Let-op : lelijk opgelost, om te checken of er meerdere diensten op 1 zondag zijn hergebruik ik de array van het andere rooster
+			# Dit werkt bij de gratie dat ze dezelfde naam hebben... lelijk
+			$sql_txt_roosters = "SELECT * FROM $TablePlanningTxt WHERE (". implode(' OR ', $tmpDienst) .")";
+			$result_txt_roosters = mysqli_query($db, $sql_txt_roosters);
+			if($row_txt_roosters = mysqli_fetch_array($result_txt_roosters)) {
+				do {
+					$rooster = $row_txt_roosters[$PlanningTxTGroup];			
+					$data_txt_rooster = getRoosterDetails($rooster);
+					
+					if($data_txt_rooster['gelijk'] == 1) {					
+						$sql_text = "SELECT * FROM $TablePlanningTxt WHERE (". implode(' OR ', $tmpDienst) .") AND $PlanningTxTGroup = $rooster";
+					} else {
+						$sql_text = "SELECT * FROM $TablePlanningTxt WHERE $PlanningTxTDienst = $dienst AND $PlanningTxTGroup = $rooster";
+					}
+					
+					$result_text = mysqli_query($db, $sql_text);				
+					if($row_text = mysqli_fetch_array($result_text)) {
+						$vulling = getRoosterVulling($rooster, $row_text[$PlanningTxTDienst]);
+						
+						$RoosterString .= $data_txt_rooster[$RoostersNaam] .'\n'. $vulling .'\n\n';
+					}
+				} while($row_txt_roosters = mysqli_fetch_array($result_txt_roosters));
+			}
+									
+			if($CollecteString != '') {
+				$DESCRIPTION = 'COLLECTEN\n'. $CollecteString.'\n\n';
+			}
+			
+			if($RoosterString != '') {
+				$DESCRIPTION .= 'ROOSTERS\n'. $RoosterString;
+			}
+
+			if($data_dienst['liturgie'] != '') {
+				$DESCRIPTION .= 'LITURGIE\n'. str_replace("\r\n", '\n', $data_dienst['liturgie']);
+			}
+		}
+		
 		$ics[] = 'DESCRIPTION:'.$DESCRIPTION;
 		$ics[] = "STATUS:CONFIRMED";	
 		$ics[] = "TRANSP:TRANSPARENT";
