@@ -1,6 +1,6 @@
 <?php
-include_once('../include/config.php');
 include_once('../include/functions.php');
+include_once('../include/config.php');
 
 # Rooster inlezen
 $roosterURL = 'https://docs.google.com/spreadsheets/d/1ZTJ9lzhxNk5PDQCBcLVAwjF-76fVytydW5v6pFTf-yk/pub?output=csv';

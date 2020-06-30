@@ -30,13 +30,12 @@ $header[] = "END:VTIMEZONE";
 $footer[] = "END:VCALENDAR";
 
 $sql = "SELECT * FROM $TablePunten WHERE $PuntenDatum >= '". date("Y-m-d", (time()-(7*24*60*60))) ."'";
-//$sql = "SELECT * FROM $TablePunten";
 $result = mysqli_query($db, $sql);
 if($row = mysqli_fetch_array($result)) {
 	do {
 		$start = strtotime($row[$PuntenDatum]);
 		$einde = $start + (24*60*60) - 5;
-		$gebedspunt = urldecode($row[$PuntenPunt]);
+		$gebedspunt = str_replace(array("\r", "\n"), '', urldecode($row[$PuntenPunt]));
 				
 		$ics[] = "BEGIN:VEVENT";	
 		$ics[] = "UID:gebedskalender-". $row[$PuntenDatum];

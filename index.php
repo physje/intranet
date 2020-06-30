@@ -153,7 +153,7 @@ if(in_array(1, getMyGroups($_SESSION['ID']))) {
 	
 	$adminLinks['admin/generateUsernames.php'] = 'Gebruikersnamen aanmaken';
 	$adminLinks['admin/generateDiensten.php'] = 'Kerkdiensten aanmaken';
-	$adminLinks['admin/editDiensten.php'] = 'Kerkdiensten wijzigen';	
+	$adminLinks['editDiensten.php'] = 'Kerkdiensten wijzigen';	
 	$adminLinks['admin/editGroepen.php'] = 'Groepen wijzigen';	
 	$adminLinks['admin/editRoosters.php'] = 'Roosters wijzigen';	
 	$adminLinks['admin/editWijkteams.php'] = 'Wijkteams wijzigen';	

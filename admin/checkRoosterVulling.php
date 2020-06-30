@@ -104,8 +104,8 @@ foreach($roosters as $rooster) {
       	
 				# In verband met Corona moeten er even geen mails verstuurd worden.
 				# Daarom de boel hard uitgezet
-				if(false) {
-				//if((!$verlopen OR $lastWarning) AND $deadline> 0) {
+				//if(false) {
+				if((!$verlopen OR $lastWarning) AND $deadline> 0) {
 					# geadresseerden
 					$beheerders = array();
 					$beheerders = getGroupMembers($roosterData['beheerder']);

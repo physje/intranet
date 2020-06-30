@@ -11,8 +11,8 @@ $db = connect_db();
 
 # In verband met Corona moeten er even geen mails verstuurd worden.
 # Daarom de boel hard uitgezet
-if(false) {
-//if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
+//if(false) {
+if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 	$startTijd = mktime(0, 0, 0, date("n"), (date("j")+3), date("Y"));
 	$eindTijd = mktime(23, 59, 59, date("n"), (date("j")+3), date("Y"));
 
