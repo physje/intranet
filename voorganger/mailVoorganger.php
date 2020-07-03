@@ -12,10 +12,7 @@ $sendTestMail = false;
 # Omdat de server deze dagelijks moet draaien wordt toegang niet gedaan op basis
 # van naam+wachtwoord maar op basis van IP-adres
 
-# In verband met Corona moeten er even geen mails verstuurd worden.
-# Daarom de boel hard uitgezet
-if(false) {
-//if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
+if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 	$startTijd	= mktime(0, 0, 0, date("n"), (date("j")+18), date("Y"));
 	$eindTijd		= mktime(23, 59, 59, date("n"), (date("j")+18), date("Y"));	
 	$diensten		= getKerkdiensten($startTijd, $eindTijd);
@@ -145,6 +142,6 @@ if(false) {
 		}
 	}
 } else {
-	//toLog('error', '', '', 'Poging handmatige run vorgangermail, IP:'.$_SERVER['REMOTE_ADDR']);
+	toLog('error', '', '', 'Poging handmatige run vorgangermail, IP:'.$_SERVER['REMOTE_ADDR']);
 }
 ?>
