@@ -44,3 +44,9 @@ a.inactief {
 a.ontrokken {
 	text-decoration:line-through;
 }
+
+.melding {
+	color:red;
+	font-size:14px;
+	font-weight:bold;
+}
