@@ -1,5 +1,5 @@
 <?php
-include_once('../../../general_include/class.phpmailer.php');
+include_once('../include/class.phpmailer.php');
 include_once('../include/functions.php');
 include_once('../include/EB_functions.php');
 include_once('../include/config.php');

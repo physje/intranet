@@ -1,5 +1,5 @@
 <?php
-include_once('../../../general_include/class.phpmailer.php');
+include_once('../include/class.phpmailer.php');
 include_once('../include/functions.php');
 include_once('../include/EB_functions.php');
 include_once('../include/config.php');
@@ -36,7 +36,7 @@ if(isset($_POST['reis_van']))		$page[] = "<input type='hidden' name='reis_van' v
 if(isset($_POST['reis_naar']))	$page[] = "<input type='hidden' name='reis_naar' value='". trim($_POST['reis_naar']) ."'>";
 if(isset($_POST['reiskosten']))	$page[] = "<input type='hidden' name='reiskosten' value='". trim($_POST['reiskosten']) ."'>";
 if(isset($_POST['km']))					$page[] = "<input type='hidden' name='km' value='". trim($_POST['km']) ."'>";
-if(isset($_FILES['bijlage']))		$page[] = "<input type='hidden' name='bijlage' value='". trim($_FILES['bijlage']['tmp_name']) ."'>";
+if(isset($_FILES['bijlage']))		$page[] = "<input type='hidden' name='bijlage' value='". trim($_FILES['bijlage']['tmp_name']) ."'>\n<input type='hidden' name='bijlage_naam' value='". trim($_FILES['bijlage']['name']) ."'>";
 if(isset($_POST['overig']))	{
 	foreach($_POST['overig'] as $key => $string) {
 		if($string != '') {
@@ -57,12 +57,16 @@ if(isset($_POST['eigen_nee'])) {
 	$page[] = "</table>";		
 } elseif(isset($_POST['eigen_ja'])) {	
 	$thuisAdres = $gebruikersData['straat'].' '.$gebruikersData['huisnummer'].', '.ucwords(strtolower($gebruikersData['plaats']));
+	$meldingCluster = $meldingDeclaratie = $meldingBestand = '';
+	
+	$EBIBAN = eb_getRelatieIbanById($gebruikersData['relatie']);
 		
 	$cluster		= getParam('cluster');
 	$reis_van 	= getParam('reis_van', $thuisAdres);
 	$reis_naar	= getParam('reis_naar');
 	$overige 		= getParam('overig', array());
-			
+	$iban 			= getParam('iban', $EBIBAN);
+				
 	# Check op correct ingevulde velden	
 	if(isset($_POST['screen_2'])) {
 		$checkFields = true;
@@ -96,14 +100,31 @@ if(isset($_POST['eigen_nee'])) {
 	
 	
 	if($checkFields) {
-		$page[] = "Prima";
+		$page[] = "<input type='hidden' name='page' value='3'>";
+		$page[] = "<table border=0>";
+		$page[] = "<tr>";
+		$page[] = "		<td colspan='2'>U staat op het punt de volgende declaratie in te dienen:</td>";
+		$page[] = "</tr>";
+		$page[] = "<tr>";
+		$page[] = "		<td>Naam:</td>";
+		$page[] = "		<td>". makeName($_SESSION['ID'], 5) ."</td>";
+		$page[] = "</tr>";
+		$page[] = "<tr>";
+		$page[] = "		<td>Emailadres:</td>";
+		$page[] = "		<td>". getMailAdres($_SESSION['ID']) ."</td>";
+		$page[] = "</tr>";
+		$page[] = "<tr>";
+		$page[] = "		<td>Cluster onderdeel:</td>";
+		$page[] = "		<td>". $clusters[$cluster] ."</td>";
+		$page[] = "</tr>";
+		$page[] = "</table>";		
 	} else {
 		# Scherm 1
 		$first = true;
 		$totaal = 0;
 		
 		$page[] = "<input type='hidden' name='page' value='2'>";
-		$page[] = "<table border=0>";
+		$page[] = "<table border=1>";
 		$page[] = "<tr>";
 		$page[] = "	<td colspan='2'>Welk cluster of onderdeel?</td>";	
 		$page[] = "	<td><select name='cluster'>";
@@ -220,8 +241,16 @@ if(isset($_POST['eigen_nee'])) {
 		$page[] = "	<td colspan='4'>&nbsp;</td>";
 		$page[] = "</tr>";		
 		$page[] = "<tr>";
-		$page[] = "	<td align='left' colspan='2'><input type='submit' name='screen_1' value=\"Voeg extra 'Overige kosten' toe\"></td>";
-		$page[] = "	<td align='right' colspan='2'><input type='submit' name='screen_2' value='Volgende'></td>";	
+		$page[] = "	<td colspan='4'><b>Rekeningnummer</b></td>";
+		$page[] = "</tr>";
+		$page[] = "<tr>";
+		$page[] = "	<td colspan='3'><input type='text' name='iban' value='$iban'></td>";
+		$page[] = "	<td>&nbsp;</td>";
+		$page[] = "</tr>";
+		$page[] = "<tr>";
+		$page[] = "	<td align='left'><input type='submit' name='screen_0' value='Vorige'></td>";
+		$page[] = "	<td colspan='2'><input type='submit' name='screen_1' value=\"Voeg extra 'Overige kosten' toe\"></td>";
+		$page[] = "	<td align='right'><input type='submit' name='screen_2' value='Volgende'></td>";	
 		$page[] = "</tr>";
 		$page[] = "</table>";
 	}
