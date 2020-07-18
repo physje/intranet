@@ -6,6 +6,9 @@ define("NL", "\n");
 # e-boekhouden is kieskeurig, dus alleen de tijd
 setlocale(LC_TIME, 'nl_NL');
 
+# Mocht er geen timezone bekend zijn : Europe/Amsterdam
+date_default_timezone_set('Europe/Amsterdam');
+
 # Tabel- en veldnamen voor de verschillende tabellen in MySQL
 $TableUsers										= "leden";
 $UserID												= "scipio_id";
@@ -238,12 +241,12 @@ $MailID												= "id";
 $MailTime											= "tijd";
 $MailMail											= "bericht";
 
-$TableGebedKalMailOverzicht                     = "GebedKal_mailoverzicht";
-$GebedsKalId                                    = "id";
-$GebedKalCategorie                              = "categorie";
-$GebedKalContactPersoon                         = "contactpersoon";
-$GebedKalMailadres                              = "mailadres";
-$GebedKalOpmerkingen                            = "opmerking";
+$TableGebedKalMailOverzicht   = "GebedKal_mailoverzicht";
+$GebedsKalId                  = "id";
+$GebedKalCategorie            = "categorie";
+$GebedKalContactPersoon       = "contactpersoon";
+$GebedKalMailadres            = "mailadres";
+$GebedKalOpmerkingen          = "opmerking";
                     					
 $ArchiveDir										= 'trinitas';
 
