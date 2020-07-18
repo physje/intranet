@@ -840,7 +840,9 @@ function sendMail($ontvanger, $subject, $bericht, $var) {
 
 
 function sendMail_new($parameter) {
-	global $ScriptURL, $ScriptMailAdress, $ScriptTitle, $SubjectPrefix, $MailHeader, $MailFooter;
+	global $ScriptURL, $ScriptMailAdress, $ScriptTitle, $SubjectPrefix;
+	global $MailHeader, $MailFooter;
+	global $SMTPHost, $SMTPPort, $SMTPSSL, $SMTPUsername, $SMTPPassword;
 	global $db, $TableMail, $MailTime, $MailMail;
 	
 	# $parameter['to']
@@ -909,8 +911,15 @@ function sendMail_new($parameter) {
 		toLog('debug', '', '', 'ouders in de CC = '. $ouderCC);
 	}	
 	
-	$mail = new PHPMailer;
-	
+	$mail = new PHPMailer\PHPMailer\PHPMailer;
+	$mail->isSMTP();
+	$mail->Host				= $SMTPHost;
+	$mail->Port       = $SMTPPort;
+	$mail->SMTPSecure = $SMTPSSL;
+	$mail->SMTPAuth   = true;
+	$mail->Username		= $SMTPUsername;
+	$mail->Password		= $SMTPPassword;
+			
 	if(isset($parameter['from']) AND $parameter['from'] != '') {
 		$mail->From = $parameter['from'];
 		toLog('debug', '', '', 'Afzenderadres is gezet op '. $parameter['from']);

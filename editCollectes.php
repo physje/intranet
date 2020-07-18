@@ -1,9 +1,9 @@
 <?php
 include_once('include/functions.php');
 include_once('include/config.php');
+include_once('include/config_mails.php');
 include_once('include/HTML_TopBottom.php');
 include_once('include/HTML_HeaderFooter.php');
-include_once('include/class.phpmailer.php');
 
 $db = connect_db();
 $cfgProgDir = 'auth/';

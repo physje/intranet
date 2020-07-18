@@ -1,11 +1,12 @@
 <?php
 include_once('../include/functions.php');
 include_once('../include/config.php');
+include_once('../include/config_mails.php');
 include_once('../include/HTML_TopBottom.php');
+
 $requiredUserGroups = array(1);
 $cfgProgDir = '../auth/';
 include($cfgProgDir. "secure.php");
-include_once('../include/class.phpmailer.php');
 
 if(isset($_POST['send'])) {
 	foreach($_POST as $key => $value) {
