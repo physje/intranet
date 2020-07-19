@@ -235,7 +235,7 @@ function getGroupMembers($commID) {
 
 function getMemberDetails($id) {
 	global $TableUsers, $UserID, $UserStatus, $UserAdres, $UserGeslacht, $UserVoorletters, $UserVoornaam, $UserTussenvoegsel,
-	$UserAchternaam, $UserMeisjesnaam, $UserUsername, $UserHashShort, $UserGeboorte, $UserTelefoon, $UserMail,
+	$UserAchternaam, $UserMeisjesnaam, $UserUsername, $UserHashShort, $UserGeboorte, $UserTelefoon, $UserMail, $UserEBRelatie,
 	$UserFormeelMail, $UserBelijdenis, $UserLastChange, $UserLastVisit, $UserBurgelijk, $UserRelatie, $UserStraat, $UserHuisnummer,
 	$UserHuisletter, $UserToevoeging, $UserPC, $UserPlaats, $UserWijk, $UserHashLong, $UserVestiging, $UserLastChange, $UserLastVisit;
 	
@@ -275,8 +275,9 @@ function getMemberDetails($id) {
 	$data['burgelijk']			= $row[$UserBurgelijk];
 	$data['relatie']				= $row[$UserRelatie];	
 	$data['tel']						= $row[$UserTelefoon];
-	$data['mail']						= $row[$UserMail];
+	$data['mail']						= $row[$UserMail];	
 	$data['form_mail']			= $row[$UserFormeelMail];
+	$data['eb_code']				= $row[$UserEBRelatie];
 	$data['vestiging']			= $row[$UserVestiging];
 	$data['change']					= $row[$UserLastChange];
 	$data['visit']					= $row[$UserLastVisit];

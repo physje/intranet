@@ -57,15 +57,16 @@ if(isset($_POST['eigen_nee'])) {
 	$page[] = "</table>";		
 } elseif(isset($_POST['eigen_ja'])) {	
 	$thuisAdres = $gebruikersData['straat'].' '.$gebruikersData['huisnummer'].', '.ucwords(strtolower($gebruikersData['plaats']));
-	$meldingCluster = $meldingDeclaratie = $meldingBestand = '';
+	$meldingCluster = $meldingIBAN = $meldingDeclaratie = $meldingBestand = '';
 	
-	$EBIBAN = eb_getRelatieIbanById($gebruikersData['relatie']);
-		
-	$cluster		= getParam('cluster');
-	$reis_van 	= getParam('reis_van', $thuisAdres);
-	$reis_naar	= getParam('reis_naar');
-	$overige 		= getParam('overig', array());
-	$iban 			= getParam('iban', $EBIBAN);
+	eb_getRelatieIbanByCode($gebruikersData['eb_code'], $EBIBAN);
+					
+	$cluster			= getParam('cluster');
+	$reis_van 		= getParam('reis_van', $thuisAdres);
+	$reis_naar		= getParam('reis_naar');
+	$overige 			= getParam('overig', array());
+	$overig_price	= getParam('overig_price', array());
+	$iban 				= getParam('iban', $EBIBAN);
 				
 	# Check op correct ingevulde velden	
 	if(isset($_POST['screen_2'])) {
@@ -77,10 +78,16 @@ if(isset($_POST['eigen_nee'])) {
 			$meldingCluster = 'Vul cluster in';
 		}
 		
+		# Is er wel een cluster ingevuld	
+		if($iban == '') {
+			$checkFields = false;
+			$meldingIBAN = 'Vul IBAN in';
+		}
+		
 		# Is er wel iets te declareren ?
 		if(($reis_van == '' OR $reis_naar == '') AND count($overige) < 2 AND $overige[0] == '') {
 			$checkFields = false;
-			$meldingDeclaratie = 'Vul van- en naar-adres of overige kosten in';
+			$meldingDeclaratie = 'Vul declaratie in (reiskosten en/of overige kosten)';
 		}
 		
 		# Bewijs
@@ -139,9 +146,26 @@ if(isset($_POST['eigen_nee'])) {
 		$page[] = "</tr>";
 		if($meldingCluster != '') {
 			$page[] = "<tr>";
-			$page[] = "	<td colspan='4' class='melding'>$meldingCluster</td>";
+			$page[] = "	<td colspan='2'>&nbsp;</td>";
+			$page[] = "	<td  colspan='2' class='melding'>$meldingCluster</td>";
 			$page[] = "</tr>";
-		}		
+		}
+		
+		$page[] = "<tr>";
+		$page[] = "	<td colspan='4'>&nbsp;</td>";
+		$page[] = "</tr>";
+		$page[] = "<tr>";
+		$page[] = "	<td colspan='2'>Welk rekeningnummer</td>";
+		$page[] = "	<td><input type='text' name='iban' value='$iban'></td>";
+		$page[] = "		<td>&nbsp;</td>";
+		$page[] = "</tr>";
+		
+		if($meldingIBAN != '') {
+			$page[] = "<tr>";
+			$page[] = "	<td colspan='2'>&nbsp;</td>";
+			$page[] = "	<td  colspan='2' class='melding'>$meldingIBAN</td>";
+			$page[] = "</tr>";
+		}
 		
 		$page[] = "<tr>";
 		$page[] = "	<td colspan='4'>&nbsp;</td>";
@@ -189,19 +213,21 @@ if(isset($_POST['eigen_nee'])) {
 		$page[] = "	</tr>";
   	
 		# Een extra leeg veld toevoegen
-		$overige[] = '';
+		$overige[] = $overig_price[] = '';
 		
 		# Laat invoervelden voor overige zaken zien
 		foreach($overige as $key => $string) {
 			if($string != '' OR $first) {
 				$page[] = "	<tr>";
 				$page[] = "		<td colspan='3'><input type='text' name='overig[$key]' value='$string' size='57'></td>";			
-				$page[] = "		<td colspan='1'>&euro;&nbsp;<input type='text' name='overig_price[$key]' value='". str_replace(',', '.', $_POST['overig_price'][$key]) ."' size='4'></td>";
+				$page[] = "		<td colspan='1'>&euro;&nbsp;<input type='text' name='overig_price[$key]' value='". (isset($_POST['overig_price'][$key]) ? str_replace(',', '.', $_POST['overig_price'][$key]) : '') ."' size='4'></td>";
 				$page[] = "	</tr>";
 			}
 			
-			$price = 100*str_replace(',', '.', $_POST['overig_price'][$key]);
-			$totaal = $totaal + $price;
+			if(isset($_POST['overig_price'][$key])) {
+				$price = 100*str_replace(',', '.', $_POST['overig_price'][$key]);
+				$totaal = $totaal + $price;
+			}
 			
 			# 1 lege regel is voldoende
 			if($string == '' AND $first)	$first = false;
@@ -239,17 +265,10 @@ if(isset($_POST['eigen_nee'])) {
 		
 		$page[] = "<tr>";
 		$page[] = "	<td colspan='4'>&nbsp;</td>";
-		$page[] = "</tr>";		
-		$page[] = "<tr>";
-		$page[] = "	<td colspan='4'><b>Rekeningnummer</b></td>";
-		$page[] = "</tr>";
-		$page[] = "<tr>";
-		$page[] = "	<td colspan='3'><input type='text' name='iban' value='$iban'></td>";
-		$page[] = "	<td>&nbsp;</td>";
 		$page[] = "</tr>";
 		$page[] = "<tr>";
 		$page[] = "	<td align='left'><input type='submit' name='screen_0' value='Vorige'></td>";
-		$page[] = "	<td colspan='2'><input type='submit' name='screen_1' value=\"Voeg extra 'Overige kosten' toe\"></td>";
+		$page[] = "	<td colspan='2'><input type='submit' name='screen_1' value=\"Voeg 'Overige kosten' toe\"></td>";
 		$page[] = "	<td align='right'><input type='submit' name='screen_2' value='Volgende'></td>";	
 		$page[] = "</tr>";
 		$page[] = "</table>";

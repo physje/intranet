@@ -24,8 +24,8 @@ if($showLogin) {
 	include($cfgProgDir. "secure.php");
 }
 
-if(isset($_POST['save_address'])) {
-	$sql_update = "UPDATE $TableUsers SET $UserFormeelMail = '". $_POST['form_mail'] ."' WHERE $UserID like ". $_POST['id'];
+if(isset($_POST['save_data'])) {
+	$sql_update = "UPDATE $TableUsers SET $UserFormeelMail = '". $_POST['form_mail'] ."', $UserEBRelatie = '". $_POST['EB_relatie'] ."' WHERE $UserID like ". $_POST['id'];
 	mysqli_query($db, $sql_update);
 }
 $id = getParam('id', $_SESSION['ID']);
@@ -114,31 +114,50 @@ if(in_array(1, getMyGroups($_SESSION['ID']))) {
 	echo "	<tr>".NL;
 	echo "		<td><b>Gebruikersnaam</b></td>".NL;
 	echo "		<td><a href='account.php?id=$id'>". $personData['username'] ."</a></td>".NL;
+	echo "	</tr>".NL;
+	echo "	<tr>".NL;
+	echo "		<td><b>e-boekhouden</b></td>".NL;
+	echo "	<td><select name='EB_relatie'>";
+	echo "	<option value=''>Selecteer relatie</option>";
+	
+	$sql = "SELECT * FROM $TableEBoekhouden ORDER BY $EBoekhoudenNaam";
+	$result = mysqli_query($db, $sql);
+	$row = mysqli_fetch_array($result);
+	
+	do {
+		echo "	<option value='". $row[$EBoekhoudenCode] ."'". ($personData['eb_code'] == $row[$EBoekhoudenCode] ? ' selected' : '') .">". substr($row[$EBoekhoudenNaam], 0, 35) ."</option>";
+	} while($row = mysqli_fetch_array($result));
+			
+	echo "	</select></td>";
 	echo "	</tr>".NL;	
+		
 	if($personData['vestiging'] > 0) {
 		echo "	<tr>".NL;
 		echo "		<td><b>Vestingsdatum</b></td>".NL;
 		echo "		<td>". time2str("%d %B '%y", $personData['vestiging']) ."</td>".NL;
 		echo "	</tr>".NL;
 	}
+	
 	if($personData['change'] > 0) {
 		echo "	<tr>".NL;
 		echo "		<td><b>Laatste wijziging</b></td>".NL;
 		echo "		<td>". time2str("%d %B '%y", $personData['change']) ."</td>".NL;
 		echo "	</tr>".NL;
 	}
+	
 	if($personData['visit'] > 0) {
 		echo "	<tr>".NL;
 		echo "		<td><b>Laatste login</b></td>".NL;
 		echo "		<td>". time2str("%d %B '%y", $personData['visit']) ."</td>".NL;
 		echo "	</tr>".NL;	
 	}
+	
 	echo "	<tr>".NL;
 	echo "		<td colspan='2'>&nbsp;</td>".NL;
 	echo "	</tr>".NL;
 	echo "	<tr>".NL;
 	echo "		<td>&nbsp;</td>".NL;
-	echo "		<td><input type='submit' name='save_address' value='Opslaan'></td>".NL;
+	echo "		<td><input type='submit' name='save_data' value='Opslaan'></td>".NL;
 	echo "	</tr>".NL;
 }
 
