@@ -32,6 +32,7 @@ $page[] = "<form method='post' action='". $_SERVER['PHP_SELF']."' enctype='multi
 if(isset($_POST['eigen_nee']))	$page[] = "<input type='hidden' name='eigen_nee' value='". trim($_POST['eigen_nee']) ."'>";
 if(isset($_POST['eigen_ja']))		$page[] = "<input type='hidden' name='eigen_ja' value='". trim($_POST['eigen_ja']) ."'>";
 if(isset($_POST['cluster']))		$page[] = "<input type='hidden' name='cluster' value='". trim($_POST['cluster']) ."'>";
+if(isset($_POST['iban']))				$page[] = "<input type='hidden' name='iban' value='". trim($_POST['iban']) ."'>";
 if(isset($_POST['reis_van']))		$page[] = "<input type='hidden' name='reis_van' value='". trim($_POST['reis_van']) ."'>";
 if(isset($_POST['reis_naar']))	$page[] = "<input type='hidden' name='reis_naar' value='". trim($_POST['reis_naar']) ."'>";
 if(isset($_POST['reiskosten']))	$page[] = "<input type='hidden' name='reiskosten' value='". trim($_POST['reiskosten']) ."'>";
@@ -64,6 +65,7 @@ if(isset($_POST['eigen_nee'])) {
 	$cluster			= getParam('cluster');
 	$reis_van 		= getParam('reis_van', $thuisAdres);
 	$reis_naar		= getParam('reis_naar');
+	$reiskosten		= getParam('reiskosten');
 	$overige 			= getParam('overig', array());
 	$overig_price	= getParam('overig_price', array());
 	$iban 				= getParam('iban', $EBIBAN);
@@ -108,22 +110,73 @@ if(isset($_POST['eigen_nee'])) {
 	
 	if($checkFields) {
 		$page[] = "<input type='hidden' name='page' value='3'>";
-		$page[] = "<table border=0>";
+		$page[] = "<table border=1>";
 		$page[] = "<tr>";
-		$page[] = "		<td colspan='2'>U staat op het punt de volgende declaratie in te dienen:</td>";
+		$page[] = "		<td colspan='3'>U staat op het punt de volgende declaratie in te dienen:</td>";
 		$page[] = "</tr>";
 		$page[] = "<tr>";
-		$page[] = "		<td>Naam:</td>";
+		$page[] = "		<td colspan='2'>Naam:</td>";
 		$page[] = "		<td>". makeName($_SESSION['ID'], 5) ."</td>";
 		$page[] = "</tr>";
 		$page[] = "<tr>";
-		$page[] = "		<td>Emailadres:</td>";
+		$page[] = "		<td colspan='2'>Emailadres:</td>";
 		$page[] = "		<td>". getMailAdres($_SESSION['ID']) ."</td>";
 		$page[] = "</tr>";
 		$page[] = "<tr>";
-		$page[] = "		<td>Cluster onderdeel:</td>";
+		$page[] = "		<td colspan='2'>Rekeningnummer:</td>";
+		$page[] = "		<td>$iban</td>";
+		$page[] = "</tr>";
+		$page[] = "<tr>";
+		$page[] = "		<td colspan='2'>Cluster onderdeel:</td>";
 		$page[] = "		<td>". $clusters[$cluster] ."</td>";
 		$page[] = "</tr>";
+		if(count($overige) > 0) {
+			$page[] = "<tr>";
+			$page[] = "		<td colspan='3'>&nbsp;</td>";
+			$page[] = "</tr>";
+			$page[] = "<tr>";
+			$page[] = "		<td colspan='3'><b>Declaraties</b></td>";
+			$page[] = "</tr>";
+			
+			$totaal = calculateTotals($overig_price);
+		
+			foreach($overige as $key => $value) {
+				if($value != "") {
+					$page[] = "<tr>";
+					$page[] = "		<td>&nbsp;</td>";
+					$page[] = "		<td>$value</td>";
+					$page[] = "		<td>". formatPrice($overig_price[$key]*100) ."</td>";
+					$page[] = "</tr>";				
+				}
+			}			
+		}
+		
+		if(isset($reiskosten)) {
+			$page[] = "<tr>";
+			$page[] = "		<td>&nbsp;</td>";
+			$page[] = "		<td>Reiskosten</td>";
+			$page[] = "		<td>". formatPrice($reiskosten) ."</td>";
+			$page[] = "</tr>";	
+			
+			$totaal = $totaal + $reiskosten;
+		}
+		
+		
+		$page[] = "<tr>";
+		$page[] = "		<td colspan='3'>&nbsp;</td>";
+		$page[] = "</tr>";
+		$page[] = "<tr>";
+		$page[] = "		<td colspan='2'><b>Totaal</b></td>";
+		$page[] = "		<td><b>". formatPrice($totaal) ."</b></td>";
+		$page[] = "</tr>";
+		$page[] = "<tr>";
+		$page[] = "		<td colspan='3'>&nbsp;</td>";
+		$page[] = "</tr>";
+		$page[] = "<tr>";
+		$page[] = "		<td><input type='submit' name='incorrect' value='Wijzigen'></td>";
+		$page[] = "		<td>&nbsp;</td>";
+		$page[] = "		<td><input type='submit' name='correct' value='Indienen'></td>";
+		$page[] = "</tr>";	
 		$page[] = "</table>";		
 	} else {
 		# Scherm 1
@@ -133,8 +186,8 @@ if(isset($_POST['eigen_nee'])) {
 		$page[] = "<input type='hidden' name='page' value='2'>";
 		$page[] = "<table border=1>";
 		$page[] = "<tr>";
-		$page[] = "	<td colspan='2'>Welk cluster of onderdeel?</td>";	
-		$page[] = "	<td><select name='cluster'>";
+		$page[] = "	<td valign='top' colspan='2'>Voor welk cluster/onderdeel?</td>";	
+		$page[] = "	<td valign='top'><select name='cluster'>";
 		$page[] = "	<option value=''>Maak een keuze</option>";
 		
 		foreach($clusters as $id => $naam) {
@@ -146,8 +199,8 @@ if(isset($_POST['eigen_nee'])) {
 		$page[] = "</tr>";
 		if($meldingCluster != '') {
 			$page[] = "<tr>";
-			$page[] = "	<td colspan='2'>&nbsp;</td>";
-			$page[] = "	<td  colspan='2' class='melding'>$meldingCluster</td>";
+			$page[] = "	<td valign='top' colspan='2'>&nbsp;</td>";
+			$page[] = "	<td valign='top' colspan='2' class='melding'>$meldingCluster</td>";
 			$page[] = "</tr>";
 		}
 		
@@ -155,9 +208,9 @@ if(isset($_POST['eigen_nee'])) {
 		$page[] = "	<td colspan='4'>&nbsp;</td>";
 		$page[] = "</tr>";
 		$page[] = "<tr>";
-		$page[] = "	<td colspan='2'>Welk rekeningnummer</td>";
-		$page[] = "	<td><input type='text' name='iban' value='$iban'></td>";
-		$page[] = "		<td>&nbsp;</td>";
+		$page[] = "	<td valign='top' colspan='2'>Wat is uw rekeningnummer</td>";
+		$page[] = "	<td valign='top'><input type='text' name='iban' value='$iban'></td>";
+		$page[] = "	<td>&nbsp;</td>";
 		$page[] = "</tr>";
 		
 		if($meldingIBAN != '') {
@@ -223,15 +276,12 @@ if(isset($_POST['eigen_nee'])) {
 				$page[] = "		<td colspan='1'>&euro;&nbsp;<input type='text' name='overig_price[$key]' value='". (isset($_POST['overig_price'][$key]) ? str_replace(',', '.', $_POST['overig_price'][$key]) : '') ."' size='4'></td>";
 				$page[] = "	</tr>";
 			}
-			
-			if(isset($_POST['overig_price'][$key])) {
-				$price = 100*str_replace(',', '.', $_POST['overig_price'][$key]);
-				$totaal = $totaal + $price;
-			}
-			
+						
 			# 1 lege regel is voldoende
 			if($string == '' AND $first)	$first = false;
 		}
+		
+		$totaal = $totaal + calculateTotals($_POST['overig_price']);
 		
 		if($totaal > 0) {
 			$page[] = "	<tr>";
@@ -267,9 +317,15 @@ if(isset($_POST['eigen_nee'])) {
 		$page[] = "	<td colspan='4'>&nbsp;</td>";
 		$page[] = "</tr>";
 		$page[] = "<tr>";
-		$page[] = "	<td align='left'><input type='submit' name='screen_0' value='Vorige'></td>";
-		$page[] = "	<td colspan='2'><input type='submit' name='screen_1' value=\"Voeg 'Overige kosten' toe\"></td>";
-		$page[] = "	<td align='right'><input type='submit' name='screen_2' value='Volgende'></td>";	
+		$page[] = "	<td colspan='4'>";
+		$page[] = "	<table width='100%'>";
+		$page[] = "	<tr>";
+		$page[] = "		<td width='33%' align='left'><input type='submit' name='screen_0' value='Vorige'></td>";
+		$page[] = "		<td width='33%'><input type='submit' name='screen_1' value=\"Voeg 'Overige kosten' toe\"></td>";
+		$page[] = "		<td width='33%' align='right'><input type='submit' name='screen_2' value='Volgende'></td>";	
+		$page[] = "	</tr>";
+		$page[] = "	</table>";
+		$page[] = "</td>";
 		$page[] = "</tr>";
 		$page[] = "</table>";
 	}
@@ -302,3 +358,16 @@ echo '	<td valign="top" width="25%">&nbsp;</td>'.NL;
 echo '</tr>'.NL;
 echo '</table>'.NL;
 echo $HTMLFooter;
+
+function calculateTotals($array) {
+	$totaal = 0;
+	
+	foreach($array as $waarde) {
+		if($waarde > 0) {
+			$price = 100*str_replace(',', '.', $waarde);
+			$totaal = $totaal + $price;
+		}
+	}
+	
+	return $totaal;
+}

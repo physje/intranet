@@ -1972,4 +1972,16 @@ function isValidEmail($email) {
 	}
 	return false;
 }
+
+function cleanIBAN($iban) {
+	$toClean = $iban;
+	
+	$toClean = trim($toClean);
+	$toClean = strtoupper($toClean);
+	$toClean = str_replace(' ', '', $toClean);
+	$toClean = str_replace('.', '', $toClean);
+	
+	return $toClean;
+}
+
 ?>

@@ -73,7 +73,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 			$mailText = $bijlageText = array(); 
 			$mailText[] = "Beste $aanspeekNaam,";
 			$mailText[] = "";
-			$mailText[] = "Fijn dat ".($voorgangerData['stijl'] == 0 ? 'u' : 'je')." komt preken in de $dagdeel van ". time2str ('%A %e %B', $dienstData['start'])." om ". date('H:i', $dienstData['start'])." uur, in de Koningskerk te Deventer.";
+			$mailText[] = "Fijn dat ".($voorgangerData['stijl'] == 0 ? 'u' : 'je')." ". time2str ('%A %e %B', $dienstData['start'])." om ". date('H:i', $dienstData['start'])." uur komt preken in de $dagdeel van de Koningskerk te Deventer.";
 			$mailText[] = "Ik geef ".($voorgangerData['stijl'] == 0 ? 'u' : 'je')." de nodige informatie door.";
 			$mailText[] = "";
 			$mailText[] = "De muzikale begeleiding in deze dienst wordt gecoordineerd door ". makeName($bandleider, 5) .".";
