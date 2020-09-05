@@ -1984,4 +1984,28 @@ function cleanIBAN($iban) {
 	return $toClean;
 }
 
+function price2RightFormat($price) {
+	$toClean = $price;
+	
+	$toClean = trim($toClean);
+	$toClean = str_replace(' ', '', $toClean);
+	$toClean = str_replace(',', '.', $toClean);
+	
+	return $toClean;
+}
+
+function calculateTotals($array) {
+	$totaal = 0;
+	
+	foreach($array as $waarde) {
+		if($waarde > 0) {
+			$price = 100*price2RightFormat($waarde);
+			$totaal = $totaal + $price;
+		}
+	}
+	
+	return $totaal;
+}
+
+
 ?>

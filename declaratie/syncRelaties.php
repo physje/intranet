@@ -46,7 +46,7 @@ try {
   if(!is_array($Relaties->cRelatie)) $Relaties->cRelatie = array($Relaties->cRelatie);
     
   foreach ($Relaties->cRelatie as $Relatie) {  	
-  	$sql = "INSERT INTO $TableEBoekhouden ($EBoekhoudenID, $EBoekhoudenCode, $EBoekhoudenIBAN, $EBoekhoudenNaam) VALUES (". $Relatie->ID .", ". $Relatie->Code .", '". $Relatie->IBAN ."',  '". $Relatie->Bedrijf ."')";
+  	$sql = "INSERT INTO $TableEBoekhouden ($EBoekhoudenID, $EBoekhoudenCode, $EBoekhoudenIBAN, $EBoekhoudenNaam) VALUES (". $Relatie->ID .", ". $Relatie->Code .", '". cleanIBAN($Relatie->IBAN) ."',  '". $Relatie->Bedrijf ."')";
   	mysqli_query($db, $sql);
   } 
   

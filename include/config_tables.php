@@ -202,10 +202,12 @@ $EBBoekstukVolgNr							= "volgnummer";
 
 $TableEBDeclaratie 						= "eb_declaraties";
 $EBDeclaratieID								= "id";
+$EBDeclaratieHash							= "hash";
 $EBDeclaratieIndiener					= "indiener";
 $EBDeclaratieCluster					= "cluster";
 $EBDeclaratieStatus						= "status";
 $EBDeclaratieDeclaratie				= "declaratie";
+$EBDeclaratieTotaal						= "totaal";
 $EBDeclaratieTijd							= "tijd";
                     					
 $TableConfig									= "config";
