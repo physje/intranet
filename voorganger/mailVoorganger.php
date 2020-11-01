@@ -90,8 +90,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 			
 			if($voorgangerData['aandacht'] == 1 AND ($voorgangerData['last_aandacht'] < $aandachtPeriode OR $voorgangerData['last_aandacht'] < $lastUpdate)) {
 				$bijlageText[] = "de aandachtspunten van de dienst";				
-				$param['file'] = '../download/aandachtspunten.pdf';
-				$param['fileName'] = 'Aandachtspunten Liturgie Deventer (dd 29-11-2019).pdf';
+				$param['attachment'][]	= array('file' => '../download/aandachtspunten.pdf', 'name' => 'Aandachtspunten Liturgie Deventer (dd 29-11-2019).pdf');
 				setLastAandachtspunten($dienstData['voorganger_id']);
 			}
 					

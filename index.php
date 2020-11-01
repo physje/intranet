@@ -139,7 +139,7 @@ if(in_array(1, getMyGroups($_SESSION['ID'])) OR in_array(28, getMyGroups($_SESSI
 	$wijzigLinks['editDiensten.php'] = 'Kerkdiensten wijzigen';	
 }
 
-if(is_array($wijzigLinks)) {	
+if(isset($wijzigLinks) AND is_array($wijzigLinks)) {	
 	foreach($wijzigLinks as $link => $naam) {
 		$wijzigDeel[] = "<a href='$link' target='_blank'>$naam</a>";
 	}

@@ -239,10 +239,9 @@ if(isset($_REQUEST['hash'])) {
 							
 				# Onderwerp maken
 				$Subject = "Declaratie $dagdeel ". date('j-n-Y', $dienstData['start']);
-				$param_penning['subject'] = trim($Subject);
-				$param_penning['file'] = 'PDF/'. $mutatieNr .'.pdf';
-				$param_penning['fileName'] = $boekstukNummer .' '. makeVoorgangerName($voorganger, 1) . ' '. date('d-m', $dienstData['start']) .' '. $dagdeel .'.pdf';
-				
+				$param_penning['subject']				= trim($Subject);
+				$param_penning['attachment'][]	= array('file' => 'PDF/'. $mutatieNr .'.pdf', 'name' => $boekstukNummer .' '. makeVoorgangerName($voorganger, 1) . ' '. date('d-m', $dienstData['start']) .' '. $dagdeel .'.pdf');
+								
 				if(!$sendMail) {
 					$page[] = 'Afzender :'. $ScriptTitle .'|'.$ScriptMailAdress ."<br>\n";
 					$page[] = 'Ontvanger :'. $declaratieReplyName .'|'.$declaratieReplyAddress ."<br>\n";
@@ -267,7 +266,7 @@ if(isset($_REQUEST['hash'])) {
 				$mailPredikant = array();
 				$mailPredikant[] = "Beste ". makeVoorgangerName($voorganger, 5) .",";
 				$mailPredikant[] = "";
-				$mailPredikant[] = ($voorgangerData['stijl'] == 0 ? 'u heeft' : 'jij hebt')." online een declaratie ingediend voor het voorgaan in de $dagdeel van ". time2str ('%e %B', $dienstData['start'])." in de Koningskerk te Deventer.";
+				$mailPredikant[] = ($voorgangerData['stijl'] == 0 ? 'u heeft' : 'jij hebt')." online een declaratie ingediend voor het voorgaan in de $dagdeel van ". time2str('%e %B', $dienstData['start'])." in de Koningskerk te Deventer.";
 				$mailPredikant[] = "Een samenvatting van deze declaratie voor in ". ($voorgangerData['stijl'] == 0 ? 'uw administratie treft u' : 'in je administratie tref je')." aan in de bijlage";
 				$mailPredikant[] = "";
 				$mailPredikant[] = "Declaratie worden over het algemeen rond de 20ste van de maand uitbetaald.";
@@ -298,12 +297,11 @@ if(isset($_REQUEST['hash'])) {
 					$page[] = 'Onderwerp :'.trim($Subject);
 					$page[] = implode("<br>\n", $mailPredikant);
 				} else {
-					$param_predikant['from'] = $declaratieReplyAddress;
-					$param_predikant['fromName'] = $declaratieReplyName;
-					$param_predikant['subject'] = trim($Subject);
-					$param_predikant['message'] = implode("<br>\n", $mailPredikant);
-					$param_predikant['file'] = 'PDF/'. $mutatieNr .'.pdf';
-					$param_predikant['fileName'] = "Declaratie $dagdeel ". date('j-n-Y', $dienstData['start']) ." Koningskerk Deventer.pdf";
+					$param_predikant['from']					= $declaratieReplyAddress;
+					$param_predikant['fromName']			= $declaratieReplyName;
+					$param_predikant['subject']				= trim($Subject);
+					$param_predikant['message'] 			= implode("<br>\n", $mailPredikant);
+					$param_predikant['attachment'][]	= array('file' => 'PDF/'. $mutatieNr .'.pdf', 'name' => "Declaratie $dagdeel ". date('j-n-Y', $dienstData['start']) ." Koningskerk Deventer.pdf");
 					
 					if(!sendMail_new($param_predikant)) {
 						toLog('error', '', '', "Problemen met declaratie-afschrift (dienst $dienst, voorganger $voorganger)");

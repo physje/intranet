@@ -846,19 +846,18 @@ function sendMail_new($parameter) {
 	global $SMTPHost, $SMTPPort, $SMTPSSL, $SMTPUsername, $SMTPPassword;
 	global $db, $TableMail, $MailTime, $MailMail;
 	
-	# $parameter['to']
-	# $parameter['subject']
-	# $parameter['message']
-	# $parameter['formeel']
-	# $parameter['ouderCC']
-	# $parameter['from']
-	# $parameter['fromName']
-	# $parameter['ReplyTo']
-	# $parameter['ReplyToName']
-	# $parameter['cc']
-	# $parameter['bcc']
-	# $parameter['file']
-	# $parameter['fileName']
+	# $parameter['to'][]					= array(adres, naam);
+	# $parameter['subject']				= '';
+	# $parameter['message'] 			= '';
+	# $parameter['formeel'] 			= '';
+	# $parameter['ouderCC'] 			= '';
+	# $parameter['from']					= '';
+	# $parameter['fromName']			= '';
+	# $parameter['ReplyTo']				= '';
+	# $parameter['ReplyToName']		= '';
+	# $parameter['cc'][]					= array(adres, naam);
+	# $parameter['bcc'][]					= ''
+	# $parameter['attachment'][]	= array('file' => '', 'name' => '');
 	
 	# Controleer of er wel een ontvanger bekend is
 	if(isset($parameter['to'])) {
@@ -913,13 +912,6 @@ function sendMail_new($parameter) {
 	}	
 	
 	$mail = new PHPMailer\PHPMailer\PHPMailer;
-	$mail->isSMTP();
-	$mail->Host				= $SMTPHost;
-	$mail->Port       = $SMTPPort;
-	$mail->SMTPSecure = $SMTPSSL;
-	$mail->SMTPAuth   = true;
-	$mail->Username		= $SMTPUsername;
-	$mail->Password		= $SMTPPassword;
 			
 	if(isset($parameter['from']) AND $parameter['from'] != '') {
 		$mail->From = $parameter['from'];
@@ -1040,6 +1032,19 @@ function sendMail_new($parameter) {
 		}
 	}
 	
+	# Controle op bijlages
+	if(isset($parameter['attachment']) AND $parameter['attachment'] != "") {
+		foreach($parameter['attachment'] as $bijlage) {
+			if(is_array($bijlage) AND count($bijlage) > 1) {
+				$mail->addAttachment($bijlage['file'], $bijlage['name']);
+				toLog('debug', '', '', $bijlage['file'] .' is als '. $bijlage['name'] .' opgenomen als bijlage');
+			} else {
+				$mail->addAttachment($bijlage['file']);
+				toLog('debug', '', '', $bijlage['file'] .' is opgenomen als bijlage');
+			}
+		}
+	}
+		
 	# Bericht opstellen
 	$HTMLMail = $MailHeader.$bericht.$MailFooter;
 	
@@ -1047,9 +1052,17 @@ function sendMail_new($parameter) {
 	$mail->Subject	= $SubjectPrefix . trim($subject);
 	$mail->IsHTML(true);
 	$mail->Body			= $HTMLMail;
+	
+	$mail->isSMTP();
+	$mail->Host				= $SMTPHost;
+	$mail->Port       = $SMTPPort;
+	$mail->SMTPSecure = $SMTPSSL;
+	$mail->SMTPAuth   = true;
+	$mail->Username		= $SMTPUsername;
+	$mail->Password		= $SMTPPassword;
 					
 	if(!$mail->Send()) {
-		toLog('debug', '', '', 'Problemen met verzenden');
+		toLog('error', '', '', 'Problemen met verzenden');
 		return false;		
 	} else {
 		$sql = "INSERT INTO $TableMail ($MailTime, $MailMail) VALUES (". time() .", '". urlencode(json_encode($parameter))."')";
@@ -1673,16 +1686,14 @@ function setVoorgangerDeclaratieStatus($status, $dienst) {
 function setDeclaratieStatus($status, $declaratie, $lid) {
 	global $db, $TableEBDeclaratie, $EBDeclaratieID, $EBDeclaratieStatus;
 	
-	$descr[0] = 'geen';
-	$descr[1] = 'open';
-	$descr[2] = 'link verstuurd';
-	$descr[3] = 'link bezocht';
-	$descr[4] = 'opgeslagen';
-	$descr[5] = 'bij CluCo';
-	$descr[6] = 'bij lid';
-	$descr[7] = 'afgekeurd';
-	$descr[8] = 'afgerond';
-	$descr[9] = 'afgezien';
+	$descr[0] = 'geen';	
+	$descr[1] = 'opgeslagen'; 	# nog niet in gebruik
+	$descr[2] = 'bij lid';
+	$descr[3] = 'bij CluCo';
+	$descr[4] = 'bij penningmeester';
+	$descr[5] = 'afgerond';
+	$descr[6] = 'afgekeurd';
+	$descr[7] = 'verwijderd';		# nog niet in gebruik
 	
 	$sql = "UPDATE $TableEBDeclaratie SET $EBDeclaratieStatus = $status WHERE $EBDeclaratieID = $declaratie";
 		
@@ -2007,5 +2018,100 @@ function calculateTotals($array) {
 	return $totaal;
 }
 
-
+function showDeclaratieDetails($input) {
+	global $clusters;
+	
+	# $input['user']
+	# $input['iban']
+	# $input['relatie']
+	# $input['cluster']
+	# $input['overige']
+	# $input['overig_price']
+	# $input['reiskosten']
+	
+	if(isset($input['user']) AND $input['user'] != '') {
+		$page[] = "<tr>";
+		$page[] = "		<td colspan='2'>Naam:</td>";
+		$page[] = "		<td>&nbsp;</td>";
+		$page[] = "		<td colspan='3'>". makeName($input['user'], 5) ."</td>";
+		$page[] = "</tr>";
+		$page[] = "<tr>";
+		$page[] = "		<td colspan='2'>Emailadres:</td>";
+		$page[] = "		<td>&nbsp;</td>";
+		$page[] = "		<td colspan='3'>". getMailAdres($input['user']) ."</td>";
+		$page[] = "</tr>";
+	}
+	
+	if($input['eigen'] == 'Ja') {	
+		$page[] = "<tr>";
+		$page[] = "		<td colspan='2'>Rekeningnummer:</td>";
+		$page[] = "		<td>&nbsp;</td>";
+		$page[] = "		<td colspan='3'>". $input['iban'] ."</td>";
+		$page[] = "</tr>";
+	}
+	
+	if($input['eigen'] == 'Nee') {
+		$page[] = "<tr>";
+		$page[] = "		<td colspan='2'>Begunstigde:</td>";
+		$page[] = "		<td>&nbsp;</td>";
+		$page[] = "		<td colspan='3'>". $input['relatie'] ."</td>";
+		$page[] = "</tr>";
+	}
+	
+	if(isset($input['cluster']) AND $input['cluster'] != '') {
+		$page[] = "<tr>";
+		$page[] = "		<td colspan='2'>Cluster onderdeel:</td>";
+		$page[] = "		<td>&nbsp;</td>";
+		$page[] = "		<td colspan='3'>". $clusters[$input['cluster']] ."</td>";
+		$page[] = "</tr>";
+	}
+	
+	if(count($input['overige']) > 0) {
+		$page[] = "<tr>";
+		$page[] = "		<td colspan='6'>&nbsp;</td>";
+		$page[] = "</tr>";
+		$page[] = "<tr>";
+		$page[] = "		<td colspan='6'><b>Declaraties</b></td>";
+		$page[] = "</tr>";
+		
+		$totaal = calculateTotals($input['overig_price']);
+	
+		foreach($input['overige'] as $key => $value) {
+			if($value != "") {
+				$page[] = "<tr>";
+				$page[] = "		<td>&nbsp;</td>";
+				$page[] = "		<td colspan='3'>$value</td>";
+				$page[] = "		<td>&nbsp;</td>";
+				$page[] = "		<td align='right'>". formatPrice(price2RightFormat($input['overig_price'][$key])*100) ."</td>";
+				$page[] = "</tr>";				
+			}
+		}			
+	}
+	
+	if($input['eigen'] == 'Ja' AND isset($input['reiskosten']) AND $input['reiskosten'] > 0) {
+		$page[] = "<tr>";
+		$page[] = "		<td>&nbsp;</td>";
+		$page[] = "		<td colspan='3'>Reiskosten</td>";
+		$page[] = "		<td>&nbsp;</td>";
+		$page[] = "		<td align='right'>". formatPrice($input['reiskosten']) ."</td>";
+		$page[] = "</tr>";	
+		
+		$totaal = $totaal + $input['reiskosten'];
+	}
+	
+	
+	$page[] = "<tr>";
+	$page[] = "		<td colspan='6'>&nbsp;</td>";
+	$page[] = "</tr>";
+	$page[] = "<tr>";
+	$page[] = "		<td colspan='4'><b>Totaal</b></td>";
+	$page[] = "		<td>&nbsp;</td>";
+	$page[] = "		<td align='right'><b>". formatPrice($totaal) ."</b></td>";
+	$page[] = "</tr>";
+	$page[] = "<tr>";
+	$page[] = "		<td colspan='6'>&nbsp;</td>";
+	$page[] = "</tr>";
+	
+	return $page;	
+}
 ?>

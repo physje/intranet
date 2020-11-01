@@ -11,7 +11,7 @@ $db = connect_db();
 $kmPrijs = 19; #in centen
 
 //$minUserLevel = 1;
-$requiredUserGroups = array(1, 36);
+$requiredUserGroups = array(1, 38);
 $cfgProgDir = '../auth/';
 include($cfgProgDir. "secure.php");
 
@@ -44,10 +44,13 @@ if(isset($_POST['reis_van']) AND $_POST['reis_van'] != '' AND isset($_POST['reis
 	$reiskosten = 0;
 }
 
-if(isset($_POST['eigen']))			$page[] = "<input type='hidden' name='eigen' value='". trim($_POST['eigen']) ."'>";
-if(isset($_POST['EB_relatie']))	$page[] = "<input type='hidden' name='EB_relatie' value='". trim($_POST['EB_relatie']) ."'>";
-if(isset($_POST['cluster']))		$page[] = "<input type='hidden' name='cluster' value='". trim($_POST['cluster']) ."'>";
-if(isset($_POST['iban']))				$page[] = "<input type='hidden' name='iban' value='". cleanIBAN($_POST['iban']) ."'>";
+if(isset($_POST['eigen']))				$page[] = "<input type='hidden' name='eigen' value='". trim($_POST['eigen']) ."'>";
+if(isset($_POST['EB_relatie']))		$page[] = "<input type='hidden' name='EB_relatie' value='". trim($_POST['EB_relatie']) ."'>";
+if(isset($_POST['cluster']))			$page[] = "<input type='hidden' name='cluster' value='". trim($_POST['cluster']) ."'>";
+if(isset($_POST['iban']))					$page[] = "<input type='hidden' name='iban' value='". cleanIBAN($_POST['iban']) ."'>";
+if(isset($_POST['bijlage']))			$page[] = "<input type='hidden' name='bijlage' value='". trim($_POST['bijlage']) ."'>";
+if(isset($_POST['bijlage_naam']))	$page[] = "<input type='hidden' name='bijlage_naam' value='". trim($_POST['bijlage_naam']) ."'>";
+
 if(isset($_POST['overig']))	{
 	foreach($_POST['overig'] as $key => $string) {
 		if($string != '') {
@@ -61,9 +64,10 @@ if(isset($_POST['overig']))	{
 if(isset($_FILES['bijlage'])) {
 	$oldName = trim($_FILES['bijlage']['tmp_name']);
 	$newName = 'uploads/'.generateFilename();
-	move_uploaded_file($oldName, $newName);
-	$page[] = "<input type='hidden' name='bijlage' value='$newName'>";
-	$page[] = "<input type='hidden' name='bijlage_naam' value='". trim($_FILES['bijlage']['name']) ."'>";
+	if(move_uploaded_file($oldName, $newName)) {
+		$page[] = "<input type='hidden' name='bijlage' value='$newName'>";
+		$page[] = "<input type='hidden' name='bijlage_naam' value='". trim($_FILES['bijlage']['name']) ."'>";	
+	}
 }
 
 if(isset($_POST['correct'])) {
@@ -77,7 +81,7 @@ if(isset($_POST['correct'])) {
 	$sql = "INSERT INTO $TableEBDeclaratie ($EBDeclaratieHash, $EBDeclaratieIndiener, $EBDeclaratieCluster, $EBDeclaratieDeclaratie, $EBDeclaratieTotaal, $EBDeclaratieTijd) VALUES ('$uniqueKey', ". $_SESSION['ID'].", ". $toDatabase['cluster'] .", '". $JSONtoDatabase ."', ". $toDatabase['totaal'] .", ". time() .")";	
 	mysqli_query($db, $sql);
 	$id = mysqli_insert_id($db);	
-	setDeclaratieStatus(1, $id, $_SESSION['ID']);	
+	setDeclaratieStatus(3, $id, $_SESSION['ID']);	
 
 	# -------
 	# Mail naar de cluco opstellen
@@ -89,6 +93,15 @@ if(isset($_POST['correct'])) {
 		$cluco = '';
 	}
 	
+	if($cluco == $_SESSION['ID']) {
+		$cluco = 0;
+	}
+	
+	//$ClucoAddress = getMailAdres($cluco);
+	$ClucoAddress	= getMailAdres($_SESSION['ID']);
+	$ClucoName		= makeName($cluco, 5);
+	$ClucoData		= getMemberDetails($cluco);
+		
 	$onderwerpen = array();
 	
 	if(isset($toDatabase['overig'])) {
@@ -105,33 +118,32 @@ if(isset($_POST['correct'])) {
 	$mailCluco[] = makeName($_SESSION['ID'], 5) .' heeft een declaratie ingediend.<br>';
 	$mailCluco[] = "<br>";
 	$mailCluco[] = "Het betreft een declaratie van <i>". makeOpsomming($onderwerpen, '</i>, <i>', '</i> en <i>') ."</i> ter waarde van ". formatPrice($toDatabase['totaal'])."<br>";
-	$mailCluco[] = "<a href='". $ScriptURL ."declaratie/cluco.php?key=$uniqueKey&accept'>Goedkeuren</a><br>";
-	$mailCluco[] = "<a href='". $ScriptURL ."declaratie/cluco.php?key=$uniqueKey&reject'>Afkeuren</a><br>";
+	$mailCluco[] = "<a href='". $ScriptURL ."declaratie/cluco.php?key=$uniqueKey&hash=". $ClucoData['hash_long'] ."&accept'>Goedkeuren</a><br>";
+	$mailCluco[] = "<a href='". $ScriptURL ."declaratie/cluco.php?key=$uniqueKey&reject'>Afkeuren</a> (inloggen vereist)<br>";
 	$mailCluco[] = "<br>";
-	$mailCluco[] = "Details zijn zichtbaar in de bijlage of <a href='". $ScriptURL ."declaratie/cluco.php?key=$uniqueKey'>online</a><br>";
-		
-	//$ClucoAddress = getMailAdres($cluco);
-	$ClucoAddress = getMailAdres($_SESSION['ID']);
-	$ClucoName = makeName($cluco, 5);
+	$mailCluco[] = "Details zijn zichtbaar in de bijlage of <a href='". $ScriptURL ."declaratie/cluco.php?key=$uniqueKey'>online</a> (inloggen vereist)<br>";
 
-	$param_cluco['subject'] = "Declaratie";
-	$param_cluco['file'] = $toDatabase['bijlage'];
-	$param_cluco['fileName'] = $toDatabase['bijlage_naam'];
-	$param_cluco['to'][] = array($ClucoAddress, $ClucoName);
-	
-	$param_cluco['message'] = implode("\n", $mailCluco);
+	$param_cluco['to'][]					= array($ClucoAddress, $ClucoName);
+	$param_cluco['subject'] 			= "Declaratie ". makeName($_SESSION['ID'], 5) ." voor cluster ". $clusters[$cluster];
+	$param_cluco['attachment'][]	= array('file' => $toDatabase['bijlage'], 'name' => $toDatabase['bijlage_naam']);
+	$param_cluco['message'] 			= implode("\n", $mailCluco);
 					
 	if(!sendMail_new($param_cluco)) {
 		toLog('error', '', '', "Problemen met declaratie-notificatie (dienst $dienst, voorganger $voorganger)");
 		$page[] = "Er zijn problemen met het versturen van de notificatie-mail naar de clustercoordinator.";
 	} else {
 		toLog('debug', '', '', "Declaratie-notificatie naar cluco");
-		$page[] = "Declaratie is ter goedkeuring voorgelegd aan de clustercoordinator";
+		$page[] = "De declaratie is ter goedkeuring voorgelegd aan de clustercoordinator";
 	}	
 } elseif(isset($_POST['page']) AND $_POST['page'] > 0) {
 	if($_POST['eigen'] == 'Ja') {
 		$thuisAdres = $gebruikersData['straat'].' '.$gebruikersData['huisnummer'].', '.ucwords(strtolower($gebruikersData['plaats']));
-		eb_getRelatieIbanByCode($gebruikersData['eb_code'], $EBIBAN);
+		
+		if($gebruikersData['eb_code'] > 0) {
+			eb_getRelatieIbanByCode($gebruikersData['eb_code'], $EBIBAN);
+		} else {
+			$EBIBAN = '';
+		}
 		
 		$reis_van 		= getParam('reis_van', $thuisAdres);
 		$reis_naar		= getParam('reis_naar');
@@ -143,8 +155,10 @@ if(isset($_POST['correct'])) {
 		$relatie			= getParam('EB_relatie', 3);	
 	}
 	
-	$meldingCluster = $meldingIBAN = $meldingDeclaratie = $meldingBestand = '';
+	$meldingCluster = $meldingIBAN = $meldingDeclaratie = $meldingBestand = $meldingNegatief = '';
 	
+	$bijlage			= getParam('bijlage');
+	$bijlage			= getParam('bijlage');
 	$cluster			= getParam('cluster');
 	$overige 			= getParam('overig', array());
 	$overig_price	= getParam('overig_price', array());
@@ -178,9 +192,19 @@ if(isset($_POST['correct'])) {
 		}
 		
 		# Bewijs
-		if(count($overige) > 0 AND $_FILES['bijlage']['tmp_name'] == '') {
+		if(count($overige) > 0 AND $_FILES['bijlage']['tmp_name'] == '' AND !isset($_POST['bijlage'])) {
 			$checkFields = false;
 			$meldingBestand = 'Voeg bijlage bij';
+		}
+		
+		# Positieve bedragen
+		if(count($overig_price) > 0) {			
+			foreach($overig_price as $waarde) {
+				if($waarde < 0) {
+					$checkFields = false;
+					$meldingNegatief = 'Bedragen kunnen alleen positief zijn';
+				}
+			}
 		}
 		
 		# Bestandsgrootte	
@@ -194,11 +218,25 @@ if(isset($_POST['correct'])) {
 	
 	
 	if($checkFields) {
+		$input['user'] = $_SESSION['ID'];
+		$input['eigen'] = $_POST['eigen'];
+		$input['iban'] = $iban;
+		$input['relatie'] = $relatie;
+		$input['cluster'] = $cluster;
+		$input['overige'] = $overige;
+		$input['overig_price'] = $overig_price;
+		$input['reiskosten'] = $reiskosten;
+		
+		$totaal = calculateTotals($overig_price) + $reiskosten;
+				
 		$page[] = "<input type='hidden' name='page' value='3'>";
+		$page[] = "<input type='hidden' name='totaal' value='$totaal'>";
+		
 		$page[] = "<table border=0>";
 		$page[] = "<tr>";
-		$page[] = "		<td colspan='3'>U staat op het punt de volgende declaratie in te dienen:</td>";
+		$page[] = "		<td colspan='6'>U staat op het punt de volgende declaratie in te dienen:</td>";
 		$page[] = "</tr>";
+		/*
 		$page[] = "<tr>";
 		$page[] = "		<td colspan='2'>Naam:</td>";
 		$page[] = "		<td>". makeName($_SESSION['ID'], 5) ."</td>";
@@ -263,14 +301,17 @@ if(isset($_POST['correct'])) {
 		$page[] = "		<td colspan='2'><b>Totaal</b></td>";
 		$page[] = "		<td><b>". formatPrice($totaal) ."</b></td>";
 		$page[] = "</tr>";
-		$page[] = "<input type='hidden' name='totaal' value='$totaal'>";
+		*/
+				
+		$page = array_merge($page, showDeclaratieDetails($input));
+		
 		$page[] = "<tr>";
-		$page[] = "		<td colspan='3'>&nbsp;</td>";
+		$page[] = "		<td colspan='6'>&nbsp;</td>";
 		$page[] = "</tr>";
 		$page[] = "<tr>";
-		$page[] = "		<td><input type='submit' name='incorrect' value='Wijzigen'></td>";
-		$page[] = "		<td>&nbsp;</td>";
-		$page[] = "		<td><input type='submit' name='correct' value='Indienen'></td>";
+		$page[] = "		<td colspan='2'><input type='submit' name='incorrect' value='Wijzigen'></td>";
+		$page[] = "		<td colspan='2'>&nbsp;</td>";
+		$page[] = "		<td colspan='2'><input type='submit' name='correct' value='Indienen'></td>";
 		$page[] = "</tr>";	
 		$page[] = "</table>";		
 	} else {
@@ -403,33 +444,46 @@ if(isset($_POST['correct'])) {
 			$totaal = $totaal + calculateTotals($_POST['overig_price']);
 		}
 		
+		if($meldingNegatief != '') {
+			$page[] = "<tr>";
+			$page[] = "	<td colspan='4' class='melding'>$meldingNegatief</td>";
+			$page[] = "</tr>";
+		}
+		
 		if($totaal > 0) {
 			$page[] = "	<tr>";
 			$page[] = "		<td colspan='3'>&nbsp;</td>";
 			$page[] = "		<td align='right'><b>". formatPrice($totaal) ."</b></td>";
 			$page[] = "	</tr>";
 		}
-		
+				
 		if($meldingDeclaratie != '') {
 			$page[] = "<tr>";
 			$page[] = "	<td colspan='4' class='melding'>$meldingDeclaratie</td>";
 			$page[] = "</tr>";
-		}		
+		}
 			
 		$page[] = "<tr>";
 		$page[] = "	<td colspan='4'>&nbsp;</td>";
 		$page[] = "</tr>";		
 		$page[] = "<tr>";
 		$page[] = "	<td colspan='4'><b>Bijlages / facturen</b></td>";
-		$page[] = "</tr>";	
-		$page[] = "<tr>";
-		$page[] = "	<td colspan='3'><input type='file' name='bijlage' accept='application/pdf'><br><small>max. 500 kB</small></td>";
-		$page[] = "	<td>&nbsp;</td>";
 		$page[] = "</tr>";
 		
-		if($meldingBestand != '') {
+		if(!isset($_POST['bijlage'])) {
 			$page[] = "<tr>";
-			$page[] = "	<td colspan='4' class='melding'>$meldingBestand</td>";
+			$page[] = "	<td colspan='3'><input type='file' name='bijlage' accept='application/pdf'><br><small>max. 500 kB</small></td>";
+			$page[] = "	<td>&nbsp;</td>";
+			$page[] = "</tr>";
+			
+			if($meldingBestand != '') {
+				$page[] = "<tr>";
+				$page[] = "	<td colspan='4' class='melding'>$meldingBestand</td>";
+				$page[] = "</tr>";
+			}
+		} else {
+			$page[] = "<tr>";
+			$page[] = "	<td colspan='4'>". $_POST['bijlage_naam'] ."</td>";
 			$page[] = "</tr>";
 		}	
 		
