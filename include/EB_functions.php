@@ -115,6 +115,51 @@ function eb_updateRelatieIbanByCode ( $code, $newIban )
 }
 
 /**
+ * Update data van relatie door middel van de e-boekhouden relatie code 
+ * @param  string $code         e-boekhouden relatie code
+ * @param  array $data         	array met nieuwe gegevens. Indien index in array niet bestaat, wordt dit niet aangepast
+ * @return string $exception    alleen in geval van error of SoapFault wordt deze string gereturned met informatie over de fout 
+ */
+function eb_updateRelatieByCode ($code, $data)
+{
+    try {
+        global $ebUsername, $ebSecurityCode1, $ebSecurityCode2;
+        $relatie = new Relation;
+        $ebClient = new eBoekhoudenConnect($ebUsername, $ebSecurityCode1, $ebSecurityCode2);
+
+        $relatieOud = $ebClient->getRelationByCode($code);
+
+        if ( $code == $relatieOud->Code ) {
+            $relatie->setId($relatieOud->ID);
+            $relatie->setRelationCode($relatieOud->Code);
+            $relatie->setCreationDate($relatieOud->AddDatum);
+            
+            if(isset($data['naam']))			$relatie->setCompanyName($data['naam']);			else	$relatie->setCompanyName($relatieOud->Bedrijf);
+            if(isset($data['geslacht']))	$relatie->setSex($data['geslacht']);					else	$relatie->setSex($relatieOud->Geslacht);
+            if(isset($data['adres']))			$relatie->setAddress($data['adres']);					else	$relatie->setAddress($relatieOud->Adres);
+            if(isset($data['postcode']))	$relatie->setPostalcode($data['postcode']);		else	$relatie->setPostalcode($relatieOud->Postcode);
+            if(isset($data['plaats']))		$relatie->setCity($data['plaats']);						else	$relatie->setCity($relatieOud->Plaats);
+            if(isset($data['mail']))			$relatie->setEmail($data['mail']);						else	$relatie->setEmail($relatieOud->Email);
+            if(isset($data['iban']))			$relatie->setIban(cleanIBAN($data['iban']));	else	$relatie->setIban(cleanIBAN($relatieOud->IBAN));
+            if(isset($data['notitie']))		$relatie->setNote($data['notitie']);					else	$relatie->setNote($relatieOud->Notitie);            
+            if(isset($data['telefoon']))	$relatie->setPhone($data['telefoon']);				else	$relatie->setPhone($relatieOud->Telefoon);
+            if(isset($data['mobiel']))		$relatie->setMobile($data['mobiel']);					else	$relatie->setMobile($relatieOud->GSM);
+                        
+            $response = $ebClient->updateRelation ( $relatie );
+
+        } else {
+            // Received relation code is different than the requested relation code
+            throw new \Exception("Failure in eb_updateRelatieByCode. Received code is different than the requested code: Rec: ".$relatieOud->Code." Req: ".$code);
+        }
+
+    } catch (\Exception $exception) {
+        return $exception->getMessage();
+    }
+}
+
+
+
+/**
  * Get IBAN nummer van relatie door middel van het e-boekhouden relatie id
  * @param  int    $id           e-boekhouden relatie id
  * @param  string &$iban        reference naar bankrekening nummer nieuwe relatie
@@ -198,10 +243,11 @@ function eb_getRelatieCodeBySearch ( $searchText, &$code ) {
  * @param  string $boekstukNummer het boekstuknummer (niet langer dan 50 karakters)
  * @param  string $factuurNummer  het factuurnummer (niet langer dan 50 karakters)
  * @param  int    $bedrag         het te declareren bedrag in centen
- * @param  string $toelichting    toelichting van de declaratie (niet langer dan 200 karakters)
+ * @param  int    $GBR	 	        grootboekrekening (GBR) waar de declaratie op geboekt moet worden
+ * @param  string $toelichting    toelichting van de declaratie (niet langer dan 200 karakters) 
  * @return string $exception      alleen in geval van error of SoapFault wordt deze string gereturned met informatie over de fout 
  */
-function eb_verstuurDeclaratie ( $code, $boekstukNummer, $factuurNummer, $bedragCenten, $toelichting, &$mutatieId )
+function eb_verstuurDeclaratie ( $code, $boekstukNummer, $factuurNummer, $bedragCenten, $GBR, $toelichting, &$mutatieId )
 {
     try {
         global $ebUsername, $ebSecurityCode1, $ebSecurityCode2;
@@ -212,7 +258,7 @@ function eb_verstuurDeclaratie ( $code, $boekstukNummer, $factuurNummer, $bedrag
         $rekening          = "2000";
         $btwCode           = "GEEN";
         $betalingstermijn  = "0";
-        $tegenRekeningCode = "40491";
+        $tegenRekeningCode = $GBR;
         $btwPercentage     = 0.0;
         // Ingevoerde bedrag is in centen, omrekenen naar euro's
         //$bedrag            = (double) round($bedragCenten / 100, 2);        

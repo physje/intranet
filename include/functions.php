@@ -711,23 +711,23 @@ function makeName($id, $type) {
 		$achter_m = '';
 	}
 	
-	# 1 = voornaam												Alberdien
-	# 2 = korte achternaam								Jong
-	# 3 = volledige achternaam (man)			de Jong
-	# 4 = volledige achternaam (vrouw)		de Jong-van Ginkel
-	# 5 = voornaam achternaam (man)				Alberdien de Jong
-	# 6 = voornaam achternaam (vrouw)			Alberdien de Jong-van Ginkel
-	# 7 = voornaam achternaam (vrouw)			Alberdien van Ginkel	
-	# 8 = achternaam, voornaam						Jong; de, Alberdien
-	# 9 = voorletters achternaam (man)		A. de Jong
-	# 10 = voorletters achternaam (vrouw)	A. de Jong-van Ginkel
-	# 11 = voorletters achternaam (vrouw)	A. van Ginkel
-	# 12 = voorletters achternaam (man)		A. (Alberdien) de Jong
-	# 13 = voorletters achternaam (vrouw)	A. (Alberdien) de Jong-van Ginkel
-	# 14 = voorletters achternaam (vrouw)	A. (Alberdien) van Ginkel
-
+	# 1 = voornaam													Alberdien
+	# 2 = korte achternaam									Jong
+	# 3 = volledige achternaam (man)				de Jong
+	# 4 = volledige achternaam (vrouw)			de Jong-van Ginkel
+	# 5 = voornaam achternaam (man)					Alberdien de Jong
+	# 6 = voornaam achternaam (vrouw)				Alberdien de Jong-van Ginkel
+	# 7 = voornaam achternaam (vrouw)				Alberdien van Ginkel	
+	# 8 = achternaam, voornaam							Jong; de, Alberdien
+	# 9 = voorletters achternaam (man)			A. de Jong
+	# 10 = voorletters achternaam (vrouw)		A. de Jong-van Ginkel
+	# 11 = voorletters achternaam (vrouw)		A. van Ginkel
+	# 12 = voorletters achternaam (man)			A. (Alberdien) de Jong
+	# 13 = voorletters achternaam (vrouw)		A. (Alberdien) de Jong-van Ginkel
+	# 14 = voorletters achternaam (vrouw)		A. (Alberdien) van Ginkel
+	# 15 = achternaam, voorletters (vrouw)	Jong-van Ginkel; de, Alberdien
 	
-	if($achter_m != '' AND ($type == 4 OR $type == 6 OR $type == 10 OR $type == 13)) {
+	if($achter_m != '' AND ($type == 4 OR $type == 6 OR $type == 10 OR $type == 13 OR $type == 15)) {
 		$achter .= '-'.$achter_m;
 	} elseif($achter_m != '' AND ($type == 7 OR $type == 11)) {
 		$achter = $achter_m;
@@ -741,7 +741,7 @@ function makeName($id, $type) {
 		
 		if($type == 2 OR $type == 7) {
 			$achternaam	= $achter;
-		} elseif($type == 8) {
+		} elseif($type == 8 OR $type == 15) {
 			$achternaam	= $achter.'; '.$tussen;
 		} else {
 			$achternaam	= $tussen.' '.$achter;
@@ -766,6 +766,8 @@ function makeName($id, $type) {
 		} else {
 			return urldecode($voorletters .' '. $achternaam);
 		}
+	} elseif($type == 15) {
+		return urldecode($achternaam.', '. $voornaam);
 	}
 }
 
@@ -2020,6 +2022,7 @@ function calculateTotals($array) {
 
 function showDeclaratieDetails($input) {
 	global $clusters;
+	global $db, $TableEBoekhouden, $EBoekhoudenCode, $EBoekhoudenNaam, $EBoekhoudenIBAN;
 	
 	# $input['user']
 	# $input['iban']
@@ -2051,10 +2054,14 @@ function showDeclaratieDetails($input) {
 	}
 	
 	if($input['eigen'] == 'Nee') {
+		$sql = "SELECT * FROM $TableEBoekhouden WHERE $EBoekhoudenCode like ". $input['relatie'];
+		$result = mysqli_query($db, $sql);
+		$row = mysqli_fetch_array($result);
+		
 		$page[] = "<tr>";
 		$page[] = "		<td colspan='2'>Begunstigde:</td>";
 		$page[] = "		<td>&nbsp;</td>";
-		$page[] = "		<td colspan='3'>". $input['relatie'] ."</td>";
+		$page[] = "		<td colspan='3'>". $row[$EBoekhoudenNaam] ."<br>". $row[$EBoekhoudenIBAN] ."</td>";
 		$page[] = "</tr>";
 	}
 	
@@ -2098,8 +2105,7 @@ function showDeclaratieDetails($input) {
 		
 		$totaal = $totaal + $input['reiskosten'];
 	}
-	
-	
+			
 	$page[] = "<tr>";
 	$page[] = "		<td colspan='6'>&nbsp;</td>";
 	$page[] = "</tr>";
@@ -2107,6 +2113,13 @@ function showDeclaratieDetails($input) {
 	$page[] = "		<td colspan='4'><b>Totaal</b></td>";
 	$page[] = "		<td>&nbsp;</td>";
 	$page[] = "		<td align='right'><b>". formatPrice($totaal) ."</b></td>";
+	$page[] = "</tr>";
+	$page[] = "<tr>";
+	$page[] = "		<td colspan='6'>&nbsp;</td>";
+	$page[] = "</tr>";
+	$page[] = "<tr>";	
+	$page[] = "		<td colspan='1'><b>Bijlage</b></td>";	
+	$page[] = "		<td colspan='5'><a href='". $input['bijlage'] ."' target='blank'>". substr($input['bijlage_naam'], 0, 50).( strlen($input['bijlage_naam']) > 50 ? '.....' : '')."</a></td>";
 	$page[] = "</tr>";
 	$page[] = "<tr>";
 	$page[] = "		<td colspan='6'>&nbsp;</td>";

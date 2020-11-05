@@ -174,7 +174,7 @@ if(isset($_REQUEST['hash'])) {
 				$factuurnummer = 'voorgaan-'.date('d-m-Y', $dienstData['start']).'-'.$dagdeel;
 				$toelichting = implode(', ', $omschrijving);
 								
-				$errorResult = eb_verstuurDeclaratie ($relatie, $boekstukNummer, $factuurnummer, $totaal, $toelichting, $mutatieId);
+				$errorResult = eb_verstuurDeclaratie ($relatie, $boekstukNummer, $factuurnummer, $totaal, $cfgGBRPreek, $toelichting, $mutatieId);
 				//$page[] = "relatie:". $relatie ."<br>\n";
 				//$page[] = "boekstukNummer:". $boekstukNummer ."<br>\n";
 				//$page[] = "factuurnummer:". $factuurnummer ."<br>\n";

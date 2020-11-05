@@ -42,12 +42,14 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 		$data['user']					= $row[$EBDeclaratieIndiener];
 		$data['eigen']				= $JSON['eigen'];
 		$data['iban']					= $JSON['iban'];
-		$data['relatie']			= $JSON['relatie'];
+		$data['relatie']			= $JSON['EB_relatie'];
 		$data['cluster']			= $JSON['cluster'];
 		$data['overige']			= $JSON['overig'];
 		$data['overig_price']	= $JSON['overig_price'];
 		$data['reiskosten']		= $JSON['reiskosten'];
-		
+		$data['bijlage']			= $JSON['bijlage'];
+		$data['bijlage_naam']	= $JSON['bijlage_naam'];
+				
 		if(isset($_REQUEST['accept'])) {
 			# Mail naar gemeentelid
 			$mail[] = "Beste ". makeName($data['user'], 1) .",<br>";
@@ -69,10 +71,10 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 			
 			if(!sendMail_new($parameter)) {
 				toLog('error', '', '', "Problemen met versturen declaratie-goedkeuring door cluco (". $_REQUEST['key'] .")");
-				$page[] = "Er zijn problemen met het versturen van de goedkeuringsmail.";
+				$page[] = "Er zijn problemen met het versturen van de goedkeuringsmail.<br>\n";
 			} else {
 				toLog('debug', '', '', "Declaratie-goedkeuring door cluco naar gemeentelid");
-				$page[] = "Er is een mail met goedkeuring verstuurd naar ". makeName($data['user'], 5);
+				$page[] = "Er is een mail met goedkeuring verstuurd naar ". makeName($data['user'], 5) ."<br>\n";
 				setDeclaratieStatus(4, $row[$EBDeclaratieID], $data['user']);	
 			}
 			
