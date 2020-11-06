@@ -52,8 +52,10 @@ if(isset($_REQUEST['key'])) {
 			if(is_numeric($UserData['eb_code']) AND $UserData['eb_code'] > 0) {
 				# Al bekend bij eBoekhouden
 				$EBCode = $UserData['eb_code'];
+				eb_getRelatieIbanByCode($EBCode, $EBIBAN);
 				
-				#eb_getRelatieIbanByCode($EBCode, $EBIBAN);
+				$page[] = "Gebruiker is al bekend in e-boekhouden: ". $EBCode .'<br>';
+				$page[] = "Heeft daar IBAN: ". $EBIBAN .'<br>';
 				
 				# Klopt IBAN-nummer nog wat bij eBoekhouden bekend is
 				if(cleanIBAN($EBIBAN) != cleanIBAN($JSON['iban'])) {
@@ -61,11 +63,13 @@ if(isset($_REQUEST['key'])) {
 					$data['iban'] = $JSON['iban'];
 					#$errorResult = eb_updateRelatieByCode($EBCode, $data);
 					
-					if($errorResult) {
-						toLog('error', '', $indiener, $errorResult);						
-					} else {
-						toLog('debug', '', $indiener, 'IBAN van relatie '. $EBCode .' aangepast van '. cleanIBAN($EBIBAN) .' naar '. cleanIBAN($JSON['iban']));
-					}					
+					$page[] = "In de declaratie is als IBAN ingevuld: ". $JSON['iban'] .'<br>';
+					
+					#if($errorResult) {
+					#	toLog('error', '', $indiener, $errorResult);						
+					#} else {
+					#	toLog('debug', '', $indiener, 'IBAN van relatie '. $EBCode .' aangepast van '. cleanIBAN($EBIBAN) .' naar '. cleanIBAN($JSON['iban']));
+					#}					
 				}			
 			
 			} else {
@@ -77,9 +81,24 @@ if(isset($_REQUEST['key'])) {
 				$plaats		= ucfirst(strtolower($UserData['plaats']));
 				$mail			= $UserData['mail'];
 				$iban			= $JSON['iban'];
+				
+				$page[] = "NIEUWE RELATIE<br>";
+				$page[] = "Naam: ". $naam .'<br>';
+				$page[] = "Geslacht: ". $geslacht .'<br>';
+				$page[] = "Adres: ". $adres .'<br>';
+				$page[] = "Postcode: ". $postcode .'<br>';
+				$page[] = "Plaats: ". $plaats .'<br>';
+				$page[] = "Mail: ". $mail .'<br>';
+				$page[] = "IBAN: ". $iban .'<br>';
 								
-				#eb_maakNieuweRelatieAan ($naam , $geslacht, $adres, $postcode, $plaats, $mail, $iban, $EBCode, $EB_id);
-				#mysqli_query($db, "UPDATE $TableUsers SET $UserEBRelatie = $EBCode WHERE $UserID = $indiener");
+				#$errorResult = eb_maakNieuweRelatieAan ($naam , $geslacht, $adres, $postcode, $plaats, $mail, $iban, $EBCode, $EB_id);
+				
+				#if($errorResult) {
+				#	toLog('error', '', $indiener, $errorResult);						
+				#} else {
+				#	toLog('debug', '', $indiener, makeName($indiener, 5) .' als relatie toegevoegd in eBoekhouden met als code '. $EBCode);
+				#	mysqli_query($db, "UPDATE $TableUsers SET $UserEBRelatie = $EBCode WHERE $UserID = $indiener");
+				#}				
 			}
 		}
 		
@@ -95,31 +114,40 @@ if(isset($_REQUEST['key'])) {
 				$mail			= '';
 				$iban			= cleanIBAN($_POST['iban_new']);
 				
-				#eb_maakNieuweRelatieAan ($naam , $geslacht, $adres, $postcode, $plaats, $mail, $iban, $EBCode, $EB_id);
+				$page[] = "NIEUWE BEGUNSTIGDE<br>";
+				$page[] = "Naam: ". $naam .'<br>';
+				$page[] = "Geslacht: ". $geslacht .'<br>';
+				$page[] = "Adres: ". $adres .'<br>';
+				$page[] = "Postcode: ". $postcode .'<br>';
+				$page[] = "Plaats: ". $plaats .'<br>';
+				$page[] = "Mail: ". $mail .'<br>';
+				$page[] = "IBAN: ". $iban .'<br>';				
+				
+				#$errorResult = eb_maakNieuweRelatieAan ($naam , $geslacht, $adres, $postcode, $plaats, $mail, $iban, $EBCode, $EB_id);
+				
+				#if($errorResult) {
+				#	toLog('error', '', $indiener, $errorResult);						
+				#} else {
+				#	toLog('debug', '', $indiener, $naam .' als nieuwe relatie aangemaakt met als code '. $EBCode);
+				#}
 			} else {
 				$EBCode = $_POST['begunstigde'];
 			}
 		}
 		
 		$boekstukNummer	= generateBoekstukNr(date('Y'));				
-		$factuurnummer	= 'declaratie-'.date('d-m-Y').'-'.$_REQUEST['key'];
+		$factuurnummer	= 'declaratie-'.date('d-m-Y').'-'.$boekstukNummer;
 		$toelichting		= implode(', ', $omschrijving);
 		$totaal					= $row[$EBDeclaratieTotaal];
 								
 		#$errorResult = eb_verstuurDeclaratie ($EBCode, $boekstukNummer, $factuurnummer, $totaal, $_POST['GBR'], $toelichting, $mutatieId);
+		#if($errorResult) {
+		#	toLog('error', '', $indiener, $errorResult);						
+		#} else {
+		#	toLog('debug', '', $indiener, 'Declaratie ingediend ('. formatPrice($totaal) .' naar '. $EBCode .')');
+		#}		
 		
-		
-		# EIGEN = JA
-		# BEPAAL EBID
-		# 	Check of $data['user'] al bekend is in eboekhouden
-		# 	Indien bekend -> check IBAN nummer -> pas aan indien nodig -> definieer EBID
-		# 	Indien niet bekend -> voeg toe -> definieer EBID -> koppel ook in leden-db
-		
-		# EIGEN = NEE
-		# RELATIE <> 3
-		#		 definieer EBID
-		# RELATIE == 3
-				
+		# JSON-string terug in database		
 		
 	} else {
 		$data['user']					= $indiener;
