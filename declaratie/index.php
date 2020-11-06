@@ -12,8 +12,12 @@ $page[] = "In welke hoedanigheid wilt u een declaratie doen?<br>";
 $page[] = "<ul>";
 $page[] = "<li><a href='gastpredikant.php'>Gastpredikant</a></li>";
 $page[] = "<li><a href='gemeentelid.php'>Gemeentelid</a></li>";
-$page[] = "<li><a href='cluco.php'>Cluster-coordinator</a></li>";
-$page[] = "<li><a href='penningmeester.php'>Penningmeester</a></li>";
+
+$toegestaan = array_merge(getGroupMembers(1), getGroupMembers(38));
+if(isset($_SESSION['ID']) AND in_array($_SESSION['ID'], $toegestaan)) {
+	$page[] = "<li><a href='cluco.php'>Cluster-coordinator</a></li>";
+	$page[] = "<li><a href='penningmeester.php'>Penningmeester</a></li>";
+}
 
 $page[] = "</ul>";
 

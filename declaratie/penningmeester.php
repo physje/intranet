@@ -1,6 +1,6 @@
 <?php
 include_once('../include/functions.php');
-//include_once('../include/EB_functions.php');
+include_once('../include/EB_functions.php');
 include_once('../include/config.php');
 include_once('../include/config_mails.php');
 include_once('../include/HTML_TopBottom.php');
@@ -43,34 +43,39 @@ if(isset($_REQUEST['key'])) {
 		
 		$UserData = getMemberDetails($indiener);
 				
-		//foreach($JSON as $key => $value) {
-		//	$page[] = "<b>$key</b>: $value<br>\n";
-		//}
+		/*
+		foreach($JSON as $key => $value) {
+			$page[] = "<b>$key</b>: $value<br>\n";
+		}
+		*/
+		
+		//$page[] = "GBR: ". $_POST['GBR'];
+		
 		
 		# EIGEN = JA
-		if($JSON['eigen'] == 'ja') {			
+		if($JSON['eigen'] == 'Ja') {		
 			if(is_numeric($UserData['eb_code']) AND $UserData['eb_code'] > 0) {
 				# Al bekend bij eBoekhouden
 				$EBCode = $UserData['eb_code'];
-				eb_getRelatieIbanByCode($EBCode, $EBIBAN);
-				
-				$page[] = "Gebruiker is al bekend in e-boekhouden: ". $EBCode .'<br>';
-				$page[] = "Heeft daar IBAN: ". $EBIBAN .'<br>';
+				$errorResult = eb_getRelatieIbanByCode($EBCode, $EBIBAN);
+											
+				//$page[] = "Gebruiker is al bekend in e-boekhouden: ". $EBCode .'<br>';
+				//$page[] = "Heeft daar IBAN: ". $EBIBAN .'<br>';
 				
 				# Klopt IBAN-nummer nog wat bij eBoekhouden bekend is
 				if(cleanIBAN($EBIBAN) != cleanIBAN($JSON['iban'])) {
 					# Update eBoekhouden
 					$data['iban'] = $JSON['iban'];
-					#$errorResult = eb_updateRelatieByCode($EBCode, $data);
+					$errorResult = eb_updateRelatieByCode($EBCode, $data);
 					
-					$page[] = "In de declaratie is als IBAN ingevuld: ". $JSON['iban'] .'<br>';
+					//$page[] = "In de declaratie is als IBAN ingevuld: ". $JSON['iban'] .'<br>';
 					
-					#if($errorResult) {
-					#	toLog('error', '', $indiener, $errorResult);						
-					#} else {
-					#	toLog('debug', '', $indiener, 'IBAN van relatie '. $EBCode .' aangepast van '. cleanIBAN($EBIBAN) .' naar '. cleanIBAN($JSON['iban']));
-					#}					
-				}			
+					if($errorResult) {
+						toLog('error', '', $indiener, $errorResult);						
+					} else {
+						toLog('debug', '', $indiener, 'IBAN van relatie '. $EBCode .' aangepast van '. cleanIBAN($EBIBAN) .' naar '. cleanIBAN($JSON['iban']));
+					}					
+				}		
 			
 			} else {
 				# Niet bekend bij eBoekhouden				
@@ -82,29 +87,30 @@ if(isset($_REQUEST['key'])) {
 				$mail			= $UserData['mail'];
 				$iban			= $JSON['iban'];
 				
-				$page[] = "NIEUWE RELATIE<br>";
-				$page[] = "Naam: ". $naam .'<br>';
-				$page[] = "Geslacht: ". $geslacht .'<br>';
-				$page[] = "Adres: ". $adres .'<br>';
-				$page[] = "Postcode: ". $postcode .'<br>';
-				$page[] = "Plaats: ". $plaats .'<br>';
-				$page[] = "Mail: ". $mail .'<br>';
-				$page[] = "IBAN: ". $iban .'<br>';
+				//$page[] = "NIEUWE RELATIE<br>";
+				//$page[] = "Naam: ". $naam .'<br>';
+				//$page[] = "Geslacht: ". $geslacht .'<br>';
+				//$page[] = "Adres: ". $adres .'<br>';
+				//$page[] = "Postcode: ". $postcode .'<br>';
+				//$page[] = "Plaats: ". $plaats .'<br>';
+				//$page[] = "Mail: ". $mail .'<br>';
+				//$page[] = "IBAN: ". $iban .'<br>';
 								
-				#$errorResult = eb_maakNieuweRelatieAan ($naam , $geslacht, $adres, $postcode, $plaats, $mail, $iban, $EBCode, $EB_id);
+				$errorResult = eb_maakNieuweRelatieAan ($naam , $geslacht, $adres, $postcode, $plaats, $mail, $iban, $EBCode, $EB_id);
 				
-				#if($errorResult) {
-				#	toLog('error', '', $indiener, $errorResult);						
-				#} else {
-				#	toLog('debug', '', $indiener, makeName($indiener, 5) .' als relatie toegevoegd in eBoekhouden met als code '. $EBCode);
-				#	mysqli_query($db, "UPDATE $TableUsers SET $UserEBRelatie = $EBCode WHERE $UserID = $indiener");
-				#}				
+				if($errorResult) {
+					toLog('error', '', $indiener, $errorResult);						
+				} else {
+					toLog('debug', '', $indiener, makeName($indiener, 5) .' als relatie toegevoegd in eBoekhouden met als code '. $EBCode);
+					mysqli_query($db, "UPDATE $TableUsers SET $UserEBRelatie = $EBCode WHERE $UserID = $indiener");
+				}				
 			}
+			$toelichting		= implode(', ', $JSON['overig']);
 		}
 		
 		
 		# EIGEN = NEE
-		if($JSON['eigen'] == 'nee') {
+		if($JSON['eigen'] == 'Nee') {
 			if($_POST['begunstigde'] == 3) {
 				$naam			= $_POST['name_new'];
 				$geslacht	= 'm';
@@ -114,41 +120,63 @@ if(isset($_REQUEST['key'])) {
 				$mail			= '';
 				$iban			= cleanIBAN($_POST['iban_new']);
 				
-				$page[] = "NIEUWE BEGUNSTIGDE<br>";
-				$page[] = "Naam: ". $naam .'<br>';
-				$page[] = "Geslacht: ". $geslacht .'<br>';
-				$page[] = "Adres: ". $adres .'<br>';
-				$page[] = "Postcode: ". $postcode .'<br>';
-				$page[] = "Plaats: ". $plaats .'<br>';
-				$page[] = "Mail: ". $mail .'<br>';
-				$page[] = "IBAN: ". $iban .'<br>';				
+				//$page[] = "NIEUWE BEGUNSTIGDE<br>";
+				//$page[] = "Naam: ". $naam .'<br>';
+				//$page[] = "Geslacht: ". $geslacht .'<br>';
+				//$page[] = "Adres: ". $adres .'<br>';
+				//$page[] = "Postcode: ". $postcode .'<br>';
+				//$page[] = "Plaats: ". $plaats .'<br>';
+				//$page[] = "Mail: ". $mail .'<br>';
+				//$page[] = "IBAN: ". $iban .'<br>';				
 				
-				#$errorResult = eb_maakNieuweRelatieAan ($naam , $geslacht, $adres, $postcode, $plaats, $mail, $iban, $EBCode, $EB_id);
+				$errorResult = eb_maakNieuweRelatieAan ($naam , $geslacht, $adres, $postcode, $plaats, $mail, $iban, $EBCode, $EB_id);
 				
-				#if($errorResult) {
-				#	toLog('error', '', $indiener, $errorResult);						
-				#} else {
-				#	toLog('debug', '', $indiener, $naam .' als nieuwe relatie aangemaakt met als code '. $EBCode);
-				#}
+				if($errorResult) {
+					toLog('error', '', $indiener, $errorResult);						
+				} else {
+					toLog('debug', '', $indiener, $naam .' als nieuwe relatie aangemaakt met als code '. $EBCode);
+				}
 			} else {
 				$EBCode = $_POST['begunstigde'];
+				//$page[] = "BESTAANDE BEGUNSTIGDE<br>";
+				//$page[] = $_POST['begunstigde'] ."<br>";
 			}
+			
+			$toelichting	= $_POST['betalingskenmerk'];
 		}
 		
-		$boekstukNummer	= generateBoekstukNr(date('Y'));				
-		$factuurnummer	= 'declaratie-'.date('d-m-Y').'-'.$boekstukNummer;
-		$toelichting		= implode(', ', $omschrijving);
+		$boekstukNummer	= generateBoekstukNr(date('Y'));		
+		$factuurnummer	= 'declaratie-'.$boekstukNummer;
 		$totaal					= $row[$EBDeclaratieTotaal];
-								
-		#$errorResult = eb_verstuurDeclaratie ($EBCode, $boekstukNummer, $factuurnummer, $totaal, $_POST['GBR'], $toelichting, $mutatieId);
-		#if($errorResult) {
-		#	toLog('error', '', $indiener, $errorResult);						
-		#} else {
-		#	toLog('debug', '', $indiener, 'Declaratie ingediend ('. formatPrice($totaal) .' naar '. $EBCode .')');
-		#}		
 		
-		# JSON-string terug in database		
+		$JSON['EBCode'] = $EBCode;
+									
+		$errorResult = eb_verstuurDeclaratie ($EBCode, $boekstukNummer, '[remove] '.$factuurnummer, $totaal, $_POST['GBR'], $toelichting, $mutatieId);
+		if($errorResult) {
+			toLog('error', '', $indiener, $errorResult);
+			$page[] = 'Probleem met toevoegen van declaratie ter waarde van '. formatPrice($totaal) .' voor '. $EBCode .'<br>';
+		} else {
+			toLog('info', '', $indiener, 'Declaratie ingediend ('. formatPrice($totaal) .' naar '. $EBCode .')');
+			$page[] = 'Declaratie van '. formatPrice($totaal) .' toegevoegd voor '. $EBCode .'<br>';
+		}
+				
+		/*	
+		$page[] = "DECLARATIE<br>";
+		$page[] = "EBCode: ". $EBCode .'<br>';
+		$page[] = "BoekstukNummer: ". $boekstukNummer .'<br>';
+		$page[] = "Factuurnummer: ". $factuurnummer .'<br>';
+		$page[] = "Totaal: ". $totaal .'<br>';
+		$page[] = "GBR: ". $_POST['GBR'] .'<br>';
+		$page[] = "Toelichting: ". $toelichting .'<br>';		
+		*/		
 		
+		setDeclaratieStatus(5, $row[$EBDeclaratieID], $data['user']);
+		# JSON-string terug in database
+		$JSONtoDatabase = json_encode($JSON);
+		
+		$sql = "UPDATE $TableEBDeclaratie SET $EBDeclaratieDeclaratie = '". $JSONtoDatabase ."' WHERE $EBDeclaratieID like ". $row[$EBDeclaratieID];
+		//$page[] = $sql;
+		mysqli_query($db, $sql);		
 	} else {
 		$data['user']					= $indiener;
 		$data['eigen']				= $JSON['eigen'];
@@ -209,8 +237,7 @@ if(isset($_REQUEST['key'])) {
 		$page[] = "		</select></td>";
 		$page[] = "</tr>";
 		
-		//if($data['eigen'] == 'Nee') {
-		if(true) {
+		if($data['eigen'] == 'Nee') {		
 			$page[] = "<tr>";
 			$page[] = "		<td colspan='6'>&nbsp;</td>";
 			$page[] = "</tr>";
@@ -235,32 +262,32 @@ if(isset($_REQUEST['key'])) {
 			} while($row = mysqli_fetch_array($result));
 			
 			$page[] = "	</select></td>";
-			$page[] = "</tr>";			
+			$page[] = "</tr>";				
+			$page[] = "<tr>";
+			$page[] = "		<td colspan='6'><b>Let wel</b>: om een nieuwe begunstigde toe te voegen dient bij '<i>Bedrijf / kerkelijke instellingen</i>' 'diversen' geselecteerd te worden.</td>";
+			$page[] = "</tr>";
+			$page[] = "<tr>";
+			$page[] = "	<td valign='top' colspan='2'>Naam</td>";	
+			$page[] = "	<td valign='top' colspan='4'><input type='text' name='name_new' size='40'></td>";
+			$page[] = "</tr>";
+			$page[] = "<tr>";
+			$page[] = "	<td valign='top' colspan='2'>Adres</td>";	
+			$page[] = "	<td valign='top' colspan='4'><input type='text' name='adres_new' size='40'></td>";
+			$page[] = "</tr>";
+			$page[] = "<tr>";
+			$page[] = "	<td valign='top' colspan='2'>Postcode</td>";	
+			$page[] = "	<td valign='top' colspan='4'><input type='text' name='PC_new' size='40'></td>";
+			$page[] = "</tr>";
+			$page[] = "<tr>";
+			$page[] = "	<td valign='top' colspan='2'>Plaats</td>";	
+			$page[] = "	<td valign='top' colspan='4'><input type='text' name='plaats_new' size='40'></td>";
+			$page[] = "</tr>";
+			$page[] = "<tr>";
+			$page[] = "	<td valign='top' colspan='2'>IBAN</td>";	
+			$page[] = "	<td valign='top' colspan='4'><input type='text' name='iban_new' size='40'></td>";
+			$page[] = "</tr>";		
 		}
 		
-		$page[] = "<tr>";
-		$page[] = "		<td colspan='6'><b>Let wel</b>: om een nieuwe begunstigde toe te voegen dient bij '<i>Bedrijf / kerkelijke instellingen</i>' 'diversen' geselecteerd te worden.</td>";
-		$page[] = "</tr>";
-		$page[] = "<tr>";
-		$page[] = "	<td valign='top' colspan='2'>Naam</td>";	
-		$page[] = "	<td valign='top' colspan='4'><input type='text' name='name_new' size='40'></td>";
-		$page[] = "</tr>";
-		$page[] = "<tr>";
-		$page[] = "	<td valign='top' colspan='2'>Adres</td>";	
-		$page[] = "	<td valign='top' colspan='4'><input type='text' name='adres_new' size='40'></td>";
-		$page[] = "</tr>";
-		$page[] = "<tr>";
-		$page[] = "	<td valign='top' colspan='2'>Postcode</td>";	
-		$page[] = "	<td valign='top' colspan='4'><input type='text' name='PC_new' size='40'></td>";
-		$page[] = "</tr>";
-		$page[] = "<tr>";
-		$page[] = "	<td valign='top' colspan='2'>Plaats</td>";	
-		$page[] = "	<td valign='top' colspan='4'><input type='text' name='plaats_new' size='40'></td>";
-		$page[] = "</tr>";
-		$page[] = "<tr>";
-		$page[] = "	<td valign='top' colspan='2'>IBAN</td>";	
-		$page[] = "	<td valign='top' colspan='4'><input type='text' name='iban_new' size='40'></td>";
-		$page[] = "</tr>";		
 		$page[] = "<tr>";
 		$page[] = "		<td colspan='6'>&nbsp;</td>";
 		$page[] = "</tr>";

@@ -47,8 +47,7 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 		$data['overige']			= $JSON['overig'];
 		$data['overig_price']	= $JSON['overig_price'];
 		$data['reiskosten']		= $JSON['reiskosten'];
-		$data['bijlage']			= $JSON['bijlage'];
-		$data['bijlage_naam']	= $JSON['bijlage_naam'];
+
 				
 		if(isset($_REQUEST['accept'])) {
 			# Mail naar gemeentelid
@@ -83,7 +82,7 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 			
 			$mail[] = "Beste Penningmeester,<br>";
 			$mail[] = "<br>";
-			$mail[] = "Onderstaande declaratie van ". makeName($data['user'], 5) ." is door de cluster-coordinator goedgekeurd.<br>";
+			$mail[] = "Onderstaande declaratie van ". makeName($data['user'], 5) ." is door ". makeName($_SESSION['ID'], 5) ." als cluster-coordinator goedgekeurd.<br>";
 			$mail[] = '<table border=0>';
 			$mail[] = "<tr>";
 			$mail[] = "		<td colspan='6' height=50><hr></td>";
@@ -168,6 +167,10 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 				$page[] = "<input type='hidden' name='key' value='". $_REQUEST['key'] ."'>";
 				$page[] = "<input type='hidden' name='user' value='". $data['user'] ."'>";
 				$page[] = '<table border=0>';
+				
+				# Pas hier toevoegen, omdat anders in de mail ook de bijlage in de tekst wordt opgenomen
+				$data['bijlage']			= $JSON['bijlage'];
+				$data['bijlage_naam']	= $JSON['bijlage_naam'];
 				
 				$page = array_merge($page, showDeclaratieDetails($data));
 			

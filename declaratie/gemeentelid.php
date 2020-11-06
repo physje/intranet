@@ -87,21 +87,25 @@ if(isset($_POST['correct'])) {
 	# Mail naar de cluco opstellen
 	$cluster = $toDatabase['cluster'];
 	
-	if(isset($clusterCoordinatoren[$cluster])) {
+	if(isset($clusterCoordinatoren[$cluster]) AND $cluco <> $_SESSION['ID']) {
 		$cluco = $clusterCoordinatoren[$cluster];
 	} else {
-		$cluco = '';
-	}
-	
-	if($cluco == $_SESSION['ID']) {
 		$cluco = 0;
-	}
+	}	
 	
-	//$ClucoAddress = getMailAdres($cluco);
-	$ClucoAddress	= getMailAdres($_SESSION['ID']);
-	$ClucoName		= makeName($cluco, 5);
-	$ClucoData		= getMemberDetails($cluco);
+	# Als $cluco = 0, betekent dat dat er geen cluco is
+	# in dat geval naar de penningmeester mailen	
+	if(isset($cluco) AND $cluco == 0) {
+		$ClucoAddress	= $declaratieReplyAddress;
+		$ClucoName		= $declaratieReplyName;
+		$cluco				= 109401;
+	} else {
+		//$ClucoAddress = getMailAdres($cluco);
+		$ClucoAddress	= getMailAdres($_SESSION['ID']);
+		$ClucoName		= makeName($cluco, 5);		
+	}
 		
+	$ClucoData		= getMemberDetails($cluco);
 	$onderwerpen = array();
 	
 	if(isset($toDatabase['overig'])) {
@@ -148,7 +152,7 @@ if(isset($_POST['correct'])) {
 		$reis_van 		= getParam('reis_van', $thuisAdres);
 		$reis_naar		= getParam('reis_naar');
 		$reiskosten		= getParam('reiskosten', $reiskosten);
-		$iban 				= getParam('iban', $EBIBAN);
+		$iban 				= cleanIBAN(getParam('iban', $EBIBAN));
 	}
 	
 	if($_POST['eigen'] == 'Nee') {	
@@ -178,6 +182,13 @@ if(isset($_POST['correct'])) {
 			$checkFields = false;
 			$meldingIBAN = 'Vul IBAN in';
 		}
+		
+		# Is de IBAN wel geldig
+		if($_POST['eigen'] == 'Ja' AND $iban != '' AND !validateIBAN($iban)) {
+			$checkFields = false;
+			$meldingIBAN = 'IBAN niet geldig';
+		}
+		
 		
 		# Is er wel een relatie ingevuld	
 		if($_POST['eigen'] == 'Nee' AND $relatie == '') {
