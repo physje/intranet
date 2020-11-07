@@ -137,7 +137,7 @@ if(isset($_POST['correct'])) {
 		$page[] = "Er zijn problemen met het versturen van de notificatie-mail naar de clustercoordinator.";
 	} else {
 		toLog('info', $_SESSION['ID'], $_SESSION['ID'], "Declaratie-notificatie naar cluco");
-		$page[] = "De declaratie is ter goedkeuring voorgelegd aan de clustercoordinator";
+		$page[] = "De declaratie is ter goedkeuring voorgelegd aan ". makeName($cluco, 5) ." als clustercoordinator";
 	}	
 } elseif(isset($_POST['page']) AND $_POST['page'] > 0) {
 	if($_POST['eigen'] == 'Ja') {
@@ -339,13 +339,11 @@ if(isset($_POST['correct'])) {
 			$page[] = "	<td valign='top'><select name='EB_relatie'>";
 			$page[] = "	<option value=''>Selecteer bedrijf/instelling</option>";
 			
-			$sql = "SELECT * FROM $TableEBoekhouden ORDER BY $EBoekhoudenNaam";
-			$result = mysqli_query($db, $sql);
-			$row = mysqli_fetch_array($result);
-		
-			do {
-				$page[] = "	<option value='". $row[$EBoekhoudenCode] ."'". ($row[$EBoekhoudenCode] == $relatie ? ' selected' : '').">". substr($row[$EBoekhoudenNaam], 0, 35) ."</option>";
-			} while($row = mysqli_fetch_array($result));
+			$relaties = eb_getRelaties();
+	
+			foreach($relaties as $relatieData) {
+				$page[] = "	<option value='". $relatieData['code'] ."'". ($relatie == $relatieData['code'] ? ' selected' : '') .">". substr($relatieData['naam'], 0, 35) ."</option>";
+			}
 			
 			$page[] = "	</select></td>";
 			$page[] = "</tr>";

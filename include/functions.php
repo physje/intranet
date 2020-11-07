@@ -2047,7 +2047,6 @@ function calculateTotals($array) {
 
 function showDeclaratieDetails($input) {
 	global $clusters;
-	global $db, $TableEBoekhouden, $EBoekhoudenCode, $EBoekhoudenNaam, $EBoekhoudenIBAN;
 	
 	# $input['user']
 	# $input['iban']
@@ -2078,15 +2077,13 @@ function showDeclaratieDetails($input) {
 		$page[] = "</tr>";
 	}
 	
-	if($input['eigen'] == 'Nee') {
-		$sql = "SELECT * FROM $TableEBoekhouden WHERE $EBoekhoudenCode like ". $input['relatie'];
-		$result = mysqli_query($db, $sql);
-		$row = mysqli_fetch_array($result);
+	if($input['eigen'] == 'Nee') {		
+		$relatieData = eb_getRelatieDataByCode($input['relatie']);
 		
 		$page[] = "<tr>";
 		$page[] = "		<td colspan='2'>Begunstigde:</td>";
 		$page[] = "		<td>&nbsp;</td>";
-		$page[] = "		<td colspan='3'>". $row[$EBoekhoudenNaam] ."<br>". $row[$EBoekhoudenIBAN] ."</td>";
+		$page[] = "		<td colspan='3'>". $relatieData['naam'] ."<br>". $relatieData['iban'] ."</td>";
 		$page[] = "</tr>";
 	}
 	

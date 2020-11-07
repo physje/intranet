@@ -150,7 +150,7 @@ if(isset($_REQUEST['key'])) {
 			toLog('info', $_SESSION['ID'], $indiener, 'Declaratie ingediend ('. formatPrice($totaal) .' naar '. $EBCode .')');
 			$page[] = 'Declaratie van '. formatPrice($totaal) .' toegevoegd voor '. $EBCode .'<br>';
 		}
-				
+						
 		/*	
 		$page[] = "DECLARATIE<br>";
 		$page[] = "EBCode: ". $EBCode .'<br>';
@@ -161,13 +161,33 @@ if(isset($_REQUEST['key'])) {
 		$page[] = "Toelichting: ". $toelichting .'<br>';		
 		*/		
 		
+		$cluster = $JSON['cluster'];
+				
+		$MailFinAdmin = array();
+		$MailFinAdmin[] = makeName($indiener, 5) .' heeft een declaratie ingediend.<br>';
+		$MailFinAdmin[] = "<br>";
+		$MailFinAdmin[] = "Het betreft een declaratie ter waarde van ". formatPrice($totaal)." voor cluster ". $clusters[$cluster] ."<br>";
+				
+		$param_finAdmin['to'][]					= array($FinAdminAddress);
+		$param_finAdmin['subject'] 			= "Declaratie ". makeName($_SESSION['ID'], 5) ." voor cluster ". $clusters[$cluster];
+		$param_finAdmin['attachment'][]	= array('file' => $toDatabase['bijlage'], 'name' => $boekstukNummer.'_'.$toDatabase['bijlage_naam']);
+		$param_finAdmin['message'] 			= implode("\n", $MailFinAdmin);
+					
+		if(!sendMail_new($param_finAdmin)) {
+			toLog('error', $_SESSION['ID'], $indiener, "Problemen met versturen van mail naar financiële administratie");
+			$page[] = "Er zijn problemen met het versturen van mail naar de financiële administratie";
+		} else {
+			toLog('debug', $_SESSION['ID'], $indiener, "Declaratie-notificatie naar financiële administratie");
+			//$page[] = "De declaratie is ter goedkeuring voorgelegd aan de clustercoordinator";
+		}	
+		
 		setDeclaratieStatus(5, $row[$EBDeclaratieID], $data['user']);
+		
 		# JSON-string terug in database
 		$JSONtoDatabase = json_encode($JSON);
-		
 		$sql = "UPDATE $TableEBDeclaratie SET $EBDeclaratieDeclaratie = '". $JSONtoDatabase ."' WHERE $EBDeclaratieID like ". $row[$EBDeclaratieID];
-		//$page[] = $sql;
 		mysqli_query($db, $sql);		
+		
 	} else {
 		$data['user']					= $indiener;
 		$data['eigen']				= $JSON['eigen'];
@@ -243,14 +263,12 @@ if(isset($_REQUEST['key'])) {
 			$page[] = "	<td valign='top' colspan='2'>Bedrijf / kerkelijke instellingen?</td>";	
 			$page[] = "	<td valign='top' colspan='4'><select name='begunstigde'>";
 			$page[] = "	<option value=''>Selecteer bedrijf/instelling</option>";
-			
-			$sql = "SELECT * FROM $TableEBoekhouden ORDER BY $EBoekhoudenNaam";
-			$result = mysqli_query($db, $sql);
-			$row = mysqli_fetch_array($result);
-		
-			do {
-				$page[] = "	<option value='". $row[$EBoekhoudenCode] ."'". ($row[$EBoekhoudenCode] == $data['relatie'] ? ' selected' : '').">". $row[$EBoekhoudenNaam] ."</option>";
-			} while($row = mysqli_fetch_array($result));
+
+			$relaties = eb_getRelaties();
+	
+			foreach($relaties as $relatieData) {
+				$page[] = "	<option value='". $relatieData['code'] ."'". ($data['relatie'] == $relatieData['code'] ? ' selected' : '') .">". $relatieData['naam'] ."</option>";
+			}
 			
 			$page[] = "	</select></td>";
 			$page[] = "</tr>";				

@@ -284,3 +284,52 @@ function eb_verstuurDeclaratie ( $code, $boekstukNummer, $factuurNummer, $bedrag
         return $exception->getMessage();
     }
 }
+
+function eb_getRelaties() {
+	try {
+		global $ebUsername, $ebSecurityCode1, $ebSecurityCode2;
+		$ebClient = new eBoekhoudenConnect($ebUsername, $ebSecurityCode1, $ebSecurityCode2);
+ 		
+ 		$Relaties = $ebClient->getAllRelations()->Relaties; 		 
+ 		 		
+ 		# indien een resultaat, dan even een array maken
+ 		if(!is_array($Relaties->cRelatie)) $Relaties->cRelatie = array($Relaties->cRelatie);
+ 		  
+ 		foreach ($Relaties->cRelatie as $Relatie) {  	
+ 			$rij['id'] = $Relatie->ID;
+ 			$rij['code'] = $Relatie->Code;
+ 			$rij['iban'] = cleanIBAN($Relatie->IBAN);
+ 			$rij['naam'] = $Relatie->Bedrijf;
+ 			
+ 			$namen[]  = strtolower($Relatie->Bedrijf);
+ 			$data[] = $rij;
+ 		}
+ 		
+ 		array_multisort($namen, SORT_ASC, $data);
+ 		
+ 		return $data;
+ 		
+ 	} catch (\Exception $exception) {
+  	return $exception->getMessage();
+  } 		
+}
+
+function eb_getRelatieDataByCode ($code){
+	try {
+		global $ebUsername, $ebSecurityCode1, $ebSecurityCode2;
+		
+		$ebClient = new eBoekhoudenConnect($ebUsername, $ebSecurityCode1, $ebSecurityCode2);
+		
+		$relatie = $ebClient->getRelationByCode ( $code );
+		
+		$rij['id'] = $relatie->ID;
+ 		$rij['code'] = $relatie->Code;
+ 		$rij['iban'] = cleanIBAN($relatie->IBAN);
+ 		$rij['naam'] = $relatie->Bedrijf;
+ 		
+ 		return $rij;
+ 		   
+  } catch (\Exception $exception) {
+  	return $exception->getMessage();
+	}
+}

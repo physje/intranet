@@ -208,7 +208,7 @@ class eBoekhoudenConnect
     /**
      *
      */
-    private function getAllRelations()
+    public function getAllRelations()
     {
         $params = [
             "SecurityCode2" => $this->securityCode2,

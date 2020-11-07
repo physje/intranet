@@ -120,13 +120,11 @@ if(in_array(1, getMyGroups($_SESSION['ID']))) {
 	echo "	<td><select name='EB_relatie'>";
 	echo "	<option value=''>Selecteer relatie</option>";
 	
-	$sql = "SELECT * FROM $TableEBoekhouden ORDER BY $EBoekhoudenNaam";
-	$result = mysqli_query($db, $sql);
-	$row = mysqli_fetch_array($result);
+	$relaties = eb_getRelaties();
 	
-	do {
-		echo "	<option value='". $row[$EBoekhoudenCode] ."'". ($personData['eb_code'] == $row[$EBoekhoudenCode] ? ' selected' : '') .">". substr($row[$EBoekhoudenNaam], 0, 35) ."</option>";
-	} while($row = mysqli_fetch_array($result));
+	foreach($relaties as $relatieData) {
+		echo "	<option value='". $relatieData['code'] ."'". ($personData['eb_code'] == $relatieData['code'] ? ' selected' : '') .">". substr($relatieData['naam'], 0, 35) ."</option>";
+	}
 			
 	echo "	</select></td>";
 	echo "	</tr>".NL;	

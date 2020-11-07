@@ -1,5 +1,6 @@
 <?php
 include_once('../include/functions.php');
+include_once('../include/EB_functions.php');
 include_once('../include/config.php');
 include_once('../include/HTML_TopBottom.php');
 
@@ -208,13 +209,11 @@ if(isset($_REQUEST['voorgangerID'])) {
 		$text[] = "	<td><select name='EB_relatie'>";
 		$text[] = "	<option value=''>Selecteer relatie</option>";
 		
-		$sql = "SELECT * FROM $TableEBoekhouden ORDER BY $EBoekhoudenNaam";
-		$result = mysqli_query($db, $sql);
-		$row = mysqli_fetch_array($result);
-		
-		do {
-			$text[] = "	<option value='". $row[$EBoekhoudenCode] ."'". ($voorgangerData['EB-relatie'] == $row[$EBoekhoudenCode] ? ' selected' : '') .">". substr($row[$EBoekhoudenNaam], 0, 35) ."</option>";
-		} while($row = mysqli_fetch_array($result));
+		$relaties = eb_getRelaties();
+	
+		foreach($relaties as $relatieData) {
+			$text[] = "	<option value='". $relatieData['code'] ."'". ($voorgangerData['EB-relatie'] == $relatieData['code'] ? ' selected' : '') .">". substr($relatieData['naam'], 0, 35) ."</option>";
+		}		
 				
 		$text[] = "	</select></td>";
 		$text[] = "</tr>";

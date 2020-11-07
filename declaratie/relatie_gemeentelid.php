@@ -7,17 +7,16 @@ $requiredUserGroups = array(1);
 $cfgProgDir = '../auth/';
 include($cfgProgDir. "secure.php");
 
-$sql = "SELECT * FROM $TableEBoekhouden ORDER BY $EBoekhoudenNaam";
-$result = mysqli_query($db, $sql);
-$row = mysqli_fetch_array($result);
+$relaties = eb_getRelaties();
 
-$page[] = '<table>'; 
-do {
+$page[] = '<table>';
+
+foreach($relaties as $relatieData) {
 	$page[] = '<tr>';
-	$page[] = '	<td>'. $row[$EBoekhoudenCode] .'</td>';
-	$page[] = '	<td>'. $row[$EBoekhoudenNaam] .'</td>';
+	$page[] = '	<td>'. $relatieData['code'] .'</td>';
+	$page[] = '	<td>'. $relatieData['naam'] .'</td>';
 		
-	$sql_2 = "SELECT $UserID FROM $TableUsers WHERE $UserEBRelatie = ". $row[$EBoekhoudenCode];
+	$sql_2 = "SELECT $UserID FROM $TableUsers WHERE $UserEBRelatie = ". $relatieData['code'];
 	$result_2 = mysqli_query($db, $sql_2);
 	if(mysqli_num_rows($result_2) > 0) {
 		$row_2 = mysqli_fetch_array($result_2);
@@ -26,7 +25,7 @@ do {
 		$page[] = '	<td>&nbsp;</td>';
 	}
 	$page[] = '</tr>';		
-} while($row = mysqli_fetch_array($result));
+}
 
 $page[] = '</table>'; 
 

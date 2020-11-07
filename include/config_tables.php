@@ -190,11 +190,11 @@ $LPdoop												= "doop";
 $LPlastSeen										= "last_seen";
 $LPlastChecked								= "last_checked";
                     					
-$TableEBoekhouden 						= "eb_relatie";
-$EBoekhoudenID								= "id";
-$EBoekhoudenCode							= "code";
-$EBoekhoudenIBAN							= "iban";
-$EBoekhoudenNaam							= "naam";
+$TableEBoekhouden 						= "eb_relatie"; # Als deze tabel verwijderd is, kan dit deel ook weg
+#$EBoekhoudenID								= "id";
+#$EBoekhoudenCode							= "code";
+#$EBoekhoudenIBAN							= "iban";
+#$EBoekhoudenNaam							= "naam";
 
 $TableEBBoekstuk							= "eb_boekstuk";
 $EBBoekstukJaar								= "jaar";
