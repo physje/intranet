@@ -122,7 +122,7 @@ if(isset($_POST['correct'])) {
 	$mailCluco[] = makeName($_SESSION['ID'], 5) .' heeft een declaratie ingediend.<br>';
 	$mailCluco[] = "<br>";
 	$mailCluco[] = "Het betreft een declaratie van <i>". makeOpsomming($onderwerpen, '</i>, <i>', '</i> en <i>') ."</i> ter waarde van ". formatPrice($toDatabase['totaal'])."<br>";
-	$mailCluco[] = "<a href='". $ScriptURL ."declaratie/cluco.php?key=$uniqueKey&hash=". $ClucoData['hash_long'] ."&accept'>Goedkeuren</a><br>";
+	//$mailCluco[] = "<a href='". $ScriptURL ."declaratie/cluco.php?key=$uniqueKey&hash=". $ClucoData['hash_long'] ."&accept'>Goedkeuren</a><br>";
 	$mailCluco[] = "<a href='". $ScriptURL ."declaratie/cluco.php?key=$uniqueKey&reject'>Afkeuren</a> (inloggen vereist)<br>";
 	$mailCluco[] = "<br>";
 	$mailCluco[] = "Details zijn zichtbaar in de bijlage of <a href='". $ScriptURL ."declaratie/cluco.php?key=$uniqueKey'>online</a> (inloggen vereist)<br>";
@@ -133,10 +133,10 @@ if(isset($_POST['correct'])) {
 	$param_cluco['message'] 			= implode("\n", $mailCluco);
 					
 	if(!sendMail_new($param_cluco)) {
-		toLog('error', '', '', "Problemen met declaratie-notificatie (dienst $dienst, voorganger $voorganger)");
+		toLog('error', $_SESSION['ID'], $_SESSION['ID'], "Problemen met declaratie-notificatie (dienst $dienst, voorganger $voorganger)");
 		$page[] = "Er zijn problemen met het versturen van de notificatie-mail naar de clustercoordinator.";
 	} else {
-		toLog('debug', '', '', "Declaratie-notificatie naar cluco");
+		toLog('info', $_SESSION['ID'], $_SESSION['ID'], "Declaratie-notificatie naar cluco");
 		$page[] = "De declaratie is ter goedkeuring voorgelegd aan de clustercoordinator";
 	}	
 } elseif(isset($_POST['page']) AND $_POST['page'] > 0) {

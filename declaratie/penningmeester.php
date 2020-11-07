@@ -43,15 +43,6 @@ if(isset($_REQUEST['key'])) {
 		
 		$UserData = getMemberDetails($indiener);
 				
-		/*
-		foreach($JSON as $key => $value) {
-			$page[] = "<b>$key</b>: $value<br>\n";
-		}
-		*/
-		
-		//$page[] = "GBR: ". $_POST['GBR'];
-		
-		
 		# EIGEN = JA
 		if($JSON['eigen'] == 'Ja') {		
 			if(is_numeric($UserData['eb_code']) AND $UserData['eb_code'] > 0) {
@@ -71,9 +62,9 @@ if(isset($_REQUEST['key'])) {
 					//$page[] = "In de declaratie is als IBAN ingevuld: ". $JSON['iban'] .'<br>';
 					
 					if($errorResult) {
-						toLog('error', '', $indiener, $errorResult);						
+						toLog('error', $_SESSION['ID'], $indiener, $errorResult);						
 					} else {
-						toLog('debug', '', $indiener, 'IBAN van relatie '. $EBCode .' aangepast van '. cleanIBAN($EBIBAN) .' naar '. cleanIBAN($JSON['iban']));
+						toLog('debug', $_SESSION['ID'], $indiener, 'IBAN van relatie '. $EBCode .' aangepast van '. cleanIBAN($EBIBAN) .' naar '. cleanIBAN($JSON['iban']));
 					}					
 				}		
 			
@@ -99,9 +90,9 @@ if(isset($_REQUEST['key'])) {
 				$errorResult = eb_maakNieuweRelatieAan ($naam , $geslacht, $adres, $postcode, $plaats, $mail, $iban, $EBCode, $EB_id);
 				
 				if($errorResult) {
-					toLog('error', '', $indiener, $errorResult);						
+					toLog('error', $_SESSION['ID'], $indiener, $errorResult);						
 				} else {
-					toLog('debug', '', $indiener, makeName($indiener, 5) .' als relatie toegevoegd in eBoekhouden met als code '. $EBCode);
+					toLog('debug', $_SESSION['ID'], $indiener, makeName($indiener, 5) .' als relatie toegevoegd in eBoekhouden met als code '. $EBCode);
 					mysqli_query($db, "UPDATE $TableUsers SET $UserEBRelatie = $EBCode WHERE $UserID = $indiener");
 				}				
 			}
@@ -132,9 +123,9 @@ if(isset($_REQUEST['key'])) {
 				$errorResult = eb_maakNieuweRelatieAan ($naam , $geslacht, $adres, $postcode, $plaats, $mail, $iban, $EBCode, $EB_id);
 				
 				if($errorResult) {
-					toLog('error', '', $indiener, $errorResult);						
+					toLog('error', $_SESSION['ID'], $indiener, $errorResult);						
 				} else {
-					toLog('debug', '', $indiener, $naam .' als nieuwe relatie aangemaakt met als code '. $EBCode);
+					toLog('debug', $_SESSION['ID'], $indiener, $naam .' als nieuwe relatie aangemaakt met als code '. $EBCode);
 				}
 			} else {
 				$EBCode = $_POST['begunstigde'];
@@ -153,10 +144,10 @@ if(isset($_REQUEST['key'])) {
 									
 		$errorResult = eb_verstuurDeclaratie ($EBCode, $boekstukNummer, '[remove] '.$factuurnummer, $totaal, $_POST['GBR'], $toelichting, $mutatieId);
 		if($errorResult) {
-			toLog('error', '', $indiener, $errorResult);
+			toLog('error', $_SESSION['ID'], $indiener, $errorResult);
 			$page[] = 'Probleem met toevoegen van declaratie ter waarde van '. formatPrice($totaal) .' voor '. $EBCode .'<br>';
 		} else {
-			toLog('info', '', $indiener, 'Declaratie ingediend ('. formatPrice($totaal) .' naar '. $EBCode .')');
+			toLog('info', $_SESSION['ID'], $indiener, 'Declaratie ingediend ('. formatPrice($totaal) .' naar '. $EBCode .')');
 			$page[] = 'Declaratie van '. formatPrice($totaal) .' toegevoegd voor '. $EBCode .'<br>';
 		}
 				

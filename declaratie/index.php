@@ -6,8 +6,10 @@ include_once('../include/HTML_HeaderFooter.php');
 
 $db = connect_db();
 
-# Het eerste scherm waarin men de keuze kan maken welk type declaratie men wil uitvoeren
+# Om zo te kunnen controleren of iemand is ingelogd, even de sessie starten.
+session_start();
 
+# Het eerste scherm waarin men de keuze kan maken welk type declaratie men wil uitvoeren
 $page[] = "In welke hoedanigheid wilt u een declaratie doen?<br>";
 $page[] = "<ul>";
 $page[] = "<li><a href='gastpredikant.php'>Gastpredikant</a></li>";
