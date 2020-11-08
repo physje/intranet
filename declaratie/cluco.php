@@ -1,6 +1,6 @@
 <?php
 include_once('../include/functions.php');
-//include_once('../include/EB_functions.php');
+include_once('../include/EB_functions.php');
 include_once('../include/config.php');
 include_once('../include/config_mails.php');
 include_once('../include/HTML_TopBottom.php');
