@@ -99,11 +99,12 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 			
 			if(!sendMail_new($parameter)) {
 				toLog('error', $_SESSION['ID'], $data['user'], "Problemen met versturen declaratie-goedkeuring naar penningmeester (". $_REQUEST['key'] .")");
-				$page[] = "Er zijn problemen met het versturen van de goedgekeurde declaratie naar de penningsmeester.";
+				$page[] = "Er zijn problemen met het versturen van de goedgekeurde declaratie naar de penningsmeester.<br>";
 			} else {
 				toLog('info', $_SESSION['ID'], $data['user'], "Declaratie-goedkeuring naar penningmeester");
-				$page[] = "De goedgekeurde declaratie is doorgestuurd naar de penningsmeesrter";
-			}			
+				$page[] = "De goedgekeurde declaratie is doorgestuurd naar de penningsmeester.<br>";
+			}
+			$page[] = "Ga terug naar <a href='". $_SERVER['PHP_SELF']."'>het overzicht</a>.";
 		} elseif(isset($_REQUEST['reject'])) {
 			if(isset($_REQUEST['send_reject'])) {				
 				$mail[] = "Beste ". makeName($data['user'], 1) .",<br>";

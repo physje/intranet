@@ -185,6 +185,8 @@ if(isset($_REQUEST['key'])) {
 		$JSONtoDatabase = json_encode($JSON);
 		$sql = "UPDATE $TableEBDeclaratie SET $EBDeclaratieDeclaratie = '". $JSONtoDatabase ."' WHERE $EBDeclaratieID like ". $row[$EBDeclaratieID];
 		mysqli_query($db, $sql);		
+		
+		$page[] = "Ga terug naar <a href='". $_SERVER['PHP_SELF']."'>het overzicht</a>.";
 	} else {
 		$data['user']					= $indiener;
 		$data['eigen']				= $JSON['eigen'];
