@@ -210,8 +210,8 @@ if(isset($_POST['correct'])) {
 		
 		# Positieve bedragen
 		if(count($overig_price) > 0) {			
-			foreach($overig_price as $waarde) {
-				if($waarde < 0) {
+			foreach($overig_price as $key => $waarde) {				
+				if($overige[$key] != '' AND $waarde <= 0) {
 					$checkFields = false;
 					$meldingNegatief = 'Bedragen kunnen alleen positief zijn';
 				}

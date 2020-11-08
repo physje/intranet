@@ -27,7 +27,6 @@ if($showLogin) {
 	$cfgProgDir = '../auth/';
 	$requiredUserGroups = array(1, 38);
 	include($cfgProgDir. "secure.php");
-
 }
 
 if(isset($_REQUEST['key'])) {	
@@ -168,17 +167,16 @@ if(isset($_REQUEST['key'])) {
 		$MailFinAdmin[] = "<br>";
 		$MailFinAdmin[] = "Het betreft een declaratie ter waarde van ". formatPrice($totaal)." voor cluster ". $clusters[$cluster] ."<br>";
 				
-		$param_finAdmin['to'][]					= array($FinAdminAddress);
+		$param_finAdmin['to'][]					= array($EBDeclaratieAddress);
 		$param_finAdmin['subject'] 			= "Declaratie ". makeName($_SESSION['ID'], 5) ." voor cluster ". $clusters[$cluster];
-		$param_finAdmin['attachment'][]	= array('file' => $toDatabase['bijlage'], 'name' => $boekstukNummer.'_'.$toDatabase['bijlage_naam']);
+		$param_finAdmin['attachment'][]	= array('file' => $JSON['bijlage'], 'name' => $boekstukNummer.'_'.$JSON['bijlage_naam']);
 		$param_finAdmin['message'] 			= implode("\n", $MailFinAdmin);
 					
 		if(!sendMail_new($param_finAdmin)) {
 			toLog('error', $_SESSION['ID'], $indiener, "Problemen met versturen van mail naar financiële administratie");
 			$page[] = "Er zijn problemen met het versturen van mail naar de financiële administratie";
 		} else {
-			toLog('debug', $_SESSION['ID'], $indiener, "Declaratie-notificatie naar financiële administratie");
-			//$page[] = "De declaratie is ter goedkeuring voorgelegd aan de clustercoordinator";
+			toLog('debug', $_SESSION['ID'], $indiener, "Declaratie-notificatie naar financiële administratie");			
 		}	
 		
 		setDeclaratieStatus(5, $row[$EBDeclaratieID], $data['user']);
@@ -187,7 +185,6 @@ if(isset($_REQUEST['key'])) {
 		$JSONtoDatabase = json_encode($JSON);
 		$sql = "UPDATE $TableEBDeclaratie SET $EBDeclaratieDeclaratie = '". $JSONtoDatabase ."' WHERE $EBDeclaratieID like ". $row[$EBDeclaratieID];
 		mysqli_query($db, $sql);		
-		
 	} else {
 		$data['user']					= $indiener;
 		$data['eigen']				= $JSON['eigen'];

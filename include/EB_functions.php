@@ -295,10 +295,8 @@ function eb_getRelaties() {
  		# indien een resultaat, dan even een array maken
  		if(!is_array($Relaties->cRelatie)) $Relaties->cRelatie = array($Relaties->cRelatie);
  		  
- 		foreach ($Relaties->cRelatie as $Relatie) {  	
- 			$rij['id'] = $Relatie->ID;
+ 		foreach ($Relaties->cRelatie as $Relatie) { 			
  			$rij['code'] = $Relatie->Code;
- 			$rij['iban'] = cleanIBAN($Relatie->IBAN);
  			$rij['naam'] = $Relatie->Bedrijf;
  			
  			$namen[]  = strtolower($Relatie->Bedrijf);
@@ -322,12 +320,20 @@ function eb_getRelatieDataByCode ($code){
 		
 		$relatie = $ebClient->getRelationByCode ( $code );
 		
-		$rij['id'] = $relatie->ID;
- 		$rij['code'] = $relatie->Code;
- 		$rij['iban'] = cleanIBAN($relatie->IBAN);
- 		$rij['naam'] = $relatie->Bedrijf;
+		$data['id'] = $relatie->ID;
+ 		$data['code'] = $relatie->Code;
+		$data['naam'] = $relatie->Bedrijf;
+		$data['geslacht'] = $relatie->Geslacht;
+		$data['adres'] = $relatie->Adres;
+		$data['postcode'] = $relatie->Postcode;
+		$data['plaats'] = $relatie->Plaats;
+		$data['mail'] = $relatie->Email;
+		$data['iban'] = $relatie->IBAN;
+		$data['notitie'] = $relatie->Notitie;            
+		$data['telefoon'] = $relatie->Telefoon;
+		$data['gsm'] = $relatie->GSM;
  		
- 		return $rij;
+ 		return $data;
  		   
   } catch (\Exception $exception) {
   	return $exception->getMessage();
