@@ -69,10 +69,10 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 			$parameter['fromName']	= makeName($_SESSION['ID'], 5);
 			
 			if(!sendMail_new($parameter)) {
-				toLog('error', $_SESSION['ID'], $data['user'], "Problemen met versturen declaratie-goedkeuring door cluco (". $_REQUEST['key'] .")");
+				toLog('error', $_SESSION['ID'], $data['user'], "Problemen met versturen declaratie-goedkeuring [". $_REQUEST['key'] ."] door cluco");
 				$page[] = "Er zijn problemen met het versturen van de goedkeuringsmail.<br>\n";
 			} else {
-				toLog('info', $_SESSION['ID'], $data['user'], "Declaratie-goedkeuring door cluco naar gemeentelid");
+				toLog('info', $_SESSION['ID'], $data['user'], "Declaratie-goedkeuring [". $_REQUEST['key'] ."] door cluco");
 				$page[] = "Er is een mail met goedkeuring verstuurd naar ". makeName($data['user'], 5) ."<br>\n";
 				setDeclaratieStatus(4, $row[$EBDeclaratieID], $data['user']);	
 			}
@@ -98,13 +98,13 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 			$parameter['fromName']	= makeName($_SESSION['ID'], 5);
 			
 			if(!sendMail_new($parameter)) {
-				toLog('error', $_SESSION['ID'], $data['user'], "Problemen met versturen declaratie-goedkeuring naar penningmeester (". $_REQUEST['key'] .")");
+				toLog('error', $_SESSION['ID'], $data['user'], "Problemen met versturen declaratie-goedkeuring naar penningmeester [". $_REQUEST['key'] ."]");
 				$page[] = "Er zijn problemen met het versturen van de goedgekeurde declaratie naar de penningsmeester.<br>";
 			} else {
-				toLog('info', $_SESSION['ID'], $data['user'], "Declaratie-goedkeuring naar penningmeester");
+				toLog('info', $_SESSION['ID'], $data['user'], "Declaratie-goedkeuring [". $_REQUEST['key'] ."] naar penningmeester");
 				$page[] = "De goedgekeurde declaratie is doorgestuurd naar de penningsmeester.<br>";
 			}
-			$page[] = "Ga terug naar <a href='". $_SERVER['PHP_SELF']."'>het overzicht</a>.";
+			$page[] = "<br>Ga terug naar <a href='". $_SERVER['PHP_SELF']."'>het overzicht</a>.";
 		} elseif(isset($_REQUEST['reject'])) {
 			if(isset($_REQUEST['send_reject'])) {				
 				$mail[] = "Beste ". makeName($data['user'], 1) .",<br>";
@@ -132,10 +132,10 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 				$parameter['fromName']	= makeName($_SESSION['ID'], 5);
 				
 				if(!sendMail_new($parameter)) {
-					toLog('error', $_SESSION['ID'], $data['user'], "Problemen met versturen declaratie-afwijzing (". $_REQUEST['key'] .")");
+					toLog('error', $_SESSION['ID'], $data['user'], "Problemen met versturen declaratie-afwijzing [". $_REQUEST['key'] ."]");
 					$page[] = "Er zijn problemen met het versturen van de afwijzingsmail.";
 				} else {
-					toLog('info', $_SESSION['ID'], $data['user'], "Declaratie-afwijzing naar gemeentelid");
+					toLog('info', $_SESSION['ID'], $data['user'], "Declaratie-afwijzing [". $_REQUEST['key'] ."] naar gemeentelid");
 					$page[] = "Er is een mail met onderbouwing voor de afwijzing verstuurd naar ". makeName($data['user'], 5);
 					setDeclaratieStatus(6, $row[$EBDeclaratieID], $data['user']);	
 				}						

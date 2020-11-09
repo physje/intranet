@@ -34,10 +34,42 @@ if(isset($_REQUEST['key'])) {
 	$result = mysqli_query($db, $sql);
 	$row = mysqli_fetch_array($result);
 			
-	$JSON = json_decode($row[$EBDeclaratieDeclaratie], true);
+	$JSON = json_decode($row[$EBDeclaratieDeclaratie], true);	
 	$indiener = $row[$EBDeclaratieIndiener];
+	$data['user']					= $indiener;
+	$data['eigen']				= $JSON['eigen'];
+	$data['iban']					= $JSON['iban'];
+	$data['relatie']			= getParam('begunstigde', $JSON['EB_relatie']);
+	$data['cluster']			= $JSON['cluster'];
+	$data['overige']			= $JSON['overig'];
+	$data['overig_price']	= $JSON['overig_price'];
+	$data['reiskosten']		= $JSON['reiskosten'];
+	$data['bijlage']			= $JSON['bijlage'];
+	$data['bijlage_naam']	= $JSON['bijlage_naam'];
 	
-	if(isset($_POST['accept'])) {
+	$veldenCorrect = true;
+
+	if(isset($_POST['GBR']) AND $_POST['GBR'] == '') {
+		$veldenCorrect = false;
+		$meldingGBR = 'Grootboekrekening ontbreekt';
+	}
+	
+	if($JSON['eigen'] == 'Nee' AND isset($_POST['betalingskenmerk']) AND $_POST['betalingskenmerk'] == '') {
+		$veldenCorrect = false;
+		$meldingKenmerk = 'Betalingskenmerk ontbreekt';
+	}
+	
+	if($JSON['eigen'] == 'Nee' AND isset($_POST['begunstigde']) AND $_POST['begunstigde'] == '') {
+		$veldenCorrect = false;
+		$meldingBegunstigde = 'Begunstigde ontbreekt';
+	}
+			
+	if($JSON['eigen'] == 'Nee' AND isset($_POST['begunstigde']) AND $_POST['begunstigde'] == 3 AND ($_POST['name_new'] == '' OR $_POST['iban_new'] == '')) {
+		$veldenCorrect = false;
+		$meldingNewBegunstigde = 'Gegevens van begunstigde zijn onvolledig';
+	}
+		
+	if(isset($_POST['accept']) AND $veldenCorrect) {
 		$JSON['GBR'] = $_POST['GBR'];
 		
 		$UserData = getMemberDetails($indiener);
@@ -186,19 +218,8 @@ if(isset($_REQUEST['key'])) {
 		$sql = "UPDATE $TableEBDeclaratie SET $EBDeclaratieDeclaratie = '". $JSONtoDatabase ."' WHERE $EBDeclaratieID like ". $row[$EBDeclaratieID];
 		mysqli_query($db, $sql);		
 		
-		$page[] = "Ga terug naar <a href='". $_SERVER['PHP_SELF']."'>het overzicht</a>.";
+		$page[] = "<br>Ga terug naar <a href='". $_SERVER['PHP_SELF']."'>het overzicht</a>.";
 	} else {
-		$data['user']					= $indiener;
-		$data['eigen']				= $JSON['eigen'];
-		$data['iban']					= $JSON['iban'];
-		$data['relatie']			= $JSON['EB_relatie'];
-		$data['cluster']			= $JSON['cluster'];
-		$data['overige']			= $JSON['overig'];
-		$data['overig_price']	= $JSON['overig_price'];
-		$data['reiskosten']		= $JSON['reiskosten'];
-		$data['bijlage']			= $JSON['bijlage'];
-		$data['bijlage_naam']	= $JSON['bijlage_naam'];
-			
 		$page[] = "<form method='post' action='". $_SERVER['PHP_SELF']."'>";
 		$page[] = "<input type='hidden' name='key' value='". $_REQUEST['key'] ."'>";
 		$page[] = "<input type='hidden' name='user' value='". $data['user'] ."'>";
@@ -220,24 +241,27 @@ if(isset($_REQUEST['key'])) {
 		$page[] = "		<td colspan='4'><select name='GBR'>";
 		$page[] = "		<option value=''>Kies Grootboekrekening</option>";
 		
-		$presetGBR = 0;	
-		
-		switch ($data['cluster']) {
-			case 1: # Gemeenteopbouw
-				$presetGBR = 43855;
-				break;
-			case 2: # Jeugd & Gezin
-				$presetGBR = 43865;
-				break;
-			case 3: # Eredienst
-				$presetGBR = 43845;
-				break;
-			case 4: # Missionaire Activiteiten
-				$presetGBR = 43895;
-				break;
-			case 5: # Organisatie & Beheer
-				$presetGBR = 43875;
-				break;
+		if(isset($_POST['GBR'])) {
+			$presetGBR = $_POST['GBR'];	
+		} else {			
+			$presetGBR = 0;			
+			switch ($data['cluster']) {
+				case 1: # Gemeenteopbouw
+					$presetGBR = 43855;
+					break;
+				case 2: # Jeugd & Gezin
+					$presetGBR = 43865;
+					break;
+				case 3: # Eredienst
+					$presetGBR = 43845;
+					break;
+				case 4: # Missionaire Activiteiten
+					$presetGBR = 43895;
+					break;
+				case 5: # Organisatie & Beheer
+					$presetGBR = 43875;
+					break;
+			}
 		}
 			
 		foreach($cfgGBR as $code => $naam) {
@@ -247,14 +271,27 @@ if(isset($_REQUEST['key'])) {
 		$page[] = "		</select></td>";
 		$page[] = "</tr>";
 		
+		if(isset($meldingGBR)) {
+			$page[] = "<tr>";
+			$page[] = "	<td valign='top' colspan='2'>&nbsp;</td>";
+			$page[] = "	<td valign='top' colspan='4' class='melding'>$meldingGBR</td>";
+			$page[] = "</tr>";
+		}
+		
 		if($data['eigen'] == 'Nee') {		
 			$page[] = "<tr>";
 			$page[] = "		<td colspan='6'>&nbsp;</td>";
 			$page[] = "</tr>";
 			$page[] = "<tr>";
 			$page[] = "	<td valign='top' colspan='2'>Betalingskenmerk</td>";	
-			$page[] = "	<td valign='top' colspan='4'><input type='text' name='betalingskenmerk' size='40'></td>";
+			$page[] = "	<td valign='top' colspan='4'><input type='text' name='betalingskenmerk' value='". $_POST['betalingskenmerk'] ."' size='40'></td>";
 			$page[] = "</tr>";
+			if(isset($meldingKenmerk)) {
+				$page[] = "<tr>";
+				$page[] = "	<td valign='top' colspan='2'>&nbsp;</td>";
+				$page[] = "	<td valign='top' colspan='4' class='melding'>$meldingKenmerk</td>";
+				$page[] = "</tr>";
+			}
 			$page[] = "<tr>";
 			$page[] = "		<td colspan='6'>&nbsp;</td>";
 			$page[] = "</tr>";
@@ -270,7 +307,13 @@ if(isset($_REQUEST['key'])) {
 			}
 			
 			$page[] = "	</select></td>";
-			$page[] = "</tr>";				
+			$page[] = "</tr>";			
+			if(isset($meldingBegunstigde)) {
+				$page[] = "<tr>";
+				$page[] = "	<td valign='top' colspan='2'>&nbsp;</td>";
+				$page[] = "	<td valign='top' colspan='4' class='melding'>$meldingBegunstigde</td>";
+				$page[] = "</tr>";
+			}				
 			$page[] = "<tr>";
 			$page[] = "		<td colspan='6'><b>Let wel</b>: om een nieuwe begunstigde toe te voegen dient bij '<i>Bedrijf / kerkelijke instellingen</i>' 'diversen' geselecteerd te worden.</td>";
 			$page[] = "</tr>";
@@ -293,7 +336,13 @@ if(isset($_REQUEST['key'])) {
 			$page[] = "<tr>";
 			$page[] = "	<td valign='top' colspan='2'>IBAN</td>";	
 			$page[] = "	<td valign='top' colspan='4'><input type='text' name='iban_new' size='40'></td>";
-			$page[] = "</tr>";		
+			$page[] = "</tr>";
+			if(isset($meldingNewBegunstigde)) {
+				$page[] = "<tr>";
+				$page[] = "	<td valign='top' colspan='2'>&nbsp;</td>";
+				$page[] = "	<td valign='top' colspan='4' class='melding'>$meldingNewBegunstigde</td>";
+				$page[] = "</tr>";
+			}
 		}
 		
 		$page[] = "<tr>";

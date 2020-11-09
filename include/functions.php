@@ -1690,7 +1690,7 @@ function setDeclaratieStatus($status, $declaratie, $lid) {
 	
 	$descr[0] = 'geen';	
 	$descr[1] = 'opgeslagen'; 	# nog niet in gebruik
-	$descr[2] = 'bij lid';
+	$descr[2] = 'bij lid'; 			# nog niet in gebruik
 	$descr[3] = 'bij CluCo';
 	$descr[4] = 'bij penningmeester';
 	$descr[5] = 'afgerond';
@@ -1700,10 +1700,10 @@ function setDeclaratieStatus($status, $declaratie, $lid) {
 	$sql = "UPDATE $TableEBDeclaratie SET $EBDeclaratieStatus = $status WHERE $EBDeclaratieID = $declaratie";
 		
 	if(mysqli_query($db, $sql)) {
-		toLog('debug', $lid, '', "Declaratie-status van declaratie $declaratie veranderd in ". $descr[$status]);
+		toLog('debug', '', $lid, "Declaratie-status van declaratie $declaratie veranderd in ". $descr[$status]);
 		return true;
 	} else {
-		toLog('error', $lid, '', "Aanpassen van declaratie-status van declaratie $declaratie naar ". $descr[$status] ." is mislukt");
+		toLog('error', '', $lid, "Aanpassen van declaratie-status van declaratie $declaratie naar ". $descr[$status] ." is mislukt");
 		return false;
 	}	
 }

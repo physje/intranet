@@ -133,10 +133,10 @@ if(isset($_POST['correct'])) {
 	$param_cluco['message'] 			= implode("\n", $mailCluco);
 					
 	if(!sendMail_new($param_cluco)) {
-		toLog('error', $_SESSION['ID'], $_SESSION['ID'], "Problemen met declaratie-notificatie (dienst $dienst, voorganger $voorganger)");
+		toLog('error', $_SESSION['ID'], $_SESSION['ID'], "Problemen met invoeren van declaratie [$uniqueKey] en voorleggen aan cluco (". makeName($cluco, 5).")");
 		$page[] = "Er zijn problemen met het versturen van de notificatie-mail naar de clustercoordinator.";
 	} else {
-		toLog('info', $_SESSION['ID'], $_SESSION['ID'], "Declaratie-notificatie naar cluco");
+		toLog('info', $_SESSION['ID'], $_SESSION['ID'], "Declaratie [$uniqueKey] ingevoerd en doorgestuurd naar cluco (". makeName($cluco, 5).")");
 		$page[] = "De declaratie is ter goedkeuring voorgelegd aan ". makeName($cluco, 5) ." als clustercoordinator";
 	}	
 } elseif(isset($_POST['page']) AND $_POST['page'] > 0) {
