@@ -31,6 +31,10 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 		$schriftlezer		= $aSchriftlezer[0];
 		$adresSchrift		= getMailAdres($schriftlezer);
 		
+		$aJeudmoment	= getRoosterVulling(25, $dienst);
+		$jeugdmoment		= $aJeudmoment[0];
+		$adresJeugd		= getMailAdres($jeugdmoment);				
+		
 		$aBeamer				= getRoosterVulling(11, $dienst);
 		$beameraar			= $aBeamer[0];
 		
@@ -55,6 +59,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 				$param['to'][] = array($voorgangerData['mail'], $mailNaam);
 				$param['cc'][] = array($adresBand, makeName($bandleider, 6));
 				$param['cc'][] = array($adresSchrift, makeName($schriftlezer, 6));
+				$param['cc'][] = array($adresJeugd, makeName($jeugdmoment, 6));
 								
 				# CC toevoegen
 				foreach($voorgangerCC as $adres => $naam) {
@@ -79,8 +84,10 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 			$mailText[] = "De muzikale begeleiding in deze dienst wordt gecoordineerd door ". makeName($bandleider, 5) .".";
 			$mailText[] = ($schriftlezer > 0 ? "Schriftlezing wordt gedaan door ". makeName($schriftlezer, 5) : "Het is nog niet bekend wie de schriftlezing doet").".";
 			$mailText[] = ($beameraar > 0 ? "Beamer wordt bediend door ". makeName($beameraar, 5) : "Het is nog niet bekend wie de beamer bediend").".";
+			$mailText[] = ($jeugdmoment > 0 ? "Het jeugdmoment wordt verzorgd door ". makeName($jeugdmoment, 5) : "Het is nog niet bekend wie het jeugdmoment verzorgt").".";
 			$mailText[] = "";
 			$mailText[] = ($voorgangerData['stijl'] == 0 ? 'U kunt' : 'Je mag')." de liturgie afstemmen met ". makeName($bandleider, 1) ." voor de muziek. ". ($bandData['geslacht'] == 'M' ? 'Hij' : 'Zij') ." kan dan aangeven of liederen bekend en of geschikt zijn in onze gemeente en eventuele suggesties voor een vervangend lied.";
+			$mailText[] = makeName($jeugdmoment, 1)." zal contact met ". ($voorgangerData['stijl'] == 0 ? 'u' : 'jou') ." opnemen om het thema van het jeugdmoment af te stemmen op ". ($voorgangerData['stijl'] == 0 ? 'uw' : 'jouw') ." keuze voor het thema van de preek en dienst.";
 			$mailText[] = ($voorgangerData['stijl'] == 0 ? 'Wilt u' : 'Wil jij')." de liturgie een week van te voren doorgeven zodat de band kan oefenen.";
 			$mailText[] = "Als ".($voorgangerData['stijl'] == 0 ? 'u' : 'je')." deze mail beantwoordt met \"allen\" dan is iedereen op tijd op de hoogte.";
 			
