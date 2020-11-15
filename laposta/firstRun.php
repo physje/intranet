@@ -105,6 +105,6 @@ do {
 		$sql_lp_update = "UPDATE $TableLP SET ". implode(', ', $sql_update)." WHERE $LPID like $scipioID";
 		mysqli_query($db, $sql_lp_update);	
 	}
-	sleep(2);
+	sleep(1);
 } while($row = mysqli_fetch_array($result));
 ?>

@@ -3,15 +3,15 @@ include_once('../include/functions.php');
 include_once('../include/config.php');
 include_once('../include/LP_functions.php');
 
-# Verwijder alle lijsten (muv TestLijst) in LaPosta
-# run makeLists.php (kan lokaal; check wel of alle meerkeuze opties goed doorkomen)
-# run output in phpMyAdmin (online)
-# Leeg de lokale 'lp_data' (online)
-# run firstRun.php (online)
-# https://us20.admin.mailchimp.com/lists/exports?id=55789 -> EXPORT AS CSV
-# UNZIP
+# Dit is om de verschillende mailinglijsten uit MailChimp over te zetten naar LaPosta
+# Verwijder dus alle lijsten (muv TestLijst en Ledenlijst) in LaPosta
+# run makeLists.php
+# Download huidige leden via : https://us20.admin.mailchimp.com/lists/exports?id=55789 -> EXPORT AS CSV
 # pas regel 15 aan naar juiste bestandsnaam
 # run import.php
+#
+# Om de Ledenlijst te vullen, gebruik firstRun.php
+#
 $filename = 'subscribed_members_export_482dc3d96e.csv';
 
 $fp = fopen($filename, 'r');
@@ -24,7 +24,7 @@ $regels = array_slice($regels, 1);
 
 foreach($regels as $persoon) {
 	# 3 seconden per persoon moet voldoende zijn
-	set_time_limit(5);
+	set_time_limit(3);
 	
 	$velden = str_getcsv ($persoon, ",",'"');
 		
@@ -66,19 +66,28 @@ foreach($regels as $persoon) {
 			foreach($tags as $tag) {				
 				if(substr($tag, 1, 4) == 'Wijk' AND strlen($tag) == 8) {				
 					$wijk = substr($tag, -2, 1);
-					if(lp_onList($LPWijkListID[$wijk], $email)) {
-						lp_updateMember($LPWijkListID[$wijk], $email, $custom_fields_short);
-					} else {
-						lp_addMember($LPWijkListID[$wijk], $email, $custom_fields_short);
-					}					
 					echo ', wijk '. $wijk;
+					if(lp_onList($LPWijkListID[$wijk], $email)) {
+						$updateMember = lp_updateMember($LPWijkListID[$wijk], $email, $custom_fields_short);						
+						if($updateMember != true) {
+							toLog('error', '', $scipioID, 'update: '. $updateMember['error']);
+						}
+					} else {
+						$addMember = lp_addMember($LPWijkListID[$wijk], $email, $custom_fields_short);
+						if($addMember != true) {
+							toLog('error', '', $scipioID, 'add: '. $updateMember['error']);
+						}
+					}					
 				}
 			}			
 		}
 		
 		if($list == 'Trinitas') {
 			if(lp_onList($LPTrinitasListID, $email)) {
-				lp_updateMember($LPTrinitasListID, $email, $custom_fields_short);
+				$updateMember = lp_updateMember($LPTrinitasListID, $email, $custom_fields_short);
+				if($updateMember != true) {
+					toLog('error', '', $scipioID, 'update: '. $updateMember['error']);
+				}
 			} else {
 				lp_addMember($LPTrinitasListID, $email, $custom_fields_short);
 			}
