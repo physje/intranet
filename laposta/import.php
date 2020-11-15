@@ -3,7 +3,16 @@ include_once('../include/functions.php');
 include_once('../include/config.php');
 include_once('../include/LP_functions.php');
 
-$filename = 'subscribed_members_export_0510be5db7.txt';
+# Verwijder alle lijsten (muv TestLijst) in LaPosta
+# run makeLists.php (kan lokaal; check wel of alle meerkeuze opties goed doorkomen)
+# run output in phpMyAdmin (online)
+# Leeg de lokale 'lp_data' (online)
+# run firstRun.php (online)
+# https://us20.admin.mailchimp.com/lists/exports?id=55789 -> EXPORT AS CSV
+# UNZIP
+# pas regel 15 aan naar juiste bestandsnaam
+# run import.php
+$filename = 'subscribed_members_export_482dc3d96e.csv';
 
 $fp = fopen($filename, 'r');
 $data = fread($fp, filesize($filename));
@@ -76,7 +85,27 @@ foreach($regels as $persoon) {
 			
 			echo ', trinitas';
 		}
+
+		if($list == 'Wekelijkse Trinitas') {
+			if(lp_onList($LPWeekTrinitasListID, $email)) {
+				lp_updateMember($LPWeekTrinitasListID, $email, $custom_fields_short);
+			} else {
+				lp_addMember($LPWeekTrinitasListID, $email, $custom_fields_short);
+			}
+			
+			echo ', trinitas (w)';
+		}
 		
+		if($list == 'Adventsmail') {
+			if(lp_onList($LPAdventListID, $email)) {
+				lp_updateMember($LPAdventListID, $email, $custom_fields_short);
+			} else {
+				lp_addMember($LPAdventListID, $email, $custom_fields_short);
+			}
+			
+			echo ', advent';
+		}
+				
 		if($list == 'Koningsmail') {
 			if(lp_onList($LPKoningsmailListID, $email)) {
 				lp_updateMember($LPKoningsmailListID, $email, $custom_fields_short);

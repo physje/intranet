@@ -70,14 +70,15 @@ do {
 		if($addMember === true) {				
 			echo makeName($scipioID, 6) ." toegevoegd aan de LaPosta ledenlijst<br>\n";
 		} else {
+			echo makeName($scipioID, 6) ." <b>niet</b> toegevoegd aan de LaPosta ledenlijst<br>\n";
 			toLog('error', '', $scipioID, 'ledenlijst: '. $addMember['error']);
-		}
-		
-		# De wijzigingen aan de LP kant moeten ook verwerkt worden in mijn lokale mailchimp-database
-		$sql_lp_insert = "INSERT INTO $TableLP ($LPID, $LPgeslacht, $LPmail, $LPVoornaam, $LPTussenvoegsel, $LPAchternaam, $LPwijk, $LPstatus, $LPrelatie, $LPdoop, $LPlastChecked, $LPlastSeen) VALUES ($scipioID, '". $data['geslacht'] ."', '". $data['mail'] ."', '". $data['voornaam'] ."', '". urlencode($data['tussenvoegsel']) ."', '". $data['achternaam'] ."', '". $data['wijk'] ."', 'actief', '". $data['relatie'] ."', '". $data['belijdenis'] ."', ". time() .", ". time() .")";
-		if(!mysqli_query($db, $sql_lp_insert)) {			
-			echo $sql_lp_insert;
-			toLog('error', '', $scipioID, 'Kon na sync niets toevoegen in lokale LP-tabel');
+			
+			# De wijzigingen aan de LP kant moeten ook verwerkt worden in mijn lokale mailchimp-database
+			$sql_lp_insert = "INSERT INTO $TableLP ($LPID, $LPgeslacht, $LPmail, $LPVoornaam, $LPTussenvoegsel, $LPAchternaam, $LPwijk, $LPstatus, $LPrelatie, $LPdoop, $LPlastChecked, $LPlastSeen) VALUES ($scipioID, '". $data['geslacht'] ."', '". $data['mail'] ."', '". $data['voornaam'] ."', '". urlencode($data['tussenvoegsel']) ."', '". $data['achternaam'] ."', '". $data['wijk'] ."', 'actief', '". $data['relatie'] ."', '". $data['belijdenis'] ."', ". time() .", ". time() .")";
+			if(!mysqli_query($db, $sql_lp_insert)) {			
+				echo $sql_lp_insert;
+				toLog('error', '', $scipioID, 'Kon na sync niets toevoegen in lokale LP-tabel');
+			}
 		}		
 	} else {			
 		# Updaten in leden-lijst
@@ -104,5 +105,6 @@ do {
 		$sql_lp_update = "UPDATE $TableLP SET ". implode(', ', $sql_update)." WHERE $LPID like $scipioID";
 		mysqli_query($db, $sql_lp_update);	
 	}
+	sleep(2);
 } while($row = mysqli_fetch_array($result));
 ?>
