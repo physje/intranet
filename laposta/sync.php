@@ -10,6 +10,7 @@ $db = connect_db();
 
 $listIDs['leden']					= $LPLedenListID;
 $listIDs['trinitas']			= $LPTrinitasListID;
+$listIDs['trinitas (week)']	= $LPWeekTrinitasListID;
 $listIDs['koningsmail']		= $LPKoningsmailListID;
 $listIDs['gebed (dag)'] 	= $LPGebedDagListID;
 $listIDs['gebed (week)'] 	= $LPGebedWeekListID;
@@ -48,8 +49,8 @@ do {
 		$custom_fields['scipioid'] = $scipioID;
 			
   	                     			
-		# Van elke persoon vraag ik op of die al voorkomt in mijn lokale mailchimp-database.
-		# 	dat is iets sneller dan aan mailchimp vragen of die al voorkomt én
+		# Van elke persoon vraag ik op of die al voorkomt in mijn lokale LaPosta-database.
+		# 	dat is iets sneller dan aan LaPosta vragen of die al voorkomt én
 		#		ik kan dan werken met het scipio id als identiefier ipv het mailadres (wat LP doet)		
 		$sql_lp = "SELECT * FROM $TableLP WHERE $LPID = $scipioID";
 		$result_lp = mysqli_query($db, $sql_lp);
@@ -75,6 +76,15 @@ do {
 					echo makeName($scipioID, 6) ." toegevoegd aan de LaPosta Trinitaslijst<br>\n";
 				} else {
 					toLog('error', '', $scipioID, 'trinitas: '. $addMember['error']);
+				}
+				
+				# Toevoegen aan de wekelijkse Trinitas-lijst
+				$addMember = lp_addMember($LPWeekTrinitasListID, $email, $custom_fields_short);
+				if($addMember === true) {
+					toLog('debug', '', $scipioID, 'Toegevoegd aan LaPosta wekelijkse Trinitaslijst');
+					echo makeName($scipioID, 6) ." toegevoegd aan LaPosta wekelijkse Trinitaslijst<br>\n";
+				} else {
+					toLog('error', '', $scipioID, 'wekelijkse trinitas: '. $addMember['error']);
 				}
 				
 				# Toevoegen aan de Koningsmail-lijst
