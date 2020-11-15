@@ -2095,7 +2095,7 @@ function showDeclaratieDetails($input) {
 		$page[] = "</tr>";
 	}
 	
-	if(count($input['overige']) > 0) {
+	if(isset($input['overige']) AND count($input['overige']) > 0) {
 		$page[] = "<tr>";
 		$page[] = "		<td colspan='6'>&nbsp;</td>";
 		$page[] = "</tr>";
@@ -2142,8 +2142,37 @@ function showDeclaratieDetails($input) {
 	
 	if(isset($input['bijlage']) AND $input['bijlage'] != '') {
 		$page[] = "<tr>";	
-		$page[] = "		<td colspan='1'><b>Bijlage</b></td>";	
-		$page[] = "		<td colspan='5'><a href='". $input['bijlage'] ."' target='blank'>". substr($input['bijlage_naam'], 0, 50).( strlen($input['bijlage_naam']) > 50 ? '.....' : '')."</a></td>";
+		$page[] = "		<td colspan='1' valign='top'><b>Bijlage</b></td>";	
+		$page[] = "		<td colspan='5'>";
+		
+		foreach($input['bijlage'] as $key => $bestand) {
+			$page[] = "<li><a href='$bestand' target='blank'>". substr($input['bijlage_naam'][$key], 0, 40).( strlen($input['bijlage_naam'][$key]) > 40 ? '.....' : '')."</a></li>";
+		}
+		$page[] = "</td>";	
+		$page[] = "</tr>";
+	}
+	
+	if(isset($input['opmerking_cluco']) AND $input['opmerking_cluco'] != '') {
+		$page[] = "<tr>";
+		$page[] = "		<td colspan='6'>&nbsp;</td>";
+		$page[] = "</tr>";
+		$page[] = "<tr>";	
+		$page[] = "		<td colspan='6'><b>Opmerking door indiener</b></td>";
+		$page[] = "</tr>";	
+		$page[] = "<tr>";	
+		$page[] = "		<td colspan='6'><i>". $input['opmerking_cluco'] ."</i></td>";
+		$page[] = "</tr>";
+	}
+	
+	if(isset($input['opmerking_penning']) AND $input['opmerking_penning'] != '') {
+		$page[] = "<tr>";
+		$page[] = "		<td colspan='6'>&nbsp;</td>";
+		$page[] = "</tr>";
+		$page[] = "<tr>";	
+		$page[] = "		<td colspan='6'><b>Opmerking door cluco</b></td>";
+		$page[] = "</tr>";	
+		$page[] = "<tr>";	
+		$page[] = "		<td colspan='6'><i>". $input['opmerking_penning'] ."</i></td>";
 		$page[] = "</tr>";
 	}
 	

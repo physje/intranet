@@ -3,9 +3,6 @@ include_once('../include/functions.php');
 include_once('../include/EB_functions.php');
 include_once('../include/config.php');
 include_once('../include/config_mails.php');
-include_once('../include/HTML_TopBottom.php');
-include_once('../include/HTML_HeaderFooter.php');
-//include_once('genereerDeclaratiePdf.php');
 $db = connect_db();
 
 $kmPrijs = 19; #in centen
@@ -48,8 +45,14 @@ if(isset($_POST['eigen']))				$page[] = "<input type='hidden' name='eigen' value
 if(isset($_POST['EB_relatie']))		$page[] = "<input type='hidden' name='EB_relatie' value='". trim($_POST['EB_relatie']) ."'>";
 if(isset($_POST['cluster']))			$page[] = "<input type='hidden' name='cluster' value='". trim($_POST['cluster']) ."'>";
 if(isset($_POST['iban']))					$page[] = "<input type='hidden' name='iban' value='". cleanIBAN($_POST['iban']) ."'>";
-if(isset($_POST['bijlage']))			$page[] = "<input type='hidden' name='bijlage' value='". trim($_POST['bijlage']) ."'>";
-if(isset($_POST['bijlage_naam']))	$page[] = "<input type='hidden' name='bijlage_naam' value='". trim($_POST['bijlage_naam']) ."'>";
+if(isset($_POST['opm_cluco']))		$page[] = "<input type='hidden' name='opm_cluco' value='". trim($_POST['opm_cluco']) ."'>";
+
+if(isset($_POST['bijlage'])) {
+	foreach($_POST['bijlage'] as $key => $string) {
+		$page[] = "<input type='hidden' name='bijlage[]' value='". trim($string) ."'>";
+		$page[] = "<input type='hidden' name='bijlage_naam[]' value='". trim($_POST['bijlage_naam'][$key]) ."'>";
+	}
+}
 
 if(isset($_POST['overig']))	{
 	foreach($_POST['overig'] as $key => $string) {
@@ -62,11 +65,13 @@ if(isset($_POST['overig']))	{
 
 # Bestand uploaden en op de juiste plaats zetten
 if(isset($_FILES['bijlage'])) {
-	$oldName = trim($_FILES['bijlage']['tmp_name']);
-	$newName = 'uploads/'.generateFilename();
-	if(move_uploaded_file($oldName, $newName)) {
-		$page[] = "<input type='hidden' name='bijlage' value='$newName'>";
-		$page[] = "<input type='hidden' name='bijlage_naam' value='". trim($_FILES['bijlage']['name']) ."'>";	
+	foreach($_FILES['bijlage']['tmp_name'] as $key => $tmpFile) {
+		$oldName = trim($tmpFile);
+		$newName = 'uploads/'.generateFilename();
+		if(move_uploaded_file($oldName, $newName)) {
+			$page[] = "<input type='hidden' name='bijlage[]' value='$newName'>";
+			$page[] = "<input type='hidden' name='bijlage_naam[]' value='". trim($_FILES['bijlage']['name'][$key]) ."'>";	
+		}
 	}
 }
 
@@ -76,69 +81,99 @@ if(isset($_POST['correct'])) {
 	unset($toDatabase['correct']);
 	
 	$JSONtoDatabase = json_encode($toDatabase);
-	$uniqueKey = generateID();
-
-	$sql = "INSERT INTO $TableEBDeclaratie ($EBDeclaratieHash, $EBDeclaratieIndiener, $EBDeclaratieCluster, $EBDeclaratieDeclaratie, $EBDeclaratieTotaal, $EBDeclaratieTijd) VALUES ('$uniqueKey', ". $_SESSION['ID'].", ". $toDatabase['cluster'] .", '". $JSONtoDatabase ."', ". $toDatabase['totaal'] .", ". time() .")";	
-	mysqli_query($db, $sql);
-	$id = mysqli_insert_id($db);	
-	setDeclaratieStatus(3, $id, $_SESSION['ID']);	
-
-	# -------
-	# Mail naar de cluco opstellen
-	$cluster = $toDatabase['cluster'];
 	
-	if(isset($clusterCoordinatoren[$cluster]) AND $cluco <> $_SESSION['ID']) {
-		$cluco = $clusterCoordinatoren[$cluster];
-	} else {
-		$cluco = 0;
-	}	
+	# Controleer of de laatste 5 minuten niet eenzelfde declaratie is ingediend.
+	# Indien wel, dan is dat waarschijnlijk een misverstand	
+	$sql_check = "SELECT * FROM $TableEBDeclaratie WHERE $EBDeclaratieIndiener = ".$_SESSION['ID'] ." AND $EBDeclaratieCluster = ". $toDatabase['cluster'] ." AND $EBDeclaratieDeclaratie = '". $JSONtoDatabase ."' AND $EBDeclaratieTotaal = ". $toDatabase['totaal'] ." AND $EBDeclaratieTijd > ". (time()-300);
+	$result_check = mysqli_query($db, $sql_check);
 	
-	# Als $cluco = 0, betekent dat dat er geen cluco is
-	# in dat geval naar de penningmeester mailen	
-	if(isset($cluco) AND $cluco == 0) {
-		$ClucoAddress	= $declaratieReplyAddress;
-		$ClucoName		= $declaratieReplyName;
-		$cluco				= 109401;
-	} else {
-		//$ClucoAddress = getMailAdres($cluco);
-		$ClucoAddress	= getMailAdres($_SESSION['ID']);
-		$ClucoName		= makeName($cluco, 5);		
-	}
+	# Komt niet eerder voor
+	if(mysqli_num_rows($result_check) == 0) {		
+		$uniqueKey = generateID();
+  	
+		$sql = "INSERT INTO $TableEBDeclaratie ($EBDeclaratieHash, $EBDeclaratieIndiener, $EBDeclaratieCluster, $EBDeclaratieDeclaratie, $EBDeclaratieTotaal, $EBDeclaratieTijd) VALUES ('$uniqueKey', ". $_SESSION['ID'].", ". $toDatabase['cluster'] .", '". $JSONtoDatabase ."', ". $toDatabase['totaal'] .", ". time() .")";	
+		mysqli_query($db, $sql);
+		$id = mysqli_insert_id($db);	
+		setDeclaratieStatus(3, $id, $_SESSION['ID']);	
+  	
+		# -------
+		# Mail naar de cluco opstellen
+		$cluster = $toDatabase['cluster'];
 		
-	$ClucoData		= getMemberDetails($cluco);
-	$onderwerpen = array();
-	
-	if(isset($toDatabase['overig'])) {
-		$onderwerpen = array_merge($onderwerpen, $toDatabase['overig']);
-	}
-	
-	if(isset($toDatabase['reiskosten'])) {
-		$onderwerpen = array_merge($onderwerpen, array('reiskosten'));
-	}
-	
-	$mailCluco = array();
-	$mailCluco[] = "Beste ". makeName($cluco, 1).",<br>";
-	$mailCluco[] = "<br>";
-	$mailCluco[] = makeName($_SESSION['ID'], 5) .' heeft een declaratie ingediend.<br>';
-	$mailCluco[] = "<br>";
-	$mailCluco[] = "Het betreft een declaratie van <i>". makeOpsomming($onderwerpen, '</i>, <i>', '</i> en <i>') ."</i> ter waarde van ". formatPrice($toDatabase['totaal'])."<br>";
-	//$mailCluco[] = "<a href='". $ScriptURL ."declaratie/cluco.php?key=$uniqueKey&hash=". $ClucoData['hash_long'] ."&accept'>Goedkeuren</a><br>";
-	$mailCluco[] = "<a href='". $ScriptURL ."declaratie/cluco.php?key=$uniqueKey&reject'>Afkeuren</a> (inloggen vereist)<br>";
-	$mailCluco[] = "<br>";
-	$mailCluco[] = "Details zijn zichtbaar in de bijlage of <a href='". $ScriptURL ."declaratie/cluco.php?key=$uniqueKey'>online</a> (inloggen vereist)<br>";
-
-	$param_cluco['to'][]					= array($ClucoAddress, $ClucoName);
-	$param_cluco['subject'] 			= "Declaratie ". makeName($_SESSION['ID'], 5) ." voor cluster ". $clusters[$cluster];
-	$param_cluco['attachment'][]	= array('file' => $toDatabase['bijlage'], 'name' => $toDatabase['bijlage_naam']);
-	$param_cluco['message'] 			= implode("\n", $mailCluco);
-					
-	if(!sendMail_new($param_cluco)) {
-		toLog('error', $_SESSION['ID'], $_SESSION['ID'], "Problemen met invoeren van declaratie [$uniqueKey] en voorleggen aan cluco (". makeName($cluco, 5).")");
-		$page[] = "Er zijn problemen met het versturen van de notificatie-mail naar de clustercoordinator.";
+		if(isset($clusterCoordinatoren[$cluster]) AND $clusterCoordinatoren[$cluster] <> $_SESSION['ID']) {
+			$cluco = $clusterCoordinatoren[$cluster];
+		} else {
+			$cluco = 0;
+		}	
+		
+		# Als $cluco = 0, betekent dat dat er geen cluco is
+		# in dat geval naar de penningmeester mailen	
+		if(isset($cluco) AND $cluco == 0) {
+			$ClucoAddress	= $declaratieReplyAddress;
+			$ClucoName		= $declaratieReplyName;
+			$cluco				= 109401;
+		} else {
+			//$ClucoAddress = getMailAdres($cluco);
+			$ClucoAddress	= getMailAdres($_SESSION['ID']);
+			$ClucoName		= makeName($cluco, 5);		
+		}
+			
+		$ClucoData		= getMemberDetails($cluco);
+		$onderwerpen = array();
+		
+		if(isset($toDatabase['overig'])) {
+			$onderwerpen = array_merge($onderwerpen, $toDatabase['overig']);
+		}
+		
+		if(isset($toDatabase['reiskosten'])) {
+			$onderwerpen = array_merge($onderwerpen, array('reiskosten'));
+		}
+		
+		$mailCluco = array();
+		$mailCluco[] = "Beste ". makeName($cluco, 1).",<br>";
+		$mailCluco[] = "<br>";
+		$mailCluco[] = makeName($_SESSION['ID'], 5) .' heeft een declaratie ingediend.<br>';
+		$mailCluco[] = "<br>";
+		$mailCluco[] = "Het betreft een declaratie van <i>". makeOpsomming($onderwerpen, '</i>, <i>', '</i> en <i>') ."</i> ter waarde van ". formatPrice($toDatabase['totaal'])."<br>";
+		$mailCluco[] = "<br>";
+		
+		if($_POST['opm_cluco'] != '') {		
+			$mailCluco[] = "Als toelichting is ingevoerd:<br>";
+			$mailCluco[] = '<i>'. $_POST['opm_cluco'] .'</i><br>';
+			$mailCluco[] = "<br>";
+		}
+		
+		//$mailCluco[] = "<a href='". $ScriptURL ."declaratie/cluco.php?key=$uniqueKey&hash=". $ClucoData['hash_long'] ."&accept'>Goedkeuren</a><br>";
+		$mailCluco[] = "<a href='". $ScriptURL ."declaratie/cluco.php?key=$uniqueKey&reject'>Afkeuren</a> (inloggen vereist)<br>";
+		$mailCluco[] = "<br>";
+		$mailCluco[] = "Details zijn zichtbaar in de bijlage of <a href='". $ScriptURL ."declaratie/cluco.php?key=$uniqueKey'>online</a> (inloggen vereist)<br>";
+  	
+		$param_cluco['to'][]					= array($ClucoAddress, $ClucoName);
+		$param_cluco['subject'] 			= "Declaratie ". makeName($_SESSION['ID'], 5) ." voor cluster ". $clusters[$cluster];	
+		$param_cluco['message'] 			= implode("\n", $mailCluco);
+		
+		foreach($toDatabase['bijlage'] as $key => $bestand) {
+			$param_cluco['attachment'][$key]['file'] = $bestand;
+			$param_cluco['attachment'][$key]['name'] = $toDatabase['bijlage_naam'][$key];
+		}
+						
+		if(!sendMail_new($param_cluco)) {
+			toLog('error', $_SESSION['ID'], '', "Problemen met invoeren van declaratie [$uniqueKey] en voorleggen aan cluco (". makeName($cluco, 5).")");
+			$page[] = "Er zijn problemen met het versturen van de notificatie-mail naar de clustercoordinator.";
+		} else {
+			toLog('info', $_SESSION['ID'], '', "Declaratie [$uniqueKey] ingevoerd en doorgestuurd naar cluco (". makeName($cluco, 5).")");
+			$page[] = "De declaratie is ter goedkeuring voorgelegd aan ". makeName($cluco, 5) ." als clustercoordinator";
+		}
+		
+		# Alles verwijderen nadat de declaratie is ingeschoten en de mail de deur uit is
+		unset($_POST);		
 	} else {
-		toLog('info', $_SESSION['ID'], $_SESSION['ID'], "Declaratie [$uniqueKey] ingevoerd en doorgestuurd naar cluco (". makeName($cluco, 5).")");
-		$page[] = "De declaratie is ter goedkeuring voorgelegd aan ". makeName($cluco, 5) ." als clustercoordinator";
-	}	
+		toLog('info', $_SESSION['ID'], '', "Mogelijk dubbele declaratie, geblokkeerd.");
+		$page[] = "U heeft recent al een dergelijke declaratie ingediend. Opnieuw indienen is helaas niet mogelijk.";
+	}
+	$page[] = "<br>";
+	$page[] = "<br>";
+	$page[] = "Wilt u nog een declaratie indienen, klik dan <a href='". $_SERVER['PHP_SELF']."'>hier</a>. Mocht dit uw laatste declaratie zijn, klik dan <a href='". $ScriptURL ."'>hier</a>";	
 } elseif(isset($_POST['page']) AND $_POST['page'] > 0) {
 	if($_POST['eigen'] == 'Ja') {
 		$thuisAdres = $gebruikersData['straat'].' '.$gebruikersData['huisnummer'].', '.ucwords(strtolower($gebruikersData['plaats']));
@@ -161,8 +196,8 @@ if(isset($_POST['correct'])) {
 	
 	$meldingCluster = $meldingIBAN = $meldingDeclaratie = $meldingBestand = $meldingNegatief = '';
 	
-	$bijlage			= getParam('bijlage');
-	$bijlage			= getParam('bijlage');
+	$bijlage			= getParam('bijlage', array());
+	$opm_cluco		= getParam('opm_cluco');
 	$cluster			= getParam('cluster');
 	$overige 			= getParam('overig', array());
 	$overig_price	= getParam('overig_price', array());
@@ -203,7 +238,7 @@ if(isset($_POST['correct'])) {
 		}
 		
 		# Bewijs
-		if(count($overige) > 0 AND $_FILES['bijlage']['tmp_name'] == '' AND !isset($_POST['bijlage'])) {
+		if(count($overige) > 0 AND isset($_FILES['bijlage']['tmp_name']) AND strlen($_FILES['bijlage']['tmp_name'][0]) == 0) {
 			$checkFields = false;
 			$meldingBestand = 'Voeg bijlage bij';
 		}
@@ -219,9 +254,18 @@ if(isset($_POST['correct'])) {
 		}
 		
 		# Bestandsgrootte	
-		if($_FILES['bijlage']['size'] > (500*1024)) {
-			$checkFields = false;
-			$meldingBestand = 'Bestand te groot. Maximaal 500 kB';
+		if(isset($_FILES['bijlage'])) {
+			foreach($_FILES['bijlage']['size'] as $fileSize) {
+				if($fileSize > (500*1024)) {
+					$checkFields = false;
+					$meldingBestand = 'Bestand te groot. Maximaal 500 kB';
+				}
+			}
+						
+			if(count($_FILES['bijlage']['size']) > 2) {
+				$checkFields = false;
+				$meldingBestand = 'Maximaal 2 bestanden';
+			}			
 		}		
 	} else {
 		$checkFields = false;
@@ -229,14 +273,15 @@ if(isset($_POST['correct'])) {
 	
 	
 	if($checkFields) {
-		$input['user'] = $_SESSION['ID'];
-		$input['eigen'] = $_POST['eigen'];
-		$input['iban'] = $iban;
-		$input['relatie'] = $relatie;
-		$input['cluster'] = $cluster;
-		$input['overige'] = $overige;
-		$input['overig_price'] = $overig_price;
-		$input['reiskosten'] = $reiskosten;
+		$input['user']						= $_SESSION['ID'];
+		$input['eigen']						= $_POST['eigen'];
+		$input['iban']						= $iban;
+		$input['relatie']					= $relatie;
+		$input['cluster']					= $cluster;
+		$input['overige']					= $overige;
+		$input['overig_price']		= $overig_price;
+		$input['reiskosten']			= $reiskosten;
+		$input['opmerking_cluco']	= $opm_cluco;
 		
 		$totaal = calculateTotals($overig_price) + $reiskosten;
 				
@@ -247,72 +292,6 @@ if(isset($_POST['correct'])) {
 		$page[] = "<tr>";
 		$page[] = "		<td colspan='6'>U staat op het punt de volgende declaratie in te dienen:</td>";
 		$page[] = "</tr>";
-		/*
-		$page[] = "<tr>";
-		$page[] = "		<td colspan='2'>Naam:</td>";
-		$page[] = "		<td>". makeName($_SESSION['ID'], 5) ."</td>";
-		$page[] = "</tr>";
-		$page[] = "<tr>";
-		$page[] = "		<td colspan='2'>Emailadres:</td>";
-		$page[] = "		<td>". getMailAdres($_SESSION['ID']) ."</td>";
-		$page[] = "</tr>";
-		if($_POST['eigen'] == 'Ja') {	
-			$page[] = "<tr>";
-			$page[] = "		<td colspan='2'>Rekeningnummer:</td>";
-			$page[] = "		<td>$iban</td>";
-			$page[] = "</tr>";
-		}
-		
-		if($_POST['eigen'] == 'Nee') {
-			$page[] = "<tr>";
-			$page[] = "		<td colspan='2'>Rekeningnummer:</td>";
-			$page[] = "		<td>$relatie</td>";
-			$page[] = "</tr>";
-		}
-		$page[] = "<tr>";
-		$page[] = "		<td colspan='2'>Cluster onderdeel:</td>";
-		$page[] = "		<td>". $clusters[$cluster] ."</td>";
-		$page[] = "</tr>";
-		if(count($overige) > 0) {
-			$page[] = "<tr>";
-			$page[] = "		<td colspan='3'>&nbsp;</td>";
-			$page[] = "</tr>";
-			$page[] = "<tr>";
-			$page[] = "		<td colspan='3'><b>Declaraties</b></td>";
-			$page[] = "</tr>";
-			
-			$totaal = calculateTotals($overig_price);
-		
-			foreach($overige as $key => $value) {
-				if($value != "") {
-					$page[] = "<tr>";
-					$page[] = "		<td>&nbsp;</td>";
-					$page[] = "		<td>$value</td>";
-					$page[] = "		<td>". formatPrice(price2RightFormat($overig_price[$key])*100) ."</td>";
-					$page[] = "</tr>";				
-				}
-			}			
-		}
-		
-		if($_POST['eigen'] == 'Ja' AND isset($reiskosten) AND $reiskosten > 0) {
-			$page[] = "<tr>";
-			$page[] = "		<td>&nbsp;</td>";
-			$page[] = "		<td>Reiskosten</td>";
-			$page[] = "		<td>". formatPrice($reiskosten) ."</td>";
-			$page[] = "</tr>";	
-			
-			$totaal = $totaal + $reiskosten;
-		}
-		
-		
-		$page[] = "<tr>";
-		$page[] = "		<td colspan='3'>&nbsp;</td>";
-		$page[] = "</tr>";
-		$page[] = "<tr>";
-		$page[] = "		<td colspan='2'><b>Totaal</b></td>";
-		$page[] = "		<td><b>". formatPrice($totaal) ."</b></td>";
-		$page[] = "</tr>";
-		*/
 				
 		$page = array_merge($page, showDeclaratieDetails($input));
 		
@@ -479,9 +458,13 @@ if(isset($_POST['correct'])) {
 		$page[] = "	<td colspan='4'><b>Bijlages / facturen</b></td>";
 		$page[] = "</tr>";
 		
-		if(!isset($_POST['bijlage'])) {
+		if(
+			(!isset($_POST['bijlage']) AND !isset($_FILES['bijlage']))
+			OR 
+			(isset($_FILES['bijlage']) AND isset($meldingBestand) AND $meldingBestand != '')				
+		) {
 			$page[] = "<tr>";
-			$page[] = "	<td colspan='3'><input type='file' name='bijlage' accept='application/pdf'><br><small>max. 500 kB</small></td>";
+			$page[] = "	<td colspan='3'><input type='file' name='bijlage[]' accept='application/pdf' multiple><br><small>max. 2 files en 500 kB/stuk</small></td>";
 			$page[] = "	<td>&nbsp;</td>";
 			$page[] = "</tr>";
 			
@@ -491,11 +474,26 @@ if(isset($_POST['correct'])) {
 				$page[] = "</tr>";
 			}
 		} else {
+			if(isset($_POST['bijlage_naam'])) {
+				$bestanden = $_POST['bijlage_naam'];
+			} else {
+				$bestanden = $_FILES['bijlage']['name'];
+			}
+				
 			$page[] = "<tr>";
-			$page[] = "	<td colspan='4'>". $_POST['bijlage_naam'] ."</td>";
+			$page[] = "	<td colspan='4'>". implode('<br>', $bestanden) ."</td>";
 			$page[] = "</tr>";
 		}	
 		
+		$page[] = "<tr>";
+		$page[] = "	<td colspan='4'>&nbsp;</td>";
+		$page[] = "</tr>";
+		$page[] = "<tr>";
+		$page[] = "	<td colspan='4'><b>Eventueel korte toelichting voor de clustercoordinator</b><br>Deze toelichting zal <u>niet</u> opgenomen worden in de definitieve declaratie.</td>";
+		$page[] = "</tr>";		
+		$page[] = "<tr>";
+		$page[] = "	<td colspan='4'><textarea name='opm_cluco' cols=75 rows=5>". $_POST['opm_cluco'] ."</textarea></td>";
+		$page[] = "</tr>";		
 		$page[] = "<tr>";
 		$page[] = "	<td colspan='4'>&nbsp;</td>";
 		$page[] = "</tr>";
@@ -532,6 +530,10 @@ if(isset($_POST['correct'])) {
 $page[] = "</form>";
 
 # Pagina tonen
+$pageTitle = 'Declaratie';
+include_once('../include/HTML_TopBottom.php');
+include_once('../include/HTML_HeaderFooter.php');
+
 echo $HTMLHeader;
 echo '<table border=0 width=100%>'.NL;
 echo '<tr>'.NL;

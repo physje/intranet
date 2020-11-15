@@ -199,7 +199,7 @@ if(in_array(1, getMyGroups($_SESSION['ID']))) {
 	$adminLinks['declaratie/relatieOverview.php'] = 'Toon alle relaties';
 	$adminLinks['declaratie/mutatieOverview.php'] = 'Toon alle mutaties';
 	//$adminLinks['declaratie/syncRelaties.php'] = 'Synchroniseer relaties naar lokale database';
-	$adminLinks['declaratie/updateRelaties.php'] = 'Wijzig relaties';
+	$adminLinks['declaratie/editRelatie.php'] = 'Wijzig relaties';
 	$adminLinks['https://secure.e-boekhouden.nl/handleiding/Documentatie_soap.pdf'] = 'SOAP documenatie PDF';
 	
 	foreach($adminLinks as $link => $naam) {

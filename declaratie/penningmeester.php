@@ -3,9 +3,6 @@ include_once('../include/functions.php');
 include_once('../include/EB_functions.php');
 include_once('../include/config.php');
 include_once('../include/config_mails.php');
-include_once('../include/HTML_TopBottom.php');
-include_once('../include/HTML_HeaderFooter.php');
-//include_once('genereerDeclaratiePdf.php');
 $db = connect_db();
 
 $showLogin = true;
@@ -36,16 +33,18 @@ if(isset($_REQUEST['key'])) {
 			
 	$JSON = json_decode($row[$EBDeclaratieDeclaratie], true);	
 	$indiener = $row[$EBDeclaratieIndiener];
-	$data['user']					= $indiener;
-	$data['eigen']				= $JSON['eigen'];
-	$data['iban']					= $JSON['iban'];
-	$data['relatie']			= getParam('begunstigde', $JSON['EB_relatie']);
-	$data['cluster']			= $JSON['cluster'];
-	$data['overige']			= $JSON['overig'];
-	$data['overig_price']	= $JSON['overig_price'];
-	$data['reiskosten']		= $JSON['reiskosten'];
-	$data['bijlage']			= $JSON['bijlage'];
-	$data['bijlage_naam']	= $JSON['bijlage_naam'];
+	$data['user']								= $indiener;
+	$data['eigen']							= $JSON['eigen'];
+	$data['iban']								= $JSON['iban'];
+	$data['relatie']						= getParam('begunstigde', $JSON['EB_relatie']);
+	$data['cluster']						= $JSON['cluster'];
+	$data['overige']						= $JSON['overig'];
+	$data['overig_price']				= $JSON['overig_price'];
+	$data['reiskosten']					= $JSON['reiskosten'];
+	$data['bijlage']						= $JSON['bijlage'];
+	$data['bijlage_naam']				= $JSON['bijlage_naam'];
+	$data['opmerking_cluco']		= $JSON['opm_cluco'];
+	$data['opmerking_penning']	= $JSON['opm_penning'];
 	
 	$veldenCorrect = true;
 
@@ -53,12 +52,12 @@ if(isset($_REQUEST['key'])) {
 		$veldenCorrect = false;
 		$meldingGBR = 'Grootboekrekening ontbreekt';
 	}
-	
+		
 	if($JSON['eigen'] == 'Nee' AND isset($_POST['betalingskenmerk']) AND $_POST['betalingskenmerk'] == '') {
 		$veldenCorrect = false;
 		$meldingKenmerk = 'Betalingskenmerk ontbreekt';
 	}
-	
+		
 	if($JSON['eigen'] == 'Nee' AND isset($_POST['begunstigde']) AND $_POST['begunstigde'] == '') {
 		$veldenCorrect = false;
 		$meldingBegunstigde = 'Begunstigde ontbreekt';
@@ -73,7 +72,7 @@ if(isset($_REQUEST['key'])) {
 		$JSON['GBR'] = $_POST['GBR'];
 		
 		$UserData = getMemberDetails($indiener);
-				
+						
 		# EIGEN = JA
 		if($JSON['eigen'] == 'Ja') {		
 			if(is_numeric($UserData['eb_code']) AND $UserData['eb_code'] > 0) {
@@ -127,9 +126,8 @@ if(isset($_REQUEST['key'])) {
 					mysqli_query($db, "UPDATE $TableUsers SET $UserEBRelatie = $EBCode WHERE $UserID = $indiener");
 				}				
 			}
-			$toelichting		= implode(', ', $JSON['overig']);
-		}
-		
+			$factuurnummer	= 'declaratie-'.time2str('%e%b_%H.%M', $row[$EBDeclaratieTijd]);
+		}		
 		
 		# EIGEN = NEE
 		if($JSON['eigen'] == 'Nee') {
@@ -164,22 +162,28 @@ if(isset($_REQUEST['key'])) {
 				//$page[] = $_POST['begunstigde'] ."<br>";
 			}
 			
-			$toelichting	= $_POST['betalingskenmerk'];
+			$factuurnummer	= $_POST['betalingskenmerk'];
 		}
+
+		$JSON['EBCode'] = $EBCode;
 		
-		$boekstukNummer	= generateBoekstukNr(date('Y'));		
-		$factuurnummer	= 'declaratie-'.$boekstukNummer;
+		$EBData					= eb_getRelatieDataByCode($EBCode);
+		$boekstukNummer	= generateBoekstukNr(date('Y'));
 		$totaal					= $row[$EBDeclaratieTotaal];
 		
-		$JSON['EBCode'] = $EBCode;
-									
+		if($JSON['overig'] == '') {				
+			$toelichting		= 'reiskostenvergoeding';
+		} else {
+			$toelichting		= implode(', ', $JSON['overig']);
+		}		
+				
 		$errorResult = eb_verstuurDeclaratie ($EBCode, $boekstukNummer, '[remove] '.$factuurnummer, $totaal, $_POST['GBR'], $toelichting, $mutatieId);
 		if($errorResult) {
 			toLog('error', $_SESSION['ID'], $indiener, $errorResult);
-			$page[] = 'Probleem met toevoegen van declaratie ter waarde van '. formatPrice($totaal) .' voor '. $EBCode .'<br>';
+			$page[] = 'Probleem met toevoegen van declaratie ter waarde van '. formatPrice($totaal) .' aan '. $EBData['naam'] .' ('. $EBCode .')<br>';
 		} else {
-			toLog('info', $_SESSION['ID'], $indiener, 'Declaratie ingediend ('. formatPrice($totaal) .' naar '. $EBCode .')');
-			$page[] = 'Declaratie van '. formatPrice($totaal) .' toegevoegd voor '. $EBCode .'<br>';
+			toLog('info', $_SESSION['ID'], $indiener, 'Declaratie ['. $_REQUEST['key'] .'] van '. formatPrice($totaal) .' toegevoegd voor '. $EBData['naam'] .' ('. $EBCode .')');
+			$page[] = 'Declaratie van '. formatPrice($totaal) .' ingediend tnv '. $EBData['naam'] .'<br>';
 		}
 						
 		/*	
@@ -197,21 +201,27 @@ if(isset($_REQUEST['key'])) {
 		$MailFinAdmin = array();
 		$MailFinAdmin[] = makeName($indiener, 5) .' heeft een declaratie ingediend.<br>';
 		$MailFinAdmin[] = "<br>";
-		$MailFinAdmin[] = "Het betreft een declaratie ter waarde van ". formatPrice($totaal)." voor cluster ". $clusters[$cluster] ."<br>";
+		$MailFinAdmin[] = "Het betreft een declaratie ter waarde van ". formatPrice($totaal)." voor cluster ". $clusters[$cluster] ." tnv ". $EBData['naam'] .' ('. $EBCode .')';
 				
 		$param_finAdmin['to'][]					= array($EBDeclaratieAddress);
 		$param_finAdmin['subject'] 			= "Declaratie ". makeName($_SESSION['ID'], 5) ." voor cluster ". $clusters[$cluster];
-		$param_finAdmin['attachment'][]	= array('file' => $JSON['bijlage'], 'name' => $boekstukNummer.'_'.$JSON['bijlage_naam']);
+		//$param_finAdmin['attachment'][]	= array('file' => $JSON['bijlage'], 'name' => $boekstukNummer.'_'.$JSON['bijlage_naam']);
+		
+		foreach($JSON['bijlage'] as $key => $bestand) {
+			$param_finAdmin['attachment'][$key]['file'] = $bestand;
+			$param_finAdmin['attachment'][$key]['name'] = $boekstukNummer.'_'.$JSON['bijlage_naam'][$key];
+		}
+		
 		$param_finAdmin['message'] 			= implode("\n", $MailFinAdmin);
 					
 		if(!sendMail_new($param_finAdmin)) {
 			toLog('error', $_SESSION['ID'], $indiener, "Problemen met versturen van mail naar financiële administratie");
 			$page[] = "Er zijn problemen met het versturen van mail naar de financiële administratie";
 		} else {
-			toLog('debug', $_SESSION['ID'], $indiener, "Declaratie-notificatie naar financiële administratie");			
-		}	
+			toLog('debug', $_SESSION['ID'], $indiener, "Declaratie-notificatie naar financiële administratie");
+			setDeclaratieStatus(5, $row[$EBDeclaratieID], $data['user']);
+		}
 		
-		setDeclaratieStatus(5, $row[$EBDeclaratieID], $data['user']);
 		
 		# JSON-string terug in database
 		$JSONtoDatabase = json_encode($JSON);
@@ -386,6 +396,10 @@ if(isset($_REQUEST['key'])) {
 }
 
 # Pagina tonen
+$pageTitle = 'Declaratie';
+include_once('../include/HTML_TopBottom.php');
+include_once('../include/HTML_HeaderFooter.php');
+
 echo $HTMLHeader;
 echo '<table border=0 width=100%>'.NL;
 echo '<tr>'.NL;

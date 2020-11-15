@@ -91,7 +91,7 @@ try {
   $params = array(
     "SecurityCode2" => $ebSecurityCode2,
     "SessionID" => $SessionID,
-    cFilter => array(
+    "cFilter" => array(
     	"MutatieNr" => 0,
     	"MutatieNrVan" => 0,
     	"MutatieNrTm" => 0,

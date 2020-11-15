@@ -3,8 +3,6 @@ include_once('../include/functions.php');
 include_once('../include/EB_functions.php');
 include_once('../include/config.php');
 include_once('../include/config_mails.php');
-include_once('../include/HTML_TopBottom.php');
-include_once('../include/HTML_HeaderFooter.php');
 //include_once('genereerDeclaratiePdf.php');
 $db = connect_db();
 
@@ -39,72 +37,101 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 				
 		$JSON = json_decode($row[$EBDeclaratieDeclaratie], true);
 		
-		$data['user']					= $row[$EBDeclaratieIndiener];
-		$data['eigen']				= $JSON['eigen'];
-		$data['iban']					= $JSON['iban'];
-		$data['relatie']			= $JSON['EB_relatie'];
-		$data['cluster']			= $JSON['cluster'];
-		$data['overige']			= $JSON['overig'];
-		$data['overig_price']	= $JSON['overig_price'];
-		$data['reiskosten']		= $JSON['reiskosten'];
-
+		$data['user']							= $row[$EBDeclaratieIndiener];
+		$data['eigen']						= $JSON['eigen'];
+		$data['iban']							= $JSON['iban'];
+		$data['relatie']					= $JSON['EB_relatie'];
+		$data['cluster']					= $JSON['cluster'];
+		$data['overige']					= $JSON['overig'];
+		$data['overig_price']			= $JSON['overig_price'];
+		$data['reiskosten']				= $JSON['reiskosten'];
+		$data['opmerking_cluco']	= $JSON['opm_cluco'];
 				
 		if(isset($_REQUEST['accept'])) {
-			# Mail naar gemeentelid
-			$mail[] = "Beste ". makeName($data['user'], 1) .",<br>";
-			$mail[] = "<br>";
-			$mail[] = "Onderstaande declaratie van ".time2str('%e %B', $row[$EBDeclaratieTijd]) ." is door ". makeName($_SESSION['ID'], 5) ." als cluster-coordinator goedgekeurd en doorgestuurd naar de penningmeester voor verdere afhandeling.<br>";
-			$mail[] = "Mocht deze laatste nog vragen hebben dan neemt hij contact met je op.<br>";
-			$mail[] = '<table border=0>';
-			$mail[] = "<tr>";
-			$mail[] = "		<td colspan='6' height=50><hr></td>";
-			$mail[] = "</tr>";			
-			$mail = array_merge($mail, showDeclaratieDetails($data));			
-			$mail[] = "</table>";
-			
-			$parameter['to'][]			= array($data['user']);
-			$parameter['subject']		= 'Goedkeuring declaratie';
-			$parameter['message'] 	= implode("\n", $mail);
-			$parameter['from']			= getMailAdres($_SESSION['ID']);
-			$parameter['fromName']	= makeName($_SESSION['ID'], 5);
-			
-			if(!sendMail_new($parameter)) {
-				toLog('error', $_SESSION['ID'], $data['user'], "Problemen met versturen declaratie-goedkeuring [". $_REQUEST['key'] ."] door cluco");
-				$page[] = "Er zijn problemen met het versturen van de goedkeuringsmail.<br>\n";
+			if(isset($_REQUEST['send_accept'])) {
+				# Mail naar gemeentelid
+				$mail[] = "Beste ". makeName($data['user'], 1) .",<br>";
+				$mail[] = "<br>";
+				$mail[] = "Onderstaande declaratie van ".time2str('%e %B', $row[$EBDeclaratieTijd]) ." is door ". makeName($_SESSION['ID'], 5) ." als cluster-coordinator goedgekeurd en doorgestuurd naar de penningmeester voor verdere afhandeling.<br>";
+				$mail[] = "Mocht deze laatste nog vragen hebben dan neemt hij contact met je op.<br>";
+				$mail[] = '<table border=0>';
+				$mail[] = "<tr>";
+				$mail[] = "		<td colspan='6' height=50><hr></td>";
+				$mail[] = "</tr>";			
+				$mail = array_merge($mail, showDeclaratieDetails($data));			
+				$mail[] = "</table>";
+				
+				$parameter['to'][]			= array($data['user']);
+				$parameter['subject']		= 'Goedkeuring declaratie';
+				$parameter['message'] 	= implode("\n", $mail);
+				$parameter['from']			= getMailAdres($_SESSION['ID']);
+				$parameter['fromName']	= makeName($_SESSION['ID'], 5);
+				
+				if(!sendMail_new($parameter)) {
+					toLog('error', $_SESSION['ID'], $data['user'], "Problemen met versturen declaratie-goedkeuring [". $_REQUEST['key'] ."] door cluco");
+					$page[] = "Er zijn problemen met het versturen van de goedkeuringsmail.<br>\n";
+				} else {
+					toLog('info', $_SESSION['ID'], $data['user'], "Declaratie-goedkeuring [". $_REQUEST['key'] ."] door cluco");
+					$page[] = "Er is een mail met goedkeuring verstuurd naar ". makeName($data['user'], 5) ."<br>\n";
+					setDeclaratieStatus(4, $row[$EBDeclaratieID], $data['user']);	
+				}
+				
+				# Mail naar penningmeester
+				unset($mail, $parameter);
+				
+				$mail[] = "Beste Penningmeester,<br>";
+				$mail[] = "<br>";
+				$mail[] = "Onderstaande declaratie van ". makeName($data['user'], 5) ." is door ". makeName($_SESSION['ID'], 5) ." als cluster-coordinator goedgekeurd.<br>";
+				$mail[] = '<table border=0>';
+				$mail[] = "<tr>";
+				$mail[] = "		<td colspan='6' height=50><hr></td>";
+				$mail[] = "</tr>";			
+				$mail = array_merge($mail, showDeclaratieDetails($data));			
+				$mail[] = "</table>";
+				
+				//$parameter['to'][]			= array($declaratieReplyAddress, $declaratieReplyName);
+				$parameter['to'][]			= array(getMailAdres($_SESSION['ID']), $declaratieReplyName);
+				$parameter['subject']		= 'Door cluco goedgekeurde declaratie';
+				$parameter['message'] 	= implode("\n", $mail);
+				$parameter['from']			= getMailAdres($_SESSION['ID']);
+				$parameter['fromName']	= makeName($_SESSION['ID'], 5);
+				
+				if(!sendMail_new($parameter)) {
+					toLog('error', $_SESSION['ID'], $data['user'], "Problemen met versturen declaratie-goedkeuring naar penningmeester [". $_REQUEST['key'] ."]");
+					$page[] = "Er zijn problemen met het versturen van de goedgekeurde declaratie naar de penningsmeester.";
+				} else {
+					toLog('info', $_SESSION['ID'], $data['user'], "Declaratie-goedkeuring [". $_REQUEST['key'] ."] naar penningmeester");
+					$page[] = "De goedgekeurde declaratie is doorgestuurd naar de penningsmeester.";
+				}
+				
+				# JSON-string terug in database
+				$JSON['opm_penning'] = $_POST['opm_penning'];
+				$JSONtoDatabase = json_encode($JSON);
+				$sql = "UPDATE $TableEBDeclaratie SET $EBDeclaratieDeclaratie = '". $JSONtoDatabase ."' WHERE $EBDeclaratieID like ". $row[$EBDeclaratieID];
+				mysqli_query($db, $sql);			
 			} else {
-				toLog('info', $_SESSION['ID'], $data['user'], "Declaratie-goedkeuring [". $_REQUEST['key'] ."] door cluco");
-				$page[] = "Er is een mail met goedkeuring verstuurd naar ". makeName($data['user'], 5) ."<br>\n";
-				setDeclaratieStatus(4, $row[$EBDeclaratieID], $data['user']);	
-			}
-			
-			# Mail naar penningmeester
-			unset($mail, $parameter);
-			
-			$mail[] = "Beste Penningmeester,<br>";
-			$mail[] = "<br>";
-			$mail[] = "Onderstaande declaratie van ". makeName($data['user'], 5) ." is door ". makeName($_SESSION['ID'], 5) ." als cluster-coordinator goedgekeurd.<br>";
-			$mail[] = '<table border=0>';
-			$mail[] = "<tr>";
-			$mail[] = "		<td colspan='6' height=50><hr></td>";
-			$mail[] = "</tr>";			
-			$mail = array_merge($mail, showDeclaratieDetails($data));			
-			$mail[] = "</table>";
-			
-			//$parameter['to'][]			= array($declaratieReplyAddress, $declaratieReplyName);
-			$parameter['to'][]			= array(getMailAdres($_SESSION['ID']), $declaratieReplyName);
-			$parameter['subject']		= 'Door cluco goedgekeurde declaratie';
-			$parameter['message'] 	= implode("\n", $mail);
-			$parameter['from']			= getMailAdres($_SESSION['ID']);
-			$parameter['fromName']	= makeName($_SESSION['ID'], 5);
-			
-			if(!sendMail_new($parameter)) {
-				toLog('error', $_SESSION['ID'], $data['user'], "Problemen met versturen declaratie-goedkeuring naar penningmeester [". $_REQUEST['key'] ."]");
-				$page[] = "Er zijn problemen met het versturen van de goedgekeurde declaratie naar de penningsmeester.<br>";
-			} else {
-				toLog('info', $_SESSION['ID'], $data['user'], "Declaratie-goedkeuring [". $_REQUEST['key'] ."] naar penningmeester");
-				$page[] = "De goedgekeurde declaratie is doorgestuurd naar de penningsmeester.<br>";
-			}
-			$page[] = "<br>Ga terug naar <a href='". $_SERVER['PHP_SELF']."'>het overzicht</a>.";
+				$page[] = "<form method='post' action='". $_SERVER['PHP_SELF']."'>";
+				$page[] = "<input type='hidden' name='key' value='". $_REQUEST['key'] ."'>";
+				$page[] = "<input type='hidden' name='accept' value='1'>";
+				$page[] = '<table border=0>';
+				$page[] = "<tr>";
+				$page[] = "		<td align='left'>Geef hieronder optioneel een korte toelichting aan de penningsmeester.<br>Deze toelichting zal <u>niet</u> opgenomen worden in de definitieve declaratie.</td>";
+				$page[] = "</tr>";	
+				$page[] = "<tr>";
+				$page[] = "		<td>&nbsp;</td>";
+				$page[] = "</tr>";	
+				$page[] = "<tr>";
+				$page[] = "		<td align='center'><textarea name='opm_penning' cols=75 rows=10>". $_POST['opm_penning'] ."</textarea></td>";
+				$page[] = "</tr>";
+				$page[] = "<tr>";
+				$page[] = "		<td>&nbsp;</td>";
+				$page[] = "</tr>";
+				$page[] = "<tr>";
+				$page[] = "		<td align='center'><input type='submit' name='send_accept' value='Goedkeuring versturen'></td>";
+				$page[] = "</tr>";	
+				$page[] = "</table>";
+				$page[] = "</form>";
+			}			
 		} elseif(isset($_REQUEST['reject'])) {
 			if(isset($_REQUEST['send_reject'])) {				
 				$mail[] = "Beste ". makeName($data['user'], 1) .",<br>";
@@ -237,8 +264,15 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 	$page[] = "U bent geen cluster-coordinator";
 }
 
+if(isset($_REQUEST['send_accept']) OR isset($_REQUEST['send_reject'])) {
+	$page[] = "<br><br>Ga terug naar <a href='". $_SERVER['PHP_SELF']."'>het overzicht</a>.";
+}
 
 # Pagina tonen
+$pageTitle = 'Declaratie';
+include_once('../include/HTML_TopBottom.php');
+include_once('../include/HTML_HeaderFooter.php');
+
 echo $HTMLHeader;
 echo '<table border=0 width=100%>'.NL;
 echo '<tr>'.NL;
