@@ -14,17 +14,22 @@ include_once('../include/LP_functions.php');
 #
 $filename = 'subscribed_members_export_482dc3d96e.csv';
 
+# De eerste regel bevat koppen, die hoeven we niet mee te nemen
+$start = getParam('start', 1);
+
+$importSucces = true;
+
 $fp = fopen($filename, 'r');
 $data = fread($fp, filesize($filename));
 fclose($fp);
 
 $regels = explode("\n", $data);
+$aantal = count($regels);
+$uitsnede = array_slice($regels, $start, 1);
 
-$regels = array_slice($regels, 1);
-
-foreach($regels as $persoon) {
+foreach($uitsnede as $persoon) {
 	# 3 seconden per persoon moet voldoende zijn
-	set_time_limit(3);
+	set_time_limit(6);
 	
 	$velden = str_getcsv ($persoon, ",",'"');
 		
@@ -32,6 +37,7 @@ foreach($regels as $persoon) {
 	$voornaam				= $velden[1];
 	$tussenvoegsel	= $velden[2];
 	$achternaam			= $velden[3];
+	$scipioID			= $velden[7];
 	$mailing				= $velden[9];
 	$tag						= $velden[26];
 	
@@ -50,8 +56,13 @@ foreach($regels as $persoon) {
 		$custom_fields_short['geslacht'] = '';
 	}
 	
-	echo $voornaam .' '. $achternaam;
-			
+	$naamMC = str_replace('  ', ' ', $voornaam .' '. $tussenvoegsel .' '. $achternaam);
+	$naamScipio = makeName($scipioID, 5);
+	
+	$waarde = levenshtein($naamMC, $naamScipio);
+	
+	echo $naamMC ."|".$naamScipio;
+	
 	foreach($mailings as $list) {
 		$list = trim($list);
 		
@@ -61,99 +72,88 @@ foreach($regels as $persoon) {
 			$custom_fields_short['3gkadres'] = 'Nee';
 		}
 		
-		
 		if($list == 'Wijkmail') {
 			foreach($tags as $tag) {				
 				if(substr($tag, 1, 4) == 'Wijk' AND strlen($tag) == 8) {				
 					$wijk = substr($tag, -2, 1);
-					echo ', wijk '. $wijk;
-					if(lp_onList($LPWijkListID[$wijk], $email)) {
-						$updateMember = lp_updateMember($LPWijkListID[$wijk], $email, $custom_fields_short);						
-						if($updateMember != true) {
-							toLog('error', '', $scipioID, 'update: '. $updateMember['error']);
-						}
-					} else {
+					
+					if(!lp_onList($LPWijkListID[$wijk], $email)) {
 						$addMember = lp_addMember($LPWijkListID[$wijk], $email, $custom_fields_short);
-						if($addMember != true) {
-							toLog('error', '', $scipioID, 'add: '. $updateMember['error']);
-						}
+						echo ', wijk '. $wijk;
+						if(is_array($addMember))    $importSucces = false;
 					}					
 				}
-			}			
+			}
 		}
 		
+
 		if($list == 'Trinitas') {
-			if(lp_onList($LPTrinitasListID, $email)) {
-				$updateMember = lp_updateMember($LPTrinitasListID, $email, $custom_fields_short);
-				if($updateMember != true) {
-					toLog('error', '', $scipioID, 'update: '. $updateMember['error']);
-				}
-			} else {
-				lp_addMember($LPTrinitasListID, $email, $custom_fields_short);
+			if(!lp_onList($LPTrinitasListID, $email)) {
+				$addMember = lp_addMember($LPTrinitasListID, $email, $custom_fields_short);
+				echo ', trinitas';
+				if(is_array($addMember))    $importSucces = false;
 			}
-			
-			echo ', trinitas';
 		}
 
 		if($list == 'Wekelijkse Trinitas') {
-			if(lp_onList($LPWeekTrinitasListID, $email)) {
-				lp_updateMember($LPWeekTrinitasListID, $email, $custom_fields_short);
-			} else {
-				lp_addMember($LPWeekTrinitasListID, $email, $custom_fields_short);
+			if(!lp_onList($LPWeekTrinitasListID, $email)) {
+				$addMember = lp_addMember($LPWeekTrinitasListID, $email, $custom_fields_short);
+				echo ', trinitas (w)';
+				if(is_array($addMember))    $importSucces = false;
 			}
-			
-			echo ', trinitas (w)';
 		}
 		
 		if($list == 'Adventsmail') {
-			if(lp_onList($LPAdventListID, $email)) {
-				lp_updateMember($LPAdventListID, $email, $custom_fields_short);
-			} else {
-				lp_addMember($LPAdventListID, $email, $custom_fields_short);
+			if(!lp_onList($LPAdventListID, $email)) {
+				$addMember = lp_addMember($LPAdventListID, $email, $custom_fields_short);
+				echo ', advent';
+				if(is_array($addMember))    $importSucces = false;
 			}
-			
-			echo ', advent';
 		}
 				
 		if($list == 'Koningsmail') {
-			if(lp_onList($LPKoningsmailListID, $email)) {
-				lp_updateMember($LPKoningsmailListID, $email, $custom_fields_short);
-			} else {
-				lp_addMember($LPKoningsmailListID, $email, $custom_fields_short);
-			}			
-			echo ', koningsmail';
+			if(!lp_onList($LPKoningsmailListID, $email)) {
+				$addMember = lp_addMember($LPKoningsmailListID, $email, $custom_fields_short);
+				echo ', koningsmail';
+				if(is_array($addMember))    $importSucces = false;
+			}
 		}
 		
 		if($list == 'Maandelijkse gebedskalender') {
-			if(lp_onList($LPGebedMaandListID, $email)) {
-				lp_updateMember($LPGebedMaandListID, $email, $custom_fields_short);
-			} else {
-				lp_addMember($LPGebedMaandListID, $email, $custom_fields_short);
+			if(!lp_onList($LPGebedMaandListID, $email)) {
+				$addMember = lp_addMember($LPGebedMaandListID, $email, $custom_fields_short);
+				echo ', gebed (m)';
+				if(is_array($addMember))    $importSucces = false;
 			}
-			echo ', gebed (m)';
 		}
 
 		if($list == 'Wekelijkse gebedskalender') {
-			if(lp_onList($LPGebedWeekListID, $email)) {
-				lp_updateMember($LPGebedWeekListID, $email, $custom_fields_short);
-			} else {
-				lp_addMember($LPGebedWeekListID, $email, $custom_fields_short);
+			if(!lp_onList($LPGebedWeekListID, $email)) {
+				$addMember = lp_addMember($LPGebedWeekListID, $email, $custom_fields_short);
+				echo ', gebed (w)';
+				if(is_array($addMember))    $importSucces = false;
 			}
-			echo ', gebed (w)';
 		}
 		
 		if($list == 'Dagelijkse gebedskalender') {
-			if(lp_onList($LPGebedDagListID, $email)) {
-				lp_updateMember($LPGebedDagListID, $email, $custom_fields_short);
-			} else {
-				lp_addMember($LPGebedDagListID, $email, $custom_fields_short);
+			if(!lp_onList($LPGebedDagListID, $email)) {
+				$addMember = lp_addMember($LPGebedDagListID, $email, $custom_fields_short);
+				echo ', gebed (d)';
+				if(is_array($addMember))    $importSucces = false;
 			}
-			echo ', gebed (d)';
 		}		
 	}
 	
-	echo '<br>';	
+	echo '<br>';
 }
 
+if($importSucces)   $start++;
+
+echo '<html>';
+echo '<head>';
+echo '  <title>'. ($aantal-$start) .' | '. $naamScipio .'</title>';
+if($aantal > $start) echo '	<meta http-equiv="refresh" content="3; url=?start='. $start .'" />';
+echo '</head>';
+echo '<body>';
 
 ?>
