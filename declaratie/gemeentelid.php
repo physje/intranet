@@ -47,13 +47,6 @@ if(isset($_POST['cluster']))			$page[] = "<input type='hidden' name='cluster' va
 if(isset($_POST['iban']))					$page[] = "<input type='hidden' name='iban' value='". cleanIBAN($_POST['iban']) ."'>";
 if(isset($_POST['opm_cluco']))		$page[] = "<input type='hidden' name='opm_cluco' value='". trim($_POST['opm_cluco']) ."'>";
 
-if(isset($_POST['bijlage'])) {
-	foreach($_POST['bijlage'] as $key => $string) {
-		$page[] = "<input type='hidden' name='bijlage[]' value='". trim($string) ."'>";
-		$page[] = "<input type='hidden' name='bijlage_naam[]' value='". trim($_POST['bijlage_naam'][$key]) ."'>";
-	}
-}
-
 if(isset($_POST['overig']))	{
 	foreach($_POST['overig'] as $key => $string) {
 		if($string != '') {
@@ -73,7 +66,12 @@ if(isset($_FILES['bijlage'])) {
 			$page[] = "<input type='hidden' name='bijlage_naam[]' value='". trim($_FILES['bijlage']['name'][$key]) ."'>";	
 		}
 	}
-}
+} elseif(isset($_POST['bijlage'])) {
+	foreach($_POST['bijlage'] as $key => $string) {
+		$page[] = "<input type='hidden' name='bijlage[]' value='". trim($string) ."'>";
+		$page[] = "<input type='hidden' name='bijlage_naam[]' value='". trim($_POST['bijlage_naam'][$key]) ."'>";
+	}
+} 
 
 if(isset($_POST['correct'])) {
 	$toDatabase = $_POST;
@@ -461,7 +459,9 @@ if(isset($_POST['correct'])) {
 		if(
 			(!isset($_POST['bijlage']) AND !isset($_FILES['bijlage']))
 			OR 
-			(isset($_FILES['bijlage']) AND isset($meldingBestand) AND $meldingBestand != '')				
+			(isset($_FILES['bijlage']) AND isset($meldingBestand) AND $meldingBestand != '')
+			OR
+			(isset($_POST['reset_files']))
 		) {
 			$page[] = "<tr>";
 			$page[] = "	<td colspan='3'><input type='file' name='bijlage[]' accept='application/pdf' multiple><br><small>max. 2 files en 500 kB/stuk</small></td>";
@@ -481,7 +481,8 @@ if(isset($_POST['correct'])) {
 			}
 				
 			$page[] = "<tr>";
-			$page[] = "	<td colspan='4'>". implode('<br>', $bestanden) ."</td>";
+			$page[] = "	<td colspan='3'>". implode('<br>', $bestanden) ."</td>";
+			$page[] = "	<td><input type='submit' name='reset_files' value='Verwijder bijlages'></td>";
 			$page[] = "</tr>";
 		}	
 		

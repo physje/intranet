@@ -229,6 +229,15 @@ if(isset($_REQUEST['key'])) {
 		mysqli_query($db, $sql);		
 		
 		$page[] = "<br>Ga terug naar <a href='". $_SERVER['PHP_SELF']."'>het overzicht</a>.";
+	} elseif(isset($_POST['reject'])) {
+		setDeclaratieStatus(3, $row[$EBDeclaratieID], $data['user']);
+		
+		# JSON-string terug in database
+		$JSONtoDatabase = json_encode($JSON);
+		$sql = "UPDATE $TableEBDeclaratie SET $EBDeclaratieDeclaratie = '". $JSONtoDatabase ."' WHERE $EBDeclaratieID like ". $row[$EBDeclaratieID];
+		mysqli_query($db, $sql);		
+		
+		$page[] = "<br>Ga terug naar <a href='". $_SERVER['PHP_SELF']."'>het overzicht</a>.";		
 	} else {
 		$page[] = "<form method='post' action='". $_SERVER['PHP_SELF']."'>";
 		$page[] = "<input type='hidden' name='key' value='". $_REQUEST['key'] ."'>";
@@ -359,7 +368,10 @@ if(isset($_REQUEST['key'])) {
 		$page[] = "		<td colspan='6'>&nbsp;</td>";
 		$page[] = "</tr>";
 		$page[] = "<tr>";	
-		$page[] = "		<td colspan='6' align='right'><input type='submit' name='accept' value='Invoeren in e-boekhouden.nl'></td>";
+		$page[] = "		<td colspan='2'><input type='submit' name='reject' value='Terug naar clustercoordinator'></td>";
+		$page[] = "		<td>&nbsp;</td>";
+		$page[] = "		<td colspan='3' align='right'><input type='submit' name='accept' value='Invoeren in e-boekhouden.nl'></td>";
+		//$page[] = "		<td colspan='6' align='right'><input type='submit' name='accept' value='Invoeren in e-boekhouden.nl'></td>";
 		$page[] = "</tr>";	
 		$page[] = "</table>";
 		$page[] = "</form>";		

@@ -25,16 +25,20 @@ $sql = "SELECT * FROM $TableUsers WHERE $UserMail like '%@%' AND $UserStatus NOT
 $result = mysqli_query($db, $sql);
 $row = mysqli_fetch_array($result);
 
+//echo $sql;
+
 if(mysqli_num_rows($result) == $stap) {
 	echo '<html>';
 	echo '<head>';
-	echo '	<meta http-equiv="refresh" content="0; url=?start='. ($start+$stap) .'" />';
+	echo '	<meta http-equiv="refresh" content="1; url=?start='. ($start+$stap) .'" />';
 	echo '</head>';
 	echo '<body>';
 } else {
 	echo '<b>Laatste keer</b>';
 	echo '<br>';
 }
+
+$fail = $succes = 0;
 
 do {
 	# 5 seconden per persoon moet voldoende zijn
@@ -47,16 +51,21 @@ do {
 	$data = getMemberDetails($scipioID); 
 	$email = $data['mail'];
 	
-	foreach($listIDs as $naam => $listID) {
-		if(lp_onList($listID, $email)) {
-			$unsubscribeMember = lp_unsubscribeMember($listID, $email);
-			if($unsubscribeMember === true) {
-				toLog('debug', '', $scipioID, 'Uitgeschreven voor '. $listID);
-				echo makeName($scipioID, 5);
-			} else {
-				toLog('error', '', $scipioID, "Uitschrijven voor $listID: ". $unsubscribeMember['error']);
+	if($email != '') {
+		foreach($listIDs as $naam => $listID) {		
+			if(lp_onList($listID, $email)) {
+				$unsubscribeMember = lp_unsubscribeMember($listID, $email);
+				if($unsubscribeMember === true) {
+					toLog('debug', '', $scipioID, 'Uitgeschreven voor '. $listID);
+					$succes++;
+				} else {
+					toLog('error', '', $scipioID, "Uitschrijven voor $listID: ". $unsubscribeMember['error']);
+					$fail++;
+				}
 			}
 		}
+		
+		echo makeName($scipioID, 5) .' ('. $email .') : '. $succes .' vs '. $fail;
 	}
 } while($row = mysqli_fetch_array($result));
 
