@@ -36,7 +36,7 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 		$row = mysqli_fetch_array($result);
 				
 		$JSON = json_decode($row[$EBDeclaratieDeclaratie], true);
-		
+				
 		$data['user']							= $row[$EBDeclaratieIndiener];
 		$data['eigen']						= $JSON['eigen'];
 		$data['iban']							= $JSON['iban'];
@@ -196,9 +196,10 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 				$page[] = "<input type='hidden' name='user' value='". $data['user'] ."'>";
 				$page[] = '<table border=0>';
 				
-				# Pas hier toevoegen, omdat anders in de mail ook de bijlage in de tekst wordt opgenomen
+				# Pas hier toevoegen, omdat anders in de mail ook de bijlage in de tekst wordt opgenomen				
 				$data['bijlage']			= $JSON['bijlage'];
 				$data['bijlage_naam']	= $JSON['bijlage_naam'];
+				$data['key']					= $_REQUEST['key'];
 				
 				$page = array_merge($page, showDeclaratieDetails($data));
 			

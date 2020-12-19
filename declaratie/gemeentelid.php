@@ -107,7 +107,8 @@ if(isset($_POST['correct'])) {
 		# Als $cluco = 0, betekent dat dat er geen cluco is
 		# in dat geval naar de penningmeester mailen	
 		if(isset($cluco) AND $cluco == 0) {
-			$ClucoAddress	= $declaratieReplyAddress;
+			//$ClucoAddress	= $declaratieReplyAddress;
+			$ClucoAddress	= getMailAdres($_SESSION['ID']);
 			$ClucoName		= $declaratieReplyName;
 			$cluco				= 109401;
 		} else {

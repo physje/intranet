@@ -33,6 +33,7 @@ if(isset($_REQUEST['key'])) {
 			
 	$JSON = json_decode($row[$EBDeclaratieDeclaratie], true);	
 	$indiener = $row[$EBDeclaratieIndiener];
+	$data['key']								= $_REQUEST['key'];
 	$data['user']								= $indiener;
 	$data['eigen']							= $JSON['eigen'];
 	$data['iban']								= $JSON['iban'];
@@ -57,6 +58,11 @@ if(isset($_REQUEST['key'])) {
 		$veldenCorrect = false;
 		$meldingKenmerk = 'Betalingskenmerk ontbreekt';
 	}
+
+	if($JSON['eigen'] == 'Nee' AND strlen($_POST['betalingskenmerk']) > 50) {
+		$veldenCorrect = false;
+		$meldingKenmerk = 'Betalingskenmerk mag maximaal 50 tekens zijn';
+	}
 		
 	if($JSON['eigen'] == 'Nee' AND isset($_POST['begunstigde']) AND $_POST['begunstigde'] == '') {
 		$veldenCorrect = false;
@@ -72,6 +78,7 @@ if(isset($_REQUEST['key'])) {
 		$JSON['GBR'] = $_POST['GBR'];
 		
 		$UserData = getMemberDetails($indiener);
+		$boekstukNummer	= generateBoekstukNr(date('Y'));
 						
 		# EIGEN = JA
 		if($JSON['eigen'] == 'Ja') {		
@@ -126,7 +133,7 @@ if(isset($_REQUEST['key'])) {
 					mysqli_query($db, "UPDATE $TableUsers SET $UserEBRelatie = $EBCode WHERE $UserID = $indiener");
 				}				
 			}
-			$factuurnummer	= 'declaratie-'.time2str('%e%b_%H.%M', $row[$EBDeclaratieTijd]);
+			$factuurnummer	= $boekstukNummer.'-declaratie-'.time2str('%e%b_%H.%M', $row[$EBDeclaratieTijd]);
 		}		
 		
 		# EIGEN = NEE
@@ -162,13 +169,12 @@ if(isset($_REQUEST['key'])) {
 				//$page[] = $_POST['begunstigde'] ."<br>";
 			}
 			
-			$factuurnummer	= $_POST['betalingskenmerk'];
+			$factuurnummer	= str_replace(' ', '-', $_POST['betalingskenmerk']);
 		}
 
 		$JSON['EBCode'] = $EBCode;
 		
-		$EBData					= eb_getRelatieDataByCode($EBCode);
-		$boekstukNummer	= generateBoekstukNr(date('Y'));
+		$EBData					= eb_getRelatieDataByCode($EBCode);		
 		$totaal					= $row[$EBDeclaratieTotaal];
 		
 		if($JSON['overig'] == '') {				
@@ -230,14 +236,87 @@ if(isset($_REQUEST['key'])) {
 		
 		$page[] = "<br>Ga terug naar <a href='". $_SERVER['PHP_SELF']."'>het overzicht</a>.";
 	} elseif(isset($_POST['reject'])) {
-		setDeclaratieStatus(3, $row[$EBDeclaratieID], $data['user']);
+		if(isset($_REQUEST['send_reject'])) {
+			$cluco = $_POST['cluco'];
+			//$ClucoAddress = getMailAdres($cluco);
+			$ClucoAddress	= getMailAdres($_SESSION['ID']);
+			$ClucoName		= makeName($cluco, 5);	
+			
+			$mail[] = "Beste ". makeName($cluco, 1) .",<br>";
+			$mail[] = "<br>";
+			$mail[] = "Onderstaande declaratie is door de penningmeester voorgelegd aan jou als cluster-coordinator.<br>";
+			$mail[] = "Als reden daarvoor heeft de penningmeester de volgende reden opgegeven :";
+			$mail[] = '<table border=0>';
+			$mail[] = "<tr>";
+			$mail[] = "		<td colspan='6'>&nbsp;</td>";
+			$mail[] = "</tr>";
+			$mail[] = "<tr>";
+			$mail[] = "		<td>&nbsp;</td>";
+			$mail[] = "		<td colspan='5'><i>". $_POST['toelichting'] ."</i></td>";
+			$mail[] = "</tr>";
+			$mail[] = "<tr>";
+			$mail[] = "		<td colspan='6' height=50><hr></td>";
+			$mail[] = "</tr>";			
+			$mail = array_merge($mail, showDeclaratieDetails($data));			
+			$mail[] = "</table>";
+			
+			//$parameter['to'][]		= array($_POST['cluco']);
+			$parameter['to'][]		= array($ClucoAddress, $ClucoName);
+			$parameter['subject']		= 'Terugleggen declaratie';
+			$parameter['message'] 	= implode("\n", $mail);
+			$parameter['from']			= $declaratieReplyAddress;
+			$parameter['fromName']	= $declaratieReplyName;
+			
+			if(!sendMail_new($parameter)) {
+				toLog('error', $_SESSION['ID'], $data['user'], "Problemen met versturen teruglegging [". $_REQUEST['key'] ."]");
+				$page[] = "Er zijn problemen met het versturen van de mail.";
+			} else {
+				toLog('info', $_SESSION['ID'], $data['user'], "Declaratie-afwijzing [". $_REQUEST['key'] ."] naar gemeentelid");
+				$page[] = "Er is een mail met toelichting  verstuurd naar ". makeName($cluco, 5);
+				setDeclaratieStatus(3, $row[$EBDeclaratieID], $data['user']);	
+			}
+					
+			# JSON-string terug in database
+			$JSON['toelichting_penning'] = $_POST['toelichting'];
+			$JSONtoDatabase = json_encode($JSON);
+			$sql = "UPDATE $TableEBDeclaratie SET $EBDeclaratieDeclaratie = '". $JSONtoDatabase ."' WHERE $EBDeclaratieID like ". $row[$EBDeclaratieID];
+			mysqli_query($db, $sql);		
 		
-		# JSON-string terug in database
-		$JSONtoDatabase = json_encode($JSON);
-		$sql = "UPDATE $TableEBDeclaratie SET $EBDeclaratieDeclaratie = '". $JSONtoDatabase ."' WHERE $EBDeclaratieID like ". $row[$EBDeclaratieID];
-		mysqli_query($db, $sql);		
+			$page[] = "<br>Ga terug naar <a href='". $_SERVER['PHP_SELF']."'>het overzicht</a>.";			
+		} else {
+			$cluster = $data['cluster'];
+			if(isset($clusterCoordinatoren[$cluster])) {
+				$cluco = $clusterCoordinatoren[$cluster];
+			}				
+			
+			$page[] = "<form method='post' action='". $_SERVER['PHP_SELF']."'>";
+			$page[] = "<input type='hidden' name='key' value='". $_REQUEST['key'] ."'>";
+			$page[] = "<input type='hidden' name='cluco' value='$cluco'>";
+			$page[] = "<input type='hidden' name='reject' value='1'>";
+			$page[] = '<table border=0>';
+			$page[] = "<tr>";
+			$page[] = "		<td align='left'>Geef hieronder een korte toelichting aan ". makeName($cluco, 1) ." waarom deze declaratie wordt teruggegeven.<br>Deze toelichting zal integraal worden opgenomen in de mail.</td>";
+			$page[] = "</tr>";	
+			$page[] = "<tr>";
+			$page[] = "		<td>&nbsp;</td>";
+			$page[] = "</tr>";	
+			$page[] = "<tr>";
+			$page[] = "		<td align='center'><textarea name='toelichting' cols=75 rows=10></textarea></td>";
+			$page[] = "</tr>";
+			$page[] = "<tr>";
+			$page[] = "		<td>&nbsp;</td>";
+			$page[] = "</tr>";
+			$page[] = "<tr>";
+			$page[] = "		<td align='center'><input type='submit' name='send_reject' value='Verstuur'></td>";
+			$page[] = "</tr>";	
+			$page[] = "</table>";
+			$page[] = "</form>";			
+		}
+	} elseif(isset($_POST['dump'])) {
+		setDeclaratieStatus(7, $row[$EBDeclaratieID], $data['user']);
 		
-		$page[] = "<br>Ga terug naar <a href='". $_SERVER['PHP_SELF']."'>het overzicht</a>.";		
+		$page[] = "Declaratie is gemarkeerd als verwijderd. Neem contact op met de webmaster mocht dit onjuist zijn.<br>";
+		$page[] = "<br>Ga terug naar <a href='". $_SERVER['PHP_SELF']."'>het overzicht</a>.";			
 	} else {
 		$page[] = "<form method='post' action='". $_SERVER['PHP_SELF']."'>";
 		$page[] = "<input type='hidden' name='key' value='". $_REQUEST['key'] ."'>";
@@ -369,8 +448,9 @@ if(isset($_REQUEST['key'])) {
 		$page[] = "</tr>";
 		$page[] = "<tr>";	
 		$page[] = "		<td colspan='2'><input type='submit' name='reject' value='Terug naar clustercoordinator'></td>";
-		$page[] = "		<td>&nbsp;</td>";
-		$page[] = "		<td colspan='3' align='right'><input type='submit' name='accept' value='Invoeren in e-boekhouden.nl'></td>";
+		$page[] = "		<td colspan='2' align='center'><input type='submit' name='dump' value='Verwijderen'></td>";
+		//$page[] = "		<td>&nbsp;</td>";
+		$page[] = "		<td colspan='2' align='right'><input type='submit' name='accept' value='Invoeren in e-boekhouden.nl'></td>";
 		//$page[] = "		<td colspan='6' align='right'><input type='submit' name='accept' value='Invoeren in e-boekhouden.nl'></td>";
 		$page[] = "</tr>";	
 		$page[] = "</table>";

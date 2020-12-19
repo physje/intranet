@@ -1695,7 +1695,7 @@ function setDeclaratieStatus($status, $declaratie, $lid) {
 	$descr[4] = 'bij penningmeester';
 	$descr[5] = 'afgerond';
 	$descr[6] = 'afgekeurd';
-	$descr[7] = 'verwijderd';		# nog niet in gebruik
+	$descr[7] = 'verwijderd';
 	
 	$sql = "UPDATE $TableEBDeclaratie SET $EBDeclaratieStatus = $status WHERE $EBDeclaratieID = $declaratie";
 		
@@ -2048,6 +2048,7 @@ function calculateTotals($array) {
 function showDeclaratieDetails($input) {
 	global $clusters;
 	
+	# $input['key']
 	# $input['user']
 	# $input['iban']
 	# $input['relatie']
@@ -2055,6 +2056,14 @@ function showDeclaratieDetails($input) {
 	# $input['overige']
 	# $input['overig_price']
 	# $input['reiskosten']
+	
+	if(isset($input['key']) AND $input['key'] != '') {
+		$page[] = "<tr>";
+		$page[] = "		<td colspan='2'>Declaratie:</td>";
+		$page[] = "		<td>&nbsp;</td>";
+		$page[] = "		<td colspan='3'>". $input['key'] ."</td>";
+		$page[] = "</tr>";
+	}
 	
 	if(isset($input['user']) AND $input['user'] != '') {
 		$page[] = "<tr>";
