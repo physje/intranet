@@ -64,6 +64,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 				$param['cc'][] = array($adresBand, makeName($bandleider, 6));
 				$param['cc'][] = array($adresSchrift, makeName($schriftlezer, 6));
 				$param['cc'][] = array($adresJeugd, makeName($jeugdmoment, 6));
+				$param['cc'][] = array($adresRegisseur, makeName($regisseur, 6));
 								
 				# CC toevoegen
 				foreach($voorgangerCC as $adres => $naam) {
@@ -87,41 +88,41 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 			
 			if($regisseur > 0) {
 				$mailText[] = "";
-				$mailText[] = "Regisseur";
-				$mailText[] = "In Deventer worden regisseurs ingezet om de coördinatie tussen alle partijen die een rol hebben in de dienst (vooraf en tijdens de eredienst) te verzorgen. De regisseur heeft hierin een afstemmende rol richting (gast)predikant en andere betrokkenen en is het eerste aanspreekpunt. ";
+				$mailText[] = "<b>Regisseur</b>";
+				$mailText[] = "In Deventer worden regisseurs ingezet om de coördinatie tussen alle partijen die een rol hebben in de dienst (vooraf en tijdens de eredienst) te verzorgen. De regisseur heeft hierin een afstemmende rol richting ". ($voorgangerData['declaratie'] == 1 ? 'gast' : '') ."predikant en andere betrokkenen en is het eerste aanspreekpunt. ";
 				$mailText[] = "In deze dienst is ". makeName($regisseur, 5) ." de regisseur.";
 				$mailText[] = ($voorgangerData['stijl'] == 0 ? 'Heeft u' : 'Heb je')." vragen of ".($voorgangerData['stijl'] == 0 ? 'wilt u' : 'wil je')." overleggen over de inhoud van de dienst? Neem dan contact op met ". makeName($regisseur, 1) .".";
 			}
 			
 			if($bandleider > 0) {
 				$mailText[] = "";
-				$mailText[] = "Bandleider";
+				$mailText[] = "<b>Bandleider</b>";
 				$mailText[] = "De muzikale begeleiding wordt gecoördineerd door ". makeName($bandleider, 5) .". De liturgie ".($voorgangerData['stijl'] == 0 ? 'kunt u' : 'kun je')." afstemmen met ". makeName($bandleider, 1) ." voor de muziek. De bandleider kan aangeven of liederen bekend en of geschikt zijn in onze gemeente en eventuele suggesties doen voor een vervangend lied.";
 				$mailText[] = ($voorgangerData['stijl'] == 0 ? 'Wilt u' : 'Wil je')." de liturgie een week van te voren doorgeven zodat de band kan oefenen?";
 			}
 			
 			if($jeugdmoment > 0) {
 				$mailText[] = "";
-				$mailText[] = "Jeugdmoment";
+				$mailText[] = "<b>Jeugdmoment</b>";
 				$mailText[] = makeName($jeugdmoment, 5) ." zal contact met ".($voorgangerData['stijl'] == 0 ? 'u' : 'je')." opnemen om het thema van het jeugdmoment af te stemmen op ".($voorgangerData['stijl'] == 0 ? 'uw' : 'jouw')." keuze voor het thema van de preek en dienst.";
 			}
 			
 			if($schriftlezer > 0 OR $beameraar > 0) {
 				$mailText[] = "";
-				$mailText[] = "Andere taken";
+				$mailText[] = "<b>Andere taken</b>";
 				$mailText[] = ($schriftlezer > 0 ? "De schriftlezing wordt gedaan door ". makeName($schriftlezer, 5) : "Het is nog niet bekend wie de schriftlezing doet").".";
 				$mailText[] = ($beameraar > 0 ? "De beamer wordt bediend door ". makeName($beameraar, 5) : "Het is nog niet bekend wie de beamer bediend").".";
 			}
 						
 			if($voorgangerData['declaratie'] == 1 AND $dienstData['ruiling'] == 0) {
 				$mailText[] = "";
-				$mailText[] = "Declaratie";
+				$mailText[] = "<b>Declaratie</b>";
 				$mailText[] = "Op ". time2str ('%A %e %B', $dienstData['start']).' '.($voorgangerData['stijl'] == 0 ? 'ontvangt u' : 'ontvang je') ." in de ochtend een link naar uw persoonlijke digitale declaratie-omgeving voor het declareren van ".($voorgangerData['stijl'] == 0 ? 'uw' : 'jouw')." onkosten.";
 				setVoorgangerDeclaratieStatus(1, $dienst);
 			}
 			
 			$mailText[] = "";
-			$mailText[] = "Communicatie";
+			$mailText[] = "<b>Communicatie</b>";
 			$mailText[] = "De regisseur is het eerste aanspreekpunt bij vragen of opmerkingen. Neem dus gerust contact op met de regisseur. Als u deze mail beantwoordt aan \"allen\" dan zijn ook alle andere betrokkenen op tijd op de hoogte.";
 			
 			# Elke keer mailen is wat overdreven. Eens in de 6 weken lijkt mij mooi
