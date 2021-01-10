@@ -137,6 +137,12 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 				toLog('info', '', $element->regnr, 'Wijziging Scipio adres: '. $oldData['adres'] .' -> '. $velden[$UserAdres]);
 			}
 			
+			# Als het kerkelijk adres gewijzigd is
+			if($oldData['plaats'] != $velden[$UserPlaats]) {
+				$changedData['plaats'] = true;
+				toLog('info', '', $element->regnr, 'Wijziging Scipio plaats: '. $oldData['plaats'] .' -> '. $velden[$UserPlaats]);
+			}
+						
 			# Als de straatnaam gewijzigd is
 			if(addslashes($oldData['straat']) != $velden[$UserStraat]) {
 				$changedData['straat'] = true;
@@ -214,7 +220,8 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 				if(isset($changedData['mail']) AND $oldData['mail'] == '')																	$temp[] = "Mailadres ". $velden[$UserMail] ." toegevoegd";
 				
 				# Verhuizingen
-				if(isset($changedData['straat']) OR isset($changedData['huisnummer']))											$temp[] = "Verhuisd van ". $oldData['straat'].' '.$oldData['huisnummer'].$oldData['huisletter'].($oldData['toevoeging'] != '' ? '-'.$oldData['toevoeging'] : '').' naar '. $velden[$UserStraat].' '.$velden[$UserHuisnummer].$velden[$UserHuisletter].($velden[$UserToevoeging] != '' ? '-'.$velden[$UserToevoeging] : '');
+				if(isset($changedData['straat']) OR isset($changedData['huisnummer']) OR isset($changedData['plaats']))											$temp[] = "Verhuisd van ". 
+				$oldData['straat'].' '.$oldData['huisnummer'].$oldData['huisletter'].($oldData['toevoeging'] != '' ? '-'.$oldData['toevoeging'] : '').($oldData['plaats'] != $velden[$UserPlaats] ? ' '.$oldData['plaats'] : '').' naar '. $velden[$UserStraat].' '.$velden[$UserHuisnummer].$velden[$UserHuisletter].($velden[$UserToevoeging] != '' ? '-'.$velden[$UserToevoeging] : '').($velden[$UserPlaats] != $oldData['plaats'] ? ' '.$velden[$UserPlaats] : '');
 				if(isset($changedData['wijk']) AND !isset($changedData['status'])) {
 					$oudeWijk = $oldData['wijk'];
 					$nieuweWijk = $velden[$UserWijk];
