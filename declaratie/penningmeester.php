@@ -229,6 +229,8 @@ if(isset($_REQUEST['key'])) {
 		}
 		
 		
+		
+		
 		# JSON-string terug in database
 		$JSONtoDatabase = json_encode($JSON);
 		$sql = "UPDATE $TableEBDeclaratie SET $EBDeclaratieDeclaratie = '". $JSONtoDatabase ."' WHERE $EBDeclaratieID like ". $row[$EBDeclaratieID];
@@ -238,8 +240,7 @@ if(isset($_REQUEST['key'])) {
 	} elseif(isset($_POST['reject'])) {
 		if(isset($_REQUEST['send_reject'])) {
 			$cluco = $_POST['cluco'];
-			//$ClucoAddress = getMailAdres($cluco);
-			$ClucoAddress	= getMailAdres($_SESSION['ID']);
+			$ClucoAddress = getMailAdres($cluco);
 			$ClucoName		= makeName($cluco, 5);	
 			
 			$mail[] = "Beste ". makeName($cluco, 1) .",<br>";

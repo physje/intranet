@@ -7,8 +7,13 @@ $cfgProgDir = '../auth/';
 include($cfgProgDir. "secure.php");
 $db = connect_db();
 
-$start = mktime(0, 0, 0, 1, 1, 2020);
-$eind = mktime(23, 59, 59, 12, 31, 2020);
+if(date('n') == 12) {
+	$jaar = date('Y')+1;
+} else {
+	$jaar = date('Y');
+}
+$start = mktime(0, 0, 0, 1, 1, $jaar);
+$eind = mktime(23, 59, 59, 12, 31, $jaar);
 $dag = 24*60*60;
 
 $file_name = 'collectes_'. date('Ymd', $start) .'_tm_'. date('Ymd', $eind) .'.csv';
@@ -23,17 +28,27 @@ $diensten = getKerkdiensten($start, $eind);
 foreach($diensten as $dienst) {	
  	$data = getKerkdienstDetails($dienst);
  	
- 	$veld = array();
-	$veld[] = '1e collecte '. time2str('%e %B', $data['start']) .': '. $data['collecte_1'];
-	$veld[] = time2str('%d-%m-%Y', $data['start']-$dag);
-	$veld[] = time2str('%d-%m-%Y', $data['eind']+$dag);	
-	$output .= implode(";", $veld)."\n";
+ 	if($data['collecte_1'] != '') {
+	 	$veld = array();
+		//$veld[] = '1e collecte '. time2str('%e %B', $data['start']) .': '. $data['collecte_1'];
+		if($data['collecte_2'] != '') {
+			$veld[] = '1e collecte voor '. $data['collecte_1'];
+		} else {
+			$veld[] = 'Collecte voor '. $data['collecte_1'];
+		}
+		$veld[] = time2str('%d-%m-%Y', $data['start']-$dag);
+		$veld[] = time2str('%d-%m-%Y', $data['eind']+$dag);	
+		$output .= implode(";", $veld)."\n";
+	}
 	
-	$veld = array();
-	$veld[] = '2e collecte '. time2str('%e %B', $data['start']) .': '. $data['collecte_2'];
-	$veld[] = time2str('%d-%m-%Y', $data['start']-$dag);
-	$veld[] = time2str('%d-%m-%Y', $data['eind']+$dag);	
-	$output .= implode(";", $veld)."\n";	 	
+	if($data['collecte_2'] != '') {
+		$veld = array();
+		//$veld[] = '2e collecte '. time2str('%e %B', $data['start']) .': '. $data['collecte_2'];
+		$veld[] = '2e collecte voor '. $data['collecte_2'];
+		$veld[] = time2str('%d-%m-%Y', $data['start']-$dag);
+		$veld[] = time2str('%d-%m-%Y', $data['eind']+$dag);	
+		$output .= implode(";", $veld)."\n";
+	}
 }
 
 if(isset($_REQUEST['onscreen'])) {

@@ -7,8 +7,8 @@ $db = connect_db();
 
 $kmPrijs = 19; #in centen
 
-//$minUserLevel = 1;
-$requiredUserGroups = array(1, 38);
+$minUserLevel = 1;
+//$requiredUserGroups = array(1, 38);
 $cfgProgDir = '../auth/';
 include($cfgProgDir. "secure.php");
 
@@ -107,13 +107,11 @@ if(isset($_POST['correct'])) {
 		# Als $cluco = 0, betekent dat dat er geen cluco is
 		# in dat geval naar de penningmeester mailen	
 		if(isset($cluco) AND $cluco == 0) {
-			//$ClucoAddress	= $declaratieReplyAddress;
-			$ClucoAddress	= getMailAdres($_SESSION['ID']);
+			$ClucoAddress	= $declaratieReplyAddress;
 			$ClucoName		= $declaratieReplyName;
 			$cluco				= 109401;
 		} else {
-			//$ClucoAddress = getMailAdres($cluco);
-			$ClucoAddress	= getMailAdres($_SESSION['ID']);
+			$ClucoAddress = getMailAdres($cluco);
 			$ClucoName		= makeName($cluco, 5);		
 		}
 			
@@ -241,6 +239,7 @@ if(isset($_POST['correct'])) {
 			$checkFields = false;
 			$meldingBestand = 'Voeg bijlage bij';
 		}
+				
 		
 		# Positieve bedragen
 		if(count($overig_price) > 0) {			
@@ -252,19 +251,31 @@ if(isset($_POST['correct'])) {
 			}
 		}
 		
-		# Bestandsgrootte	
+		# Check van bestanden
 		if(isset($_FILES['bijlage'])) {
+			
+			# Bestandsgrootte	
 			foreach($_FILES['bijlage']['size'] as $fileSize) {
-				if($fileSize > (500*1024)) {
+				if($fileSize > (1100*1024)) {
 					$checkFields = false;
-					$meldingBestand = 'Bestand te groot. Maximaal 500 kB';
+					$meldingBestand = 'Bestand te groot. Maximaal 1 MB';
 				}
 			}
-						
+			
+			# Aantal bestanden
 			if(count($_FILES['bijlage']['size']) > 2) {
 				$checkFields = false;
 				$meldingBestand = 'Maximaal 2 bestanden';
 			}			
+			
+			# Alleen PDF's
+			foreach($_FILES['bijlage']['name'] as $bestandsnaam) {
+				$path_parts = pathinfo($bestandsnaam);
+				if($path_parts['extension'] != 'pdf') {
+					$checkFields = false;
+					$meldingBestand = 'Alleen PDF toegestaan';
+				}
+			}
 		}		
 	} else {
 		$checkFields = false;
@@ -403,10 +414,7 @@ if(isset($_POST['correct'])) {
 			$page[] = "	<td colspan='4'>&nbsp;</td>";
 			$page[] = "</tr>";		
 		}		
-		
-		//$page[] = "<tr>";
-		//$page[] = "	<td colspan='4'>&nbsp;</td>";
-		//$page[] = "</tr>";
+
 		$page[] = "	<tr>";
 		$page[] = "		<td colspan='4'><b>Overige kosten</b></td>";
 		$page[] = "	</tr>";
@@ -465,7 +473,7 @@ if(isset($_POST['correct'])) {
 			(isset($_POST['reset_files']))
 		) {
 			$page[] = "<tr>";
-			$page[] = "	<td colspan='3'><input type='file' name='bijlage[]' accept='application/pdf' multiple><br><small>max. 2 files en 500 kB/stuk</small></td>";
+			$page[] = "	<td colspan='3'><input type='file' name='bijlage[]' accept='application/pdf' multiple><br><small>max. 2 files en 1MB/stuk</small></td>";
 			$page[] = "	<td>&nbsp;</td>";
 			$page[] = "</tr>";
 			
@@ -516,11 +524,17 @@ if(isset($_POST['correct'])) {
 	$page[] = "<input type='hidden' name='page' value='1'>";
 	$page[] = "<table border=0>";
 	$page[] = "<tr>";
+	$page[] = "	<td colspan='2'><i>Welkom op het Online declaratiesysteem van de Koningskerk te Deventer.<br><br>Heeft u zelf onkosten gemaakt voor de kerk dan kunt u uw declaratie eenvoudig indienen via dit systeem. Uw declaratie gaat aan de hand van de workflow naar de clusterco&ouml;rdinator, penningmeester en het financieel systeem van de Koningskerk. U wordt over de voortgang van uw declaratie via deze workflow op de hoogte gehouden.<br><br>Declaraties worden aan u zelf uitbetaald, vanwege (voorgeschoten) gemaakte kosten.<br><br>Rekeningen worden echter rechtstreeks uitbetaald richting bedrijven of instellingen. Bij rekeningen moeten betaalgegevens waaronder bankrekeningnummer in de bijlage zijn opgenomen.</i></td>";
+	$page[] = "</tr>";
+	$page[] = "<tr>";
+	$page[] = "	<td colspan='2'>&nbsp;</td>";
+	$page[] = "</tr>";
+	$page[] = "<tr>";
 	$page[] = "	<td colspan='2'>Moet de rekening aan u zelf worden uitbetaald?</td>";
 	$page[] = "</tr>";
 	$page[] = "<tr>";
-	$page[] = "	<td colspan='3'>&nbsp;</td>";
-	$page[] = "</tr>";		
+	$page[] = "	<td colspan='2'>&nbsp;</td>";
+	$page[] = "</tr>";
 	$page[] = "<tr>";
 	$page[] = "	<td align='left'><input type='submit' name='eigen' value='Ja'></td>";
 	//$page[] = "	<td>&nbsp;</td>";

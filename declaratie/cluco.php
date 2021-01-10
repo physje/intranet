@@ -89,8 +89,7 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 				$mail = array_merge($mail, showDeclaratieDetails($data));			
 				$mail[] = "</table>";
 				
-				//$parameter['to'][]			= array($declaratieReplyAddress, $declaratieReplyName);
-				$parameter['to'][]			= array(getMailAdres($_SESSION['ID']), $declaratieReplyName);
+				$parameter['to'][]			= array($declaratieReplyAddress, $declaratieReplyName);				
 				$parameter['subject']		= 'Door cluco goedgekeurde declaratie';
 				$parameter['message'] 	= implode("\n", $mail);
 				$parameter['from']			= getMailAdres($_SESSION['ID']);
@@ -199,6 +198,7 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 				# Pas hier toevoegen, omdat anders in de mail ook de bijlage in de tekst wordt opgenomen				
 				$data['bijlage']			= $JSON['bijlage'];
 				$data['bijlage_naam']	= $JSON['bijlage_naam'];
+				$data['toelichting_penning']	= $JSON['toelichting'];
 				$data['key']					= $_REQUEST['key'];
 				
 				$page = array_merge($page, showDeclaratieDetails($data));

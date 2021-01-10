@@ -2185,6 +2185,19 @@ function showDeclaratieDetails($input) {
 		$page[] = "</tr>";
 	}
 	
+	
+	if(isset($input['toelichting_penning']) AND $input['toelichting_penning'] != '') {
+		$page[] = "<tr>";
+		$page[] = "		<td colspan='6'>&nbsp;</td>";
+		$page[] = "</tr>";
+		$page[] = "<tr>";	
+		$page[] = "		<td colspan='6'><b>Opmerking door penningmeester</b></td>";
+		$page[] = "</tr>";	
+		$page[] = "<tr>";	
+		$page[] = "		<td colspan='6'><i>". $input['toelichting_penning'] ."</i></td>";
+		$page[] = "</tr>";
+	}
+	
 	$page[] = "<tr>";
 	$page[] = "		<td colspan='6'>&nbsp;</td>";
 	$page[] = "</tr>";
