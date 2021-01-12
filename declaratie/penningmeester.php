@@ -183,7 +183,7 @@ if(isset($_REQUEST['key'])) {
 			$toelichting		= implode(', ', $JSON['overig']);
 		}		
 				
-		$errorResult = eb_verstuurDeclaratie ($EBCode, $boekstukNummer, '[remove] '.$factuurnummer, $totaal, $_POST['GBR'], $toelichting, $mutatieId);
+		$errorResult = eb_verstuurDeclaratie ($EBCode, $boekstukNummer, $factuurnummer, $totaal, $_POST['GBR'], $toelichting.' ('.$_REQUEST['key'].')', $mutatieId);
 		if($errorResult) {
 			toLog('error', $_SESSION['ID'], $indiener, $errorResult);
 			$page[] = 'Probleem met toevoegen van declaratie ter waarde van '. formatPrice($totaal) .' aan '. $EBData['naam'] .' ('. $EBCode .')<br>';
@@ -230,6 +230,30 @@ if(isset($_REQUEST['key'])) {
 		
 		
 		
+		$MailIndiener = array();
+		$MailIndiener[] = "Beste ". makeName($indiener, 1) .",<br>";
+		$MailIndiener[] = "<br>";
+		$MailIndiener[] = "Onderstaande declaratie van ".time2str('%e %B', $row[$EBDeclaratieTijd]) ." is goedgekeurd en zal worden uitbetaald.<br>";
+		$MailIndiener[] = '<table border=0>';
+		$MailIndiener[] = "<tr>";
+		$MailIndiener[] = "		<td colspan='6' height=50><hr></td>";
+		$MailIndiener[] = "</tr>";			
+		$MailIndiener = array_merge($mail, showDeclaratieDetails($data));			
+		$MailIndiener[] = "</table>";
+		
+		$param_indiener['to'][]			= array($data['user']);
+		$param_indiener['subject']	= 'Uitbetaling declaratie';
+		$param_indiener['message'] 	= implode("\n", $mail);
+		$param_indiener['from']			= $declaratieReplyAddress;
+		$param_indiener['fromName']	= $declaratieReplyName;
+		
+		if(!sendMail_new($param_indiener)) {
+			toLog('error', $_SESSION['ID'], $indiener, "Problemen met versturen declaratie-goedkeuring [". $_REQUEST['key'] ."] door penningmeester");
+			$page[] = "Er zijn problemen met het versturen van de goedkeuringsmail.<br>\n";
+		} else {
+			toLog('info', $_SESSION['ID'], $indiener, "Declaratie-goedkeuring [". $_REQUEST['key'] ."] door penningmeester");
+			$page[] = "Er is een mail met goedkeuring verstuurd naar ". makeName($indiener, 5) ."<br>\n";
+		}				
 		
 		# JSON-string terug in database
 		$JSONtoDatabase = json_encode($JSON);
