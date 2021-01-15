@@ -138,7 +138,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 			}
 			
 			# Als het kerkelijk adres gewijzigd is
-			if($oldData['plaats'] != $velden[$UserPlaats]) {
+			if(addslashes($oldData['plaats']) != $velden[$UserPlaats]) {
 				$changedData['plaats'] = true;
 				toLog('info', '', $element->regnr, 'Wijziging Scipio plaats: '. $oldData['plaats'] .' -> '. $velden[$UserPlaats]);
 			}
