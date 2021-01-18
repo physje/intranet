@@ -171,25 +171,34 @@ function getKerkdienstDetails($id) {
 	global $TableDiensten, $DienstID, $DienstStart, $DienstEind, $DienstVoorganger, $DienstCollecte_1, $DienstCollecte_2, $DienstOpmerking, $DienstRuiling, $DienstLiturgie;
 	$db = connect_db();
 	
-	$data = array();
+	$data = $voorgangerData = array();
 	
 	$sql = "SELECT * FROM $TableDiensten WHERE $DienstID = $id";
 	$result = mysqli_query($db, $sql);
-	if($row = mysqli_fetch_array($result)) {
-		$voorgangerData = getVoorgangerData($row[$DienstVoorganger]);
-		
+	if($row = mysqli_fetch_array($result)) {			
 		$data['start']					= $row[$DienstStart];
 		$data['eind']						= $row[$DienstEind];
 		$data['collecte_1']			= urldecode($row[$DienstCollecte_1]);
 		$data['collecte_2']			= urldecode($row[$DienstCollecte_2]);
 		$data['bijzonderheden']	= urldecode($row[$DienstOpmerking]);
-		$data['voorganger_id']	= $row[$DienstVoorganger];
-		$data['voorganger']			= strtolower($voorgangerData['titel']).' '.$voorgangerData['init'].' '.($voorgangerData['tussen'] == '' ? '' : $voorgangerData['tussen'].' ').$voorgangerData['achter'];
-		if(strtolower($voorgangerData['plaats']) != 'deventer' AND $voorgangerData['plaats'] != '')	$data['voorganger'] .= ' ('.$voorgangerData['plaats'].')';
-		$data['voorganger']			= trim($data['voorganger']);
+		$voorganger							= $row[$DienstVoorganger];
+						
+		if($voorganger != 0) {			
+			$voorgangerData = getVoorgangerData($voorganger);
+			
+			$data['voorganger_id']	= $voorganger;
+			$data['voorganger']			= strtolower($voorgangerData['titel']).' '.$voorgangerData['init'].' '.($voorgangerData['tussen'] == '' ? '' : $voorgangerData['tussen'].' ').$voorgangerData['achter'];
+			if(strtolower($voorgangerData['plaats']) != 'deventer' AND $voorgangerData['plaats'] != '')	$data['voorganger'] .= ' ('.$voorgangerData['plaats'].')';
+			$data['voorganger']			= trim($data['voorganger']);
+		} else {
+			$data['voorganger_id']	= $voorganger;
+			$data['voorganger']			= 'onbekend';
+		}
+				
 		$data['ruiling']				= $row[$DienstRuiling];
 		$data['liturgie']       = urldecode($row[$DienstLiturgie]);
 	}
+	
 	return $data;
 }
 
@@ -619,10 +628,13 @@ function getRoosterVulling($rooster, $dienst) {
 			} while($row = mysqli_fetch_array($result));		
 		}
 	} else {
+		$data = '';
+		
 		$sql = "SELECT $PlanningTxTText FROM $TablePlanningTxt WHERE $PlanningTxTDienst = $dienst AND $PlanningTxTGroup = $rooster";
 		$result = mysqli_query($db, $sql);
-		$row = mysqli_fetch_array($result);
-		$data = $row[$PlanningTxTText];		
+		if($row = mysqli_fetch_array($result)) {
+			$data = $row[$PlanningTxTText];
+		}
 	}
 	return $data;	
 }
@@ -1424,30 +1436,33 @@ function getLiturgie($id) {
 function getVoorgangerData($id) {
 	global $TableVoorganger, $VoorgangerID, $VoorgangerTitel, $VoorgangerVoor, $VoorgangerInit, $VoorgangerTussen, $VoorgangerAchter, $VoorgangerTel, $VoorgangerTel2, $VoorgangerPVNaam, $VoorgangerPVTel, $VoorgangerMail, $VoorgangerPlaats, $VoorgangerDenom, $VoorgangerOpmerking, $VoorgangerAandacht, $VoorgangerDeclaratie, $VoorgangerLastAandacht, $VoorgangerStijl, $VoorgangerLastSeen;
 	
+	$data = array();
+	
 	$db = connect_db();
 	$sql = "SELECT * FROM $TableVoorganger WHERE $VoorgangerID = $id";
 
 	$result = mysqli_query($db, $sql);
-	$row = mysqli_fetch_array($result);
 	
-	$data['titel'] = $row[$VoorgangerTitel];		
-	$data['init'] = $row[$VoorgangerInit];
-	$data['voor'] = $row[$VoorgangerVoor];	
-	$data['tussen'] = $row[$VoorgangerTussen];
-	$data['achter'] = $row[$VoorgangerAchter];
-	$data['tel'] = $row[$VoorgangerTel];
-	$data['mail'] = $row[$VoorgangerMail];	
-	$data['plaats'] = $row[$VoorgangerPlaats];
-	$data['denom'] = $row[$VoorgangerDenom];
-	$data['tel2'] = $row[$VoorgangerTel2];
-	$data['pv_naam'] = $row[$VoorgangerPVNaam];
-	$data['pv_tel'] = $row[$VoorgangerPVTel];		
-	$data['stijl'] = $row[$VoorgangerStijl];		
-	$data['opm'] = $row[$VoorgangerOpmerking];
-	$data['aandacht'] = $row[$VoorgangerAandacht];
-	$data['declaratie'] = $row[$VoorgangerDeclaratie];
-	$data['last_aandacht'] = $row[$VoorgangerLastAandacht];
-	$data['last_voorgaan'] = $row[$VoorgangerLastSeen];
+	if($row = mysqli_fetch_array($result)) {
+		$data['titel'] = $row[$VoorgangerTitel];		
+		$data['init'] = $row[$VoorgangerInit];
+		$data['voor'] = $row[$VoorgangerVoor];	
+		$data['tussen'] = $row[$VoorgangerTussen];
+		$data['achter'] = $row[$VoorgangerAchter];
+		$data['tel'] = $row[$VoorgangerTel];
+		$data['mail'] = $row[$VoorgangerMail];	
+		$data['plaats'] = $row[$VoorgangerPlaats];
+		$data['denom'] = $row[$VoorgangerDenom];
+		$data['tel2'] = $row[$VoorgangerTel2];
+		$data['pv_naam'] = $row[$VoorgangerPVNaam];
+		$data['pv_tel'] = $row[$VoorgangerPVTel];		
+		$data['stijl'] = $row[$VoorgangerStijl];		
+		$data['opm'] = $row[$VoorgangerOpmerking];
+		$data['aandacht'] = $row[$VoorgangerAandacht];
+		$data['declaratie'] = $row[$VoorgangerDeclaratie];
+		$data['last_aandacht'] = $row[$VoorgangerLastAandacht];
+		$data['last_voorgaan'] = $row[$VoorgangerLastSeen];
+	}
 		
 	return $data;
 }

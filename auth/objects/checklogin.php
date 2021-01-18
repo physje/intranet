@@ -33,15 +33,11 @@ if (!isset($entered_login) && !isset($entered_password)) {
 	# use entered data
 	session_start();
 		
-	# encrypt entered login & password
+	# entered login & password
+	# will be encrypt later on
 	$login = $entered_login;
-	
-	if ($passwordEncryptedWithMD5 && function_exists(md5)) {
-		$password = md5($entered_password);
-	} else {
-		$password = $entered_password;
-	}
-	
+	$password = $entered_password;
+		
 	$_SESSION['login'] = $login;
   $_SESSION['password'] = $password;
 }

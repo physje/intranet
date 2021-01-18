@@ -63,7 +63,7 @@ foreach($diensten as $dienst) {
 		
 		if(trim($RoosterString) != '') {
 			$block_1[] = "<tr>";
-			$block_1[] = "	<td valign='top'>".time2str("%a %d %b %H:%M", $details['start'])."</td>";
+			$block_1[] = "	<td valign='top'><a href='roosterKomendeWeek.php?id=$dienst'>".time2str("%a %d %b %H:%M", $details['start'])."</a></td>";
 			$block_1[] = "	<td valign='top'>". $RoosterString ."</td>";
 			$block_1[] = "</tr>".NL;
 		}
