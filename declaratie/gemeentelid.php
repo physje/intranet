@@ -348,7 +348,7 @@ if(isset($_POST['correct'])) {
 		
 		foreach($clusters as $id => $naam) {
 			//$page[] = "	<option value='$id'". ($id == $cluster ? ' selected' : '').">Cluster $naam</option>";
-			$page[] = "	<option value='$id'". ($id == $cluster ? ' selected' : '').($id != 5 ? ' disabled' : '').">Cluster $naam</option>";
+			$page[] = "	<option value='$id'". ($id == $cluster ? ' selected' : '').($id != 3 ? ' disabled' : '').">Cluster $naam</option>";
 		}
 		
 		$page[] = "	</select></td>";
