@@ -21,11 +21,11 @@ if(isset($_POST['opvragen'])) {
 		$Mail[] = "Beste ". $data['voornaam'] .",<br>";
 		$Mail[] = "<br>";
 		$Mail[] = "je hebt een nieuw wachtwoord aangevraagd voor $ScriptTitle.<br>";
-		$Mail[] = "Heb geen nieuw wachtwoord voor je aangemaakt, maar een link gemaakt waarmee je zelf een wachtwoord kan instellen<br>";
+		$Mail[] = "Heb geen nieuw wachtwoord voor je aangemaakt, maar een link gemaakt waarmee je zelf een wachtwoord kunt instellen<br>";
 		$Mail[] = "Door <a href='". $ScriptURL ."account.php?hash=". $data['hash_long'] ."'>deze link</a> te volgen kom je op jouw persoonlijke account-pagina waarop je een wachtwoord kunt instellen.<br>";
 		$Mail[] = "<br>";
-		$Mail[] = "Let wel op, iemand met deze link kan zonder in te loggen bij je account komen, wees er dus zuinig op!";
-		$Mail[] = "Mocht je het idee hebben dan iemand anders jouw link gebruikt/misbruikt, laat het weten, dan krijg jij een nieuwe link en maken we de oude link onklaar.";
+		$Mail[] = "<i>Let wel op, iemand met deze link kan zonder in te loggen bij je account komen, wees er dus zuinig op!";
+		$Mail[] = "Mocht je het idee hebben dan iemand anders jouw link gebruikt/misbruikt, laat het weten, dan krijg jij een nieuwe link en maken we de oude link onklaar</i>.";
 		
 		$HTMLMail = implode("\n", $Mail);
 		

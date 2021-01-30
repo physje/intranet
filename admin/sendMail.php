@@ -29,8 +29,7 @@ if(isset($_POST['send_mail'])) {
 		$ReplacedBericht = str_replace ('[[voornaam]]', $memberData['voornaam'], $ReplacedBericht);
 		$ReplacedBericht = str_replace ('[[achternaam]]', $memberData['achternaam'], $ReplacedBericht);
 		$ReplacedBericht = str_replace ('[[hash_kort]]', $memberData['hash_short'], $ReplacedBericht);
-		$ReplacedBericht = str_replace ('[[hash_lang]]', $memberData['hash_long'], $ReplacedBericht);
-		
+		$ReplacedBericht = str_replace ('[[hash_lang]]', $memberData['hash_long'], $ReplacedBericht);		
 		$ReplacedBericht = str_replace ('[[groep]]', $groep, $ReplacedBericht);
 		$ReplacedBericht = str_replace ('[[groep-naam]]', $groepData['naam'], $ReplacedBericht);
 		$ReplacedBericht = str_replace ('[[rooster]]', $rooster, $ReplacedBericht);
@@ -50,15 +49,12 @@ if(isset($_POST['send_mail'])) {
 	$param['subject']		= $FinalSubject;
 	$param['from']			= $_POST['mail_afzender'];
 	$param['FromName']	= $_POST['naam_afzender'];
-	$param['bcc']				= 'matthijs.draijer@koningskerkdeventer.nl';
-		
+			
 	if(sendMail_new($param)) {
 		toLog('debug', '', $lid, "Mail met als onderwerp '$FinalSubject' verstuurd");
 	} else {
 		toLog('error', '', $lid, "Problemen met versturen mail met onderwerp '$FinalSubject'");
-	}
-	
-	//echo $FinalHTMLMail;
+	}	
 } else {
 	$leden = getMembers();
 	$groepen = getAllGroups();
@@ -128,13 +124,13 @@ if(isset($_POST['send_mail'])) {
 	$voorbeeld[] = "";
 	$voorbeeld[] = "heb eea ingericht zodat jij zelf het rooster kunt invullen, aanpassen en up-to-date houden.";
 	$voorbeeld[] = "";
-	$voorbeeld[] = htmlentities("Om te beginnen heb je inloggegevens nodig. Weet niet of je die al hebt, maar anders kan je die zelf kiezen via <a href='https://www.draijer.org/extern/3GK/intranet/account.php?hash=[[hash_lang]]'>deze pagina</a>. Dit is een link die alleen voor jou is, iedereen met deze link kan jouw inloggegevens wijzigen.");
+	$voorbeeld[] = htmlentities("Om te beginnen heb je inloggegevens nodig. Weet niet of je die al hebt, maar anders kan je die zelf kiezen via <a href='".$ScriptServer.$ScriptURL."account.php?hash=[[hash_lang]]'>deze pagina</a>. Dit is een link die alleen voor jou is, iedereen met deze link kan jouw inloggegevens wijzigen.");
 	$voorbeeld[] = "";
-	$voorbeeld[] = htmlentities("Met deze inloggegevens kan je naar <a href='https://www.draijer.org/extern/3GK/intranet'>de startpagina</a> gaan. Je hebt daar links het kopje <b>Teams die ik beheer</b> met daaronder als het goed is <a href='https://www.draijer.org/extern/3GK/intranet/editGroup.php?groep=[[groep]]'>[[groep-naam]]</a>. Hier heb je een overzicht van iedereen die in [[groep-naam]] zit. Door een vinkje voor een naam weg te halen verdwijnt iemand uit de groep en door in de balk onder de namen een naam in te voeren kan je leden toevoegen.");
+	$voorbeeld[] = htmlentities("Met deze inloggegevens kan je naar <a href='".$ScriptServer.$ScriptURL."'>de startpagina</a> gaan. Je hebt daar links het kopje <b>Teams die ik beheer</b> met daaronder als het goed is <a href='".$ScriptServer.$ScriptURL."editGroup.php?groep=[[groep]]'>[[groep-naam]]</a>. Hier heb je een overzicht van iedereen die in [[groep-naam]] zit. Door een vinkje voor een naam weg te halen verdwijnt iemand uit de groep en door in de balk onder de namen een naam in te voeren kan je leden toevoegen.");
 	$voorbeeld[] = "";
-	$voorbeeld[] = htmlentities("Als dat allemaal goed is kan je op <a href='https://www.draijer.org/extern/3GK/intranet'>de startpagina</a> onder <b>Roosters die ik beheer</b> op <a href='https://www.draijer.org/extern/3GK/intranet/makeRooster.php?rooster=[[rooster]]'>[[rooster-naam]]</a> klikken om het rooster in te vullen.");
+	$voorbeeld[] = htmlentities("Als dat allemaal goed is kan je op <a href='".$ScriptServer.$ScriptURL."'>de startpagina</a> onder <b>Roosters die ik beheer</b> op <a href='".$ScriptServer.$ScriptURL."makeRooster.php?rooster=[[rooster]]'>[[rooster-naam]]</a> klikken om het rooster in te vullen.");
 	$voorbeeld[] = "";
-	$voorbeeld[] = htmlentities("Als het rooster eenmaal helemaal is ingevuld is deze zichtbaar op <a href='https://www.draijer.org/extern/3GK/intranet'>de startpagina</a> onder <b>Roosters</b>. Hier staan alle roosters zoals die momenteel bekend zijn. Door op <a href='https://www.draijer.org/extern/3GK/intranet/showRooster.php?rooster=[[rooster]]'>[[rooster-naam]]</a> te klikken wordt het rooster getoond.");
+	$voorbeeld[] = htmlentities("Als het rooster eenmaal helemaal is ingevuld is deze zichtbaar op <a href='".$ScriptServer.$ScriptURL."'>de startpagina</a> onder <b>Roosters</b>. Hier staan alle roosters zoals die momenteel bekend zijn. Door op <a href='".$ScriptServer.$ScriptURL."showRooster.php?rooster=[[rooster]]'>[[rooster-naam]]</a> te klikken wordt het rooster getoond.");
 	$voorbeeld[] = "";
 	$voorbeeld[] = "Mocht je vragen hebben dan hoor ik het graag.";
 	$voorbeeld[] = "";

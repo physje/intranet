@@ -131,7 +131,7 @@ if ($phpSP_message) {
         this line may NOT be removed or altered in such a way that it becomes
         less (or un-) readable). -->
         <!-- <p><?php echo $strPoweredBy; ?> <A HREF="http://www.phpSecurePages.com" TITLE="phpSecurePages <?php echo $strInfo; ?>" TARGET="_blank" CLASS="link">phpSecurePages</A></p> -->
-        <p><a href="<?php echo $cfgProgDir ?>wachtwoord.php" title="wachtwoord opvragen" target="_blank">wachtwoord opvragen</a></p>
+        <p><a href="<?php echo $cfgProgDir ?>wachtwoord.php" title="wachtwoord opvragen" target="_blank">inloggegevens en/of wachtwoord opvragen</a></p>
 <!-- ------ Copyright line ends here ------ -->
 
 <SCRIPT LANGUAGE="JavaScript">

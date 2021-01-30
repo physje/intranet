@@ -76,14 +76,14 @@ for($r=1 ; $r < $aantal ; $r++) {
 					$id_old = $id-1;		
 					if($id == 0) {
 						add2Rooster(7, $dienstID, $ouderling, $id);
-						if($ouderling != $vullingOvD[0]) {
+						if($vullingOvD[0] != '' AND $ouderling != $vullingOvD[0]) {
 							toLog('info', '', $ouderling, 'Wijziging ouderling van dienst '. date("d-m", $details['start']) .': '. makeName($vullingOvD[0], 5) .' -> '. makeName($ouderling, 5));
 						} else {							
 							toLog('debug', '', $ouderling, 'Ouderling van dienst '. date("d-m", $details['start']) .': '. makeName($ouderling, 5));
 						}
 					} else {
 						add2Rooster(8, $dienstID, $ouderling, $id);
-						if($ouderling != $vullingO[$id_old]) {
+						if($vullingO[$id_old] != '' AND $ouderling != $vullingO[$id_old]) {
 							toLog('info', '', $ouderling, 'Wijziging ouderling '. date("d-m", $details['start']) .': '. makeName($vullingO[$id_old], 5) .' -> '. makeName($ouderling, 5));
 						} else {
 							toLog('debug', '', $ouderling, 'Ouderling '. date("d-m", $details['start']) .': '. makeName($ouderling, 5));
@@ -114,14 +114,14 @@ for($r=1 ; $r < $aantal ; $r++) {
 					$id_old = $id-1;
 					if($id == 0) {
 						add2Rooster(10, $dienstID, $diaken, $id);
-						if($diaken != $vullingDvD[0]) {
+						if($vullingDvD[0] != '' AND $diaken != $vullingDvD[0]) {
 							toLog('info', '', $diaken, 'Wijziging diaken van dienst '. date("d-m", $details['start']) .': '. makeName($vullingDvD[0], 5) .' -> '. makeName($diaken, 5));
 						} else {
 							toLog('debug', '', $diaken, 'Diaken van dienst '. date("d-m", $details['start']) .': '. makeName($diaken, 5));
 						}
 					} else {
 						add2Rooster(9, $dienstID, $diaken, $id);
-						if($diaken != $vullingD[$id_old]) {
+						if($vullingD[$id_old] != '' AND $diaken != $vullingD[$id_old]) {
 							toLog('info', '', $diaken, 'Wijziging diaken '. date("d-m", $details['start']) .': '. makeName($vullingD[$id_old], 5) .' -> '. makeName($diaken, 5));
 						} else {
 							toLog('debug', '', $diaken, 'Diaken '. date("d-m", $details['start']) .': '. makeName($diaken, 5));
