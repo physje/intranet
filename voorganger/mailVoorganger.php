@@ -123,7 +123,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 			
 			$mailText[] = "";
 			$mailText[] = "<b>Communicatie</b>";
-			$mailText[] = "De regisseur is het eerste aanspreekpunt bij vragen of opmerkingen. Neem dus gerust contact op met de regisseur. Als u deze mail beantwoordt aan \"allen\" dan zijn ook alle andere betrokkenen op tijd op de hoogte.";
+			$mailText[] = "De regisseur is het eerste aanspreekpunt bij vragen of opmerkingen. Neem dus gerust contact op met ". makeName($regisseur, 1) .". Als ".($voorgangerData['stijl'] == 0 ? 'u' : 'je')." deze mail beantwoordt aan \"allen\" dan zijn ook alle andere betrokkenen op tijd op de hoogte.";
 			
 			# Elke keer mailen is wat overdreven. Eens in de 6 weken lijkt mij mooi
 			$aandachtPeriode = mktime(23,59,59,date("n")-(6*7));

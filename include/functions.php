@@ -2219,4 +2219,10 @@ function showDeclaratieDetails($input) {
 	
 	return $page;	
 }
+
+# https://stackoverflow.com/questions/4117555/simplest-way-to-detect-a-mobile-device-in-php
+function isMobile() {
+    return preg_match("/(android|avantgo|blackberry|bolt|boost|cricket|docomo|fone|hiptop|mini|mobi|palm|phone|pie|tablet|up\.browser|up\.link|webos|wos)/i", $_SERVER["HTTP_USER_AGENT"]);
+}
+
 ?>

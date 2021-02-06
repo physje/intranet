@@ -7,11 +7,6 @@ $HTMLHead	.= '<head>'.NL;
 $HTMLHead	.= "	<title>$ScriptTitle ". ((isset($pageTitle) AND $pageTitle != '') ? "| $pageTitle" : $Version) ."</title>\n";
 $HTMLHead	.= "	<link rel='stylesheet' type='text/css' href='". $ScriptURL ."include/style.css?".time()."'>\n";
 $HTMLHead	.= "	<link rel='icon' href='". $ScriptURL ."images/logo.ico'>\n";
-
-//if($_SERVER['HTTPS'] == '') {
-	//$HTMLHead .= "<meta http-equiv='refresh' content='0; URL=$ScriptSever".$_SERVER['REQUEST_URI']."'>";
-//}
-
 $HTMLHead	.= '</head>'.NL;
 
 $HTMLBody	= '<body>'.NL;

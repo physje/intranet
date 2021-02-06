@@ -311,22 +311,36 @@ if(count($jarigen) > 0) {
 echo $HTMLHeader;
 echo '<table border=0 width=100%>'.NL;
 echo '<tr>'.NL;
-echo '	<td valign="top" width="50">&nbsp;</td>'.NL;
-echo '	<td valign="top">'.NL;
 
-$scheiding = floor(count($blockArray)/2);
-
-foreach($blockArray as $key => $block) {
-	if($scheiding == $key) {
-		echo '	</td>'.NL;
-		echo '	<td valign="top" width="50">&nbsp;</td>'.NL;
-		echo '	<td valign="top">'.NL;
+# Als site bekeken wordt op een mobieltje
+if(isMobile()) {
+	echo '	<td valign="top">'.NL;
+	foreach($blockArray as $key => $block) {
+		echo showBlock($block, 100);
+		echo '<p>'.NL;
 	}
-	echo showBlock($block, 100);
-	echo '<p>'.NL;
+	echo '	</td>'.NL;
+
+# Als site niet bekeken wordt op een mobieltje
+} else {
+	echo '	<td valign="top" width="50">&nbsp;</td>'.NL;
+	echo '	<td valign="top">'.NL;
+
+	$scheiding = floor(count($blockArray)/2);
+
+	foreach($blockArray as $key => $block) {
+		if($scheiding == $key) {
+			echo '	</td>'.NL;
+			echo '	<td valign="top" width="50">&nbsp;</td>'.NL;
+			echo '	<td valign="top">'.NL;
+		}
+		echo showBlock($block, 100);
+		echo '<p>'.NL;
+	}
+	echo '	</td>'.NL;
+	echo '	<td valign="top" width="50">&nbsp;</td>'.NL;
 }
-echo '	</td>'.NL;
-echo '	<td valign="top" width="50">&nbsp;</td>'.NL;
+
 echo '</tr>'.NL;
 echo '</table>'.NL;
 echo $HTMLFooter;
