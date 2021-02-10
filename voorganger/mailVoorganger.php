@@ -89,7 +89,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 			if($regisseur > 0) {
 				$mailText[] = "";
 				$mailText[] = "<b>Regisseur</b>";
-				$mailText[] = "In Deventer worden regisseurs ingezet om de coördinatie tussen alle partijen die een rol hebben in de dienst (vooraf en tijdens de eredienst) te verzorgen. De regisseur heeft hierin een afstemmende rol richting ". ($voorgangerData['declaratie'] == 1 ? 'gast' : '') ."predikant en andere betrokkenen en is het eerste aanspreekpunt. ";
+				$mailText[] = "In Deventer worden regisseurs ingezet om de coördinatie tussen alle partijen die een rol hebben in de dienst (vooraf en tijdens de eredienst) te verzorgen. De regisseur heeft hierin een afstemmende rol richting ". ($voorgangerData['declaratie'] == 1 ? 'gast' : '') ."predikant en andere betrokkenen en is het eerste aanspreekpunt.";
 				$mailText[] = "In deze dienst is ". makeName($regisseur, 5) ." de regisseur.";
 				$mailText[] = ($voorgangerData['stijl'] == 0 ? 'Heeft u' : 'Heb je')." vragen of ".($voorgangerData['stijl'] == 0 ? 'wilt u' : 'wil je')." overleggen over de inhoud van de dienst? Neem dan contact op met ". makeName($regisseur, 1) .".";
 			}
