@@ -97,7 +97,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 			if($bandleider > 0) {
 				$mailText[] = "";
 				$mailText[] = "<b>Bandleider</b>";
-				$mailText[] = "De muzikale begeleiding wordt gecoördineerd door ". makeName($bandleider, 5) .". De liturgie ".($voorgangerData['stijl'] == 0 ? 'kunt u' : 'kun je')." afstemmen met ". makeName($bandleider, 1) ." voor de muziek. De bandleider kan aangeven of liederen bekend en of geschikt zijn in onze gemeente en eventuele suggesties doen voor een vervangend lied.";
+				$mailText[] = "De muzikale begeleiding wordt gecoördineerd door ". makeName($bandleider, 5) .". De liturgie ".($voorgangerData['stijl'] == 0 ? 'kunt u' : 'kun je')." afstemmen met ". makeName($bandleider, 1) ." voor de muziek.". ($bandData['geslacht'] == 'M' ? 'Hij' : 'Zij') ." kan dan aangeven of liederen bekend en of geschikt zijn in onze gemeente en eventuele suggesties doen voor een vervangend lied.";
 				$mailText[] = ($voorgangerData['stijl'] == 0 ? 'Wilt u' : 'Wil je')." de liturgie een week van te voren doorgeven zodat de band kan oefenen?";
 			}
 			
