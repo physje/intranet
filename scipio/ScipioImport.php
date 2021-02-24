@@ -221,7 +221,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 				
 				# Verhuizingen
 				if(isset($changedData['straat']) OR isset($changedData['huisnummer']) OR isset($changedData['plaats']))											$temp[] = "Verhuisd van ". 
-				$oldData['straat'].' '.$oldData['huisnummer'].$oldData['huisletter'].($oldData['toevoeging'] != '' ? '-'.$oldData['toevoeging'] : '').($oldData['plaats'] != $velden[$UserPlaats] ? ' '.$oldData['plaats'] : '').' naar '. $velden[$UserStraat].' '.$velden[$UserHuisnummer].$velden[$UserHuisletter].($velden[$UserToevoeging] != '' ? '-'.$velden[$UserToevoeging] : '').($velden[$UserPlaats] != $oldData['plaats'] ? ' '.$velden[$UserPlaats] : '');
+				$oldData['straat'].' '.$oldData['huisnummer'].$oldData['huisletter'].($oldData['toevoeging'] != '' ? '-'.$oldData['toevoeging'] : '').($oldData['plaats'] != $velden[$UserPlaats] ? ', '.ucwords(strtolower($oldData['plaats'])) : '').' naar '. $velden[$UserStraat].' '.$velden[$UserHuisnummer].$velden[$UserHuisletter].($velden[$UserToevoeging] != '' ? '-'.$velden[$UserToevoeging] : '').($velden[$UserPlaats] != $oldData['plaats'] ? ', '.ucwords(strtolower($velden[$UserPlaats])) : '');
 				if(isset($changedData['wijk']) AND !isset($changedData['status'])) {
 					$oudeWijk = $oldData['wijk'];
 					$nieuweWijk = $velden[$UserWijk];
