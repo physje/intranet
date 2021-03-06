@@ -18,9 +18,11 @@ $dag = 24*60*60;
 
 $file_name = 'collectes_'. date('Ymd', $start) .'_tm_'. date('Ymd', $eind) .'.csv';
 
-$kop[] = 'Collecte naam';
-$kop[] = 'Start datum';
-$kop[] = 'Eind datum';
+$kop[] = 'Naam';
+$kop[] = 'Van';
+$kop[] = 'Tot';
+$kop[] = 'Opbrengst weergave';
+
 $output  = implode(";", $kop)."\n";
 
 $diensten = getKerkdiensten($start, $eind);
@@ -37,7 +39,8 @@ foreach($diensten as $dienst) {
 			$veld[] = 'Collecte voor '. $data['collecte_1'];
 		}
 		$veld[] = time2str('%d-%m-%Y', $data['start']-$dag);
-		$veld[] = time2str('%d-%m-%Y', $data['eind']+$dag);	
+		$veld[] = time2str('%d-%m-%Y', $data['eind']+$dag);
+		$veld[] = 'ALL_TIME';
 		$output .= implode(";", $veld)."\n";
 	}
 	
