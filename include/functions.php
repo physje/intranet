@@ -2225,4 +2225,23 @@ function isMobile() {
     return preg_match("/(android|avantgo|blackberry|bolt|boost|cricket|docomo|fone|hiptop|mini|mobi|palm|phone|pie|tablet|up\.browser|up\.link|webos|wos)/i", $_SERVER["HTTP_USER_AGENT"]);
 }
 
+function getOpenKerkVulling($week, $dag, $uur) {
+	global $db, $TableOpenKerkTemplate, $OKTemplateWeek, $OKTemplateDag, $OKTemplateTijd, $OKTemplatePos, $OKTemplatePersoon;
+	
+	$data = array();
+	$sql = "SELECT * FROM $TableOpenKerkTemplate WHERE $OKTemplateWeek = '$week' AND $OKTemplateDag = '$dag' AND $OKTemplateTijd = '$uur'";
+	
+	$result = mysqli_query($db, $sql);
+
+	if($row	= mysqli_fetch_array($result)) {
+		do {
+			$positie = $row[$OKTemplatePos];
+			$data[$positie] = $row[$OKTemplatePersoon];
+		} while($row = mysqli_fetch_array($result));
+	}
+	
+	return $data;	
+}
+
+
 ?>

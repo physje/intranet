@@ -12,16 +12,25 @@ if(date('n') == 12) {
 } else {
 	$jaar = date('Y');
 }
+
 $start = mktime(0, 0, 0, 1, 1, $jaar);
 $eind = mktime(23, 59, 59, 12, 31, $jaar);
 $dag = 24*60*60;
+
+if($start < time()) {
+	$start = time();
+}
 
 $file_name = 'collectes_'. date('Ymd', $start) .'_tm_'. date('Ymd', $eind) .'.csv';
 
 $kop[] = 'Naam';
 $kop[] = 'Van';
 $kop[] = 'Tot';
+$kop[] = 'Omschrijving';
+$kop[] = 'Video URL';
+$kop[] = 'Website URL';
 $kop[] = 'Opbrengst weergave';
+$kop[] = 'Doelbedrag';
 
 $output  = implode(";", $kop)."\n";
 
@@ -40,7 +49,11 @@ foreach($diensten as $dienst) {
 		}
 		$veld[] = time2str('%d-%m-%Y', $data['start']-$dag);
 		$veld[] = time2str('%d-%m-%Y', $data['eind']+$dag);
+		$veld[] = '';
+		$veld[] = '';
+		$veld[] = '';
 		$veld[] = 'ALL_TIME';
+		$veld[] = '';
 		$output .= implode(";", $veld)."\n";
 	}
 	
@@ -50,6 +63,11 @@ foreach($diensten as $dienst) {
 		$veld[] = '2e collecte voor '. $data['collecte_2'];
 		$veld[] = time2str('%d-%m-%Y', $data['start']-$dag);
 		$veld[] = time2str('%d-%m-%Y', $data['eind']+$dag);	
+		$veld[] = '';
+		$veld[] = '';
+		$veld[] = '';
+		$veld[] = 'ALL_TIME';
+		$veld[] = '';
 		$output .= implode(";", $veld)."\n";
 	}
 }

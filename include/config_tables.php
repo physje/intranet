@@ -249,6 +249,18 @@ $GebedKalCategorie            = "categorie";
 $GebedKalContactPersoon       = "contactpersoon";
 $GebedKalMailadres            = "mailadres";
 $GebedKalOpmerkingen          = "opmerking";
+
+$TableOpenKerkTemplate				= "openkerk_template";
+$OKTemplateWeek								= "week";
+$OKTemplateDag								= "dag";
+$OKTemplateTijd								= "tijd";
+$OKTemplatePos								= "pos";
+$OKTemplatePersoon						= "persoon";
+
+$TableOpenKerkRooster					= "openkerk_rooster";
+$OKRoosterTijd								= "tijd";
+$OKRoosterPos									= "pos";
+$OKRoosterPersoon							= "persoon";
                     					
 $ArchiveDir										= 'trinitas';
 
