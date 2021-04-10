@@ -63,27 +63,16 @@ if(isset($_POST['save'])) {
 		
 		$text[] = strftime('%a %e %B', $nieuweDag).' -> '. $week .'<br>';
 	}
-	
-	//$huidigeWeek = fmod(strftime('%W', $start), 2);
-	
-	//$startDatum = mktime(0, 0, 0, date('n'), date('j')+1+(7-strftime('%w')));
-	
-	/*
-	# Oneven week
-	if($huidigeWeek == 1) {
-		$startDatum = mktime(0, 0, 0, date('n'), date('j')+1+(7-strftime('%w')));
-	# Even week
-	} else {		
-		$startDatum = mktime(0, 0, 0, date('n'), date('j')+8+(7-strftime('%w')));
+} else {
+	# Een keer alle namen ophalen en in een array zetten zodat dit later hergebruikt kan worden
+	foreach($namen as $key => $value) {
+		if(is_array($value)) {
+			$namenArray[$key] = $value['naam'];
+		} else {
+			$namenArray[$value] = makeName($value, 5);
+		}
 	}
 	
-	$text[] = 'Vandaag zitten wij in week '. strftime("%W") .', dat is een '. ($huidigeWeek == 1 ? 'oneven' : 'even') .' week.<br>';
-	//$text[] = 'Het rooster zal op basis van dit template worden uitgerold vanaf '. strftime('%e %B', $startDatum) .'.<br>';	
-	$text[] = 'Het rooster zal op basis van dit template worden uitgerold.<br>';
-	$text[] = 'Daarbij zal het rooster wat al in het systeem staat worden aangevuld met 2 weken.<br>';
-	$text[] = 'Elke keer klikken zal dus 2 weken toevoegen.<br>';
-	*/
-} else {
 	$text[] = "<form action='". htmlspecialchars($_SERVER['PHP_SELF']) ."' method='post'>";
 	$text[] = "<table border=1>";
 	for($week = 0; $week < 2 ; $week++) {	
@@ -108,12 +97,8 @@ if(isset($_POST['save'])) {
 					$text[] = "<select name='item[$week][$dag][$uur][$positie]'>";
 					$text[] = "<option value=''></option>";
 					
-					foreach($namen as $key => $value) {
-						if(is_numeric($key)) {
-							$text[] = "<option value='$value'". ((isset($vulling[$positie]) AND $value == $vulling[$positie]) ? ' selected' : '') .">". makeName($value, 5)."</option>";
-						} else {
-							$text[] = "<option value='$key'". ((isset($vulling[$positie]) AND $key == $vulling[$positie]) ? ' selected' : '') .">". $value['naam'] ."</option>";
-						}
+					foreach($namenArray as $id => $naam) {
+						$text[] = "<option value='$id'". ((isset($vulling[$positie]) AND $vulling[$positie] == $id) ? ' selected' : '') .">". $naam ."</option>";												
 					}				
 					$text[] = "		</select><br>";
 				}

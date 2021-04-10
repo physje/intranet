@@ -261,6 +261,10 @@ $TableOpenKerkRooster					= "openkerk_rooster";
 $OKRoosterTijd								= "tijd";
 $OKRoosterPos									= "pos";
 $OKRoosterPersoon							= "persoon";
+
+$TableOpenKerkOpmerking				= "openkerk_opmerking";
+$OKOpmerkingTijd							= "tijd";
+$OKOpmerkingPersoon						= "opmerking";
                     					
 $ArchiveDir										= 'trinitas';
 

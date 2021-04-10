@@ -112,6 +112,24 @@ if(in_array(1, getMyGroups($_SESSION['ID']))) {
 	$blockArray[] = implode("<br>".NL, $adminRoosters);
 }
 
+# Open Kerk
+if(in_array(1, getMyGroups($_SESSION['ID'])) OR in_array(43, getMyGroups($_SESSION['ID'])) OR in_array(44, getMyGroups($_SESSION['ID']))) {
+	$OpenKerkDeel[] = "<b>Open kerk</b>";
+	
+	if(in_array(1, getMyGroups($_SESSION['ID'])) OR in_array(44, getMyGroups($_SESSION['ID']))) {
+		$OpenKerkLinks['openkerk/template.php'] = 'Template bekijken/aanpassen';
+	}
+	
+	$OpenKerkLinks['openkerk/editRooster.php'] = 'Rooster wijzigen';
+	$OpenKerkLinks['openkerk/showRooster.php'] = 'Rooster tonen';
+	
+	foreach($OpenKerkLinks as $link => $naam) {
+		$OpenKerkDeel[] = "<a href='$link' target='_blank'>$naam</a>";
+	}
+	
+	$blockArray[] = implode("<br>".NL, $OpenKerkDeel);
+}
+
 
 # Gegevens wijzigen-deel
 # 1 = Admin
