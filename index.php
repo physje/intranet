@@ -233,9 +233,10 @@ if(in_array(1, getMyGroups($_SESSION['ID']))) {
 	$koppelDeel[] = "<b>Koppelingen</b>";
 	
 	$koppelLinks['extern/makeiCal.php'] = 'Persoonlijke iCals aanmaken';
-	$koppelLinks['extern/makeiCalScipio.php'] = 'iCal voor Scipio aanmaken';
+	$koppelLinks['extern/makeiCalScipio.php'] = 'iCal voor Scipio aanmaken';	
 	$koppelLinks['onderhoud/importOuderlingen.php'] = 'Importeer ambtsdragers';
 	$koppelLinks['scipio/ScipioImport.php'] = 'Scipio-data inladen';
+	$koppelLinks['scipio/exportCollectes.php'] = 'Collectes exporteren voor in Scipio';
 	
 	foreach($koppelLinks as $link => $naam) {
 		$koppelDeel[] = "<a href='$link' target='_blank'>$naam</a>";

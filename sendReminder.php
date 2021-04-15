@@ -131,7 +131,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 						$param['ouderCC']			= true;
 									
 						if(sendMail_new($param)) {
-							toLog('debug', '', $lid, 'reminder-mail '. $roosterData['naam'] .' verstuurd');
+							toLog('info', '', $lid, 'reminder-mail '. $roosterData['naam'] .' verstuurd');
 						} else {
 							toLog('error', '', $lid, 'problemen met reminder-mail '. $roosterData['naam'] .' versturen');
 						}

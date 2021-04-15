@@ -63,7 +63,7 @@ if($row_dienst = mysqli_fetch_array($result_dienst)) {
 		
 		# Collectes
 		if($data_dienst['collecte_1'] != '')	{ $CollecteString .= '1. '. $data_dienst['collecte_1']; }
-		//if($data_dienst['collecte_2'] != '')	{ $CollecteString .= '\n2. '. $data_dienst['collecte_2']; }
+		if($data_dienst['collecte_2'] != '')	{ $CollecteString .= '\n2. '. $data_dienst['collecte_2']; }
 		
 		# Controleren op gelijke diensten
 		$tmpDienst = array();

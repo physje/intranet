@@ -7,6 +7,8 @@ $cfgProgDir = '../auth/';
 include($cfgProgDir. "secure.php");
 $db = connect_db();
 
+$history = array();
+
 if(date('n') == 12) {
 	$jaar = date('Y')+1;
 } else {
@@ -36,12 +38,13 @@ $output  = implode(";", $kop)."\n";
 
 $diensten = getKerkdiensten($start, $eind);
 
-foreach($diensten as $dienst) {	
- 	$data = getKerkdienstDetails($dienst);
- 	
- 	if($data['collecte_1'] != '') {
-	 	$veld = array();
-		//$veld[] = '1e collecte '. time2str('%e %B', $data['start']) .': '. $data['collecte_1'];
+foreach($diensten as $dienst) {
+	$data = getKerkdienstDetails($dienst);
+	
+	$key = strftime('%d%m%y', $data['start']);
+	
+	if($data['collecte_1'] != '' AND ((isset($history[$key]) AND $history[$key] != $data['collecte_1']) OR !isset($history[$key]))) {
+		$veld = array();			
 		if($data['collecte_2'] != '') {
 			$veld[] = '1e collecte voor '. $data['collecte_1'];
 		} else {
@@ -55,9 +58,11 @@ foreach($diensten as $dienst) {
 		$veld[] = 'ALL_TIME';
 		$veld[] = '';
 		$output .= implode(";", $veld)."\n";
+		
+		$history[$key] = $data['collecte_1'];
 	}
-	
-	if($data['collecte_2'] != '') {
+
+	if($data['collecte_2'] != '' AND ((isset($history[$key]) AND $history[$key] != $data['collecte_2']) OR !isset($history[$key]))) {
 		$veld = array();
 		//$veld[] = '2e collecte '. time2str('%e %B', $data['start']) .': '. $data['collecte_2'];
 		$veld[] = '2e collecte voor '. $data['collecte_2'];
@@ -69,6 +74,8 @@ foreach($diensten as $dienst) {
 		$veld[] = 'ALL_TIME';
 		$veld[] = '';
 		$output .= implode(";", $veld)."\n";
+		
+		$history[$key] = $data['collecte_2'];
 	}
 }
 
