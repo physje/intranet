@@ -18,17 +18,20 @@ $dagNamen[6] = 'Zaterdag';
 
 $extern['extern01'] = array(
 	'mail' => 'henk@oostra',
-	'naam' => 'Henk Oostra'
+	'naam' => 'Henk Oostra',
+	'voornaam' => 'Henk'
 	);
 	
 $extern['extern02'] = array(
 	'mail' => 'marion@andrews',
-	'naam' => 'Marion Andrews'
+	'naam' => 'Marion Andrews',
+	'voornaam' => 'Marion'
 	);
 	
 $extern['extern03'] = array(
 	'mail' => 'john@andrews',
-	'naam' => 'John Andrews'
+	'naam' => 'John Andrews',
+	'voornaam' => 'John'
 	);
 
 ?>

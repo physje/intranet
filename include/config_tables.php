@@ -264,7 +264,7 @@ $OKRoosterPersoon							= "persoon";
 
 $TableOpenKerkOpmerking				= "openkerk_opmerking";
 $OKOpmerkingTijd							= "tijd";
-$OKOpmerkingPersoon						= "opmerking";
+$OKOpmerkingOpmerking					= "opmerking";
                     					
 $ArchiveDir										= 'trinitas';
 

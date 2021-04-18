@@ -38,10 +38,10 @@ if(isset($_POST['save'])) {
 		
 		# Als die nog niet bestaat en de nieuwe is niet leeg -> voeg toe
 		if(mysqli_num_rows($result) == 0 AND trim($opmerking) != '') {
-			$sql = "INSERT INTO $TableOpenKerkOpmerking ($OKOpmerkingPersoon, $OKOpmerkingTijd) VALUES ('". urlencode($opmerking) ."', $datum)";
+			$sql = "INSERT INTO $TableOpenKerkOpmerking ($OKOpmerkingOpmerking, $OKOpmerkingTijd) VALUES ('". urlencode($opmerking) ."', $datum)";
 		# Als die al wel bestaat en de nieuwe is niet leeg -> update
 		} elseif(trim($opmerking) != '') {
-			$sql = "UPDATE $TableOpenKerkOpmerking SET $OKOpmerkingPersoon = '". urlencode($opmerking) ."' WHERE $OKOpmerkingTijd = $datum";
+			$sql = "UPDATE $TableOpenKerkOpmerking SET $OKOpmerkingOpmerking = '". urlencode($opmerking) ."' WHERE $OKOpmerkingTijd = $datum";
 		# Als de nieuwe is leeg -> verwijder
 		} elseif(trim($opmerking) == '') {
 			$sql = "DELETE FROM $TableOpenKerkOpmerking WHERE $OKOpmerkingTijd = $datum";
@@ -108,7 +108,7 @@ do {
 			$row_opmerking = mysqli_fetch_array($result_opmerking);
 						
 			$text[] = "</td>";
-			$text[] = "<td><input type='text' name='opmerking[$datum]' value='". (isset($row_opmerking[$OKOpmerkingPersoon]) ? $row_opmerking[$OKOpmerkingPersoon] : '') ."'></td>";
+			$text[] = "<td><input type='text' name='opmerking[$datum]' value='". (isset($row_opmerking[$OKOpmerkingOpmerking]) ? $row_opmerking[$OKOpmerkingOpmerking] : '') ."'></td>";
 			$text[] = "</tr>";
 		}				
 	}

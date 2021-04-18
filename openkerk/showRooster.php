@@ -29,7 +29,7 @@ do {
 	
 	do {
 		$key = $row_datum[$OKRoosterPersoon];
-		
+				
 		if(is_numeric($key)) {
 			$text[] = "<a href='profiel.php?id=$key'>". makeName($key, 5) ."</a><br>";
 		} else {
@@ -38,6 +38,15 @@ do {
 	} while($row_datum = mysqli_fetch_array($result_datum));
 	
 	$text[] = "</td>";
+
+	$sql_opmerking = "SELECT * FROM $TableOpenKerkOpmerking WHERE $OKOpmerkingTijd = ". $datum;
+	$result_opmerking	= mysqli_query($db, $sql_opmerking);
+	if($row_opmerking = mysqli_fetch_array($result_opmerking)) {
+		$text[] = "<td valign='top'><i>". $row_opmerking[$OKOpmerkingOpmerking] ."</i></td>";
+	} else {
+		$text[] = "<td>&nbsp;</td>";
+	}
+	
 	$text[] = "</tr>";
 	
 } while($row = mysqli_fetch_array($result));
