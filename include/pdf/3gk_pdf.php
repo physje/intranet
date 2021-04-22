@@ -5,6 +5,7 @@ class PDF_3GK extends FPDF {
 	# Page header
 	function Header() {
     global $cfgMarge, $title;
+    global $ScriptURL;
         
 		# Stel marges in
     $this->SetMargins($cfgMarge, $cfgMarge);
@@ -13,7 +14,7 @@ class PDF_3GK extends FPDF {
     $size = array(70, 10);
     $offsetX = $cfgMarge;
     $offsetY = $cfgMarge-10;
-    $this->Image('images/logoKoningsKerk.png',$offsetX,$offsetY,$size[0]);
+    $this->Image($ScriptURL.'images/logoKoningsKerk.png',$offsetX,$offsetY,$size[0]);
     
     # Arial bold 15
     $this->SetFont('Arial','B',15);

@@ -67,6 +67,7 @@ $text[] = "		<td>Opmerkingen</td>";
 $text[] = "</tr>";
 
 $dag = 0;
+$datum = time();
 
 # Een keer alle namen ophalen en in een array zetten zodat dit later hergebruikt kan worden
 foreach($namen as $key => $value) {
@@ -77,8 +78,7 @@ foreach($namen as $key => $value) {
 	}
 }
 
-
-do {
+while($datum < $lastDag) {
 	for($uur=$minUur; $uur < $maxUur ; $uur++) {
 		$datum = mktime($uur, 0, 0, date('n'), (date('j')+$dag));
 		$weekdag = date('w', $datum);
@@ -108,12 +108,12 @@ do {
 			$row_opmerking = mysqli_fetch_array($result_opmerking);
 						
 			$text[] = "</td>";
-			$text[] = "<td><input type='text' name='opmerking[$datum]' value='". (isset($row_opmerking[$OKOpmerkingOpmerking]) ? $row_opmerking[$OKOpmerkingOpmerking] : '') ."'></td>";
+			$text[] = "<td><input type='text' name='opmerking[$datum]' value='". (isset($row_opmerking[$OKOpmerkingOpmerking]) ? urldecode($row_opmerking[$OKOpmerkingOpmerking]) : '') ."'></td>";
 			$text[] = "</tr>";
 		}				
 	}
 	$dag++;
-} while($datum < $lastDag);
+}
 
 
 $text[] = "	<tr>";
