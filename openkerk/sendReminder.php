@@ -28,13 +28,15 @@ if($row		= mysqli_fetch_array($result)) {
 		
 		if(is_numeric($persoon)) {
 			$mail[] = "Beste ". makeName($persoon, 1) .",<br>";
-			$parameter['to'][] = array($persoon);
+			$parameter['to'][] = array($persoon);			
+			$memberData = getMemberDetails($persoon);
 		} else {
 			$mail[] = "Beste ". $extern[$persoon]['voornaam'] .",<br>";
 			$parameter['to'][] = array($extern[$persoon]['mail'], $extern[$persoon]['naam']);
+			$memberData['geslacht'] == $extern[$persoon]['geslacht'];
 		}
 		$mail[] = "<br>";
-		$mail[] = "dit is een reminder dat je voor morgen op het rooster staat als gastheer/gastvrouw voor Open Kerk<br>";
+		$mail[] = "dit is een reminder dat je voor morgen op het rooster staat als gast".($memberData['geslacht'] == 'M' ? 'heer' : 'vrouw') ." voor Open Kerk<br>";
 		$mail[] = "Je bent op de volgende tijden ingedeeld :";
 		$mail[] = "<ul>";
 		
@@ -54,8 +56,15 @@ if($row		= mysqli_fetch_array($result)) {
 		} while($row_tijden = mysqli_fetch_array($result_tijden));
 		
 		$mail[] = "</ul>";
+		$mail[] = "<br>";
 		
-		//$parameter['to'][] = array(984285);
+		if(is_numeric($persoon)) {
+			$mail[] = "Ps 1. : je kan je persoonlijke open-kerk-rooster opnemen in je digitale agenda door <a href='". $ScriptURL ."ical/".$memberData['username'].'-'. $memberData['hash_short'] .".ics'>deze link</a> toe te voegen.<br>";
+			$mail[] = "Ps 2. : mocht je onderling geruild hebben, wil je deze mail dan doorsturen naar de betreffende persoon?";
+		} else {
+			$mail[] = "Ps : mocht je onderling geruild hebben, wil je deze mail dan doorsturen naar de betreffende persoon?";
+		}
+				
 		$parameter['subject']				= 'Remindermail';
 		$parameter['message'] 			= implode("\n", $mail);
 		$parameter['from']					= 'maartendejonge55@gmail.com';

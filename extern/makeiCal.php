@@ -39,15 +39,27 @@ if(isset($_REQUEST['id'])) {
 			$ids[] = $row[$PlanningUser];
 		} while($row = mysqli_fetch_array($result));
 	}	
+	
+	$sql = "SELECT * FROM $TableOpenKerkRooster GROUP BY $OKRoosterPersoon";
+	$result = mysqli_query($db, $sql);
+	if($row = mysqli_fetch_array($result)) {
+		do {
+			if(!in_array($row[$OKRoosterPersoon], $ids) AND is_numeric($row[$OKRoosterPersoon])) {
+				$ids[] = $row[$OKRoosterPersoon];
+			}
+		} while($row = mysqli_fetch_array($result));
+	}
 }
 
 foreach($ids as $id) {
+	# Initialiseren
+	$ics = array();
+	$memberData = getMemberDetails($id);
+	
+	# Standaard rooster
 	$sql = "SELECT * FROM $TablePlanning WHERE $PlanningUser = $id";
 	$result = mysqli_query($db, $sql);
-	if($row = mysqli_fetch_array($result)) {
-		$ics = array();
-		$memberData = getMemberDetails($id);
-				
+	if($row = mysqli_fetch_array($result)) {						
 		do {
 			$diensten = array();
 			$dienst_tmp = $row[$PlanningDienst];
@@ -81,6 +93,26 @@ foreach($ids as $id) {
 				$ics[] = "END:VEVENT";
 			}
 		} while($row = mysqli_fetch_array($result));
+	}
+	
+	# Open Kerk rooster
+	$sql_2 = "SELECT * FROM $TableOpenKerkRooster WHERE $OKRoosterPersoon = $id";
+	$result_2 = mysqli_query($db, $sql_2);
+	if($row_2 = mysqli_fetch_array($result_2)) {
+		do {
+			$start = $row_2[$OKRoosterTijd];
+			$einde = $start + (60*60);
+			
+			$ics[] = "BEGIN:VEVENT";	
+			$ics[] = "UID:3GK-". $row_2[$OKRoosterTijd] .'.OK.'. substr('00'.$id, -3);
+			$ics[] = "DTSTART;TZID=Europe/Amsterdam:". date("Ymd\THis", $start);
+			$ics[] = "DTEND;TZID=Europe/Amsterdam:". date("Ymd\THis", $einde);	
+			$ics[] = "LAST-MODIFIED:". date("Ymd\THis", time());				
+			$ics[] = "SUMMARY:Gast".($memberData['geslacht'] == 'M' ? 'heer' : 'vrouw') ." Open Kerk";				
+			$ics[] = "STATUS:CONFIRMED";	
+			$ics[] = "TRANSP:TRANSPARENT";
+			$ics[] = "END:VEVENT";			
+		} while($row_2 = mysqli_fetch_array($result_2));
 	}
 	
 	$file = fopen('../ical/'.$memberData['username'].'-'. $memberData['hash_short'] .'.ics', 'w+');

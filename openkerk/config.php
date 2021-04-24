@@ -17,19 +17,22 @@ $dagNamen[5] = 'Vrijdag';
 $dagNamen[6] = 'Zaterdag';
 
 $extern['extern01'] = array(
-	'mail' => 'henk@oostra',
+	'gelacht' => 'M',
+	'mail' => 'paheng48@gmail.com',
 	'naam' => 'Henk Oostra',
 	'voornaam' => 'Henk'
 	);
 	
 $extern['extern02'] = array(
-	'mail' => 'marion@andrews',
+	'gelacht' => 'V',
+	'mail' => 'mariona1664@gmail.com',
 	'naam' => 'Marion Andrews',
 	'voornaam' => 'Marion'
 	);
 	
 $extern['extern03'] = array(
-	'mail' => 'john@andrews',
+	'gelacht' => 'M',
+	'mail' => 'johna6334@gmail.com',
 	'naam' => 'John Andrews',
 	'voornaam' => 'John'
 	);
