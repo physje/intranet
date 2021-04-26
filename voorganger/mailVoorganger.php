@@ -37,7 +37,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 		
 		$aRegisseur			= getRoosterVulling(26, $dienst);
 		$regisseur			= $aRegisseur[0];
-		$adresRegisseur	= getMailAdres($regisseur);		
+		$adresRegisseur	= getMailAdres($regisseur, true);		
 		
 		$aBeamer				= getRoosterVulling(11, $dienst);
 		$beameraar			= $aBeamer[0];
