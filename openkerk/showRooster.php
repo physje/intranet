@@ -45,7 +45,7 @@ if($row		= mysqli_fetch_array($result)) {
 			$key = $row_datum[$OKRoosterPersoon];
 					
 			if(is_numeric($key)) {
-				$text[] = "<a href='profiel.php?id=$key'>". makeName($key, 5) ."</a><br>";
+				$text[] = "<a href='../profiel.php?id=$key'>". makeName($key, 5) ."</a><br>";
 				$people[] = makeName($key, 5);
 			} else {
 				$text[] = $extern[$key]['naam']."<br>";

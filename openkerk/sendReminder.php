@@ -58,8 +58,8 @@ if($row		= mysqli_fetch_array($result)) {
 		$mail[] = "</ul>";
 		$mail[] = "<br>";
 		
-		if(is_numeric($persoon)) {
-			$mail[] = "Ps 1. : je kan je persoonlijke open-kerk-rooster opnemen in je digitale agenda door <a href='". $ScriptURL ."ical/".$memberData['username'].'-'. $memberData['hash_short'] .".ics'>deze link</a> toe te voegen.<br>";
+		if(is_numeric($persoon)) {			
+			$mail[] = "Ps 1. : je kan je persoonlijke 3GK-rooster opnemen in je digitale agenda door eenmalig <a href='". $ScriptURL ."ical/".$memberData['username'].'-'. $memberData['hash_short'] .".ics'>deze link</a> toe te voegen (<a href='". $ScriptURL ."ical/handleiding_ical.php'>handleiding</a>).<br>";
 			$mail[] = "Ps 2. : mocht je onderling geruild hebben, wil je deze mail dan doorsturen naar de betreffende persoon?";
 		} else {
 			$mail[] = "Ps : mocht je onderling geruild hebben, wil je deze mail dan doorsturen naar de betreffende persoon?";

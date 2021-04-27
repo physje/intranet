@@ -104,7 +104,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 							if($i==0) {
 								$memberData = getMemberDetails($lid);
 								$ReplacedBericht .= "<p>";
-								$ReplacedBericht .= "Ps 1. : je kan je persoonlijke 3GK-rooster opnemen in je digitale agenda door <a href='". $ScriptURL ."ical/".$memberData['username'].'-'. $memberData['hash_short'] .".ics'>deze link</a> toe te voegen.<br>";								
+								$ReplacedBericht .= "Ps 1. : je kan je persoonlijke 3GK-rooster opnemen in je digitale agenda door eenmalig <a href='". $ScriptURL ."ical/".$memberData['username'].'-'. $memberData['hash_short'] .".ics'>deze link</a> toe te voegen (<a href='". $ScriptURL ."ical/handleiding_ical.php'>handleiding</a>).<br>";
 								$ReplacedBericht .= "Ps 2. : mocht je onderling geruild hebben, wil je deze mail dan doorsturen naar de betreffende persoon?<br>";
 								$ReplacedBericht .= "Ps 3. : <i>recent is de site verplaatst. Mocht je een bladwijzer hebben gemaakt voor de oude site, dan dien je deze aan te passen. Dit geldt ook voor bovenstaande digitale agenda</i><br>";
 								
