@@ -70,7 +70,7 @@ $text[] = "<li>Ga op je iPhone naar 'Instellingen' -> 'Agenda' -> 'Accounts' -> 
 if($agendaURL != '') {
 	$text[] = "<li>Je ziet nu het veld '<i>Server</i>', daar voer je in<br>$agendaURL<br>en klikt op 'Volgende'.</li>";
 } else {
-	$text[] = "<li>Je ziet nu het veld '<i>Server</i>', daar voer je de link naar je persoonlijke agenda in en klikt op 'Volgende'.</li>";
+	$text[] = "<li>Je ziet nu het veld '<i>Server</i>', daar voer je de link naar je persoonlijke agenda in en klikt op 'Volgende' en daarna 'Bewaar'.</li>";
 }
 $text[] = "</ol>";
 $text[] = "De agenda is nu toegevoegd, mocht je de naam willen wijzigen, kijk dan hieronder bij het kopje <a href='#iosChange'>Wijzigen</a>";

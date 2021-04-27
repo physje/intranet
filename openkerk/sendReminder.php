@@ -65,7 +65,7 @@ if($row		= mysqli_fetch_array($result)) {
 			$mail[] = "Ps : mocht je onderling geruild hebben, wil je deze mail dan doorsturen naar de betreffende persoon?";
 		}
 				
-		$parameter['subject']				= 'Remindermail';
+		$parameter['subject']				= "Reminder morgen gast".($memberData['geslacht'] == 'M' ? 'heer' : 'vrouw') ." Open Kerk";
 		$parameter['message'] 			= implode("\n", $mail);
 		$parameter['from']					= 'maartendejonge55@gmail.com';
 		$parameter['fromName']			= 'Maarten de Jonge';
