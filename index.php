@@ -118,6 +118,7 @@ if(in_array(1, getMyGroups($_SESSION['ID'])) OR in_array(43, getMyGroups($_SESSI
 	
 	if(in_array(1, getMyGroups($_SESSION['ID'])) OR in_array(44, getMyGroups($_SESSION['ID']))) {
 		$OpenKerkLinks['openkerk/template.php'] = 'Template bekijken/aanpassen';
+		$OpenKerkLinks['openkerk/mailen.php'] = 'Rooster mailen';
 	}
 	
 	$OpenKerkLinks['openkerk/editRooster.php'] = 'Rooster wijzigen';
