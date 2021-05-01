@@ -1078,8 +1078,13 @@ function sendMail_new($parameter) {
 	if(!$mail->Send()) {
 		toLog('error', '', '', 'Problemen met verzenden');
 		return false;		
-	} else {
+	} else {		
 		$sql = "INSERT INTO $TableMail ($MailTime, $MailMail) VALUES (". time() .", '". urlencode(json_encode($parameter))."')";
+		
+		$fp = fopen('mails.txt', 'a+');
+		fwrite($fp, $sql."\n");
+		fclose($fp);
+		
 		if(!mysqli_query($db, $sql)) {			
 			toLog('debug', '', '', 'Problemen met wegschrijven mail');
 			return false;			
