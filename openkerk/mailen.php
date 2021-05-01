@@ -12,7 +12,7 @@ $cfgProgDir = '../auth/';
 $requiredUserGroups = array(1, 44);
 include($cfgProgDir. "secure.php");
 
-if(isset($_POST['mailen'])) {	
+if(isset($_POST['versturen'])) {	
 	$filename = generateFilename();
 	
 	# Genereer koptekst
@@ -78,38 +78,68 @@ if(isset($_POST['mailen'])) {
 	$pdf->makeTable($header, $data);
 	$pdf->Output('F', $filename.'.pdf');
 	
+	$ontvangers = explode('|', $_POST['ontvangers']);
+	
 	# Doorloop alle ontvangers om ze een persoonlijke mail te sturen met het rooster als bijlage
-	foreach($_POST['ontvanger'] as $ontvanger) {
-		$mail = array();
+	foreach($ontvangers as $ontvanger) {		
+		$parameter = array();
+		
 		if(is_numeric($ontvanger)) {
-			$mail[] = "Beste ". makeName($ontvanger, 1) .",<br>";
+			$voornaam = makeName($ontvanger, 1);
 			$parameter['to'][] = array($ontvanger);			
 		} else {
-			$mail[] = "Beste ". $extern[$ontvanger]['voornaam'] .",<br>";
+			$voornaam = $extern[$ontvanger]['voornaam'];
 			$parameter['to'][] = array($extern[$ontvanger]['mail'], $extern[$ontvanger]['naam']);
 		}
 		
-		$mail[] = "<br>";
-		$mail[] = "In de bijlage het nieuwe rooster voor de nieuwe periode.<br>";
-		$mail[] = "<br>";
-		$mail[] = "Met groet,<br>";
-		$mail[] = "Maarten";
-				
+		$message = $_POST['begeleidendeTekst'];
+		$message = str_replace('[[voornaam]]', $voornaam, $message);
+		$message = nl2br($message);
+						
 		$parameter['subject']				= 'Nieuw rooster Open Kerk';
-		$parameter['message'] 			= implode("\n", $mail);
+		$parameter['message'] 			= $message;
 		$parameter['from']					= 'maartendejonge55@gmail.com';
 		$parameter['fromName']			= 'Maarten de Jonge';
 		$parameter['attachment'][]	= array('file' => $filename.'.pdf', 'name' => 'Rooster_Open_Kerk_'. time2str("%d_%b", $first) .'-tm-'. time2str("%d_%b", $last) .'.pdf');	
 		
 		if(sendMail_new($parameter)) {
-			$text[] = 'Mail naar '. (is_numeric($ontvanger) ? makeName($ontvanger, 5) : $extern[$ontvanger]['naam']) .' gestuurd<br>';
+			$text[] = 'Mail naar '. $voornaam .' gestuurd<br>';
 		} else {
-			$text[] = 'Geen mail naar '. (is_numeric($ontvanger) ? makeName($ontvanger, 5) : $extern[$ontvanger]['naam']) .' gestuurd<br>';
+			$text[] = 'Geen mail naar '. $voornaam .' gestuurd<br>';
 		}		
 	}
 	
 	# Rommel weer even opruimen
-	unlink($filename.'.pdf')
+	unlink($filename.'.pdf');
+} elseif(isset($_POST['mailen'])) {
+	if(isset($_POST['begeleidendeTekst'])) {
+		$begeleidendeTekst = $_POST['begeleidendeTekst'];
+	} else {
+		$begeleidendeTekst = "Beste [[voornaam]],\n\nIn de bijlage het nieuwe rooster voor de nieuwe periode.\n\nMet groet,\nMaarten";
+	}	
+	
+	$text[] = "<form action='". htmlspecialchars($_SERVER['PHP_SELF']) ."' method='post'>";
+	$text[] = "<input type='hidden' name='ontvangers' value='". implode('|', $_POST['ontvangers'])."'>";
+	$text[] = "<table>";
+	$text[] = "	<tr>";
+	$text[] = "		<td colspan='3'>Voer de begeleidende tekst in die verstuurd moet worden gelijk met het rooster.</td>";
+	$text[] = "	</tr>";
+	$text[] = "	<tr>";
+	$text[] = "		<td colspan='3'>&nbsp;</td>";
+	$text[] = "	</tr>";	
+	$text[] = "<tr>";
+	$text[] = "		<td valign='top'><textarea name='begeleidendeTekst' rows=15 cols=75>$begeleidendeTekst</textarea></td>";
+	$text[] = "		<td>&nbsp;</td>";
+	$text[] = "		<td valign='top'>[[voornaam]] wordt vervangen door de werkelijke voornaam</td>";
+	$text[] = "	</tr>";
+	$text[] = "	<tr>";
+	$text[] = "		<td colspan='3'>&nbsp;</td>";
+	$text[] = "	</tr>";	
+	$text[] = "	<tr>";
+	$text[] = "		<td colspan='3'><input type='submit' name='versturen' value='Verstuur PDF-rooster'></td>";
+	$text[] = "	</tr>";
+	$text[] = "</table>";
+	$text[] = "</form>";	
 } else {
 	$sql		= "SELECT * FROM $TableOpenKerkRooster WHERE $OKRoosterTijd > ". time() ." GROUP BY $OKRoosterPersoon";
 	$result	= mysqli_query($db, $sql);
@@ -131,7 +161,7 @@ if(isset($_POST['mailen'])) {
 	
 	foreach($groepLeden as $key => $value) {
 		$text[] = "<tr>";
-		$text[] = "		<td><input type='checkbox' name='ontvanger[]' value='". (is_numeric($value) ? $value : $key)."'". ((in_array($value, $roosterLeden) OR in_array($key, $roosterLeden)) ? ' checked' : '') ."></td>";
+		$text[] = "		<td><input type='checkbox' name='ontvangers[]' value='". (is_numeric($value) ? $value : $key)."'". ((in_array($value, $roosterLeden) OR in_array($key, $roosterLeden)) ? ' checked' : '') ."></td>";
 		if(is_numeric($value)) {
 			$text[] = "		<td>". makeName($value, 5) ."</td>";	
 		} else {
@@ -144,7 +174,7 @@ if(isset($_POST['mailen'])) {
 	$text[] = "		<td colspan='2'>&nbsp;</td>";
 	$text[] = "	</tr>";	
 	$text[] = "	<tr>";
-	$text[] = "		<td colspan='2'><input type='submit' name='mailen' value='Verstuur PDF-rooster'></td>";
+	$text[] = "		<td colspan='2'><input type='submit' name='mailen' value='Voer begeleidende tekst in'></td>";
 	$text[] = "	</tr>";
 	$text[] = "</table>";
 	$text[] = "</form>";
