@@ -67,8 +67,10 @@ if($row		= mysqli_fetch_array($result)) {
 				
 		$parameter['subject']				= "Reminder morgen gast".($memberData['geslacht'] == 'M' ? 'heer' : 'vrouw') ." Open Kerk";
 		$parameter['message'] 			= implode("\n", $mail);
-		$parameter['from']					= 'maartendejonge55@gmail.com';
-		$parameter['fromName']			= 'Maarten de Jonge';
+		$parameter['from']					= $ScriptMailAdress;
+		$parameter['fromName']			= 'Open Kerk reminder';
+		$parameter['ReplyTo']				= 'maartendejonge55@gmail.com';
+		$parameter['ReplyToName']		= 'Maarten de Jonge';
 		
 		if(sendMail_new($parameter)) {
 			echo 'Goed';

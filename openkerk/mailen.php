@@ -86,20 +86,26 @@ if(isset($_POST['versturen'])) {
 		
 		if(is_numeric($ontvanger)) {
 			$voornaam = makeName($ontvanger, 1);
-			$parameter['to'][] = array($ontvanger);			
+			$parameter['to'][] = array($ontvanger);
+			$memberData = getMemberDetails($ontvanger);			
+			$AgendaURL = $ScriptURL ."ical/".$memberData['username'].'-'. $memberData['hash_short'] .".ics";
 		} else {
 			$voornaam = $extern[$ontvanger]['voornaam'];
 			$parameter['to'][] = array($extern[$ontvanger]['mail'], $extern[$ontvanger]['naam']);
+			$AgendaURL = '';
 		}
 		
 		$message = $_POST['begeleidendeTekst'];
 		$message = str_replace('[[voornaam]]', $voornaam, $message);
+		$message = str_replace('[[url-agenda]]', $AgendaURL, $message);
 		$message = nl2br($message);
 						
 		$parameter['subject']				= 'Nieuw rooster Open Kerk';
 		$parameter['message'] 			= $message;
-		$parameter['from']					= 'maartendejonge55@gmail.com';
-		$parameter['fromName']			= 'Maarten de Jonge';
+		$parameter['from']					= $ScriptMailAdress;
+		$parameter['fromName']			= $ScriptTitle;
+		$parameter['ReplyTo']				= 'maartendejonge55@gmail.com';
+		$parameter['ReplyToName']		= 'Maarten de Jonge';
 		$parameter['attachment'][]	= array('file' => $filename.'.pdf', 'name' => 'Rooster_Open_Kerk_'. time2str("%d_%b", $first) .'-tm-'. time2str("%d_%b", $last) .'.pdf');	
 		
 		if(sendMail_new($parameter)) {
@@ -115,7 +121,32 @@ if(isset($_POST['versturen'])) {
 	if(isset($_POST['begeleidendeTekst'])) {
 		$begeleidendeTekst = $_POST['begeleidendeTekst'];
 	} else {
-		$begeleidendeTekst = "Beste [[voornaam]],\n\nIn de bijlage het nieuwe rooster voor de nieuwe periode.\n\nMet groet,\nMaarten";
+		$sql_last 		= "SELECT * FROM $TableOpenKerkRooster ORDER BY $OKRoosterTijd DESC LIMIT 0,1";
+		$result_last	= mysqli_query($db, $sql_last);
+		$row_last			= mysqli_fetch_array($result_last);
+	
+		$standaardTekst[] = "Beste [[voornaam]],";
+		$standaardTekst[] = "";
+		$standaardTekst[] = "Hierbij krijg je als bijlage bij het rooster \"Open Kerk\" voor de periode tot en met ". time2str("%A %e %B", $row_last[$OKRoosterTijd]) .".";
+		$standaardTekst[] = "";
+		$standaardTekst[] = "Je kan je persoonlijke open-kerk-rooster opnemen in je digitale agenda door eenmalig <a href='[[url-agenda]]'>deze link</a> toe te voegen.";
+		$standaardTekst[] = "";
+		$standaardTekst[] = "Een dag voor je dienst krijg je sowieso een herinnering via de mail.";
+		$standaardTekst[] = "";
+		$standaardTekst[] = "Ik verzoek je om incidentele ruilingen zelf in 'Rooster wijzigen' door te voeren middels <a href='". $ScriptURL ."openkerk/editRooster.php'>deze link</a> of op de website <a href='". $ScriptURL ."'>". $ScriptURL ."</a> onder het kopje 'Open Kerk'.";
+		$standaardTekst[] = "Je hebt hiervoor inloggegevens nodig (alleen vrijwilligers die lid van de gemeente zijn hebben toegang tot deze app).";
+		$standaardTekst[] = "Als je roosterwijzigingen doorvoert is het voor iedereen duidelijk met wie hij/zij samenwerkt en krijgt de juiste persoon een herinneringsmail.";
+		$standaardTekst[] = "Als je in een volgend rooster structurele wijzigingen wilt dan verzoek ik je je wensen en mogelijkheden door te geven aan de roostermaker.";
+		$standaardTekst[] = "";
+		$standaardTekst[] = "Het zou overigens plezierig zijn als je structurele ruilingen met andere vrijwilligers zelf kunt regelen.";
+		$standaardTekst[] = "Kant-en-klaar doorgeven van wijzigingen scheelt de roostermaker veel werk.";
+		$standaardTekst[] = "";
+		$standaardTekst[] = "Als je minder uren wilt gaan doen of overweegt te gaan stoppen bespreek dat alsjeblieft tijdig met de roostermaker.";
+		$standaardTekst[] = "";
+		$standaardTekst[] = "Hartelijke groet,";
+		$standaardTekst[] = "Maarten de Jonge";
+		
+		$begeleidendeTekst = implode("\n", $standaardTekst);
 	}	
 	
 	$text[] = "<form action='". htmlspecialchars($_SERVER['PHP_SELF']) ."' method='post'>";
@@ -130,7 +161,7 @@ if(isset($_POST['versturen'])) {
 	$text[] = "<tr>";
 	$text[] = "		<td valign='top'><textarea name='begeleidendeTekst' rows=15 cols=75>$begeleidendeTekst</textarea></td>";
 	$text[] = "		<td>&nbsp;</td>";
-	$text[] = "		<td valign='top'>[[voornaam]] wordt vervangen door de werkelijke voornaam</td>";
+	$text[] = "		<td valign='top'>[[voornaam]] wordt vervangen door de werkelijke voornaam<br>[[url-agenda]] wordt vervangen door de link naar de persoonlijke agenda</td>";
 	$text[] = "	</tr>";
 	$text[] = "	<tr>";
 	$text[] = "		<td colspan='3'>&nbsp;</td>";

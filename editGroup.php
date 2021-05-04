@@ -58,7 +58,7 @@ foreach($GroupMembers as $lid) {
 }
 
 $block_1[] = "<br>\n";
-$block_1[] = "Voer naam in om persoon toe te voeegen.<br>";
+$block_1[] = "Voer naam in om persoon toe te voegen.<br>";
 $block_1[] = "<input type='text' name='nieuw_lid' id=\"namen\" size='50'><br>";
 $block_1[] = "<br>";
 $block_1[] = "<input type='submit' name='change_members' value='Leden wijzigen'>";

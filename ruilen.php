@@ -18,9 +18,20 @@ if(isset($_REQUEST['dader']) AND isset($_REQUEST['slachtoffer'])) {
 	$roosterData = getRoosterDetails($rooster);
 	$vulling_d = getRoosterVulling($rooster, $dienst_d);
 	$vulling_s = getRoosterVulling($rooster, $dienst_s);
-		
-	array_splice ($vulling_d, array_search($dader, $vulling_d), 1, array($slachtoffer));
-	array_splice ($vulling_s, array_search($slachtoffer, $vulling_s), 1, array($dader));
+	
+	# Vervang in de array waar "de dader" in voorkomt
+	# deze waarde door die van het slachtoffer
+	foreach($vulling_d as $key => $value) {
+		if($value == $dader)	$vulling_d[$key] = $slachtoffer;			
+	}
+	
+	# En vice versa
+	foreach($vulling_s as $key => $value) {
+		if($value == $slachtoffer)	$vulling_s[$key] = $dader;			
+	}
+	
+	#array_splice ($vulling_d, array_search($dader, $vulling_d), 1, array($slachtoffer));
+	#array_splice ($vulling_s, array_search($slachtoffer, $vulling_s), 1, array($dader));
 	
 	# Alle gegevens voor de dienst verwijderen
 	removeFromRooster($rooster, $dienst_d);
@@ -49,11 +60,11 @@ if(isset($_REQUEST['dader']) AND isset($_REQUEST['slachtoffer'])) {
 	$param_dader['to'][]			= array($slachtoffer);
 	$param_dader['message']	= implode("<br>\n", $mail);
 	$param_dader['subject']	= "Er is met jou geruild voor '". $roosterData['naam'] ."'";
-	
+		
 	if(sendMail_new($param_dader)) {
 		toLog('debug', $dader, '', 'verplaatst van dienst '. $dienst_d .' naar '. $dienst_s); 
 	}
-			
+				
 	$mail = array();
 	$mail[] = "Dag ". makeName($dader, 1) .",";
 	$mail[] = "";
