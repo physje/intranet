@@ -33,7 +33,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 		
 		$aJeudmoment	= getRoosterVulling(25, $dienst);
 		$jeugdmoment		= $aJeudmoment[0];
-		$adresJeugd		= getMailAdres($jeugdmoment);				
+		$adresJeugd		= getMailAdres($jeugdmoment, true);			
 		
 		$aRegisseur			= getRoosterVulling(26, $dienst);
 		$regisseur			= $aRegisseur[0];
@@ -89,7 +89,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 			if($regisseur > 0) {
 				$mailText[] = "";
 				$mailText[] = "<b>Regisseur</b>";
-				$mailText[] = "In Deventer worden regisseurs ingezet om de coördinatie tussen alle partijen die een rol hebben in de dienst (vooraf en tijdens de eredienst) te verzorgen.";
+				$mailText[] = "In Deventer worden regisseurs ingezet om de coÃ¶rdinatie tussen alle partijen die een rol hebben in de dienst (vooraf en tijdens de eredienst) te verzorgen.";
 				$mailText[] = "In deze dienst is ". makeName($regisseur, 5) ." de regisseur.";
 				$mailText[] = "De regisseur heeft een afstemmende rol richting ". ($voorgangerData['declaratie'] == 1 ? 'gast' : '') ."predikant en andere betrokkenen en is het eerste aanspreekpunt.";
 				$mailText[] = ($voorgangerData['stijl'] == 0 ? 'Heeft u' : 'Heb je')." vragen of ".($voorgangerData['stijl'] == 0 ? 'wilt u' : 'wil je')." overleggen over de inhoud van de dienst? Neem dan contact op met ". makeName($regisseur, 1) .".";
@@ -98,7 +98,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 			if($bandleider > 0) {
 				$mailText[] = "";
 				$mailText[] = "<b>Bandleider</b>";
-				$mailText[] = "De muzikale begeleiding wordt gecoördineerd door ". makeName($bandleider, 5) .". De muziek in de liturgie ".($voorgangerData['stijl'] == 0 ? 'kunt u' : 'kun je')." afstemmen met ". makeName($bandleider, 1) .". ". ($bandData['geslacht'] == 'M' ? 'Hij' : 'Zij') ." kan dan aangeven of liederen bekend en of geschikt zijn in onze gemeente en eventuele suggesties doen voor een vervangend lied.";
+				$mailText[] = "De muzikale begeleiding wordt gecoÃ¶rdineerd door ". makeName($bandleider, 5) .". De muziek in de liturgie ".($voorgangerData['stijl'] == 0 ? 'kunt u' : 'kun je')." afstemmen met ". makeName($bandleider, 1) .". ". ($bandData['geslacht'] == 'M' ? 'Hij' : 'Zij') ." kan dan aangeven of liederen bekend en of geschikt zijn in onze gemeente en eventuele suggesties doen voor een vervangend lied.";
 				$mailText[] = ($voorgangerData['stijl'] == 0 ? 'Wilt u' : 'Wil je')." de liturgie een week van te voren doorgeven zodat de band kan oefenen?";
 			}
 			
