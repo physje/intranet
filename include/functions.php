@@ -783,76 +783,6 @@ function makeName($id, $type) {
 	}
 }
 
-/*
-function sendMail($ontvanger, $subject, $bericht, $var) {
-	global $ScriptURL, $ScriptMailAdress, $ScriptTitle, $SubjectPrefix, $MailHeader, $MailFooter;
-	
-	# Er staat ook een formeel mailadres in de database
-	# Met de variabele formeel kan worden aangegeven of deze gebruikt moet worden
-	if(isset($var['formeel'])) {
-		$formeel = $var['formeel'];
-	} else {
-		$formeel = false;
-	}
-	
-	# Haal de data van de ontvanger op
-	# Zoek ook direct de mail op van de ontvanger
-	$UserData = getMemberDetails($ontvanger);
-	$UserMail	= getMailAdres($ontvanger, $formeel);
-						
-	$HTMLMail = $MailHeader.$bericht.$MailFooter;
-		
-	$mail = new PHPMailer;	
-	$mail->From     = $ScriptMailAdress;
-	$mail->FromName = $ScriptTitle;
-		
-	if(isset($var['ReplyTo']) AND $var['ReplyTo'] != '') {
-		if(isset($var['ReplyToName']) AND $var['ReplyToName'] != '') {
-			$mail->AddReplyTo($var['ReplyTo'], $var['ReplyToName']);
-		} else {
-			$mail->AddReplyTo($var['ReplyTo']);
-		}
-	}
-	
-	$mail->AddAddress($UserMail, makeName($ontvanger, 5));
-	
-	$mail->Subject	= $SubjectPrefix . trim($subject);
-	$mail->IsHTML(true);
-	$mail->Body			= $HTMLMail;
-		
-	# Als de ouders ook een CC moeten
-	# Alleen bij mensen die als relatie 'zoon' of 'dochter' hebben
-	if(isset($var['ouderCC']) AND ($UserData['relatie'] == 'zoon' OR $UserData['relatie'] == 'dochter')) {
-		$ouders = getParents($ontvanger);
-		foreach($ouders as $ouder){
-			$OuderData = getMemberDetails($ouder);
-			if($OuderData['mail'] != $UserMail AND $OuderData['mail'] != '') {
-				$mail->AddCC($OuderData['mail']);
-				toLog('debug', $ontvanger, $ouder, makeName($ouder, 5) .' ('. $OuderData['mail'] .') als ouder in CC opgenomen');
-			}
-		}
-	}
-		
-	if(isset($var['file']) AND $var['file'] != "") {
-		if(isset($var['name']) AND $var['name'] != "") {
-			$mail->addAttachment($var['file'], $var['name']);
-		} else {
-			$mail->addAttachment($var['file']);
-		}
-	}
-	
-	if(isset($var['BCC']) AND $var['BCC_mail'] != "") {
-		$mail->AddBCC($var['BCC_mail']);
-	}
-			
-	if(!$mail->Send()) {
-		return false;
-	} else {
-		return true;
-	}
-}
-*/
-
 
 function sendMail_new($parameter) {
 	global $ScriptURL, $ScriptMailAdress, $ScriptTitle, $SubjectPrefix;
@@ -1062,35 +992,42 @@ function sendMail_new($parameter) {
 	# Bericht opstellen
 	$HTMLMail = $MailHeader.$bericht.$MailFooter;
 	
-	# Onderwerp instellen
-	$mail->Subject	= $SubjectPrefix . trim($subject);
-	$mail->IsHTML(true);
-	$mail->Body			= $HTMLMail;
-	
-	$mail->isSMTP();
-	$mail->Host				= $SMTPHost;
-	$mail->Port       = $SMTPPort;
-	$mail->SMTPSecure = $SMTPSSL;
-	$mail->SMTPAuth   = true;
-	$mail->Username		= $SMTPUsername;
-	$mail->Password		= $SMTPPassword;
-					
-	if(!$mail->Send()) {
-		toLog('error', '', '', 'Problemen met verzenden');
-		return false;		
-	} else {		
-		$sql = "INSERT INTO $TableMail ($MailTime, $MailMail) VALUES (". time() .", '". urlencode(json_encode($parameter))."')";
+	# Door de variabele testen mee te geven wordt er geen mail verstuurd
+	# maar wordt de mail alleen op het scherm getoond
+	if(!isset($parameter['testen'])) {
+		# Onderwerp instellen
+		$mail->Subject	= $SubjectPrefix . trim($subject);
+		$mail->IsHTML(true);
+		$mail->Body			= $HTMLMail;
 		
-		$fp = fopen('mails.txt', 'a+');
-		fwrite($fp, $sql."\n");
-		fclose($fp);
-		
-		if(!mysqli_query($db, $sql)) {			
-			toLog('debug', '', '', 'Problemen met wegschrijven mail');
-			return false;			
-		} else {
-			return true;
+		$mail->isSMTP();
+		$mail->Host				= $SMTPHost;
+		$mail->Port       = $SMTPPort;
+		$mail->SMTPSecure = $SMTPSSL;
+		$mail->SMTPAuth   = true;
+		$mail->Username		= $SMTPUsername;
+		$mail->Password		= $SMTPPassword;
+						
+		if(!$mail->Send()) {
+			toLog('error', '', '', 'Problemen met verzenden');
+			return false;		
+		} else {		
+			$sql = "INSERT INTO $TableMail ($MailTime, $MailMail) VALUES (". time() .", '". urlencode(json_encode($parameter))."')";
+			
+			$fp = fopen('mails.txt', 'a+');
+			fwrite($fp, json_encode($parameter)."\n");
+			fclose($fp);
+			
+			if(!mysqli_query($db, $sql)) {			
+				toLog('debug', '', '', 'Problemen met wegschrijven mail');
+				return false;			
+			} else {
+				return true;
+			}
 		}
+	} else {
+		echo $HTMLMail;		
+		return true;
 	}	
 }
 
