@@ -48,7 +48,7 @@ if($row		= mysqli_fetch_array($result)) {
 			$sql_opmerking = "SELECT * FROM $TableOpenKerkOpmerking WHERE $OKOpmerkingTijd = ". $startTijd;
 			$result_opmerking	= mysqli_query($db, $sql_opmerking);
 			if($row_opmerking = mysqli_fetch_array($result_opmerking)) {
-				$opmerking = $row_opmerking[$OKOpmerkingOpmerking];
+				$opmerking = urldecode($row_opmerking[$OKOpmerkingOpmerking]);
 			}		
 						
 			$mail[] = "<li>". time2str("%a %d %b %H:%M", $startTijd) .'-'. time2str("%H:%M", $eindTijd) .($opmerking != '' ? " (<i>$opmerking</i>)" : '') .'</li>';
