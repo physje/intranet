@@ -210,23 +210,23 @@ if(in_array(1, getMyGroups($_SESSION['ID']))) {
 
 
 # e-boekhouden.nl
-if(in_array(1, getMyGroups($_SESSION['ID']))) {
-	$adminDeel = $adminLinks = array();
-	$adminDeel[] = "<b>e-boekhouden.nl</b>";
+$adminDeel = $adminLinks = array();
+$adminDeel[] = "<b>Declaraties</b>";
 
-	$adminLinks['declaratie/'] = 'Declaratie-pagina';
+$adminLinks['declaratie/'] = 'Dien declaratie in';
+if(in_array(1, getMyGroups($_SESSION['ID']))) {
 	$adminLinks['declaratie/relatieOverview.php'] = 'Toon alle relaties';
 	$adminLinks['declaratie/mutatieOverview.php'] = 'Toon alle mutaties';
 	//$adminLinks['declaratie/syncRelaties.php'] = 'Synchroniseer relaties naar lokale database';
 	$adminLinks['declaratie/editRelatie.php'] = 'Wijzig relaties';
 	$adminLinks['https://secure.e-boekhouden.nl/handleiding/Documentatie_soap.pdf'] = 'SOAP documenatie PDF';
-	
-	foreach($adminLinks as $link => $naam) {
-		$adminDeel[] = "<a href='$link' target='_blank'>$naam</a>";
-	}
-	
-	$blockArray[] = implode("<br>".NL, $adminDeel);
 }
+
+foreach($adminLinks as $link => $naam) {
+	$adminDeel[] = "<a href='$link' target='_blank'>$naam</a>";
+}
+
+$blockArray[] = implode("<br>".NL, $adminDeel);
 
 
 # Koppelingen-deel
