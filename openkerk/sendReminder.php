@@ -33,7 +33,7 @@ if($row		= mysqli_fetch_array($result)) {
 		} else {
 			$mail[] = "Beste ". $extern[$persoon]['voornaam'] .",<br>";
 			$parameter['to'][] = array($extern[$persoon]['mail'], $extern[$persoon]['naam']);
-			$memberData['geslacht'] == $extern[$persoon]['geslacht'];
+			$memberData['geslacht'] = $extern[$persoon]['geslacht'];
 		}
 		$mail[] = "<br>";
 		$mail[] = "dit is een reminder dat je voor morgen op het rooster staat als gast".($memberData['geslacht'] == 'M' ? 'heer' : 'vrouw') ." voor Open Kerk<br>";
