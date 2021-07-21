@@ -64,7 +64,9 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 		$velden[$UserPC] = trim($element->postcode);
 		$velden[$UserPlaats] = trim($element->plaats);
 		$velden[$UserVestiging] = trim($element->vestigingsdatum);
-		$velden[$UserWijk] = substr($element->wijk, -1);
+		# $element->wijk kan Wijk X zijn of ICF
+		# Op deze manier vis ik die laatste eruit, weet nog niet wat ik met die laatste aanmoet
+		$velden[$UserWijk] = substr($element->wijk, 5);
 		//$velden[] = 'sectie';
 		//$velden[] = 'mutatiedatum';
 		$velden[$UserTelefoon] = trim($element->telnr);
