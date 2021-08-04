@@ -2,9 +2,24 @@
 include_once('../include/functions.php');
 include_once('../include/config.php');
 
+$online = true;
+$debug = false;
+
 # Rooster inlezen
-$roosterURL = 'https://docs.google.com/spreadsheets/d/1ZTJ9lzhxNk5PDQCBcLVAwjF-76fVytydW5v6pFTf-yk/pub?output=csv';
-$contents = file_get_contents($roosterURL);
+if($online) {
+	$roosterURL = 'https://docs.google.com/spreadsheets/d/1ZTJ9lzhxNk5PDQCBcLVAwjF-76fVytydW5v6pFTf-yk/pub?output=csv';
+	$contents = file_get_contents($roosterURL);
+	
+	if($debug) {
+		$file = fopen('dump.txt', 'w+');
+		fwrite($file, $contents);
+		fclose($file);
+	}
+} else {
+	$file = fopen('dump.txt', 'r+');
+	$contents = fread($file, filesize('dump.txt'));
+	fclose($file);
+}
 $regels = explode("\n", $contents);
 $aantal = count($regels);
 
@@ -56,13 +71,45 @@ for($r=1 ; $r < $aantal ; $r++) {
 					
 			# Alle ouderlingen doorlopen
 			if($Oud[0] != '' AND $dienstID != 0) {
-				$ouderlingID = array();			
+				$ouderlingID = $OvDID = array();
 							
-				foreach($Oud as $ouderling) {
-					$id = array_search_closest($ouderling, $namenOud);
-					if($ouderling!= '' AND $id != 0) {
-						echo $ouderling .' -> '. $namenOud[$id] .' ('. $id .')<br>';
-						$ouderlingID[] = $id;
+				foreach($Oud as $plek => $ouderling) {
+					# Met de komst van duo-banen moet er even eea opgeknipt worden
+					# Ik ga er vanuit dat de duo banen genoteerd zijn als VOORNAAM MAN en VOORNAAM VROUW ACHTERNAAM
+
+					# Checken of er een duo-naam is
+					if(strpos($ouderling, ' en ')) {
+						$naamDelen = explode(' en ', $ouderling);
+						$delenVrouw = explode(' ', $naamDelen[1]);
+						$voornaamMan = $naamDelen[0];
+						$voornaamVrouw = $delenVrouw[0];
+						$achternaam = $delenVrouw[1];
+						
+						$id_man = array_search_closest($voornaamMan.' '.$achternaam, $namenOud);
+						$id_vrouw = array_search_closest($voornaamVrouw.' '.$achternaam, $namenOud);
+						
+						if($id_man != 0 AND $id_vrouw != 0) {
+							echo $ouderling .' -> '. $namenOud[$id_man] .' ('. $id_man .') & '. $namenOud[$id_vrouw] .' ('. $id_vrouw .')<br>';
+							
+							if($plek == 0) {
+								$OvDID[] = $id_man;
+								$OvDID[] = $id_vrouw;								
+							} else {
+								$ouderlingID[] = $id_man;
+								$ouderlingID[] = $id_vrouw;
+							}
+						}						
+					} else {
+						$id = array_search_closest($ouderling, $namenOud);
+						if($ouderling!= '' AND $id != 0) {
+							echo $ouderling .' -> '. $namenOud[$id] .' ('. $id .')<br>';
+							
+							if($plek == 0) {
+								$OvDID[] = $id;
+							} else {
+								$ouderlingID[] = $id;
+							}
+						}
 					}
 				}
 				echo '<br>';
@@ -71,25 +118,25 @@ for($r=1 ; $r < $aantal ; $r++) {
 				removeFromRooster(7, $dienstID);
 				removeFromRooster(8, $dienstID);
 				
-				# Nieuwe data inlezen
-				foreach($ouderlingID as $id => $ouderling) {
-					$id_old = $id-1;		
-					if($id == 0) {
-						add2Rooster(7, $dienstID, $ouderling, $id);
-						if($vullingOvD[0] != '' AND $ouderling != $vullingOvD[0]) {
-							toLog('info', '', $ouderling, 'Wijziging ouderling van dienst '. date("d-m", $details['start']) .': '. makeName($vullingOvD[0], 5) .' -> '. makeName($ouderling, 5));
-						} else {							
-							toLog('debug', '', $ouderling, 'Ouderling van dienst '. date("d-m", $details['start']) .': '. makeName($ouderling, 5));
-						}
-					} else {
-						add2Rooster(8, $dienstID, $ouderling, $id);
-						if($vullingO[$id_old] != '' AND $ouderling != $vullingO[$id_old]) {
-							toLog('info', '', $ouderling, 'Wijziging ouderling '. date("d-m", $details['start']) .': '. makeName($vullingO[$id_old], 5) .' -> '. makeName($ouderling, 5));
-						} else {
-							toLog('debug', '', $ouderling, 'Ouderling '. date("d-m", $details['start']) .': '. makeName($ouderling, 5));
-						}
+				# Nieuwe data OvD inlezen
+				foreach($OvDID as $id => $ouderling) {
+					add2Rooster(7, $dienstID, $ouderling, $id);
+					if(count($vullingOvD) > 0 AND !in_array($ouderling, $vullingOvD)) {					
+						toLog('info', '', $ouderling, 'Wijziging ouderling van dienst '. date("d-m", $details['start']) .': '. makeName($vullingOvD[$id], 5) .' -> '. makeName($ouderling, 5));
+					} else {							
+						toLog('debug', '', $ouderling, 'Ouderling van dienst '. date("d-m", $details['start']) .': '. makeName($ouderling, 5));
 					}
-				}			
+				}
+				
+				# Nieuwe data ouderlingen inlezen
+				foreach($ouderlingID as $id => $ouderling) {
+					add2Rooster(8, $dienstID, $ouderling, $id);
+					if(count($vullingO) > 0 AND !in_array($ouderling, $vullingO)) {
+						toLog('info', '', $ouderling, 'Wijziging ouderling '. date("d-m", $details['start']) .': '. makeName($vullingO[$id], 5) .' -> '. makeName($ouderling, 5));
+					} else {
+						toLog('debug', '', $ouderling, 'Ouderling '. date("d-m", $details['start']) .': '. makeName($ouderling, 5));
+					}
+				}		
 			}
 		
 			# Alle diakenen doorlopen		

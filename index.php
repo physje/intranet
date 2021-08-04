@@ -310,7 +310,8 @@ if(count($jarigen) > 0) {
 	$jarig[] = "<b>Jarigen vandaag</b>";
 	foreach($jarigen as $jarige) {
 		$data = getMemberDetails($jarige);
-		$jarig[] = "<a href='profiel.php?id=$jarige' target='_blank'>". makeName($jarige, 5)."</a> (". (date("Y")-$data['jaar']).")";
+		$leeftijd = (date("Y")-$data['jaar']);		
+		$jarig[] = "<a href='profiel.php?id=$jarige' target='_blank'>". makeName($jarige, 5)."</a>".(($data['geslacht'] == 'V' AND $leeftijd > 18) ? '' : " ($leeftijd)");
 	}
 	$blockArray[] = implode("<br>".NL, $jarig);
 }
@@ -322,7 +323,8 @@ if(count($jarigen) > 0) {
 	$morgen[] = "<b>Jarigen morgen</b>";
 	foreach($jarigen as $jarige) {
 		$data = getMemberDetails($jarige);
-		$morgen[] = "<a href='profiel.php?id=$jarige' target='_blank'>". makeName($jarige, 5)."</a> (". (date("Y")-$data['jaar']).")";
+		$leeftijd = (date("Y")-$data['jaar']);		
+		$morgen[] = "<a href='profiel.php?id=$jarige' target='_blank'>". makeName($jarige, 5)."</a>".(($data['geslacht'] == 'V' AND $leeftijd > 18) ? '' : " ($leeftijd)");		
 	}
 	$blockArray[] = implode("<br>".NL, $morgen);
 }
