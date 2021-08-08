@@ -22,7 +22,8 @@ $extern['extern01'] = array(
 	'naam' => 'Henk Oostra',
 	'voornaam' => 'Henk'
 	);
-	
+
+/*	
 $extern['extern02'] = array(
 	'geslacht' => 'V',
 	'mail' => 'mariona1664@gmail.com',
@@ -36,5 +37,6 @@ $extern['extern03'] = array(
 	'naam' => 'John Andrews',
 	'voornaam' => 'John'
 	);
+*/
 
 ?>

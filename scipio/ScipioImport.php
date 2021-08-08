@@ -64,9 +64,15 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 		$velden[$UserPC] = trim($element->postcode);
 		$velden[$UserPlaats] = trim($element->plaats);
 		$velden[$UserVestiging] = trim($element->vestigingsdatum);
+		
 		# $element->wijk kan Wijk X zijn of ICF
 		# Op deze manier vis ik die laatste eruit, weet nog niet wat ik met die laatste aanmoet
-		$velden[$UserWijk] = substr($element->wijk, 5);
+		if(is_numeric(strpos($element->wijk, 'Wijk'))) {
+		    $velden[$UserWijk] = substr($element->wijk, 5);
+		} else {
+		    $velden[$UserWijk] = $element->wijk;
+		}
+		
 		//$velden[] = 'sectie';
 		//$velden[] = 'mutatiedatum';
 		$velden[$UserTelefoon] = trim($element->telnr);
@@ -222,8 +228,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 				if(isset($changedData['mail']) AND $oldData['mail'] == '')																	$temp[] = "Mailadres ". $velden[$UserMail] ." toegevoegd";
 				
 				# Verhuizingen
-				if(isset($changedData['straat']) OR isset($changedData['huisnummer']) OR isset($changedData['plaats']))											$temp[] = "Verhuisd van ". 
-				$oldData['straat'].' '.$oldData['huisnummer'].$oldData['huisletter'].($oldData['toevoeging'] != '' ? '-'.$oldData['toevoeging'] : '').($oldData['plaats'] != $velden[$UserPlaats] ? ', '.ucwords(strtolower($oldData['plaats'])) : '').' naar '. $velden[$UserStraat].' '.$velden[$UserHuisnummer].$velden[$UserHuisletter].($velden[$UserToevoeging] != '' ? '-'.$velden[$UserToevoeging] : '').($velden[$UserPlaats] != $oldData['plaats'] ? ', '.ucwords(strtolower($velden[$UserPlaats])) : '');
+				if((isset($changedData['straat']) AND $velden[$UserStraat] != '') OR (isset($changedData['huisnummer']) AND $velden[$UserHuisnummer] != '') OR (isset($changedData['plaats']) AND $velden[$UserPlaats] != ''))	$temp[] = "Verhuisd van ". $oldData['straat'].' '.$oldData['huisnummer'].$oldData['huisletter'].($oldData['toevoeging'] != '' ? '-'.$oldData['toevoeging'] : '').($oldData['plaats'] != $velden[$UserPlaats] ? ', '.ucwords(strtolower($oldData['plaats'])) : '').' naar '. $velden[$UserStraat].' '.$velden[$UserHuisnummer].$velden[$UserHuisletter].($velden[$UserToevoeging] != '' ? '-'.$velden[$UserToevoeging] : '').($velden[$UserPlaats] != $oldData['plaats'] ? ', '.ucwords(strtolower($velden[$UserPlaats])) : '');
 				if(isset($changedData['wijk']) AND !isset($changedData['status'])) {
 					$oudeWijk = $oldData['wijk'];
 					$nieuweWijk = $velden[$UserWijk];
