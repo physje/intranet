@@ -208,14 +208,11 @@ if(isset($_POST['search'])) {
 			
 			$rechts[] = "<li><a href='profiel.php?id=$lid' class='$class'>". makeName($lid, 5) ."</a></li>";
 			$ids[] = $lid;			
-			
-			/*
+						
 			$ouders = getParents($lid);			
 			foreach($ouders as $ouder) {
 				$parentIDs[$ouder] = $ouder;
-			}
-			*/
-			
+			}			
 		} while($row = mysqli_fetch_array($result));		
 		$rechts[] = '</ol>';
 		

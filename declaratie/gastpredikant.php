@@ -232,7 +232,7 @@ if(isset($_REQUEST['hash'])) {
 					$param_penning['to'][] = array($declaratieReplyAddress, $declaratieReplyName);
 					$param_penning['cc'][] = array($EBDeclaratieAddress);
 					$param_penning['cc'][] = array($FinAdminAddress);
-					$param_penning['bcc'] = $ScriptMailAdress;
+					//$param_penning['bcc'] = $ScriptMailAdress;
 				} else {
 					$param_penning['to'][] = array($ScriptMailAdress);
 				}

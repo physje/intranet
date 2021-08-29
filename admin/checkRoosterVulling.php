@@ -106,7 +106,7 @@ foreach($roosters as $rooster) {
 					# geadresseerden
 					$beheerders = array();
 					$beheerders = getGroupMembers($roosterData['beheerder']);
-					$beheerders[] = 984285;
+					//$beheerders[] = 984285;
       	
 					foreach($beheerders as $beheerder) {
 						# Mail opstellen
