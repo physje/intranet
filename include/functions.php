@@ -813,7 +813,7 @@ function sendMail_new($parameter) {
 	} else {
 		echo 'Geen ontvangers bekend';
 		toLog('error', '', '', 'Geen ontvangers bekend');
-		exit;
+		return false;
 	}
 	
 	# Controleer of er wel een bericht bekend is
@@ -823,7 +823,7 @@ function sendMail_new($parameter) {
 	} else {
 		echo 'Geen bericht bekend';
 		toLog('error', '', '', 'Geen bericht bekend');
-		exit;
+		return false;
 	}	
 	
 	# Controleer of er wel een onderwerp bekend is
@@ -833,7 +833,7 @@ function sendMail_new($parameter) {
 	} else {
 		echo 'Geen onderwerp bekend';
 		toLog('error', '', '', 'Geen onderwerp bekend');
-		exit;
+		return false;
 	}	
 	
 	# Er staat ook een formeel mailadres in de database

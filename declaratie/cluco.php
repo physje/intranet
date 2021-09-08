@@ -88,6 +88,8 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 				$mail[] = "</tr>";			
 				$mail = array_merge($mail, showDeclaratieDetails($data));			
 				$mail[] = "</table>";
+				$mail[] = "<br>";
+				$mail[] = "Details en mogelijkheid tot goed- of afkeuren zijn zichtbaar <a href='". $ScriptURL ."declaratie/penningmeester.php?key=". $_REQUEST['key'] ."'>online</a> (inloggen vereist)";
 				
 				$parameter['to'][]			= array($declaratieReplyAddress, $declaratieReplyName);				
 				$parameter['subject']		= 'Door cluco goedgekeurde declaratie';
