@@ -117,7 +117,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 				
 				$item = array();
 				$item[] = "<b><a href='". $ScriptURL ."profiel.php?hash=[[hash]]&id=". $element->regnr ."'>". makeName($element->regnr, 6) ."</a></b> ('". substr($element->gebdatum, 2, 2) .")";
-				$item[] = $velden[$UserStraat].' '.$velden[$UserHuisnummer].$velden[$UserHuisletter].($velden[$UserToevoeging] != '' ? '-'.$velden[$UserToevoeging] : '');
+				$item[] = $velden[$UserStraat].' '.$velden[$UserHuisnummer].$velden[$UserHuisletter].($velden[$UserToevoeging] != '' ? '-'.$velden[$UserToevoeging] : '').(strtolower($velden[$UserPlaats]) != 'deventer' ? ', '.ucwords(strtolower($velden[$UserPlaats])) : '');
 				if($velden[$UserTelefoon] != '')	$item[] = $velden[$UserTelefoon];
 				if($velden[$UserMail] != '')			$item[] = $velden[$UserMail];
 				$item[] = "";				
@@ -226,9 +226,9 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 				if(isset($changedData['mail']) AND $velden[$UserMail] != '' AND $oldData['mail'] != '')			$temp[] = "Mailadres gewijzigd van ".$oldData['mail'] .' naar '. $velden[$UserMail];
 				if(isset($changedData['mail']) AND $velden[$UserMail] == '')																$temp[] = "Mailadres ".$oldData['mail'] ." verwijderd";
 				if(isset($changedData['mail']) AND $oldData['mail'] == '')																	$temp[] = "Mailadres ". $velden[$UserMail] ." toegevoegd";
-				
+												
 				# Verhuizingen
-				if((isset($changedData['straat']) AND $velden[$UserStraat] != '') OR (isset($changedData['huisnummer']) AND $velden[$UserHuisnummer] != '') OR (isset($changedData['plaats']) AND $velden[$UserPlaats] != ''))	$temp[] = "Verhuisd van ". $oldData['straat'].' '.$oldData['huisnummer'].$oldData['huisletter'].($oldData['toevoeging'] != '' ? '-'.$oldData['toevoeging'] : '').($oldData['plaats'] != $velden[$UserPlaats] ? ', '.ucwords(strtolower($oldData['plaats'])) : '').' naar '. $velden[$UserStraat].' '.$velden[$UserHuisnummer].$velden[$UserHuisletter].($velden[$UserToevoeging] != '' ? '-'.$velden[$UserToevoeging] : '').($velden[$UserPlaats] != $oldData['plaats'] ? ', '.ucwords(strtolower($velden[$UserPlaats])) : '');
+				if((isset($changedData['straat']) AND $velden[$UserStraat] != '') OR (isset($changedData['huisnummer']) AND $velden[$UserHuisnummer] != '') OR (isset($changedData['plaats']) AND $velden[$UserPlaats] != ''))	$temp[] = "Verhuisd van ". $oldData['straat'].' '.$oldData['huisnummer'].$oldData['huisletter'].($oldData['toevoeging'] != '' ? '-'.$oldData['toevoeging'] : '').(strtolower($oldData['plaats']) != 'deventer' ? ', '.ucwords(strtolower($oldData['plaats'])) : '').' naar '. $velden[$UserStraat].' '.$velden[$UserHuisnummer].$velden[$UserHuisletter].($velden[$UserToevoeging] != '' ? '-'.$velden[$UserToevoeging] : '').(strtolower($velden[$UserPlaats]) != 'deventer' ? ', '.ucwords(strtolower($velden[$UserPlaats])) : '');
 				if(isset($changedData['wijk']) AND !isset($changedData['status'])) {
 					$oudeWijk = $oldData['wijk'];
 					$nieuweWijk = $velden[$UserWijk];
