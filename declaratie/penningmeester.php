@@ -225,10 +225,10 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 			$param_finAdmin['message'] 			= implode("\n", $MailFinAdmin);
 						
 			if(!sendMail_new($param_finAdmin)) {
-				toLog('error', $_SESSION['ID'], $indiener, "Problemen met versturen van mail naar financiële administratie");
-				$page[] = "Er zijn problemen met het versturen van mail naar de financiële administratie";
+				toLog('error', $_SESSION['ID'], $indiener, "Problemen met versturen van mail naar financiÃ«le administratie");
+				$page[] = "Er zijn problemen met het versturen van mail naar de financiÃ«le administratie";
 			} else {
-				toLog('debug', $_SESSION['ID'], $indiener, "Declaratie-notificatie naar financiële administratie");
+				toLog('debug', $_SESSION['ID'], $indiener, "Declaratie-notificatie naar financiÃ«le administratie");
 				setDeclaratieStatus(5, $row[$EBDeclaratieID], $data['user']);
 			}
 			
@@ -242,7 +242,7 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 			$MailIndiener[] = "<tr>";
 			$MailIndiener[] = "		<td colspan='6' height=50><hr></td>";
 			$MailIndiener[] = "</tr>";			
-			$MailIndiener = array_merge($mail, showDeclaratieDetails($data));			
+			$MailIndiener = array_merge($MailIndiener, showDeclaratieDetails($data));			
 			$MailIndiener[] = "</table>";
 			
 			$param_indiener['to'][]			= array($data['user']);
