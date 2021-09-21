@@ -47,7 +47,7 @@ do {
 	$scipioID = $row[$UserID];
 		
 	# Haal alle gegevens op
-	$data = getMemberDetails($scipioID); 
+	$data = getMemberDetails($scipioID);
 	$email = $data['mail'];
 	
 	$custom_fields['voornaam'] = $data['voornaam'];

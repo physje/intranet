@@ -111,18 +111,18 @@ if ($phpSP_message) {
 ?>
     <h1><?php echo $strLoginInterface; ?></h1>
     <div>
-            <label for="login_username">Username</label> 
+            <label for="login_username">Username</label>
             <input type="text" name="entered_login" class="field required" />
-    </div>                        
+    </div>
     <div>
             <label for="login_password">Password</label>
             <input type="password" name="entered_password" class="field required" />
-    </div>                        
+    </div>
     <div class="submit">
         <button type="submit">Log in</button>
 
 
-          
+
     </form>
     </div>
 

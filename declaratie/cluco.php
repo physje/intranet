@@ -106,8 +106,8 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 				}
 				
 				# JSON-string terug in database
-				$JSON['opm_penning'] = $_POST['opm_penning'];
-				$JSONtoDatabase = json_encode($JSON);
+				$JSON['opm_penning'] = $_POST['opm_penning'];				
+				$JSONtoDatabase = encode_clean_JSON($JSON);
 				$sql = "UPDATE $TableEBDeclaratie SET $EBDeclaratieDeclaratie = '". $JSONtoDatabase ."' WHERE $EBDeclaratieID like ". $row[$EBDeclaratieID];
 				mysqli_query($db, $sql);			
 			} else {

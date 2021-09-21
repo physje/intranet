@@ -28,7 +28,7 @@ class eBoekhoudenConnect
     public function __construct($username, $securityCode1, $securityCode2)
     {
         try {
-            // The trace param in the SoapClient constructor below will enable trace possibilities. 
+            // The trace param in the SoapClient constructor below will enable trace possibilities.
             // For example: The last sent xml can be requested for analyzing and/or debugging when trace is true by running the following piece of code after a soapCall
             //              echo "REQUEST:\n". htmlentities($this->soapClient->__getLastRequest()). "\n";
             $this->soapClient = new \SoapClient("https://soap.e-boekhouden.nl/soap.asmx?WSDL", array('trace' => false, 'exceptions' => true));
@@ -57,7 +57,7 @@ class eBoekhoudenConnect
             $params = array(
                 "SessionID" => $this->sessionId
             );
-            
+
             return $this->soapClient->__soapCall("CloseSession", array($params));
         } catch(\SoapFault $soapFault) {
             // SoapFault will not be thrown further since this can hang up the program when another exception is occurred before the __destruct is called.
@@ -67,7 +67,7 @@ class eBoekhoudenConnect
     /**
      * @param Mutation $mutation
      * @return mixed
-     * @throws \Exception 
+     * @throws \Exception
      */
     public function addMutation(Mutation $mutation)
     {
@@ -77,7 +77,7 @@ class eBoekhoudenConnect
                 "SessionID" => $this->sessionId,
                 "oMut" => $mutation->getMutationArray()
             ];
-            
+
             $response = $this->soapClient->__soapCall("AddMutatie", [$params]);
 
             $this->checkforerror($response, "AddMutatieResult");
@@ -103,7 +103,7 @@ class eBoekhoudenConnect
             ];
 
             $response = $this->soapClient->__soapCall("AddRelatie", [$params]);
-            
+
             $this->checkforerror($response, "AddRelatieResult");
 
             return  $response->AddRelatieResult;
@@ -123,14 +123,14 @@ class eBoekhoudenConnect
             $response = $this->soapClient->__soapCall("GetMutaties", [$params]);
 
             $this->checkforerror($response, "GetMutatiesResult");
-            
+
             return $response->GetMutatiesResult;
         } catch(\SoapFault $soapFault) {
             throw new \Exception('<strong>Soap Exception:</strong> ' . $soapFault);
         }
     }
 
-    
+
     /**
      * @param $dateFrom
      * @param $toDate
@@ -223,7 +223,7 @@ class eBoekhoudenConnect
         return $this->getRelations($params);
     }
 
-    /** 
+    /**
      * @return string $newCode
      */
     public function generateNewCode()
@@ -251,13 +251,13 @@ class eBoekhoudenConnect
             $newCode = "9000";
         } else {
             $newCode = (string)((int)$maxCode + 1);
-        }  
+        }
 
         return $newCode;
     }
 
     /**
-     * @param  string $iban   
+     * @param  string $iban
      * @return string $code
      */
     public function getRelationByIban($iban)
@@ -391,7 +391,7 @@ class eBoekhoudenConnect
             $response = $this->soapClient->__soapCall("GetRelaties", [$params]);
 
             $this->checkforerror($response, "GetRelatiesResult");
- 
+
             return $response->GetRelatiesResult;
         } catch(\SoapFault $soapFault) {
             throw new \Exception('<strong>Soap Exception:</strong> ' . $soapFault);
@@ -411,7 +411,7 @@ class eBoekhoudenConnect
                 "SessionID" => $this->sessionId,
                 "oRel" => $relation->getEboekhoudenArray()
             ];
-            
+
             $response = $this->soapClient->__soapCall("UpdateRelatie", [$params]);
 
             $this->checkforerror($response, "UpdateRelatieResult");

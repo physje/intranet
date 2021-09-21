@@ -61,10 +61,10 @@ if (isset($logout) && !(isset($_GET['logout']) || isset($_POST['logout']))) {
   # make post variables global
   if (isset($_POST['entered_login'])) $entered_login = $_POST['entered_login'];
   if (isset($_POST['entered_password'])) $entered_password = $_POST['entered_password'];
-          
+
   # check if login is necessary
   include($cfgProgDir . "objects/checklogin.php");
-  
+
   # check login with Database
   if ($useDatabase == true) {
   	include($cfgProgDir . 'objects/checklogin_db.php');

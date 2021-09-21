@@ -255,7 +255,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 			if(!mysqli_query($db, $sql_update)) {
 				 echo '<b>'. $sql_update ."</b><br>\n";
 				 toLog('error', '', $element->regnr, 'Updaten mislukt');
-				 echo $sql_update .'<br>';				 
+				 echo $sql_update .'<br>';				
 			}
 		}
 	}

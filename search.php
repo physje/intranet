@@ -79,7 +79,7 @@ $links[] = "	<td align='right' valign='top''>Wijk</td>";
 $links[] = "	<td>&nbsp;</td>";
 $links[] = "	<td align='left' valign='top'>";
 foreach($wijkArray as $w) {
-	$links[] = "	<input type='checkbox' name='wijk[]' value='$w'". (in_array($w, $wijk) ? ' checked' : '') .">Wijk $w<br>"; 
+	$links[] = "	<input type='checkbox' name='wijk[]' value='$w'". (in_array($w, $wijk) ? ' checked' : '') .">Wijk $w<br>";
 }
 $links[] = "	</td>";
 $links[] = "</tr>";
@@ -137,7 +137,7 @@ $links[] = "</tr>";
 $links[] = "<tr>";
 $links[] = "	<td colspan='3' align='center'><input type='submit' name='search' value='Zoeken'></td>";
 $links[] = "</tr>";
-$links[] = "</table>"; 
+$links[] = "</table>";
 
 if(isset($_POST['search'])) {
 	//toLog('debug', $_SESSION['ID'], '', "Gezocht op S:$searchString G:$geslacht W:$wijk B:$sDag-$sMaand-$sJaar E:$eDag-$eMaand-$eJaar");

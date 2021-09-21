@@ -6,13 +6,13 @@ class PDF_3GK_Declaratie extends FPDF {
 	function Header() {
     global $cfgMarge, $title;
     $breedte = $this->GetPageWidth();
-        
+
 		# Stel marges in
     $this->SetMargins($cfgMarge, $cfgMarge);
 
     # Arial bold 15
     $this->SetY(0);
-    $this->SetX(0); 
+    $this->SetX(0);
     $this->SetFont('Arial','B',20);
     $this->SetFillColor(255,255,255);
     $this->SetDrawColor(43,21,59);
@@ -27,11 +27,11 @@ class PDF_3GK_Declaratie extends FPDF {
     $offsetX = $cfgMarge;
     $offsetY = $cfgMarge-10;
     $this->Image('../images/logoKoningsKerk.png',$offsetX - 20,$offsetY - 9,$size[0]);
-       
+
     # Move to the right + Title
     $this->SetY($offsetY+5);
-    $this->SetX($offsetX+$size[0]+10);    
-    
+    $this->SetX($offsetX+$size[0]+10);
+
     # Line break
     $this->Ln($size[1]+10);
 	}
@@ -39,7 +39,7 @@ class PDF_3GK_Declaratie extends FPDF {
 	// Page footer
 	function Footer() {		
     global $cfgMarge, $title;
-    
+
     $iconXOffset = 18;
     $iconYOffset = 11;
 				
@@ -66,7 +66,7 @@ class PDF_3GK_Declaratie extends FPDF {
 
     $this->SetY(-(13+$iconYOffset));
     $this->SetX(($cfgMarge - $iconXOffset) + 5);
-   
+
     $this->Cell(70, 7,'',0,0,'L');
     $this->Cell(120,7,'KONINGSKERK DEVENTER',0,0,'R');
     $this->Ln();
@@ -75,7 +75,7 @@ class PDF_3GK_Declaratie extends FPDF {
     $this->Ln();
     $this->SetX(($cfgMarge - $iconXOffset) + 5);
     $this->Cell(70, 6,'Marienburghstraat 4, 7415 BP Deventer',0,0,'L');
-    $this->Cell(60, 6,'Pagina '.$this->PageNo().' van {nb}',0,0,'C'); 
+    $this->Cell(60, 6,'Pagina '.$this->PageNo().' van {nb}',0,0,'C');
     $this->Cell(60, 6,strftime("%A %d %B %Y"),0,0,'R');
 	}
 }

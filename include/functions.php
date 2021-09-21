@@ -69,7 +69,7 @@ function isUniqueUsername($username) {
 function generatePassword ($length = 8) {
 	// start with a blank password
 	$password = "";
-  
+
   $klink[] = 'a';
   $klink[] = 'e';
   $klink[] = 'i';
@@ -78,13 +78,13 @@ function generatePassword ($length = 8) {
   $klink[] = 'ei';
   $klink[] = 'ij';
   $klink[] = 'ie';
-  
+
   $mede[] = 'b';
   $mede[] = 'c';
   $mede[] = 'd';
   $mede[] = 'f';
   $mede[] = 'g';
-  $mede[] = 'h';  
+  $mede[] = 'h';
   $mede[] = 'j';
   $mede[] = 'k';
   $mede[] = 'l';
@@ -101,15 +101,15 @@ function generatePassword ($length = 8) {
   $mede[] = 'y';
   $mede[] = 'z';
   $mede[] = 'ch';
-    
+
   $len_klink = count($klink);
   $len_mede = count($mede);
-  
+
   // set up a counter for how many characters are in the password so far
   $i = 0;
-  
+
   // add random characters to $password until $length is reached
-  while(strlen($password) < $length) { 
+  while(strlen($password) < $length) {
   	if(fmod($i, 2) == 0) {
   		$id = mt_rand(0, $len_mede-1);
   		$char = $mede[$id];
@@ -121,15 +121,15 @@ function generatePassword ($length = 8) {
   	$password .= $char;
     $i++;
   }
-  
+
   // done!
   return ucfirst($password);
 }
 
-function generateID($length=8) { 
-    //$s = strtoupper(md5(uniqid(rand(),true))); 
+function generateID($length=8) {
+    //$s = strtoupper(md5(uniqid(rand(),true)));
     $s = strtoupper(bin2hex(openssl_random_pseudo_bytes($length)));
-    $guidText = substr($s,0,$length); 
+    $guidText = substr($s,0,$length);
     return $guidText;
 }
 
@@ -441,7 +441,7 @@ function getRoosterDetails($id) {
 }
 
 function getBeheerder($groep) {
-	global $TableGroups, $GroupID, $GroupBeheer; 
+	global $TableGroups, $GroupID, $GroupBeheer;
 	$db = connect_db();
 	
 	$sql = "SELECT $GroupBeheer FROM $TableGroups WHERE $GroupID = $groep";
@@ -460,7 +460,7 @@ function getBeheerder($groep) {
 #	$db = connect_db();
 #	
 #	/*
-#	$sql = "SELECT $TableRoosters.$RoostersID FROM $TableRoosters, $TableGroups, $TableGrpUsr WHERE 
+#	$sql = "SELECT $TableRoosters.$RoostersID FROM $TableRoosters, $TableGroups, $TableGrpUsr WHERE
 #	$TableRoosters.$RoostersGroep = $TableGroups.$GroupID AND
 #	$TableGroups.$GroupBeheer = $TableGrpUsr.$GrpUsrGroup AND
 #	$TableGrpUsr.$GrpUsrUser = $id";
@@ -913,7 +913,7 @@ function sendMail_new($parameter) {
 			$naam			= $ontvanger[1];			
 			$mail->AddAddress($address, $naam);
 			toLog('debug', '', '', $naam .' ('. $address .') in de Aan opgenomen');
-		} elseif(count($ontvanger) == 1 AND !is_numeric($ontvanger[0])) {  
+		} elseif(count($ontvanger) == 1 AND !is_numeric($ontvanger[0])) {
 			$mail->AddAddress($ontvanger[0]);
 			toLog('debug', '', '', $ontvanger[0] .' in de Aan opgenomen');
 		}
@@ -938,7 +938,7 @@ function sendMail_new($parameter) {
 				$naam = $ontvanger[1];				
 				$mail->AddCC($address, $naam);
 				toLog('debug', '', '', $naam .' ('. $address .') in de CC opgenomen');
-			} elseif(count($ontvanger) == 1 AND !is_numeric($ontvanger[0])) {  
+			} elseif(count($ontvanger) == 1 AND !is_numeric($ontvanger[0])) {
 				$mail->AddCC($ontvanger[0]);
 				toLog('debug', '', '', $ontvanger[0] .' in de CC opgenomen');
 			}
@@ -1237,7 +1237,7 @@ function array_search_closest($input, $array) {
   } else {
   	$closest = 0;
   }
-  
+
   return $closest;
 }
 
@@ -1787,7 +1787,7 @@ function time2str($format, $time = 0) {
 		$time = time();
 	}	
 	
-	// Check for Windows to find and replace the %e 
+	// Check for Windows to find and replace the %e
 	// modifier correctly
 	if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN') {
 		$format = preg_replace('#(?<!%)((?:%%)*)%e#', '\1%#d', $format);
@@ -1795,9 +1795,9 @@ function time2str($format, $time = 0) {
 	return strftime($format, $time);
 }
 
-function generateFilename() { 
-    $s = strtoupper(md5(uniqid(rand(),true))); 
-    $guidText = substr($s,0,4) . '-'. date('dmyHis').'-'. substr($s,4); 
+function generateFilename() {
+    $s = strtoupper(md5(uniqid(rand(),true)));
+    $guidText = substr($s,0,4) . '-'. date('dmyHis').'-'. substr($s,4);
     return $guidText;
 }
 
@@ -1929,7 +1929,7 @@ function getLastNrsTrinitas($number = 3) {
 	$result	= mysqli_query($db, $sql);
 	if($row	= mysqli_fetch_array($result)) {
 		do {
-			$data[] = $row[$ArchiefID]; 
+			$data[] = $row[$ArchiefID];
 		} while($row = mysqli_fetch_array($result));
 	}
 	
@@ -2160,6 +2160,16 @@ function showDeclaratieDetails($input) {
 	$page[] = "</tr>";
 	
 	return $page;	
+}
+
+# Alles omzetten in JSON-formaat en daarbij newlines
+# vervangen door een spatie
+function encode_clean_JSON($input) {
+	$string = $input;
+	$string = json_encode($string);
+	$string = str_replace('\r\n', ' ', $string);
+	
+	return $string;
 }
 
 # https://stackoverflow.com/questions/4117555/simplest-way-to-detect-a-mobile-device-in-php

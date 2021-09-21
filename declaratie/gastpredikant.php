@@ -79,7 +79,7 @@ if(isset($_REQUEST['hash'])) {
 					}
 				}			
 			} else {
-				# op basis van IBAN zoeken of iemand al bekend is				 
+				# op basis van IBAN zoeken of iemand al bekend is				
 				$errorResult = eb_getRelatieCodeByIban ($_POST['IBAN'], $EB_code);
 				if($errorResult) {
 					toLog('error', '', '', $errorResult);

@@ -32,10 +32,10 @@ if(isset($_POST['save_data'])) {
 $id = getParam('id', $_SESSION['ID']);
 $personData = getMemberDetails($id);
 
-# Als je als admin bent ingelogd zie je alle leden, anders alleen de actieve 
+# Als je als admin bent ingelogd zie je alle leden, anders alleen de actieve
 $familie = getFamilieleden($id, in_array(1, getMyGroups($_SESSION['ID'])));
 
-toLog('debug', $_SESSION['ID'], $id, 'profiel bekeken'); 
+toLog('debug', $_SESSION['ID'], $id, 'profiel bekeken');
 
 # Pagina tonen
 echo $HTMLHeader;

@@ -137,7 +137,7 @@ $text[] = "</tr>";
 $text[] = "<tr>";
 $text[] = "	<td>&nbsp;</td>";
 if($configMoveGroups) {
-	$text[] = "	<td>&nbsp;</td>"; 
+	$text[] = "	<td>&nbsp;</td>";
 }
 $text[] = "	<td><input type='text' name='name[999]'></td>";
 $text[] = "	<td><input type='text' name='key[999]'></td>";	

@@ -222,7 +222,7 @@ function columnArray($array, $column) {
 	foreach($array as $key => $sub_array) {
 		$output[$key] = $sub_array[$column];
 	}
-    
+
 	return $output;
 }
 

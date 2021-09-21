@@ -29,7 +29,7 @@ $end		= mktime ($eUur,$eMin,59,$eMaand,$eDag,$eJaar);
 $dader				= getParam('dader', '');
 $slachtoffer	= getParam('slacht', '');
 $type					= getParam('type', array('info', 'error'));
-$message			= getParam('message', ''); 
+$message			= getParam('message', '');
 $aantal				= getParam('aantal', 100);
 
 $cfgAantalLog = array(10, 25, 50, 100, 250, 500, 1000);

@@ -36,17 +36,17 @@ $veld['IBAN']						= 'IBAN';
 
 try {
   $client = new SoapClient("https://soap.e-boekhouden.nl/soap.asmx?WSDL");
-  
+
   // sessie openen en sessionid ophalen
   $params = array(
     "Username" => $ebUsername,
     "SecurityCode1" => $ebSecurityCode1,
     "SecurityCode2" => $ebSecurityCode2
   );
-  
-  $response = $client->__soapCall("OpenSession", array($params));  
+
+  $response = $client->__soapCall("OpenSession", array($params));
   $SessionID = $response->OpenSessionResult->SessionID;
-  
+
   // opvragen alle relaties
   $params = array(
     "SecurityCode2" => $ebSecurityCode2,
@@ -57,13 +57,13 @@ try {
     	"ID" => 0,
     )
   );
-  
+
   $response = $client->__soapCall("GetRelaties", array($params));
   $Relaties = $response->GetRelatiesResult->Relaties;
- 
+
   // indien een resultaat, dan even een array maken
   if(!is_array($Relaties->cRelatie)) $Relaties->cRelatie = array($Relaties->cRelatie);
-  
+
   foreach ($Relaties->cRelatie as $Relatie) {
   	$cel = array();
   	
@@ -73,14 +73,14 @@ try {
   	
     $rij[] = "<tr>\n<td>". implode("</td>\n<td>", $cel) ."</td>\n</tr>";
   }
-  
-    
+
+
   // sessie sluiten
   $params = array("SessionID" => $SessionID);
   $response = $client->__soapCall("CloseSession", array($params));
 } catch(SoapFault $soapFault) {
   echo '<strong>Er is een fout opgetreden:</strong><br>';
-  echo $soapFault;  
+  echo $soapFault;
 }
 
 foreach($veld as $key => $dummy) {

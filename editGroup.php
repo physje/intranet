@@ -50,8 +50,8 @@ if(isset($_POST['change_site'])) {
 
 $GroupMembers = getGroupMembers($_REQUEST['groep']);
 
-$block_1[] = "<form method='post' action='$_SERVER[PHP_SELF]'>";                      
-$block_1[] = "<input type='hidden' name='groep' value='". $_REQUEST['groep'] ."'>"; 
+$block_1[] = "<form method='post' action='$_SERVER[PHP_SELF]'>";
+$block_1[] = "<input type='hidden' name='groep' value='". $_REQUEST['groep'] ."'>";
 
 foreach($GroupMembers as $lid) {
 	$block_1[] = "<input type='checkbox' name='ids[]' value='$lid' checked> <a href='profiel.php?id=$lid'>". makeName($lid, 5) ."</a><br>";
@@ -67,7 +67,7 @@ $block_1[] = "</form>";
 $block_2[] = "<table width=100%>";
 $block_2[] = "<tr>";
 $block_2[] = "<td valign='top'>";
-$block_2[] = "	<form method='post' action='$_SERVER[PHP_SELF]'>";                      
+$block_2[] = "	<form method='post' action='$_SERVER[PHP_SELF]'>";
 $block_2[] = "	<input type='hidden' name='groep' value='". $_REQUEST['groep'] ."'>";
 $block_2[] = "	Tekst op de interne groep-pagina (alleen zichtbaar voor groepsleden).<br>";
 $block_2[] = "	<textarea name='intern' rows=30 cols=60>". $groupData['html-int'] ."</textarea><br>";

@@ -57,7 +57,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 			$param['ReplyTo'] = $voorgangerReplyAddress;
 			$param['ReplyToName'] = $voorgangerReplyName;
 			
-			# Als er niet getest wordt 
+			# Als er niet getest wordt
 			if(!$sendTestMail) {
 				# Alle geadresseerden toevoegen
 				$param['to'][] = array($voorgangerData['mail'], $mailNaam);

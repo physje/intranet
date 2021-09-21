@@ -62,7 +62,7 @@ if(isset($_REQUEST['dader']) AND isset($_REQUEST['slachtoffer'])) {
 	$param_dader['subject']	= "Er is met jou geruild voor '". $roosterData['naam'] ."'";
 		
 	if(sendMail_new($param_dader)) {
-		toLog('debug', $dader, '', 'verplaatst van dienst '. $dienst_d .' naar '. $dienst_s); 
+		toLog('debug', $dader, '', 'verplaatst van dienst '. $dienst_d .' naar '. $dienst_s);
 	}
 				
 	$mail = array();
@@ -78,11 +78,11 @@ if(isset($_REQUEST['dader']) AND isset($_REQUEST['slachtoffer'])) {
 	$param_slachtoffer['subject']	= "Je hebt geruild voor '". $roosterData['naam'] ."'";
 		
 	if(sendMail_new($param_slachtoffer)) {
-		toLog('debug', $slachtoffer, '', 'verplaatst van dienst '. $dienst_s .' naar '. $dienst_d); 
+		toLog('debug', $slachtoffer, '', 'verplaatst van dienst '. $dienst_s .' naar '. $dienst_d);
 	}
 		
 	$text[] = 'Er is een bevestigingsmail naar jullie allebei gestuurd.';
-	toLog('info', $dader, $slachtoffer, "geruild voor '". $roosterData['naam'] ."'"); 
+	toLog('info', $dader, $slachtoffer, "geruild voor '". $roosterData['naam'] ."'");
 } elseif($slachtoffer != '' OR $dader != '') {
 	$diensten = getAllKerkdiensten(true);
 	

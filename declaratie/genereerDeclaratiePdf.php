@@ -8,12 +8,12 @@ define('EURO',chr(128));
  * Berken de betaal datum op basis van de declaratie datum
  * @param  string $datum             datum al vergkregen door de date() functie
  * @param  int    $betaalDag         dag van uitbetalen
- * @param  int    $betaalDagMarge    aantal dagen marge voor het uitbetalen, vb: als betaaldag 20ste is, en declaratie 16e 
- *                                   wordt ingeschoten bij een marge van 5 dagen, niet de eerstvolgende 20ste uitbetalen zoals 
+ * @param  int    $betaalDagMarge    aantal dagen marge voor het uitbetalen, vb: als betaaldag 20ste is, en declaratie 16e
+ *                                   wordt ingeschoten bij een marge van 5 dagen, niet de eerstvolgende 20ste uitbetalen zoals
  *                                   verwacht maar een maand later om wat meer speling te geven
  * @return string $betaalDatum       betaal datum string formaat "d-m-Y"
  */
-function bereken_betaal_datum($datum, $betaalDag, $betaalDagMarge) 
+function bereken_betaal_datum($datum, $betaalDag, $betaalDagMarge)
 {
     $timestamp = strtotime($datum);
     $betaalDatum = "";
@@ -50,7 +50,7 @@ function bereken_betaal_datum($datum, $betaalDag, $betaalDagMarge)
 function genereer_declaratie_pdf($mutatieNr, $mutatieDatum, $naam, $adres, $mailadres, $iban, $declaratieData)
 {
     global $cfgMarge;
-    
+
     $pdf = new PDF_3GK_Table_Declaratie;
     $fontSize = 10;
 
@@ -93,13 +93,13 @@ function genereer_declaratie_pdf($mutatieNr, $mutatieDatum, $naam, $adres, $mail
         $pdf->Write(5, $adres);
         $pdf->Ln();
     }
-    
+
     if ( $mailadres != "" ) {
         $pdf->Cell(25,5, "Mailadres:", 'R', 0, 'L', 0);
         $pdf->Write(5, $mailadres);
         $pdf->Ln();
     }
-    
+
     $pdf->Cell(25,5, "IBAN:", 'R', 0, 'L', 0);
     $pdf->Write(5, $iban);
     $pdf->Ln();
@@ -116,13 +116,13 @@ function genereer_declaratie_pdf($mutatieNr, $mutatieDatum, $naam, $adres, $mail
 
     $pdf->SetFont("Helvetica",'',$fontSize);
 
-    # Maak tabel met details over de declaratie 
+    # Maak tabel met details over de declaratie
     $totaalBedrag = 0.0;
-    foreach ($declaratieData as $key => $data) {    	  
-        $totaalBedrag += (float)($data[1] / 100);        
+    foreach ($declaratieData as $key => $data) {    	
+        $totaalBedrag += (float)($data[1] / 100);
         $declaratieData[$key][1] = '€ '.number_format($data[1]/100, 2,',','.');
     }
-    
+
     $totaalBedrag = number_format($totaalBedrag, 2,',','.');
     $totaalBedragRow = ["Totaal uit te betalen bedrag:", "€ ".$totaalBedrag];
 
@@ -148,7 +148,7 @@ function genereer_declaratie_pdf($mutatieNr, $mutatieDatum, $naam, $adres, $mail
 $mutatieNr = "123_13719";
 $mutatieDatum = date("Y-m-d");
 $naam = "Jan Janssen";
-$adres = "adres 123"; 
+$adres = "adres 123";
 $mailadres = "naam@domein.nl";
 $iban = "NL01XXXX0123456789";
 $declaratieData = [["OnderdeelX", "90.00"], ["OnderdeelY", "17.15"]];

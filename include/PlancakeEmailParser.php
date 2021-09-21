@@ -21,7 +21,7 @@
 **************************************************************************************
 *
 * Valuable contributions by:
-* - Chris 
+* - Chris
 *
 * **************************************************************************************/
 
@@ -32,10 +32,10 @@
  *
  * N.B.: if you deal with non-English languages, we recommend you install the IMAP PHP extension:
  * the Plancake PHP Email Parser will detect it and used it automatically for better results.
- * 
+ *
  * For more info, check:
  * https://github.com/plancake/official-library-php-email-parser
- * 
+ *
  * @author dan
  */
 class PlancakeEmailParser {
@@ -46,9 +46,9 @@ class PlancakeEmailParser {
     /**
      *
      * @var boolean
-     */    
+     */
     private $isImapExtensionAvailable = false;
-    
+
     /**
      *
      * @var string
@@ -75,7 +75,7 @@ class PlancakeEmailParser {
         $this->emailRawContent = $emailRawContent;
 
         $this->extractHeadersAndRawBody();
-        
+
         if (function_exists('imap_open')) {
             $this->isImapExtensionAvailable = true;
         }
@@ -96,7 +96,7 @@ class PlancakeEmailParser {
                 $this->rawBodyLines = array_slice($lines, $i);
                 break;
             }
-            
+
             if ($this->isLineStartingWithPrintableChar($line)) // start of new header
             {
                 preg_match('/([^:]+): ?(.*)$/', $line, $matches);
@@ -126,9 +126,9 @@ class PlancakeEmailParser {
         {
             throw new Exception("Couldn't find the subject of the email");
         }
-        
+
         $ret = '';
-        
+
         if ($this->isImapExtensionAvailable) {
             foreach (imap_mime_header_decode($this->rawFields['subject']) as $h) { // subject can span into several lines
                 $charset = ($h->charset == 'default') ? 'US-ASCII' : $h->charset;
@@ -137,7 +137,7 @@ class PlancakeEmailParser {
         } else {
             $ret = utf8_encode(iconv_mime_decode($this->rawFields['subject']));
         }
-        
+
         return $ret;
     }
 
@@ -171,9 +171,9 @@ class PlancakeEmailParser {
 
     /**
      * return string - UTF8 encoded
-     * 
+     *
      * Example of an email body
-     * 
+     *
         --0016e65b5ec22721580487cb20fd
         Content-Type: text/plain; charset=ISO-8859-1
 
@@ -201,7 +201,7 @@ class PlancakeEmailParser {
             $contentTypeRegex = '/^Content-Type: ?text\/html/i';
         else
             $contentTypeRegex = '/^Content-Type: ?text\/plain/i';
-        
+
         // there could be more than one boundary
         preg_match_all('!boundary=(.*)$!mi', $this->emailRawContent, $matches);
         $boundaries = $matches[1];
@@ -209,34 +209,34 @@ class PlancakeEmailParser {
         foreach($boundaries as $i => $v) {
             $boundaries[$i] = str_replace(array("'", '"'), '', $v);
         }
-        
+
         foreach ($this->rawBodyLines as $line) {
             if (!$detectedContentType) {
-                
+
                 if (preg_match($contentTypeRegex, $line, $matches)) {
                     $detectedContentType = true;
                 }
-                
+
                 if(preg_match('/charset=(.*)/i', $line, $matches)) {
-                    $charset = strtoupper(trim($matches[1], '"')); 
-                }       
-                
+                    $charset = strtoupper(trim($matches[1], '"'));
+                }
+
             } else if ($detectedContentType && $waitingForContentStart) {
-                
+
                 if(preg_match('/charset=(.*)/i', $line, $matches)) {
-                    $charset = strtoupper(trim($matches[1], '"')); 
-                }                 
-                
+                    $charset = strtoupper(trim($matches[1], '"'));
+                }
+
                 if ($contentTransferEncoding == null && preg_match('/^Content-Transfer-Encoding: ?(.*)/i', $line, $matches)) {
                     $contentTransferEncoding = $matches[1];
-                }                
-                
+                }
+
                 if (self::isNewLine($line)) {
                     $waitingForContentStart = false;
                 }
             } else {  // ($detectedContentType && !$waitingForContentStart)
                 // collecting the actual content until we find the delimiter
-                
+
                 // if the delimited is AAAAA, the line will be --AAAAA  - that's why we use substr
                 if (is_array($boundaries)) {
                     if (in_array(substr($line, 2), $boundaries)) {  // found the delimiter
@@ -260,16 +260,16 @@ class PlancakeEmailParser {
         if ($contentTransferEncoding == 'base64')
             $body = base64_decode($body);
         else if ($contentTransferEncoding == 'quoted-printable')
-            $body = quoted_printable_decode($body);        
-        
+            $body = quoted_printable_decode($body);
+
         if($charset != 'UTF-8') {
             // FORMAT=FLOWED, despite being popular in emails, it is not
             // supported by iconv
             $charset = str_replace("FORMAT=FLOWED", "", $charset);
-           
-	    $bodyCopy = $body; 
+
+	    $bodyCopy = $body;
             $body = iconv($charset, 'UTF-8//TRANSLIT', $body);
-            
+
             if ($body === FALSE) { // iconv returns FALSE on failure
                 $body = utf8_encode($bodyCopy);
             }
@@ -280,7 +280,7 @@ class PlancakeEmailParser {
 
     /**
      * @return string - UTF8 encoded
-     * 
+     *
      */
     public function getPlainBody()
     {

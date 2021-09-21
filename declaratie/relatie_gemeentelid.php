@@ -27,7 +27,7 @@ foreach($relaties as $relatieData) {
 	$page[] = '</tr>';		
 }
 
-$page[] = '</table>'; 
+$page[] = '</table>';
 
 # Pagina tonen
 echo $HTMLHeader;

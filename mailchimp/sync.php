@@ -20,7 +20,7 @@ do {
 	$scipioID = $row[$UserID];
 		
 	# Haal alle gegevens op
-	$data = getMemberDetails($scipioID); 
+	$data = getMemberDetails($scipioID);
 	$wijk = $data['wijk'];
 	$relatie = $data['relatie'];
 	$status = $data['belijdenis'];

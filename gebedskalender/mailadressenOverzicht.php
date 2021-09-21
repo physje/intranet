@@ -53,7 +53,7 @@ if(isset($_REQUEST['edit_page'])) {
     $block[] = "<h1>Gebedskalender mailadressen overzicht - edit</h1>";
     $block[] = "In het eerste veld kan een nieuw contactpersoon opgeslagen worden, in het tweede veld kan de lijst met contactpersonen worden aangepast. <br><br>";
     $categories = array_unique($kalCategorie);
-    
+
     // Voeg nieuwe contact toe formulier
     $block[] = "<form method='post' action='$_SERVER[PHP_SELF]' >";
     $block[] = "<fieldset><legend><b>Nieuw contact toevoegen</b></legend>";
@@ -87,7 +87,7 @@ if(isset($_REQUEST['edit_page'])) {
 
     foreach ($contacten as $key => $contact) {
         $block[] = "<tr>";
-        $block[] = "<td width=50>" . $contacten[$key][$GebedKalCategorie] . "</td>"; 
+        $block[] = "<td width=50>" . $contacten[$key][$GebedKalCategorie] . "</td>";
         $block[] = "<td>" . $contacten[$key][$GebedKalContactPersoon] . "</td>";
         $block[] = "<td>" . strtolower($contacten[$key][$GebedKalMailadres]) . "</td>";
         $block[] = "<td>" . $contacten[$key][$GebedKalOpmerkingen] . "</td>";
@@ -141,16 +141,16 @@ if(isset($_REQUEST['edit_page'])) {
 
     foreach ($contacten as $key => $contact) {
         $block[] = "<tr>";
-        
+
         // Als categorie meerdere keren voorkomt, een keer laten zien en cellen mergen
         if ($key == 0 OR $contacten[$key][$GebedKalCategorie] != $contacten[$key - 1][$GebedKalCategorie] ) {
             if ($key == (count($contacten) -1)) {
-                $block[] = "<td><b>" . $contacten[$key][$GebedKalCategorie] . "</b></td>"; 
+                $block[] = "<td><b>" . $contacten[$key][$GebedKalCategorie] . "</b></td>";
             }
             else {
                 for ($i = 1; ($key + $i) <= count($contacten); $i++) {
                     if ($contacten[$key][$GebedKalCategorie] != $contacten[$key + $i][$GebedKalCategorie]) {
-                        $block[] = "<td rowspan='". strval($i) ."'><b>" . $contacten[$key][$GebedKalCategorie] . "</b></td>"; 
+                        $block[] = "<td rowspan='". strval($i) ."'><b>" . $contacten[$key][$GebedKalCategorie] . "</b></td>";
                         break;
                     }
                 }
@@ -161,7 +161,7 @@ if(isset($_REQUEST['edit_page'])) {
         $block[] = "<td>" . strtolower($contacten[$key][$GebedKalMailadres]) . "</td>";
         $block[] = "<td>" . $contacten[$key][$GebedKalOpmerkingen] . "</td>";
         $block[] = "</tr>";
-        
+
     }
     $block[] = "</table>";
 
@@ -191,7 +191,7 @@ function CheckCategorie(val){
  var element=document.getElementById('categorie');
  if(val=='Kies een categorie'||val=='anders...')
    element.style.display='block';
- else  
+ else
    element.style.display='none';
 }
 </script>

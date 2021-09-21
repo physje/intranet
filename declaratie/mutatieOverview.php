@@ -76,17 +76,17 @@ $zoekScherm[] = "</form>";
 
 try {
   $client = new SoapClient("https://soap.e-boekhouden.nl/soap.asmx?WSDL");
-  
+
   // sessie openen en sessionid ophalen
   $params = array(
     "Username" => $ebUsername,
     "SecurityCode1" => $ebSecurityCode1,
     "SecurityCode2" => $ebSecurityCode2
   );
-  
-  $response = $client->__soapCall("OpenSession", array($params));  
+
+  $response = $client->__soapCall("OpenSession", array($params));
   $SessionID = $response->OpenSessionResult->SessionID;
-  
+
   // opvragen alle mutaties
   $params = array(
     "SecurityCode2" => $ebSecurityCode2,
@@ -100,13 +100,13 @@ try {
     	"DatumTm" => date('Y-m-d', $end)
     )
   );
-  
+
   $response = $client->__soapCall("GetMutaties", array($params));
   $Mutaties = $response->GetMutatiesResult->Mutaties;
-    
+
   // indien een resultaat, dan even een array maken
   if(!is_array($Mutaties->cMutatieList)) $Mutaties->cMutatieList = array($Mutaties->cMutatieList);
-  
+
   foreach ($Mutaties->cMutatieList as $Mutatie) {
   	if($Mutatie->Rekening == 2000 OR isset($showAllMutaties)) {
   		$cel = array();
@@ -139,13 +139,13 @@ try {
   		$rij[$id] = "<tr>\n<td>". implode("</td>\n<td>", $cel) ."</td>\n</tr>";
   	}
   }
-    
+
   // sessie sluiten
   $params = array("SessionID" => $SessionID);
   $response = $client->__soapCall("CloseSession", array($params));
 } catch(SoapFault $soapFault) {
   echo '<strong>Er is een fout opgetreden:</strong><br>';
-  echo $soapFault;  
+  echo $soapFault;
 }
 
 foreach($veld as $key => $dummy) {	

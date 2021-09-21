@@ -90,7 +90,7 @@ echo '<p>';
 
 /*
 if(!isset($_REQUEST['letter'])) {
-	echo "<form method='post' action='$_SERVER[PHP_SELF]' target='_blank'>";                      
+	echo "<form method='post' action='$_SERVER[PHP_SELF]' target='_blank'>";
 	echo "Voer de naam in van de persoon die u zoekt.<br>";
 	echo "<input type='text' name='lid' id=\"namen\" size='50'><br>";
 	echo "<br>";

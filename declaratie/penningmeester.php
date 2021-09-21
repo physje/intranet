@@ -259,8 +259,8 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 				$page[] = "Er is een mail met goedkeuring verstuurd naar ". makeName($indiener, 5) ."<br>\n";
 			}				
 			
-			# JSON-string terug in database
-			$JSONtoDatabase = json_encode($JSON);
+			# JSON-string terug in database			
+			$JSONtoDatabase = encode_clean_JSON($JSON);
 			$sql = "UPDATE $TableEBDeclaratie SET $EBDeclaratieDeclaratie = '". $JSONtoDatabase ."' WHERE $EBDeclaratieID like ". $row[$EBDeclaratieID];
 			mysqli_query($db, $sql);		
 			
@@ -307,7 +307,8 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 						
 				# JSON-string terug in database
 				$JSON['toelichting_penning'] = $_POST['toelichting'];
-				$JSONtoDatabase = json_encode($JSON);
+				$JSONtoDatabase = encode_clean_JSON($JSON);
+				
 				$sql = "UPDATE $TableEBDeclaratie SET $EBDeclaratieDeclaratie = '". $JSONtoDatabase ."' WHERE $EBDeclaratieID like ". $row[$EBDeclaratieID];
 				mysqli_query($db, $sql);		
 			

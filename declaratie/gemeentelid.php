@@ -71,14 +71,18 @@ if(isset($_FILES['bijlage'])) {
 		$page[] = "<input type='hidden' name='bijlage[]' value='". trim($string) ."'>";
 		$page[] = "<input type='hidden' name='bijlage_naam[]' value='". trim($_POST['bijlage_naam'][$key]) ."'>";
 	}
-} 
+}
 
 if(isset($_POST['correct'])) {
+	# Alle POST-variabelen, met uitzondering van de pagina en
+	# de knop dat de gegevens correct zijn moeten in de database
 	$toDatabase = $_POST;
 	unset($toDatabase['page']);
 	unset($toDatabase['correct']);
 	
-	$JSONtoDatabase = json_encode($toDatabase);
+	# Alles omzetten in JSON-formaat en daarbij newlines
+	# (met name bij opm_cluco) vervangen door een spatie	
+	$JSONtoDatabase = encode_clean_JSON($toDatabase);
 	
 	# Controleer of de laatste 5 minuten niet eenzelfde declaratie is ingediend.
 	# Indien wel, dan is dat waarschijnlijk een misverstand	
@@ -468,7 +472,7 @@ if(isset($_POST['correct'])) {
 		
 		if(
 			(!isset($_POST['bijlage']) AND !isset($_FILES['bijlage']))
-			OR 
+			OR
 			(isset($_FILES['bijlage']) AND isset($meldingBestand) AND $meldingBestand != '')
 			OR
 			(isset($_POST['reset_files']))
@@ -520,7 +524,7 @@ if(isset($_POST['correct'])) {
 		$page[] = "</td>";
 		$page[] = "</tr>";
 		$page[] = "</table>";
-	}   
+	}
 } else {
 	$page[] = "<input type='hidden' name='page' value='1'>";
 	$page[] = "<table border=0>";

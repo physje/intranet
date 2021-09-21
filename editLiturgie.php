@@ -61,7 +61,7 @@ if(isset($_REQUEST['dienstID'])) {
 
     foreach($diensten as $dienst) {
         $data = getKerkdienstDetails($dienst);
-        
+
         $text[] = "<tr>";
         $text[] = "	<td align='right'>". time2str("%a %e %b", $data['start']) ."</td>";
         //$text[] = "	<td align='right'>". date("d-m-Y", $data['start']) ."</td>";

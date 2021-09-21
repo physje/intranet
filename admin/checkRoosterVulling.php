@@ -39,7 +39,7 @@ foreach($roosters as $rooster) {
 			if($roosterData['text_only'] == 0) {
 				$sql_last = "SELECT MAX($TableDiensten.$DienstStart) as lastDienst FROM $TableDiensten, $TablePlanning WHERE $TablePlanning.$PlanningDienst = $TableDiensten.$DienstID AND $TablePlanning.$PlanningGroup = $rooster";
 			} else {
-				$sql_last = "SELECT MAX($TableDiensten.$DienstStart) as lastDienst FROM $TableDiensten, $TablePlanningTxt WHERE $TablePlanningTxt.$PlanningTxTDienst = $TableDiensten.$DienstID AND $TablePlanningTxt.$PlanningTxTGroup = $rooster"; 
+				$sql_last = "SELECT MAX($TableDiensten.$DienstStart) as lastDienst FROM $TableDiensten, $TablePlanningTxt WHERE $TablePlanningTxt.$PlanningTxTDienst = $TableDiensten.$DienstID AND $TablePlanningTxt.$PlanningTxTGroup = $rooster";
 			}
 			
 			$result_last = mysqli_query($db, $sql_last);
@@ -115,7 +115,7 @@ foreach($roosters as $rooster) {
 						$alert[] = "";
 						$alert[] = "dit is een automatisch gegenereerde mail om aan te geven dat het huidige online rooster '". $roosterData['naam'] ."' ". ($verlopen ? '' : 'bijna ') ."afgelopen is.";
 						$alert[] = "";
-				  
+				
 						if(!$lastWarning AND $roosterData['text_only'] == 0) {
 							$alert[] = "Om te zorgen dat iedereen op tijd remindermails krijgt/er geen lege mails verstuurd worden, moet je v&oacute;&oacute;r ". time2str('%A %e %B', $deadline) ." het nieuwe rooster invoeren.";
 						} elseif($lastWarning AND $roosterData['text_only'] == 0) {

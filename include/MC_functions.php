@@ -87,7 +87,7 @@ function mc_resubscribe($email) {
 }
 
 
-# 
+#
 function mc_addinterest($email, $interest) {
 	global $MC_listid, $MC_server;
 	

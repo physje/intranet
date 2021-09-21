@@ -19,7 +19,7 @@ if(isset($_REQUEST['relNr'])) {
 		$data = eb_getRelatieDataByCode($_REQUEST['relNr']);
 		
 		if($data['code'] != $_REQUEST['relNr']) {
-			$page[] = "Hier klopt iets niet"; 
+			$page[] = "Hier klopt iets niet";
 		} else {
 			$page[] = "<form method='post' action='". $_SERVER['PHP_SELF']."'>";
 			$page[] = "<input type='hidden' name='relNr' value='". $_REQUEST['relNr'] ."'>";

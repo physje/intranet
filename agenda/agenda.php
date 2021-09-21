@@ -125,7 +125,7 @@ if(isset($_POST['remove'])) {
 		if(!in_array(1, getMyGroups($_SESSION['ID'])) AND isset($_REQUEST['id'])) {
 			$text[] = "<input type='hidden' name='eigenaar' value='". $details['eigenaar'] ."'>";
 		} elseif(isset($_REQUEST['id'])) {
-			$leden = 
+			//$leden =
 			$text[] = "<tr>";
 			$text[] = "	<td>Eigenaar</td>";
 			$text[] = "	<td colspan=2><select name='eigenaar'>";			
