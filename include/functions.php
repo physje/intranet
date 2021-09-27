@@ -1621,14 +1621,14 @@ function setVoorgangerDeclaratieStatus($status, $dienst) {
 	global $db, $TableDiensten, $DienstDeclStatus, $DienstID;
 	
 	$descr[0] = 'geen';
-	$descr[1] = 'open';
-	$descr[2] = 'link verstuurd';
-	$descr[3] = 'link bezocht';
-	$descr[4] = 'opgeslagen';
-	$descr[5] = 'bij CluCo';
-	$descr[6] = 'bij lid';
-	$descr[7] = 'afgekeurd';
-	$descr[8] = 'afgerond';
+	$descr[1] = 'open';			# Status wordt op 'open' gezet in mailVoorganger.php (20 dagen van te voren)
+	$descr[2] = 'link verstuurd';		# Status wordt op 'link verstuurd' gezet na versturen van link op de dag van voorgaan
+	$descr[3] = 'link bezocht';		# Status wordt op 'link bezocht' gezet als de link uit vorige mail bezocht is
+	$descr[4] = 'opgeslagen';		# (nog) niet ingebruik
+	$descr[5] = 'bij CluCo';		# (nog) niet ingebruik
+	$descr[6] = 'bij lid';			# (nog) niet ingebruik
+	$descr[7] = 'afgekeurd';		# (nog) niet ingebruik
+	$descr[8] = 'afgerond';			# Status wordt op 'afgerond' gezet als declaratie is ingediend
 	$descr[9] = 'afgezien';
 	
 	$sql = "UPDATE $TableDiensten SET $DienstDeclStatus = $status WHERE $DienstID = $dienst";
