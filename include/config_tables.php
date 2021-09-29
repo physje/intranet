@@ -209,6 +209,7 @@ $EBDeclaratieStatus						= "status";
 $EBDeclaratieDeclaratie				= "declaratie";
 $EBDeclaratieTotaal						= "totaal";
 $EBDeclaratieTijd							= "tijd";
+$EBDeclaratieLastAction				= "last_action";
                     					
 $TableConfig									= "config";
 $ConfigID											= "id";

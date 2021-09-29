@@ -1620,15 +1620,15 @@ function generateDeclaratieLink($dienst, $voorganger) {
 function setVoorgangerDeclaratieStatus($status, $dienst) {
 	global $db, $TableDiensten, $DienstDeclStatus, $DienstID;
 	
-	$descr[0] = 'geen';
-	$descr[1] = 'open';			# Status wordt op 'open' gezet in mailVoorganger.php (20 dagen van te voren)
+	$descr[0] = 'geen';							# standaard status bij nieuwe kerkdienst
+	$descr[1] = 'open';							# Status wordt op 'open' gezet in mailVoorganger.php (20 dagen van te voren)
 	$descr[2] = 'link verstuurd';		# Status wordt op 'link verstuurd' gezet na versturen van link op de dag van voorgaan
-	$descr[3] = 'link bezocht';		# Status wordt op 'link bezocht' gezet als de link uit vorige mail bezocht is
-	$descr[4] = 'opgeslagen';		# (nog) niet ingebruik
-	$descr[5] = 'bij CluCo';		# (nog) niet ingebruik
-	$descr[6] = 'bij lid';			# (nog) niet ingebruik
-	$descr[7] = 'afgekeurd';		# (nog) niet ingebruik
-	$descr[8] = 'afgerond';			# Status wordt op 'afgerond' gezet als declaratie is ingediend
+	$descr[3] = 'link bezocht';			# Status wordt op 'link bezocht' gezet als de link uit vorige mail bezocht is
+	$descr[4] = 'opgeslagen';				# (nog) niet ingebruik
+	$descr[5] = 'bij CluCo';				# (nog) niet ingebruik
+	$descr[6] = 'bij lid';					# (nog) niet ingebruik
+	$descr[7] = 'afgekeurd';				# (nog) niet ingebruik
+	$descr[8] = 'afgerond';					# Status wordt op 'afgerond' gezet als declaratie is ingediend
 	$descr[9] = 'afgezien';
 	
 	$sql = "UPDATE $TableDiensten SET $DienstDeclStatus = $status WHERE $DienstID = $dienst";
@@ -1645,14 +1645,14 @@ function setVoorgangerDeclaratieStatus($status, $dienst) {
 function setDeclaratieStatus($status, $declaratie, $lid) {
 	global $db, $TableEBDeclaratie, $EBDeclaratieID, $EBDeclaratieStatus;
 	
-	$descr[0] = 'geen';	
-	$descr[1] = 'opgeslagen'; 	# nog niet in gebruik
-	$descr[2] = 'bij lid'; 			# nog niet in gebruik
-	$descr[3] = 'bij CluCo';
-	$descr[4] = 'bij penningmeester';
-	$descr[5] = 'afgerond';
-	$descr[6] = 'afgekeurd';
-	$descr[7] = 'verwijderd';
+	$descr[0] = 'geen';								# nog niet in gebruik
+	$descr[1] = 'opgeslagen'; 				# nog niet in gebruik
+	$descr[2] = 'bij lid'; 						# nog niet in gebruik
+	$descr[3] = 'bij CluCo';					# Door gemeentelid
+	$descr[4] = 'bij penningmeester';	# Door Cluco
+	$descr[5] = 'afgerond';						# Door Penningmeester
+	$descr[6] = 'afgekeurd';					# Door Cluco
+	$descr[7] = 'verwijderd';					# Door Penningmeester
 	
 	$sql = "UPDATE $TableEBDeclaratie SET $EBDeclaratieStatus = $status WHERE $EBDeclaratieID = $declaratie";
 		
@@ -2176,6 +2176,24 @@ function encode_clean_JSON($input) {
 function isMobile() {
     return preg_match("/(android|avantgo|blackberry|bolt|boost|cricket|docomo|fone|hiptop|mini|mobi|palm|phone|pie|tablet|up\.browser|up\.link|webos|wos)/i", $_SERVER["HTTP_USER_AGENT"]);
 }
+
+
+function setDeclaratieActionDate($declaratie, $tijd = 0) {
+	global $db, $TableEBDeclaratie, $EBDeclaratieLastAction, $EBDeclaratieHash;
+	
+	if($tijd == 0) $tijd = time();
+	
+	$sql = "UPDATE $TableEBDeclaratie SET $EBDeclaratieLastAction = $tijd WHERE $EBDeclaratieHash like '$declaratie'";
+	
+	if(mysqli_query($db, $sql)) {
+		toLog('debug', '', '', "Laatste actie van declaratie $declaratie gezet op ". time2str('%a %e %b %H:%M', $tijd));
+		return true;
+	} else {
+		toLog('error', '', '', "Kon laatste actie van declaratie $declaratie niet instellen op ". time2str('%a %e %b %H:%M', $tijd));
+		return false;
+	}	
+}
+
 
 function getOpenKerkVulling($week, $dag, $uur) {
 	global $db, $TableOpenKerkTemplate, $OKTemplateWeek, $OKTemplateDag, $OKTemplateTijd, $OKTemplatePos, $OKTemplatePersoon;

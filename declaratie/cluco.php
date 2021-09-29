@@ -73,7 +73,8 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 				} else {
 					toLog('info', $_SESSION['ID'], $data['user'], "Declaratie-goedkeuring [". $_REQUEST['key'] ."] door cluco");
 					$page[] = "Er is een mail met goedkeuring verstuurd naar ". makeName($data['user'], 5) ."<br>\n";
-					setDeclaratieStatus(4, $row[$EBDeclaratieID], $data['user']);	
+					setDeclaratieStatus(4, $row[$EBDeclaratieID], $data['user']);
+					setDeclaratieActionDate($_REQUEST['key']);
 				}
 				
 				# Mail naar penningmeester
@@ -165,7 +166,8 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 				} else {
 					toLog('info', $_SESSION['ID'], $data['user'], "Declaratie-afwijzing [". $_REQUEST['key'] ."] naar gemeentelid");
 					$page[] = "Er is een mail met onderbouwing voor de afwijzing verstuurd naar ". makeName($data['user'], 5);
-					setDeclaratieStatus(6, $row[$EBDeclaratieID], $data['user']);	
+					setDeclaratieStatus(6, $row[$EBDeclaratieID], $data['user']);
+					setDeclaratieActionDate($_REQUEST['key']);
 				}						
 			} else {
 				$page[] = "<form method='post' action='". $_SERVER['PHP_SELF']."'>";

@@ -230,10 +230,9 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 			} else {
 				toLog('debug', $_SESSION['ID'], $indiener, "Declaratie-notificatie naar financiële administratie");
 				setDeclaratieStatus(5, $row[$EBDeclaratieID], $data['user']);
+				setDeclaratieActionDate($_REQUEST['key']);
 			}
-			
-			
-			
+						
 			$MailIndiener = array();
 			$MailIndiener[] = "Beste ". makeName($indiener, 1) .",<br>";
 			$MailIndiener[] = "<br>";
@@ -302,7 +301,8 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 				} else {
 					toLog('info', $_SESSION['ID'], $data['user'], "Declaratie-afwijzing [". $_REQUEST['key'] ."] naar gemeentelid");
 					$page[] = "Er is een mail met toelichting  verstuurd naar ". makeName($cluco, 5);
-					setDeclaratieStatus(3, $row[$EBDeclaratieID], $data['user']);	
+					setDeclaratieStatus(3, $row[$EBDeclaratieID], $data['user']);
+					setDeclaratieActionDate($_REQUEST['key']);
 				}
 						
 				# JSON-string terug in database
@@ -344,6 +344,7 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 			}
 		} elseif(isset($_POST['dump'])) {
 			setDeclaratieStatus(7, $row[$EBDeclaratieID], $data['user']);
+			setDeclaratieActionDate($_REQUEST['key']);
 			
 			$page[] = "Declaratie is gemarkeerd als verwijderd. Neem contact op met de webmaster mocht dit onjuist zijn.<br>";
 			$page[] = "<br>Ga terug naar <a href='". $_SERVER['PHP_SELF']."'>het overzicht</a>.";			

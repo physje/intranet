@@ -96,7 +96,8 @@ if(isset($_POST['correct'])) {
 		$sql = "INSERT INTO $TableEBDeclaratie ($EBDeclaratieHash, $EBDeclaratieIndiener, $EBDeclaratieCluster, $EBDeclaratieDeclaratie, $EBDeclaratieTotaal, $EBDeclaratieTijd) VALUES ('$uniqueKey', ". $_SESSION['ID'].", ". $toDatabase['cluster'] .", '". $JSONtoDatabase ."', ". $toDatabase['totaal'] .", ". time() .")";	
 		mysqli_query($db, $sql);
 		$id = mysqli_insert_id($db);	
-		setDeclaratieStatus(3, $id, $_SESSION['ID']);	
+		setDeclaratieStatus(3, $id, $_SESSION['ID']);
+		setDeclaratieActionDate($uniqueKey);
   	
 		# -------
 		# Mail naar de cluco opstellen
