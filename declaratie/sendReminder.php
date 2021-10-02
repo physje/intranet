@@ -19,7 +19,7 @@ if($row = mysqli_fetch_array($result)) {
 		$indiener 	= $row[$EBDeclaratieIndiener];
 		$uniqueKey	= $row[$EBDeclaratieHash];
 		$cluster		= $row[$EBDeclaratieCluster];
-		$totoaal		= $row[$EBDeclaratieTotaal];
+		$totaal			= $row[$EBDeclaratieTotaal];
 		$tijd				= $row[$EBDeclaratieTijd];
 		$status			= $row[$EBDeclaratieStatus];
 		
@@ -45,9 +45,9 @@ if($row = mysqli_fetch_array($result)) {
 			$reminderMail[] = "Beste Penningmeester,<br>";
 		}
 		$reminderMail[] = "<br>";
-		$reminderMail[] = "De declaratie van ". makeName($indiener, 5) .' van '. time2str('%A %e %B') .' wacht op een reactie van jou.<br>';
+		$reminderMail[] = "De declaratie van ". makeName($indiener, 5) .' van '. time2str('%A %e %B', $tijd) .' wacht op een reactie van jou.<br>';
 		$reminderMail[] = "<br>";
-		$reminderMail[] = "Het betreft een declaratie van <i>". makeOpsomming($onderwerpen, '</i>, <i>', '</i> en <i>') ."</i> ter waarde van ". formatPrice($totoaal)."<br>";
+		$reminderMail[] = "Het betreft de declaratie van <i>". makeOpsomming($onderwerpen, '</i>, <i>', '</i> en <i>') ."</i> ter waarde van ". formatPrice($totaal)."<br>";
 		$reminderMail[] = "<br>";
 		if($status == 3) {
 			$reminderMail[] = "Klik <a href='". $ScriptURL ."declaratie/cluco.php?key=$uniqueKey'>hier</a> (inloggen vereist) om direct naar de declaratie te gaan.<br>";

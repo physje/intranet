@@ -1607,12 +1607,12 @@ function makeVoorgangerName($id, $type) {
 	}
 }
 
-function generateDeclaratieLink($dienst, $voorganger) {
+function generateDeclaratieLink($dienst, $voorganger, $afzeggen = false) {
 	global $randomCodeDeclaratie, $ScriptURL;
 	
 	# Declaratielink genereren
 	$hash = urlencode(password_hash($dienst.'$'.$randomCodeDeclaratie.'$'.$voorganger, PASSWORD_BCRYPT));
-	$declaratieLink = $ScriptURL ."declaratie/gastpredikant.php?hash=$hash&d=$dienst&v=$voorganger";
+	$declaratieLink = $ScriptURL ."declaratie/". ($afzeggen ? 'geenDeclaratie.php' : 'gastpredikant.php') ."?hash=$hash&d=$dienst&v=$voorganger";
 	
 	return $declaratieLink;
 }
