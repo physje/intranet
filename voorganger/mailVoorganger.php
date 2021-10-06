@@ -145,7 +145,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 			$mailText[] = $voorgangerReplyAddress;		
 			
 			# Onderwerp maken
-			$Subject = "Preken $dagdeel ". date('j-n-Y', $dienstData['start']);
+			$Subject = "Voorgaan $dagdeel ". date('j-n-Y', $dienstData['start']);
 			
 			if($sendMail) {		
 				$param['subject'] = trim($Subject);

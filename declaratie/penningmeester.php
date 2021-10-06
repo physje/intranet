@@ -214,9 +214,8 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 			$MailFinAdmin[] = "Het betreft een declaratie ter waarde van ". formatPrice($totaal)." voor cluster ". $clusters[$cluster] ." tnv ". $EBData['naam'] .' ('. $EBCode .')';
 					
 			$param_finAdmin['to'][]					= array($EBDeclaratieAddress);
-			$param_finAdmin['subject'] 			= "Declaratie ". makeName($_SESSION['ID'], 5) ." voor cluster ". $clusters[$cluster];
-			//$param_finAdmin['attachment'][]	= array('file' => $JSON['bijlage'], 'name' => $boekstukNummer.'_'.$JSON['bijlage_naam']);
-			
+			$param_finAdmin['subject'] 			= "Declaratie ". makeName($indiener, 5) ." voor cluster ". $clusters[$cluster];
+						
 			foreach($JSON['bijlage'] as $key => $bestand) {
 				$param_finAdmin['attachment'][$key]['file'] = $bestand;
 				$param_finAdmin['attachment'][$key]['name'] = $boekstukNummer.'_'.$JSON['bijlage_naam'][$key];

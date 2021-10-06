@@ -550,7 +550,7 @@ if(isset($_REQUEST['hash'])) {
 		$mailText[] = $declaratieReplyAddress;
 
 		# Onderwerp maken
-		$Subject = "Declaratie $dagdeel ". time2str('%e %b %y', $dienstData['start']);
+		$Subject = "Link naar declaratie-omgeving voor $dagdeel ". time2str('%e %b %y', $dienstData['start']);
 		
 		if(!$sendMail) {
 			$page[] = 'Afzender :'. $declaratieReplyName .'|'.$declaratieReplyAddress;

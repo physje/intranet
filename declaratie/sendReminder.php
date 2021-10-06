@@ -71,7 +71,7 @@ if($row = mysqli_fetch_array($result)) {
 			}
 		} else {
 			if($status == 3) {
-				toLog('info', '', '', "Reminder-mail aan cluco (". makeName($cluco, 5).") gestuurd voor [$uniqueKey]");
+				toLog('info', '', $cluco, "Reminder-mail aan cluco (". makeName($cluco, 5).") gestuurd voor [$uniqueKey]");
 				$page[] = "Reminder-mail aan cluco (". makeName($cluco, 5).") verstuurd";
 			} else {
 				toLog('info', '', '', "Reminder-mail aan penningmeester gestuurd voor [$uniqueKey]");

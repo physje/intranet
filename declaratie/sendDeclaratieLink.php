@@ -5,7 +5,6 @@ include_once('../include/config_mails.php');
 include_once('../include/HTML_TopBottom.php');
 include_once('../include/HTML_HeaderFooter.php');
 
-
 # Omdat de server deze dagelijks moet draaien wordt toegang niet gedaan op basis
 # van naam+wachtwoord maar op basis van IP-adres
 
@@ -38,10 +37,13 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 			$mailText[] = "De Koningskerk heeft een digitale declaratie-omgeving waar gast-predikanten hun declaratie kunnen indienen.";
 			$mailText[] = "Voordeel hiervan is dat waar mogelijk gegevens al zijn ingevuld, dat de declaratie direct in de boekhouding komt (wat de doorloop-tijd verkort) en dat ". ($voorgangerData['stijl'] == 0 ? 'u' : 'jij') ." een PDF-document voor de administratie in ". ($voorgangerData['stijl'] == 0 ? 'uw' : 'jouw') ." mailbox krijgt.";
 			$mailText[] = "";
-			$mailText[] = "Om de persoonlijke digitale declaratie-omgeving voor de $dagdeel te bereiken ". ($voorgangerData['stijl'] == 0 ? 'kunt u' : 'kun jij') ." <a href='$declaratieLink'>hier</a> klikken.";
+			$mailText[] = "<b>Declaratie $dagdeel ". time2str('%e %B', $dienstData['start']) ."</b>";
+			$mailText[] = "Om de persoonlijke digitale declaratie-omgeving voor deze diens te bereiken ". ($voorgangerData['stijl'] == 0 ? 'kunt u' : 'kun jij') ." <a href='$declaratieLink'>hier</a> klikken.";
 			$mailText[] = "";
+			$mailText[] = "<b>Afzien van declaratie</b>";
 			$mailText[] = "Mocht u willen afzien van declaratie, dan kan u dat middels <a href='$afzienLink'>deze link</a> aangeven, de declaratie zal dan als afgehandeld worden geregistreerd.";
 			$mailText[] = "";
+			$mailText[] = "<b>Declaratie eerdere dienst</b>";
 			$mailText[] = "In de digitale declaratie-omgeving is het ook mogelijk vorige diensten te declareren. Ga daarvoor naar <a href='". $ScriptURL ."declaratie/gastpredikant.php'>deze site</a> en selecteer de dienst die ". ($voorgangerData['stijl'] == 0 ? 'u' : 'je') ." wilt declararen. Neem contact op met de <a href='mailto:$ScriptMailAdress'>de webmaster</a> mocht de dienst niet meer in de lijst staan.";			
 			$mailText[] = "";			
 			$mailText[] = "Mochten er nog vragen zijn dan horen wij het graag.";
@@ -54,12 +56,6 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 			
 			# Onderwerp maken
 			$Subject = "Online declaratie-formulier $dagdeel ". date('j-n-Y', $dienstData['start']);
-			
-			/*
-			$mail->Subject	= trim($Subject);
-			$mail->IsHTML(true);
-			$mail->Body	= $MailHeader.implode("<br>\n", $mailText).$MailFooter;
-			*/
 						
 			$param['to'][] = array($voorgangerData['mail'], $mailNaam);
 			$param['from'] = $declaratieReplyAddress;
