@@ -7,8 +7,8 @@ $db = connect_db();
 
 $stap = 5;
 
-for($i=0 ; $i<4 ; $i++) {
-	$step[] = "$EBDeclaratieLastAction BETWEEN ". mktime(0, 0, 0, date("m"), date("d")-(($i+1)*$stap)) ." AND ". mktime(23, 59, 59, date("m"), date("d")-(($i+1)*$stap));
+for($i=1 ; $i<8 ; $i++) {
+	$step[] = "$EBDeclaratieLastAction BETWEEN ". mktime(0, 0, 0, date("m"), date("d")-($i*$stap)) ." AND ". mktime(23, 59, 59, date("m"), date("d")-($i*$stap));
 }
 
 $sql		= "SELECT * FROM $TableEBDeclaratie WHERE ($EBDeclaratieStatus = 3 OR $EBDeclaratieStatus = 4) AND (". implode(' OR ', $step) .")";
@@ -45,7 +45,7 @@ if($row = mysqli_fetch_array($result)) {
 			$reminderMail[] = "Beste Penningmeester,<br>";
 		}
 		$reminderMail[] = "<br>";
-		$reminderMail[] = "De declaratie van ". makeName($indiener, 5) .' van '. time2str('%A %e %B', $tijd) .' wacht op een reactie van jou.<br>';
+		$reminderMail[] = "De declaratie van ". makeName($indiener, 5) .' van '. time2str('%A %e %B', $tijd) .' wacht op een reactie van jouw.<br>';
 		$reminderMail[] = "<br>";
 		$reminderMail[] = "Het betreft de declaratie van <i>". makeOpsomming($onderwerpen, '</i>, <i>', '</i> en <i>') ."</i> ter waarde van ". formatPrice($totaal)."<br>";
 		$reminderMail[] = "<br>";

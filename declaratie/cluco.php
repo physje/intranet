@@ -62,7 +62,7 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 				$mail[] = "</table>";
 				
 				$parameter['to'][]			= array($data['user']);
-				$parameter['subject']		= 'Goedkeuring declaratie';
+				$parameter['subject']		= 'Declaratie doorgestuurd voor afhandeling';
 				$parameter['message'] 	= implode("\n", $mail);
 				$parameter['from']			= getMailAdres($_SESSION['ID']);
 				$parameter['fromName']	= makeName($_SESSION['ID'], 5);
@@ -72,7 +72,7 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 					$page[] = "Er zijn problemen met het versturen van de goedkeuringsmail.<br>\n";
 				} else {
 					toLog('info', $_SESSION['ID'], $data['user'], "Declaratie-goedkeuring [". $_REQUEST['key'] ."] door cluco");
-					$page[] = "Er is een mail met goedkeuring verstuurd naar ". makeName($data['user'], 5) ."<br>\n";
+					$page[] = "Er is een mail met status-update verstuurd naar ". makeName($data['user'], 5) ."<br>\n";
 					setDeclaratieStatus(4, $row[$EBDeclaratieID], $data['user']);
 					setDeclaratieActionDate($_REQUEST['key']);
 				}

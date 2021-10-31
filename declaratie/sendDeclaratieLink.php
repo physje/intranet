@@ -38,10 +38,10 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 			$mailText[] = "Voordeel hiervan is dat waar mogelijk gegevens al zijn ingevuld, dat de declaratie direct in de boekhouding komt (wat de doorloop-tijd verkort) en dat ". ($voorgangerData['stijl'] == 0 ? 'u' : 'jij') ." een PDF-document voor de administratie in ". ($voorgangerData['stijl'] == 0 ? 'uw' : 'jouw') ." mailbox krijgt.";
 			$mailText[] = "";
 			$mailText[] = "<b>Declaratie $dagdeel ". time2str('%e %B', $dienstData['start']) ."</b>";
-			$mailText[] = "Om de persoonlijke digitale declaratie-omgeving voor deze diens te bereiken ". ($voorgangerData['stijl'] == 0 ? 'kunt u' : 'kun jij') ." <a href='$declaratieLink'>hier</a> klikken.";
+			$mailText[] = "Om de persoonlijke digitale declaratie-omgeving voor deze dienst te bereiken ". ($voorgangerData['stijl'] == 0 ? 'kunt u' : 'kun jij') ." <a href='$declaratieLink'>hier</a> klikken.";
 			$mailText[] = "";
 			$mailText[] = "<b>Afzien van declaratie</b>";
-			$mailText[] = "Mocht u willen afzien van declaratie, dan kan u dat middels <a href='$afzienLink'>deze link</a> aangeven, de declaratie zal dan als afgehandeld worden geregistreerd.";
+			$mailText[] = "Mocht ".($voorgangerData['stijl'] == 0 ? 'u' : 'je')." willen afzien van declaratie, dan kan ".($voorgangerData['stijl'] == 0 ? 'u' : 'je')." dat middels <a href='$afzienLink'>deze link</a> aangeven, de declaratie zal dan als afgehandeld worden geregistreerd.";
 			$mailText[] = "";
 			$mailText[] = "<b>Declaratie eerdere dienst</b>";
 			$mailText[] = "In de digitale declaratie-omgeving is het ook mogelijk vorige diensten te declareren. Ga daarvoor naar <a href='". $ScriptURL ."declaratie/gastpredikant.php'>deze site</a> en selecteer de dienst die ". ($voorgangerData['stijl'] == 0 ? 'u' : 'je') ." wilt declararen. Neem contact op met de <a href='mailto:$ScriptMailAdress'>de webmaster</a> mocht de dienst niet meer in de lijst staan.";			
