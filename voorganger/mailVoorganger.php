@@ -126,11 +126,11 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 			
 			# Elke keer de aandachtspunten mailen is wat overdreven. Eens in de 6 weken lijkt mij mooi
 			$aandachtPeriode = mktime(23,59,59,date("n")-(6*7));
-			$lastUpdate = mktime(23,59,59,28,8,2021);
+			$lastUpdate = mktime(23,59,59,11,05,2021);
 			
 			if($voorgangerData['aandacht'] == 1 AND ($voorgangerData['last_aandacht'] < $aandachtPeriode OR $voorgangerData['last_aandacht'] < $lastUpdate)) {
 				$bijlageText[] = "de aandachtspunten van de dienst";				
-				$param['attachment'][]	= array('file' => '../download/aandachtspunten.pdf', 'name' => 'Aandachtspunten Liturgie Deventer (dd 28-08-2021).pdf');
+				$param['attachment'][]	= array('file' => '../download/aandachtspunten.pdf', 'name' => 'Aandachtspunten Liturgie Deventer (dd 05-11-2021).pdf');
 				setLastAandachtspunten($dienstData['voorganger_id']);
 			}
 					
