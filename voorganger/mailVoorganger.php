@@ -49,7 +49,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 		$voorgangerAchterNaam = makeVoorgangerName($dienstData['voorganger_id'], 7);
 		
 		# Als er geen mailadres van de voorganger bekend is
-		if(isValidEmail($voorgangerData['mail'])) {			
+		if(isValidEmail($voorgangerData['mail']) AND (date("H", $dienstData['start']) > 5 AND date("H", $dienstData['eind']) < 17)) {
 			# Nieuw mail-object aanmaken
 			unset($param);
 		
