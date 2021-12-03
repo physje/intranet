@@ -345,6 +345,8 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 			setDeclaratieStatus(7, $row[$EBDeclaratieID], $data['user']);
 			setDeclaratieActionDate($_REQUEST['key']);
 			
+			toLog('info', $_SESSION['ID'], $data['user'], "Declaratie afgekeurd [". $_REQUEST['key'] ."]");
+			
 			$page[] = "Declaratie is gemarkeerd als verwijderd. Neem contact op met de webmaster mocht dit onjuist zijn.<br>";
 			$page[] = "<br>Ga terug naar <a href='". $_SERVER['PHP_SELF']."'>het overzicht</a>.";			
 		} else {
