@@ -16,6 +16,8 @@ $result	= mysqli_query($db, $sql);
 
 if($row = mysqli_fetch_array($result)) {
 	do {
+		unset($param);
+		
 		$indiener 	= $row[$EBDeclaratieIndiener];
 		$uniqueKey	= $row[$EBDeclaratieHash];
 		$cluster		= $row[$EBDeclaratieCluster];
@@ -64,18 +66,18 @@ if($row = mysqli_fetch_array($result)) {
 		if(!sendMail_new($param)) {
 			if($status == 3) {
 				toLog('error', '', $cluco, "Problemen met versturen reminder-mail aan cluco (". makeName($cluco, 5).") voor [$uniqueKey]");
-				$page[] = "Er zijn problemen met het versturen van de reminder-mail naar de clustercoordinator.";
+				$page[] = "Er zijn problemen met het versturen van de reminder-mail naar de clustercoordinator.<br>";
 			} else {
 				toLog('error', '', '', "Problemen met versturen reminder-mail aan penningmeester voor [$uniqueKey]");
-				$page[] = "Er zijn problemen met het versturen van de reminder-mail naar de penningmeester.";
+				$page[] = "Er zijn problemen met het versturen van de reminder-mail naar de penningmeester.<br>";
 			}
 		} else {
 			if($status == 3) {
 				toLog('info', '', $cluco, "Reminder-mail aan cluco (". makeName($cluco, 5).") gestuurd voor [$uniqueKey]");
-				$page[] = "Reminder-mail aan cluco (". makeName($cluco, 5).") verstuurd";
+				$page[] = "Reminder-mail aan cluco (". makeName($cluco, 5).") verstuurd<br>";
 			} else {
 				toLog('info', '', '', "Reminder-mail aan penningmeester gestuurd voor [$uniqueKey]");
-				$page[] = "Reminder-mail aan penningmeester verstuurd";
+				$page[] = "Reminder-mail aan penningmeester verstuurd<br>";
 			}
 		}		
 	} while($row = mysqli_fetch_array($result));
