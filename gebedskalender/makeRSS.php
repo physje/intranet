@@ -86,4 +86,6 @@ for($ronde=0;$ronde<3;$ronde++) {
 	$fp = fopen($filename, 'w+');
 	fwrite($fp, implode("", $rss));
 	fclose($fp);
+	
+	toLog('debug', '', '', 'Gebedskalender RSS aangemaakt');
 }

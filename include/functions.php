@@ -192,7 +192,8 @@ function getKerkdienstDetails($id) {
 			$data['voorganger']			= trim($data['voorganger']);
 		} else {
 			$data['voorganger_id']	= $voorganger;
-			$data['voorganger']			= 'onbekend';
+			#$data['voorganger']			= 'onbekend';
+			$data['voorganger']			= '';
 		}
 				
 		$data['ruiling']				= $row[$DienstRuiling];

@@ -180,4 +180,6 @@ echo $ScriptURL.$file_name .'<br>';
 
 //echo implode("\r\n", $ics);
 
+toLog('debug', '', '', 'Agenda export voor Scipio aangemaakt');
+
 ?>

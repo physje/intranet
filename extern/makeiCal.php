@@ -121,7 +121,9 @@ foreach($ids as $id) {
 	fwrite($file, implode("\r\n", $ics));
 	fwrite($file, "\r\n");
 	fwrite($file, implode("\r\n", $footer));
-	fclose ($file);	
+	fclose ($file);
+	
+	toLog('debug', '', $id, 'Persoonlijke agenda geexporteerd');
 }
 
 ?>
