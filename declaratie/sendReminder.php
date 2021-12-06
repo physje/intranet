@@ -17,6 +17,7 @@ $result	= mysqli_query($db, $sql);
 if($row = mysqli_fetch_array($result)) {
 	do {
 		unset($param);
+		$reminderMail = array();
 		
 		$indiener 	= $row[$EBDeclaratieIndiener];
 		$uniqueKey	= $row[$EBDeclaratieHash];
