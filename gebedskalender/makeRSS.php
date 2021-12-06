@@ -87,5 +87,5 @@ for($ronde=0;$ronde<3;$ronde++) {
 	fwrite($fp, implode("", $rss));
 	fclose($fp);
 	
-	toLog('debug', '', '', 'Gebedskalender RSS aangemaakt');
+	toLog('debug', '', '', "RSS gebedskalender $filename aangemaakt, van ". time2str('%e %B', $start).($start != $eind ? " tot ". time2str('%e %B', $eind) : ''));
 }
