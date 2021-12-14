@@ -27,11 +27,15 @@ do {
 	$geslacht = $data['geslacht'];
 	
 	# Bereken leeftijd
-	$offset = 0;
-	if((date("n") < $data['maand']) OR (date("n") == $data['maand'] AND date("j") < $data['dag'])) {
-		$offset = 1;
-	}		
-	$leeftijd = (date("Y")-$data['jaar'])-$offset;
+	if($data['maand'] > 0 AND $data['dag'] > 0) {
+		$offset = 0;
+		if((date("n") < $data['maand']) OR (date("n") == $data['maand'] AND date("j") < $data['dag'])) {
+			$offset = 1;
+		}
+		$leeftijd = (date("Y")-$data['jaar'])-$offset;
+	} else {
+		$leeftijd = 0;
+	}
 			
 	# Van elke persoon vraag ik op of die al voorkomt in mijn lokale mailchimp-database.
 	# 	dat is iets sneller dan aan mailchimp vragen of die al voorkomt én
