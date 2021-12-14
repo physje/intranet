@@ -25,6 +25,19 @@ do {
 	$relatie = $data['relatie'];
 	$status = $data['belijdenis'];
 	$geslacht = $data['geslacht'];
+	
+	$offset = 0;
+	if(date("n") < $data['maand']) {
+		$offset = -1;
+	} elseif(date("n") == $data['maand']) {
+		if(date("j") < $data['dag']) {
+			$offset = -1;
+		} else {
+			$offset = 0;
+		}
+	}
+		
+	$leeftijd = (date("Y")-$data['jaar'])+$offset;
 			
 	# Van elke persoon vraag ik op of die al voorkomt in mijn lokale mailchimp-database.
 	# 	dat is iets sneller dan aan mailchimp vragen of die al voorkomt én
@@ -152,7 +165,8 @@ do {
 					toLog('error', '', $scipioID, 'Kon niet opnieuw inschrijven in MailChimp [S]');
 				}
 			}
-													
+			
+			
 			# Gewijzigd mailadres
 			if($email != $data['mail']) {
 				if(mc_changemail($email, $data['mail'])) {
@@ -166,7 +180,8 @@ do {
 					toLog('error', '', $scipioID, 'Mailadres gewijzigd naar niet gesynced naar MailChimp');
 				}						
 			}
-		
+			
+			
 			# Gewijzigde naam
 			if($row_mc[$MCfname] != $data['voornaam'] OR urldecode($row_mc[$MCtname]) != $data['tussenvoegsel'] OR $row_mc[$MClname] != $data['achternaam']) {
 				if(mc_changename($email, $data['voornaam'], $data['tussenvoegsel'], $data['achternaam'])) {
@@ -178,7 +193,8 @@ do {
 					toLog('error', '', $scipioID, 'Naam gewijzigd maar niet gesynced naar MailChimp');
 				}
 			}
-		
+			
+						
 			# Gewijzigde wijk
 			if($row_mc[$MCwijk] != $wijk) {
 				$oudeWijk = $row_mc[$MCwijk];			
@@ -189,7 +205,8 @@ do {
 					toLog('error', '', $scipioID, "Wijk gewijzigd ($oudeWijk -> $wijk) maar niet gesynced naar MailChimp");
 				}
 			}
-		
+			
+			
 			# Gewijzigde kerkelijke status
 			if($row_mc[$MCdoop] != $status) {
 				$oudeStatus = $row_mc[$MCdoop];			
@@ -200,7 +217,8 @@ do {
 					toLog('error', '', $scipioID, "Kerkelijke status gewijzigd ($oudeStatus -> $status) maar niet gesynced naar MailChimp");
 				}			
 			}
-		
+						
+			
 			# Gewijzigde kerkelijke relatie
 			if($row_mc[$MCrelatie] != $relatie) {
 				$oudeRelatie = $row_mc[$MCrelatie];						
@@ -211,10 +229,7 @@ do {
 					toLog('error', '', $scipioID, "Kerkelijke relatie gewijzigd (". $row_mc[$MCrelatie] ." -> $relatie) maar niet gesynced naar MailChimp");
 				}
 			}
-			
-			
-			
-			
+						
 			
 			# Gewijzigd geslacht
 			if($row_mc[$MCgeslacht] != $geslacht) {
@@ -225,12 +240,14 @@ do {
 				} else {
 					toLog('error', '', $scipioID, "Geslacht gewijzigd (". $row_mc[$MCgeslacht] ." -> $geslacht) maar niet gesynced naar MailChimp");
 				}
-			}			
+			}
 			
 			
-			
-			
-			
+			# Tijdelijke tag voor 16+
+			if($row_mc[$MCtempTag] == 0 AND $leeftijd > 16) {
+				mc_addtag($email, $tempTag)
+				$sql_update[] = "$MCtempTag = 1";
+			}
 		}
 		
 		# De wijzigingen aan de MC kant moeten ook verwerkt worden in mijn lokale mailchimp-database

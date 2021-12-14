@@ -106,9 +106,13 @@ foreach($roosters as $rooster) {
 					# geadresseerden
 					$beheerders = array();
 					$beheerders = getGroupMembers($roosterData['beheerder']);
-					//$beheerders[] = 984285;
+					
+					foreach($beheerders as $lid => $dummy)	$namenBeheerders[$lid] = makeName($lid, 1);
+					
       	
 					foreach($beheerders as $beheerder) {
+						$andereOntvangers = excludeID($namenBeheerders, $beheerder);
+						
 						# Mail opstellen
 						$alert = array();
 						$alert[] = "Goedemorgen ". makeName($beheerder, 1) .",";
@@ -140,6 +144,8 @@ foreach($roosters as $rooster) {
 						$alert[] = "";
 						$alert[] = "Groet,";
 						$alert[] = "Matthijs";
+						$alert[] = "";
+						$alert[] = (count($andereOntvangers) > 0 ? "Deze mail is ook naar ". makeOpsomming($andereOntvangers) .' gestuurd.' : '');
 						//$alert[] = "";
 						$alert[] = "<!-- lastDienst: ". date('d-m-Y', $row_last['lastDienst']). "; firstMissed: ". date('d-m-Y', $firstMissed['start']). "; deadline: ". date('d-m-Y', $deadline) ." -->";
 						$alert[] = "<!-- ". ($verlopen ? 'verlopen' : 'niet verlopen') . "; ". ($lastWarning ? 'laatste waarschuwing' : 'nog geen laatste waarschuwing') ." -->";
