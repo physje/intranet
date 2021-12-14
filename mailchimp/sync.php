@@ -26,18 +26,12 @@ do {
 	$status = $data['belijdenis'];
 	$geslacht = $data['geslacht'];
 	
+	# Bereken leeftijd
 	$offset = 0;
-	if(date("n") < $data['maand']) {
-		$offset = -1;
-	} elseif(date("n") == $data['maand']) {
-		if(date("j") < $data['dag']) {
-			$offset = -1;
-		} else {
-			$offset = 0;
-		}
-	}
-		
-	$leeftijd = (date("Y")-$data['jaar'])+$offset;
+	if((date("n") < $data['maand']) OR (date("n") == $data['maand'] AND date("j") < $data['dag'])) {
+		$offset = 1;
+	}		
+	$leeftijd = (date("Y")-$data['jaar'])-$offset;
 			
 	# Van elke persoon vraag ik op of die al voorkomt in mijn lokale mailchimp-database.
 	# 	dat is iets sneller dan aan mailchimp vragen of die al voorkomt én
@@ -60,6 +54,13 @@ do {
 			toLog('debug', '', $scipioID, 'Geslacht gesynced naar MailChimp');
 		} else {
 			toLog('error', '', $scipioID, 'Kon geslacht niet syncen naar MailChimp');
+		}
+		
+		# + leeftijd toevoegen
+		if(mc_changeLeeftijd($data['mail'], $leeftijd)) {
+			toLog('debug', '', $scipioID, 'Leeftijd gesynced naar MailChimp');
+		} else {
+			toLog('error', '', $scipioID, 'Kon leeftijd niet syncen naar MailChimp');
 		}
 		
 		# + tag van de juiste wijk eraan
@@ -132,9 +133,9 @@ do {
 		} else {
 			toLog('error', '', $scipioID, 'Kon kerkelijke status niet syncen naar MailChimp');
 		}
-		
+				
 		# De wijzigingen aan de MC kant moeten ook verwerkt worden in mijn lokale mailchimp-database
-		$sql_mc_insert = "INSERT INTO $TableMC ($MCID, $MCgeslacht, $MCmail, $MCfname, $MCtname, $MClname, $MCwijk, $MCstatus, $MCrelatie, $MCdoop, $MClastChecked, $MClastSeen) VALUES ($scipioID, '". $data['geslacht'] ."', '". $data['mail'] ."', '". $data['voornaam'] ."', '". urlencode($data['tussenvoegsel']) ."', '". $data['achternaam'] ."', '$wijk', 'subscribed', '$relatie', '". $data['belijdenis'] ."', ". time() .", ". time() .")";
+		$sql_mc_insert = "INSERT INTO $TableMC ($MCID, $MCgeslacht, $MCmail, $MCfname, $MCtname, $MClname, $MCwijk, $MCstatus, $MCrelatie, $MCdoop, $MCleeftijd, $MClastChecked, $MClastSeen) VALUES ($scipioID, '". $data['geslacht'] ."', '". $data['mail'] ."', '". $data['voornaam'] ."', '". urlencode($data['tussenvoegsel']) ."', '". $data['achternaam'] ."', '$wijk', 'subscribed', '$relatie', '". $data['belijdenis'] ."', $leeftijd, ". time() .", ". time() .")";
 		if(mysqli_query($db, $sql_mc_insert)) {
 			toLog('debug', '', $scipioID, 'Mailchimp-data na sync toegevoegd in lokale MC-tabel');
 		} else {
@@ -243,10 +244,14 @@ do {
 			}
 			
 			
-			# Tijdelijke tag voor 16+
-			if($row_mc[$MCtempTag] == 0 AND $leeftijd > 16) {
-				mc_addtag($email, $tempTag)
-				$sql_update[] = "$MCtempTag = 1";
+			# Gewijzigde leeftijd
+			if($row_mc[$MCleeftijd] != $leeftijd) {
+				if(mc_changeLeeftijd($email, $leeftijd)) {
+					toLog('debug', '', $scipioID, "Leeftijd gewijzigd (". $row_mc[$MCleeftijd] ." -> $leeftijd) dus gesynced naar MailChimp");
+					$sql_update[] = "$MCleeftijd = $leeftijd";
+				} else {
+					toLog('error', '', $scipioID, "Leeftijd gewijzigd (". $row_mc[$MCleeftijd] ." -> $leeftijd) maar niet gesynced naar MailChimp");
+				}				
 			}
 		}
 		

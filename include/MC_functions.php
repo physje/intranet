@@ -214,6 +214,22 @@ function mc_addHash($email, $hash) {
 }
 
 
+function mc_changeLeeftijd($email, $leeftijd) {
+	global $MC_listid, $MC_server;
+	
+	$userid = md5( strtolower( $email ) );
+	$data = array(
+		'merge_fields'  => array(
+			'LEEFTIJD' => $leeftijd
+			)
+		);
+	$json_data = json_encode($data);
+	
+	$url = 'https://'.$MC_server.'api.mailchimp.com/3.0/lists/'.$MC_listid.'/members/' . $userid;
+	return mc_connect($url, $json_data, 'patch');
+}
+
+
 
 function mc_getData($email) {
 	global $MC_listid, $MC_server;

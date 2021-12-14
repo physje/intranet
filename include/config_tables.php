@@ -167,6 +167,7 @@ $MCstatus											= "status";
 $MCrelatie										= "relatie";
 $MCdoop												= "doop";
 $MCtempTag										= "tempTag";
+$MCleeftijd										= "leeftijd";
 $MClastSeen										= "last_seen";
 $MClastChecked								= "last_checked";
                     					
