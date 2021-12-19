@@ -22,37 +22,27 @@ if(isset($_POST['save']) OR isset($_POST['maanden'])) {
 		$sql = "UPDATE $TableDiensten SET ". implode(', ', $set)." WHERE $DienstID = ". $dienst;		
 			
 		if(mysqli_query($db, $sql)) {
-			if($oldData['collecte_1'] != '' AND $oldData['collecte_1'] != $collectes[1]) {
-				$bericht[] = '1ste collecte van '. date('d-m-y', $oldData['start']).' is gewijzigd van <i>'. $oldData['collecte_1'] .'</i> naar <i>'. $collectes[1] .'</i>';
+			if($oldData['collecte_1'] != $collectes[1]) {
+				if($oldData['collecte_1'] != '') {
+					$bericht[] = '1ste collecte van '. date('d-m-y', $oldData['start']).' is gewijzigd van <i>'. $oldData['collecte_1'] .'</i> naar <i>'. $collectes[1] .'</i>';
+				} else {
+					$bericht[] = '<i>'. $collectes[1] .'</i> is als 1ste collecte van '. date('d-m-y', $oldData['start']).' toegevoegd.';
+				}
 			}
 			
-			if($oldData['collecte_2'] != '' AND $oldData['collecte_2'] != $collectes[2]) {
-				$bericht[] = '2de collecte van '. date('d-m-y', $oldData['start']).' is gewijzigd van <i>'. $oldData['collecte_2'] .'</i> naar <i>'. $collectes[2] .'</i>';
+			if($oldData['collecte_2'] != $collectes[2]) {
+				if($oldData['collecte_2'] != '') {
+					$bericht[] = '2de collecte van '. date('d-m-y', $oldData['start']).' is gewijzigd van <i>'. $oldData['collecte_2'] .'</i> naar <i>'. $collectes[2] .'</i>';
+				} else {
+					$bericht[] = '<i>'. $collectes[2] .'</i> is als 2de collecte van '. date('d-m-y', $oldData['start']).' toegevoegd.';
+				}
 			}
+		} else {
+			toLog('error', $_SESSION['ID'], '', 'Collectes van '. date('d-m-y', $oldData['start']) .' konden niet worden opgeslagen');
 		}
 	}
 	
 	if(isset($bericht)){
-		/*
-		$HTMLMail = $MailHeader.implode('<br>', $bericht).$MailFooter;
-				
-		$mail = new PHPMailer;
-	
-		$mail->From     = $ScriptMailAdress;
-		$mail->FromName = $ScriptTitle;
-		$mail->AddAddress('scipiobeheer@koningskerkdeventer.nl', 'Scipio beheer');
-	
-		$mail->Subject	= $SubjectPrefix . count($bericht).' '.(count($bericht) > 1 ? 'gewijzigde collectedoelen' : 'gewijzigd collectedoel');
-		$mail->IsHTML(true);
-		$mail->Body			= $HTMLMail;
-		
-		if(!$mail->Send()) {
-			toLog('error', $_SESSION['ID'], '', 'Kon geen mail sturen naar Scipio-beheer voor gewijzigde collectes');
-		} else {
-			toLog('debug', $_SESSION['ID'], '', 'Mail gestuurd naar Scipio-beheer voor gewijzigde collectes');
-		}
-		*/		
-		
 		$param['to'][] = array('scipiobeheer@koningskerkdeventer.nl', 'Scipio beheer');
 		$param['subject'] = count($bericht).' '.(count($bericht) > 1 ? 'gewijzigde collectedoelen' : 'gewijzigd collectedoel');
 		$param['message'] = implode('<br>', $bericht);
@@ -62,10 +52,7 @@ if(isset($_POST['save']) OR isset($_POST['maanden'])) {
 		} else {
 			toLog('debug', $_SESSION['ID'], '', 'Mail gestuurd naar Scipio-beheer voor gewijzigde collectes');
 		}		
-	}
-	
-	
-	
+	}	
 	toLog('info', $_SESSION['ID'], '', 'Collectes bijgewerkt');
 }
 
