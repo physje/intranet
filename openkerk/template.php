@@ -43,10 +43,10 @@ if(isset($_POST['save'])) {
 			$nieuweDag	= mktime(0,0,0,date('n', $start),(date('j', $start)+$offset));
 			$week				= fmod(strftime('%W', $nieuweDag), 2);
 			$dag				= strftime('%w', $nieuweDag);
-			
+						
 			for($uur=$minUur; $uur < $maxUur ; $uur++) {
-				$tijdstip = mktime($uur,0,0,date('n', $nieuweDag),date('j', $nieuweDag));
-				
+				$tijdstip = mktime($uur,0,0,date('n', $nieuweDag),date('j', $nieuweDag), date('Y', $nieuweDag));
+												
 				$vulling = getOpenKerkVulling($week, $dag, $uur);
 				
 				foreach($vulling as $pos => $persoon) {

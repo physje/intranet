@@ -1027,7 +1027,8 @@ function sendMail_new($parameter) {
 			}
 		}
 	} else {
-		echo $HTMLMail;		
+		foreach($parameter as $key => $value) echo $key .' -> '. $value .'<br>';
+		# echo $HTMLMail;		
 		return true;
 	}	
 }
@@ -1654,6 +1655,7 @@ function setDeclaratieStatus($status, $declaratie, $lid) {
 	$descr[5] = 'afgerond';						# Door Penningmeester
 	$descr[6] = 'afgekeurd';					# Door Cluco
 	$descr[7] = 'verwijderd';					# Door Penningmeester
+	$descr[8] = 'investering';				# Door Penningmeester	
 	
 	$sql = "UPDATE $TableEBDeclaratie SET $EBDeclaratieStatus = $status WHERE $EBDeclaratieID = $declaratie";
 		
