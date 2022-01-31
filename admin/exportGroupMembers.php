@@ -123,6 +123,48 @@ if(isset($_REQUEST['type']) AND $_REQUEST['type'] == 'google') {
 		
 		$output .= implode(";", $veld)."\n";
 	}
+} elseif(isset($_REQUEST['type']) AND $_REQUEST['type'] == 'outlook') {
+	$kop[] = 'First Name';
+	$kop[] = 'Middle Name';
+	$kop[] = 'Last Name';
+	$kop[] = 'E-mail Address';
+	$kop[] = 'E-mail 2 Address';
+	$kop[] = 'Home Phone';
+	$kop[] = 'Mobile Phone';
+	$kop[] = 'Home Street';
+	$kop[] = 'Home City';
+	$kop[] = 'Home Postal Code';
+	$kop[] = 'Birthday';
+	$kop[] = 'Notes';
+	
+	$output  = implode(",", $kop)."\n";
+	
+	foreach($leden as $lid) {
+	 	$data = getMemberDetails($lid);
+	 	
+	 	$veld = array();
+		$veld[] = $data['voornaam'];
+		$veld[] = $data['tussenvoegsel'];
+		$veld[] = $data['achternaam'];
+		$veld[] = $data['mail'];
+		$veld[] = $data['form_mail'];
+		
+		if(substr($data['tel'], 0, 2) == '06') {
+			$veld[] = '';
+			$veld[] = $data['tel'];
+		} else {
+			$veld[] = $data['tel'];
+			$veld[] = '';
+		}
+				
+		$veld[] = trim($data['straat'].' '.$data['huisnummer'].' '.$data['huisletter'].' '.$data['toevoeging']);
+		$veld[] = $data['plaats'];
+		$veld[] = $data['PC'];
+		$veld[] = $data['dag'].'-'.$data['maand'].'-'.$data['jaar'];
+		$veld[] = '';
+	 		 	
+	 	$output .= implode(",", $veld)."\n";	 	
+	}	
 } else {
 	$kop[] = 'Voornaam';
 	$kop[] = 'Achternaam';
@@ -143,14 +185,8 @@ if(isset($_REQUEST['type']) AND $_REQUEST['type'] == 'google') {
 		$veld[] = $data['tussenvoegsel'];
 		$veld[] = $data['voorletters'];
 		$veld[] = $data['meisjesnaam'];
-	 	
-	 	if($data['prive_mail'] == '') {
-			$veld[] = $data['fam_mail'];
-			$veld[] = '';
-		} else {
-			$veld[] = $data['prive_mail'];
-			$veld[] = $data['fam_mail'];
-		}
+		$veld[] = $data['mail'];
+		$veld[] = '';
 		
 		$output .= implode(";", $veld)."\n";	 	
 	}

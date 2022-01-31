@@ -11,6 +11,7 @@ include($cfgProgDir. "secure.php");
 
 $leden = getGroupMembers(43);
 $namen = array_merge($leden, $extern);
+$blokGrootte = (31*24*60*60);
 
 if(isset($_POST['save'])) {
 	# Doorloop alle tijden
@@ -20,11 +21,15 @@ if(isset($_POST['save'])) {
 		foreach($sub as $uur => $sub2) {
 			foreach($sub2 as $pos => $persoon) {
 				$sql_delete = "DELETE FROM $TableOpenKerkRooster WHERE $OKRoosterTijd = $datum AND $OKRoosterPos = $pos";
-				mysqli_query($db, $sql_delete);
+				if(!mysqli_query($db, $sql_delete)) {
+				    echo $sql_delete .'<br>';
+				}
 				
 				if($persoon != '') {
 					$sql_insert = "INSERT INTO $TableOpenKerkRooster ($OKRoosterTijd, $OKRoosterPos, $OKRoosterPersoon) VALUES ('$datum', '$pos', '$persoon')";
-					mysqli_query($db, $sql_insert);
+					if(!mysqli_query($db, $sql_insert)) {
+					    echo $sql_delete .'<br>';
+					}
 				}
 			}
 		}
@@ -54,12 +59,26 @@ if(isset($_POST['save'])) {
 	$text[] = '<i>Wijzigingen in het rooster zijn opgeslagen</i>';
 }
 
-$sql		= "SELECT * FROM $TableOpenKerkRooster WHERE $OKRoosterTijd > ". time() ." ORDER BY $OKRoosterTijd DESC";
+if(isset($_POST['start'])) {
+	$start = $_POST['start'];
+} else {
+	$start = time();
+}
+
+if(isset($_POST['next_week'])) {
+	$start = ($start + $blokGrootte);
+}
+
+$einde = $start + $blokGrootte;
+
+//$sql		= "SELECT * FROM $TableOpenKerkRooster WHERE $OKRoosterTijd > ". time() ." ORDER BY $OKRoosterTijd DESC";
+$sql		= "SELECT * FROM $TableOpenKerkRooster WHERE $OKRoosterTijd BETWEEN ". $start ." AND ". $einde ." ORDER BY $OKRoosterTijd DESC";
 $result = mysqli_query($db, $sql);
 $row		= mysqli_fetch_array($result);
 $lastDag	= $row[$OKRoosterTijd];
 
 $text[] = "<form action='". htmlspecialchars($_SERVER['PHP_SELF']) ."' method='post'>";
+$text[] = "<input type='hidden' name='start' value='$start'>";
 $text[] = "<table>";
 $text[] = "<tr>";
 $text[] = "		<td colspan='2'>&nbsp;</td>";
@@ -67,7 +86,7 @@ $text[] = "		<td>Opmerkingen</td>";
 $text[] = "</tr>";
 
 $dag = 0;
-$datum = time();
+$datum = $start;
 
 # Een keer alle namen ophalen en in een array zetten zodat dit later hergebruikt kan worden
 foreach($namen as $key => $value) {
@@ -80,7 +99,7 @@ foreach($namen as $key => $value) {
 
 while($datum < $lastDag) {
 	for($uur=$minUur; $uur < $maxUur ; $uur++) {
-		$datum = mktime($uur, 0, 0, date('n'), (date('j')+$dag));
+		$datum = mktime($uur, 0, 0, date('n', $start), (date('j', $start)+$dag));
 		$weekdag = date('w', $datum);
 		
 		if(($minDag <= $weekdag) AND ($weekdag <= $maxDag)) {
@@ -115,9 +134,13 @@ while($datum < $lastDag) {
 	$dag++;
 }
 
-
 $text[] = "	<tr>";
-$text[] = "		<td colspan='3'><input type='submit' name='save' value='Opslaan'></td>";
+$text[] = "		<td colspan='3'>&nbsp;</td>";
+$text[] = "	</tr>";
+$text[] = "	<tr>";
+$text[] = "		<td><input type='submit' name='save' value='Opslaan'></td>";
+$text[] = "		<td>&nbsp;</td>";
+$text[] = "		<td><input type='submit' name='next_week' value='Toon volgende periode'></td>";
 $text[] = "	</tr>";
 $text[] = "</table>";
 $text[] = "</form>";

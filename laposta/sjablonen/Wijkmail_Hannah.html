@@ -1,0 +1,2723 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<head><link rel="shortcut icon" href="/img/icons/favicon.ico" /><meta property="og:url" content="https://koningskerkdeventer.email-provider.nl/web/squjrcacva/hq1tcaireo"><meta property="og:type" content="website"><meta property="og:title" content="Test sjabloon"><meta property="og:description" content="Test sjabloon"><meta property="og:image" content="https://app.laposta.nl/clients/images/screenshots/msCO7ZOdmS.2.png"><meta property="og:image:width" content="226"><meta property="og:image:height" content="268">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Test sjabloon</title>
+<style type="text/css">
+
+	/*************************/
+	/*** fix email clients ***/
+	/*************************/
+	img{-ms-interpolation-mode:bicubic;}
+
+	/********************/
+	/*** reset styles ***/
+	/********************/
+	body{margin:0;padding:0;}
+	img{border:0;line-height:100%;outline:none;text-decoration:none;display:block;}
+	table{border-collapse:collapse !important;}
+	table th {margin:0 !important;vertical-align:top;font-weight:normal;}
+	body{height:100% !important;margin:0 !important;padding:0 !important;}
+	p{margin:0;padding:0;margin-bottom:0;}
+	h1,h2,h3,h4,h5,h6{line-height:1.4em;font-weight:bold;font-style:normal;margin:0} 
+
+	/****************/
+	/*** defaults ***/
+	/****************/
+	h1 { font-size: 2em; }
+	h2 { font-size: 1.7em; }
+	h3 { font-size: 1.4em; }
+	h4 { font-size: 1em; }
+	hr { border: 0; color: #333333; background-color: #333333; height: 1px; }
+	ul, ol { margin: 0; padding: 0 }
+	ul { list-style-type: disc; list-style-position: outside; padding-left: 20px; }
+	ol { list-style-type: decimal; list-style-position: outside; padding-left: 20px; }
+	ul ul, ol ul { list-style-type: circle; list-style-position: inside; margin-left: 16px; }
+	ol ol, ul ol { list-style-type: lower-latin; list-style-position: inside; margin-left: 16px; }
+
+	/* add some spacing for Gmail: set minimum width for outer table */
+	.wrapper-td, .columns-wrapper-td {
+		padding: 0 20px;
+	}
+
+	/* but not for blocks inside columns */
+	.columns-wrapper-td .wrapper-td {
+		padding: 0;
+	}
+
+	/* prevent unnecessary vertical width in Outlook 07/10/13 */
+	.image-td, .video-td {
+		height: 1px;
+		line-height: 100%;
+	}
+
+	/* keep bullets outside image padding */
+	.textimage-table ul, .textimage-table ol {
+		overflow: hidden;
+	}
+
+	/* follow block */
+	.follow-td .text-td a {
+		text-decoration: none !important;
+		/* prevent wrapping in ios */
+		word-break: keep-all;
+	}
+
+	.follow-td .spacer-text-td {
+		font-size: 0;
+		line-height: 0;
+	}
+
+	/* share block */
+	.share-td .text-td a {
+		text-decoration: none !important;
+		/* prevent wrapping in ios */
+		word-break: keep-all;
+	}
+
+	.share-td .spacer-text-td {
+		font-size: 0;
+		line-height: 0;
+	}
+
+	/* follow & share spacers */
+	.spacer-h-td {
+		padding-top: 0 !important;
+		padding-bottom: 0 !important;
+	}
+
+	.spacer-v-td {
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+	}
+
+	/* buttons */
+	.button-td a {
+		display: inline-block;
+		text-decoration: none;
+		line-height: 125% !important;
+		text-align: center !important;
+	}
+
+	/*****************/
+	/* be responsive */
+	/*****************/
+	@media screen and (max-width: 600px) {
+
+		body,table,td,a{-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;}
+
+		/* reset Gmail padding */
+		.wrapper-td, .columns-wrapper-td {
+			padding: 0 !important;
+		}
+
+		/* remove bottom padding */
+		td.pad-top-td {
+			padding: 0 !important;
+		}
+
+		/* remove bottom padding */
+		td.pad-bottom-td {
+			padding: 0 !important;
+		}
+
+		/* add small padding to show background */
+		#body-div {
+			padding: 10px 10px !important;
+		}
+
+		/* set content at full width */
+		table.content-table {
+			width: 100% !important;
+		}
+
+		table.columns-content-table {
+			width: 100% !important;
+		}
+
+		table.border-table {
+			width: 100% !important;
+		}
+
+		table.columns-border-table {
+			width: 100% !important;
+		}
+
+		/* correct mobile gmail hack */
+		td.content-td {
+			min-width: 0 !important;
+			padding: 0 !important;
+		}
+
+		/* fixed padding for almost all content blocks */
+		/* not touched: divider, code */
+		.text-table .inner-content-td {
+			padding: 16px 16px !important;
+		}
+
+		.title-table .inner-content-td {
+			padding: 10px 16px 10px 16px !important;
+		}
+
+		.textimage-table .inner-content-td {
+			padding: 16px 16px !important;
+		}
+
+		.video-table .inner-content-td {
+			padding: 16px 16px !important;
+		}
+
+		.button-table .inner-content-td {
+			padding: 16px 16px !important;
+		}
+
+		.follow-table .inner-content-td {
+			padding: 16px 16px !important;
+		}
+
+		.share-table .inner-content-td {
+			padding: 16px 16px !important;
+		}
+
+		/* default image padding */
+		.image-table .inner-content-td {
+			padding: 16px 16px !important;
+		}
+
+		/* full width for full width images (if no horizontal padding) */
+		.image-table.full-width .inner-content-td {
+			padding: 0 !important;
+		}
+
+		/* less width for square images */
+		.image-table.square .inner-content-td {
+			padding: 16px 48px !important;
+		}
+
+		/* even less width for vertical images */
+		.image-table.vertical .inner-content-td {
+			padding: 16px 64px !important;
+		}
+
+		/* stack columns */
+		table.columns-content-table {
+			width: 100% !important;
+		}
+
+		td.columns-inner-content-td th {
+			display: block !important;
+			width: 100% !important;
+		}
+
+		td.columns-inner-content-td th.col-spacer-td {
+			display: none;
+		}
+
+		/* control vertical padding for columns */
+		td.columns-content-td {
+			padding: 0 !important;
+		}
+
+		td.columns-inner-content-td {
+			padding: 4px 0 !important;
+		}
+
+		td.columns-inner-content-td th {
+			padding: 0 !important;
+		}
+
+		/* images full width */
+		td.image-td img {
+			width: 100% !important;
+			height: auto !important;
+		}
+
+		/* vertical spacing for images in textimage block */
+		table.textimage-table .image-td {
+			padding: 6px 0 16px 0 !important;
+		}
+
+		/* video preview full width */
+		td.video-td img {
+			width: 100% !important;
+			height: auto !important;
+		}
+
+		/* buttons full width */
+		table.button-c2-table {
+			width: 100% !important;
+		}
+
+		td.button-td a {
+			display: block !important;
+		}
+
+		/* textimage images full width */
+		table.image-table {
+			width: 100% !important;
+		}
+
+		table.image-table .spacer-td {
+			padding: 0 !important;
+		}
+
+		/* follow items */
+		td.follow-td .icon-td img {
+			min-width: 40px;
+			max-width: 60px;
+		}
+
+		td.follow-td .text-td a {
+			font-size: 12px !important;
+		}
+
+		td.follow-td .spacer-text-td {
+			padding: 0 !important;
+		}
+
+		td.follow-td .spacer-item-td {
+			padding: 12px !important;
+		}
+
+		td.follow-td .item-table {
+			width: 1px;
+		}
+
+		/* share items */
+		td.share-td .icon-td img {
+			min-width: 40px;
+			max-width: 60px;
+		}
+
+		td.share-td .text-td a {
+			font-size: 12px !important;
+		}
+
+		td.share-td .spacer-text-td {
+			padding: 0 !important;
+		}
+
+		td.share-td .spacer-item-td {
+			padding: 12px !important;
+		}
+
+		td.share-td .item-table {
+			width: 1px;
+		}
+	
+		/*** global text settings ***/
+
+		/* all text */
+		body, td, div {
+			font-size: 18px !important;
+			line-height: 24px !important;
+		}
+
+		/* titles  */
+		td.title-td {
+			font-size: 34px !important;
+			line-height: 42px !important;
+			padding: 0 !important;
+		}
+
+		/* text */
+		td.text-td {
+			font-size: 18px !important;
+			line-height: 24px !important;
+		}
+
+		div.text-div {
+			font-size: 18px !important;
+			line-height: 24px !important;
+		}
+
+		/* titles inside text */
+		.text-table .title-td {
+			font-size: 26px !important;
+			line-height: 34px !important;
+		}
+
+		/*** per block settings ***/
+
+		/* hide preheader, keep border */
+		table.preheader-table .content-table {
+			display: none !important;
+		}
+
+		/* postfooter */
+		table.postfooter-table .text-td {
+			text-align: left !important;
+			font-size: 14px !important;
+			line-height: 20px !important;
+		}
+
+		/* marketing */
+		table.marketing-table .inner-content-td {
+			padding: 10px 0 !important;
+		}
+
+		table.marketing-table .text-td {
+			padding: 20px 20px !important;
+			text-align: left !important;
+			font-size: 16px !important;
+			line-height: 20px !important;
+		}
+
+		table.marketing-table .bull {
+			display: none;
+		}
+
+		table.marketing-table .line {
+			display: block;
+			padding-bottom: 16px;
+		}
+
+		table.marketing-border-table {
+			width: 100% !important;
+		}
+
+		/* misc */
+		.mobile-hide {
+			display: none;
+		}
+	}
+</style>
+<!--[if gte mso 9]>
+<style>
+ul, ol {
+   margin: 0 0 0 24px !important;
+   padding: 0 !important;
+   list-style-position: inside;
+}
+</style>
+<![endif]-->
+<!--[if gte mso 9]>
+<xml>
+  <o:OfficeDocumentSettings>
+    <o:AllowPNG/>
+    <o:PixelsPerInch>96</o:PixelsPerInch>
+ </o:OfficeDocumentSettings>
+</xml>
+<![endif]-->
+<style type="text/css">
+body {
+	background-color: #f0f0f0;
+}
+.pad-top-td {
+	padding-top: 20px;
+}
+.pad-bottom-td {
+	padding-bottom: 20px;
+}
+.content-td, .columns-content-td {
+	background-color: #ffffff;
+}
+body,td {
+	color: #000000;
+	font-family: "Trebuchet MS",Helvetica,sans-serif;
+	font-size: 14px;
+	font-weight: normal;
+	font-style: normal;
+	line-height: 200%;
+}
+
+/* [force] */
+.title-td,.text-td,.text-div,.button-td a {
+	color: #000000;
+	font-family: "Trebuchet MS",Helvetica,sans-serif;
+	font-size: 14px;
+	font-weight: normal;
+	font-style: normal;
+	line-height: 200%;
+}
+.inner-content-td {
+	text-align: left;
+}
+
+/* [force] */
+.title-td,.text-td,.text-div,.button-td a {
+	text-align: left;
+}
+body a {
+	color: #9e0091;
+	text-decoration: underline;
+}
+
+/* [force] */
+.title-td a,.text-td a,.text-div a,.button-td a a {
+	color: #9e0091;
+}
+
+/* columns */
+#lp-block-s6vdmpd2tx0vueqi97cx .columns-inner-content-td, #lp-block-s6vdmpd2tx0vueqi97cx .content-td {
+	background-color: #9b207d;
+}
+
+/* follow */
+#lp-block-cpqicwv3ytxg10k2us67 .icon-td {
+	width: 36px;
+}
+
+/* follow */
+#lp-block-cpqicwv3ytxg10k2us67 .spacer-h-td, #lp-block-cpqicwv3ytxg10k2us67 .spacer-v-td {
+	padding: 13px;
+}
+
+/* follow */
+#lp-block-cpqicwv3ytxg10k2us67 .spacer-text-td {
+	padding: 1px;
+}
+
+/* follow */
+#lp-block-cpqicwv3ytxg10k2us67 .text-td a {
+	color: #ffffff;
+	font-family: "Trebuchet MS",Helvetica,sans-serif;
+	font-size: 12px;
+	font-weight: normal;
+	font-style: normal;
+}
+
+/* follow */
+#lp-block-cpqicwv3ytxg10k2us67 .inner-content-td {
+	background-color: #a42179;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+/* title */
+#lp-block-plhvrxn1fc3tm1qs9rtp .title-td {
+	color: #8a1672;
+	font-size: 24px;
+	font-weight: bold;
+	line-height: 125%;
+}
+/* title */
+#lp-block-plhvrxn1fc3tm1qs9rtp .title-td a {
+	color: #8a1672;
+	text-decoration: none;
+}
+
+/* title */
+#lp-block-plhvrxn1fc3tm1qs9rtp .inner-content-td {
+	padding-top: 30px;
+	padding-bottom: 10px;
+	padding-left: 40px;
+	padding-right: 40px;
+}
+
+/* textimage */
+#lp-block-gx3tt3a52682696jprug .image-table {
+	width: 50px;
+}
+
+/* textimage */
+#lp-block-gx3tt3a52682696jprug .spacer-td {
+	padding-left: 10px;
+}
+
+/* textimage */
+#lp-block-gx3tt3a52682696jprug .inner-content-td {
+	padding-top: 10px;
+	padding-bottom: 30px;
+	padding-left: 40px;
+	padding-right: 40px;
+}
+
+/* text */
+#lp-block-lvazcj9so4eqy0tqidkk .title-td {
+	font-size: 24px;
+	font-weight: bold;
+	line-height: 200%;
+}
+/* text */
+#lp-block-lvazcj9so4eqy0tqidkk .title-td a {
+	text-decoration: none;
+}
+
+/* text */
+#lp-block-lvazcj9so4eqy0tqidkk .text-td {
+	color: #8a1672;
+	font-size: 14px;
+}
+
+/* text */
+#lp-block-lvazcj9so4eqy0tqidkk .inner-content-td {
+	background-color: #faf0f6;
+	padding-top: 10px;
+	padding-bottom: 40px;
+	padding-left: 40px;
+	padding-right: 40px;
+}
+
+/* text */
+#lp-block-lvazcj9so4eqy0tqidkk .content-td {
+	padding-bottom: 10px;
+}
+
+/* text */
+#lp-block-uv0l9zi2i26rb035wwxn .title-td {
+	font-size: 24px;
+	font-weight: bold;
+	line-height: 200%;
+}
+/* text */
+#lp-block-uv0l9zi2i26rb035wwxn .title-td a {
+	text-decoration: none;
+}
+
+/* text */
+#lp-block-uv0l9zi2i26rb035wwxn .text-td {
+	color: #8a1672;
+	font-size: 14px;
+}
+
+/* text */
+#lp-block-uv0l9zi2i26rb035wwxn .inner-content-td {
+	background-color: #faf0f6;
+	padding-bottom: 20px;
+	padding-left: 40px;
+	padding-right: 40px;
+}
+
+/* text */
+#lp-block-uv0l9zi2i26rb035wwxn .content-td {
+	padding-bottom: 10px;
+}
+
+/* text */
+#lp-block-8zwiwu6bmr1e12j03wsy .title-td {
+	font-size: 24px;
+	font-weight: bold;
+	line-height: 200%;
+}
+/* text */
+#lp-block-8zwiwu6bmr1e12j03wsy .title-td a {
+	text-decoration: none;
+}
+
+/* text */
+#lp-block-8zwiwu6bmr1e12j03wsy .text-td {
+	color: #8a1672;
+	font-size: 14px;
+}
+
+/* text */
+#lp-block-8zwiwu6bmr1e12j03wsy .inner-content-td {
+	padding-bottom: 20px;
+	padding-left: 40px;
+	padding-right: 40px;
+}
+
+/* text */
+#lp-block-8zwiwu6bmr1e12j03wsy .content-td {
+	padding-bottom: 10px;
+}
+
+/* text */
+#lp-block-j054psnsqg3bbsk7kyuk .title-td {
+	font-size: 24px;
+	font-weight: bold;
+	line-height: 200%;
+}
+/* text */
+#lp-block-j054psnsqg3bbsk7kyuk .title-td a {
+	text-decoration: none;
+}
+
+/* text */
+#lp-block-j054psnsqg3bbsk7kyuk .text-td {
+	color: #8a1672;
+	font-size: 14px;
+}
+
+/* text */
+#lp-block-j054psnsqg3bbsk7kyuk .inner-content-td {
+	padding-bottom: 20px;
+	padding-left: 40px;
+	padding-right: 40px;
+}
+
+/* text */
+#lp-block-j054psnsqg3bbsk7kyuk .content-td {
+	padding-bottom: 10px;
+}
+
+/* text */
+#lp-block-7k8ilvn4vmuitk8wzqcl .title-td {
+	font-size: 24px;
+	font-weight: bold;
+	line-height: 200%;
+}
+/* text */
+#lp-block-7k8ilvn4vmuitk8wzqcl .title-td a {
+	text-decoration: none;
+}
+
+/* text */
+#lp-block-7k8ilvn4vmuitk8wzqcl .text-td {
+	color: #8a1672;
+	font-size: 14px;
+}
+
+/* text */
+#lp-block-7k8ilvn4vmuitk8wzqcl .inner-content-td {
+	background-color: #faf0f6;
+	padding-bottom: 20px;
+	padding-left: 40px;
+	padding-right: 40px;
+}
+
+/* text */
+#lp-block-7k8ilvn4vmuitk8wzqcl .content-td {
+	padding-bottom: 10px;
+}
+
+/* textimage */
+#lp-block-kwszrlakc2aupjddy3an .image-table {
+	width: 16px;
+}
+
+/* textimage */
+#lp-block-kwszrlakc2aupjddy3an .text-div {
+	color: #8a1672;
+}
+
+/* textimage */
+#lp-block-kwszrlakc2aupjddy3an .inner-content-td {
+	background-color: #faf0f6;
+	padding-left: 20px;
+}
+
+/* text */
+#lp-block-qvg2eqf4cq0ikxxuctch .title-td {
+	color: #8a1672;
+	font-size: 24px;
+	font-weight: bold;
+	line-height: 200%;
+}
+/* text */
+#lp-block-qvg2eqf4cq0ikxxuctch .title-td a {
+	color: #8a1672;
+	text-decoration: none;
+}
+
+/* text */
+#lp-block-qvg2eqf4cq0ikxxuctch .inner-content-td {
+	padding-top: 21px;
+	padding-bottom: 30px;
+	padding-left: 50px;
+	padding-right: 40px;
+}
+
+/* text */
+#lp-block-qvg2eqf4cq0ikxxuctch .content-td {
+	padding-left: 38px;
+}
+
+/* text */
+#lp-block-rkv9xfkrxdyqr2ttd0pa .title-td {
+	color: #ffffff;
+	font-size: 18px;
+	font-weight: bold;
+	line-height: 125%;
+}
+/* text */
+#lp-block-rkv9xfkrxdyqr2ttd0pa .title-td a {
+	color: #ffffff;
+	text-decoration: none;
+}
+
+/* text */
+#lp-block-rkv9xfkrxdyqr2ttd0pa .text-td {
+	color: #ffffff;
+}
+
+/* text */
+#lp-block-rkv9xfkrxdyqr2ttd0pa .inner-content-td {
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+/* title */
+#lp-block-0fqvz22ucmjsg927tach .title-td {
+	color: #ffffff;
+	font-size: 28px;
+	font-weight: normal;
+	line-height: 125%;
+	text-align: right;
+}
+/* title */
+#lp-block-0fqvz22ucmjsg927tach .title-td a {
+	color: #ffffff;
+	text-decoration: none;
+}
+
+/* title */
+#lp-block-0fqvz22ucmjsg927tach .inner-content-td {
+	padding-top: 25px;
+	padding-right: 40px;
+}
+
+/* image */
+#lp-block-wpmukhfzw0i86z5gfjam .inner-content-td {
+	background-color: #f0f0f0;
+}
+
+/* postfooter */
+#lp-block-isjaaqd4vinjgnk4kvtl .text-td {
+	color: #888888;
+	font-size: 12px;
+	line-height: 125%;
+	text-align: center;
+}
+
+/* postfooter */
+#lp-block-isjaaqd4vinjgnk4kvtl .text-td a {
+	color: #888888;
+}
+
+/* postfooter */
+#lp-block-isjaaqd4vinjgnk4kvtl .inner-content-td {
+	padding-top: 15px;
+	padding-bottom: 15px;
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+/* textimage */
+#lp-block-lc13wd8j4sd1azw8l7d8 .image-table {
+	width: 16px;
+}
+
+/* textimage */
+#lp-block-lc13wd8j4sd1azw8l7d8 .text-div {
+	color: #8a1672;
+}
+
+/* textimage */
+#lp-block-lc13wd8j4sd1azw8l7d8 .inner-content-td {
+	padding-left: 20px;
+}
+
+/* text */
+#lp-block-wlohukd47o16t6mlsum6 .title-td {
+	color: #000000;
+	font-size: 24px;
+	font-weight: bold;
+	line-height: 200%;
+}
+/* text */
+#lp-block-wlohukd47o16t6mlsum6 .title-td a {
+	color: #000000;
+	text-decoration: none;
+}
+
+/* text */
+#lp-block-wlohukd47o16t6mlsum6 .text-td {
+	color: #8a1672;
+	font-size: 14px;
+}
+
+/* text */
+#lp-block-wlohukd47o16t6mlsum6 .inner-content-td {
+	padding-bottom: 20px;
+	padding-left: 40px;
+	padding-right: 40px;
+}
+
+/* text */
+#lp-block-wlohukd47o16t6mlsum6 .content-td {
+	padding-bottom: 10px;
+}
+
+/* textimage */
+#lp-block-565hmoyf6ihmhfuk17qk .image-table {
+	width: 15px;
+}
+
+/* textimage */
+#lp-block-565hmoyf6ihmhfuk17qk .text-div {
+	color: #8a1672;
+}
+
+/* textimage */
+#lp-block-565hmoyf6ihmhfuk17qk .inner-content-td {
+	padding-left: 20px;
+}
+
+/* textimage */
+#lp-block-gayfctf5m9ijwkyak0jx .image-table {
+	width: 15px;
+}
+
+/* textimage */
+#lp-block-gayfctf5m9ijwkyak0jx .text-div {
+	color: #8a1672;
+}
+
+/* textimage */
+#lp-block-gayfctf5m9ijwkyak0jx .inner-content-td {
+	padding-left: 20px;
+}
+
+/* textimage */
+#lp-block-54zzyf4uk26iueylskp0 .image-table {
+	width: 16px;
+}
+
+/* textimage */
+#lp-block-54zzyf4uk26iueylskp0 .text-div {
+	color: #8a1672;
+}
+
+/* textimage */
+#lp-block-54zzyf4uk26iueylskp0 .inner-content-td {
+	background-color: #faf0f6;
+	padding-left: 20px;
+}
+
+/* text */
+#lp-block-8sox37rd9jx2jn419hit .title-td {
+	font-size: 24px;
+	font-weight: bold;
+	line-height: 200%;
+}
+/* text */
+#lp-block-8sox37rd9jx2jn419hit .title-td a {
+	text-decoration: none;
+}
+
+/* text */
+#lp-block-8sox37rd9jx2jn419hit .text-td {
+	color: #8a1672;
+	font-size: 14px;
+}
+
+/* text */
+#lp-block-8sox37rd9jx2jn419hit .inner-content-td {
+	padding-bottom: 20px;
+	padding-left: 40px;
+	padding-right: 40px;
+}
+
+/* text */
+#lp-block-8sox37rd9jx2jn419hit .content-td {
+	padding-bottom: 10px;
+}
+
+/* textimage */
+#lp-block-y2ap35f695oukzlqlaqn .image-table {
+	width: 18px;
+}
+
+/* textimage */
+#lp-block-y2ap35f695oukzlqlaqn .text-div {
+	color: #8a1672;
+}
+
+/* textimage */
+#lp-block-y2ap35f695oukzlqlaqn .inner-content-td {
+	background-color: #faf0f6;
+	padding-left: 12px;
+}
+
+/* textimage */
+#lp-block-20dtvpaz2bhqyk8i8jn7 .image-table {
+	width: 15px;
+}
+
+/* textimage */
+#lp-block-20dtvpaz2bhqyk8i8jn7 .text-div {
+	color: #8a1672;
+}
+
+/* textimage */
+#lp-block-20dtvpaz2bhqyk8i8jn7 .inner-content-td {
+	padding-left: 20px;
+}
+
+/* title */
+#lp-block-7b6caghvg27lib74arda .title-td {
+	color: #8a1672;
+	font-size: 24px;
+	font-weight: bold;
+	line-height: 125%;
+}
+/* title */
+#lp-block-7b6caghvg27lib74arda .title-td a {
+	color: #8a1672;
+	text-decoration: none;
+}
+
+/* title */
+#lp-block-7b6caghvg27lib74arda .inner-content-td {
+	padding-top: 20px;
+	padding-bottom: 10px;
+	padding-left: 40px;
+	padding-right: 40px;
+}
+
+/* text */
+#lp-block-zonrn0kcbgr5o9rwfnye .title-td {
+	font-size: 24px;
+	font-weight: bold;
+	line-height: 200%;
+}
+/* text */
+#lp-block-zonrn0kcbgr5o9rwfnye .title-td a {
+	text-decoration: none;
+}
+
+/* text */
+#lp-block-zonrn0kcbgr5o9rwfnye .text-td {
+	color: #8a1672;
+	font-size: 14px;
+}
+
+/* text */
+#lp-block-zonrn0kcbgr5o9rwfnye .inner-content-td {
+	padding-bottom: 20px;
+	padding-left: 40px;
+	padding-right: 40px;
+}
+
+/* text */
+#lp-block-zonrn0kcbgr5o9rwfnye .content-td {
+	padding-bottom: 10px;
+}
+
+/* text */
+#lp-block-7wu8u4m8hypaf2yxq7kb .title-td {
+	color: #8a1672;
+	font-size: 24px;
+	font-weight: bold;
+	line-height: 125%;
+}
+/* text */
+#lp-block-7wu8u4m8hypaf2yxq7kb .title-td a {
+	color: #8a1672;
+	text-decoration: none;
+}
+
+/* text */
+#lp-block-7wu8u4m8hypaf2yxq7kb .inner-content-td {
+	background-color: #faf0f6;
+	padding-top: 30px;
+	padding-bottom: 30px;
+	padding-left: 40px;
+	padding-right: 20px;
+}
+
+/* textimage */
+#lp-block-ix9pck3ofyb39e90yk6y .image-table {
+	width: 15px;
+}
+
+/* textimage */
+#lp-block-ix9pck3ofyb39e90yk6y .text-div {
+	color: #8a1672;
+}
+
+/* textimage */
+#lp-block-ix9pck3ofyb39e90yk6y .inner-content-td {
+	padding-left: 20px;
+}
+
+/* textimage */
+#lp-block-fg82cx7w9oc1r6p7beyy .image-table {
+	width: 50px;
+}
+
+/* textimage */
+#lp-block-fg82cx7w9oc1r6p7beyy .spacer-td {
+	padding-left: 10px;
+}
+
+/* textimage */
+#lp-block-fg82cx7w9oc1r6p7beyy .inner-content-td {
+	padding-top: 10px;
+	padding-bottom: 30px;
+	padding-left: 40px;
+	padding-right: 40px;
+}
+
+/* text */
+#lp-block-9mk5izahqqf8qc39pas5 .title-td {
+	font-size: 24px;
+	font-weight: bold;
+	line-height: 200%;
+}
+/* text */
+#lp-block-9mk5izahqqf8qc39pas5 .title-td a {
+	text-decoration: none;
+}
+
+/* text */
+#lp-block-9mk5izahqqf8qc39pas5 .text-td {
+	color: #8a1672;
+	font-size: 14px;
+}
+
+/* text */
+#lp-block-9mk5izahqqf8qc39pas5 .inner-content-td {
+	padding-bottom: 20px;
+	padding-left: 40px;
+	padding-right: 40px;
+}
+
+/* text */
+#lp-block-9mk5izahqqf8qc39pas5 .content-td {
+	padding-bottom: 10px;
+}
+
+/* image */
+#lp-block-9ye83kpk0ethr1cj8tx2 .inner-content-td {
+	background-color: #f0f0f0;
+}
+
+/* textimage */
+#lp-block-rxpmvqr1ss9hhimioq3z .image-table {
+	width: 15px;
+}
+
+/* textimage */
+#lp-block-rxpmvqr1ss9hhimioq3z .text-div {
+	color: #8a1672;
+}
+
+/* textimage */
+#lp-block-rxpmvqr1ss9hhimioq3z .inner-content-td {
+	padding-left: 20px;
+}
+
+/* marketing */
+#lp-block-srras1wdfcknurctuflf .text-td {
+	color: #777777;
+	font-family: Arial;
+	font-size: 12px;
+	line-height: 150%;
+	font-weight: normal;
+	font-style: normal;
+	text-align: center;
+}
+
+/* marketing */
+#lp-block-srras1wdfcknurctuflf .text-td a {
+	color: #777777;
+	text-decoration: underline;
+}
+
+/* marketing */
+#lp-block-srras1wdfcknurctuflf .text-td {
+	padding-top: 20px;
+	padding-bottom: 6px;
+	padding-left: 60px;
+	padding-right: 60px;
+}
+
+/* marketing */
+#lp-block-srras1wdfcknurctuflf .logo-td {
+	padding-top: 6px;
+	padding-bottom: 20px;
+	padding-left: 24px;
+	padding-right: 24px;
+}
+
+/* marketing */
+#lp-block-srras1wdfcknurctuflf .inner-content-td {
+	padding: 20px;
+}
+
+/* preheader */
+#lp-block-zaccw0wbozaftolxwrtj .inner-content-td {
+	font-size: 12px;
+}
+
+/* [force] */
+/* preheader */
+#lp-block-zaccw0wbozaftolxwrtj .title-td,#lp-block-zaccw0wbozaftolxwrtj .text-td,#lp-block-zaccw0wbozaftolxwrtj .text-div,#lp-block-zaccw0wbozaftolxwrtj .button-td a {
+	font-size: 12px;
+}
+
+/* preheader */
+#lp-block-zaccw0wbozaftolxwrtj .inner-content-td {
+	padding-bottom: 15px;
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+/* preheader */
+#lp-block-zaccw0wbozaftolxwrtj .col-spacer {
+	padding-left: 8px;
+	padding-right: 8px;
+}</style>
+<!--[if mso]>
+<style type="text/css">
+body,td,a {
+	font-family: "Trebuchet MS",Helvetica,sans-serif !important;
+}
+
+/* follow */
+#lp-block-cpqicwv3ytxg10k2us67 .text-td a {
+	font-family: "Trebuchet MS",Helvetica,sans-serif !important;
+}
+
+/* marketing */
+#lp-block-srras1wdfcknurctuflf .text-td {
+	font-family: Arial !important;
+}
+</style>
+<![endif]-->
+</head>
+<body>
+<table width="100%" height="100%" cellspacing="0" cellpadding="0"><tr><td valign="top" id="body-td">
+<!--[if mso]></td></tr></table><![endif]-->
+<div id="body-div"><table width="100%" cellspacing="0" cellpadding="0"><tr><td class="pad-top-td"></td></tr></table>
+
+
+<!-- preheader -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="preheader-table" id="lp-block-zaccw0wbozaftolxwrtj">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="preheader-border-table">
+				<tr>
+					<td width="100%" valign="top" class="preheader-border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="preheader-content-td">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+	<tr>
+		<td width="50%" valign="top" style="text-align:left;" class="text-td">Zet hier een korte, pakkende omschrijving van uw nieuwsbrief.</td>
+		<td class="col-spacer"></td>
+		<td width="50%" valign="top" style="text-align:right;" class="text-td"><a href="https://koningskerkdeventer.email-provider.nl/web/squjrcacva/hq1tcaireo">Bekijk de webversie</a></td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /preheader -->
+
+
+
+<!-- columns -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="columns-table first-columns-table" id="lp-block-s6vdmpd2tx0vueqi97cx">
+	<tr>
+		<td width="100%" align="center" class="columns-wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="columns-border-table">
+				<tr>
+					<td width="100%" valign="top" class="columns-border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="columns-content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="columns-content-td">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="columns-inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="columns-inner-content-td">
+<!-- skeleton -->
+<!-- use th instead of td to enable display:block on android 4 -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		
+		<th valign="top" class="col-0-td" width="324" style="width:324px;">
+			<table cellpadding="0" cellspacing="0" border="0" width="100%" class="container-table">
+				<tr>
+					<td class="container-td">
+<!-- col-0 -->
+<!-- image -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="image-table full-width" id="lp-block-wpmukhfzw0i86z5gfjam">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table" width="100%">
+				<tr>
+					<td width="100%" valign="top" class="border-td-removed">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="100%">
+							<tr>
+								<td width="100%" valign="top" class="content-td">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td width="100%" valign="top">
+			<table width="100%" cellpadding="0" cellspacing="0" border="0">
+				<tr>
+					<td valign="top" align="center" class="image-td"><img src="https://koningskerkdeventer.email-provider.nl/a/squjrcacva/d/ciyltryne4/i/4ea5240_w1272_headerwijkmail2.png" width="324" height="70" alt="" title="" /></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /image -->
+<!-- /col-0 -->
+</td>
+				</tr>
+			</table>
+		</th>
+		
+		
+		<th valign="top" class="col-1-td" width="186" style="width:186px;">
+			<table cellpadding="0" cellspacing="0" border="0" width="100%" class="container-table">
+				<tr>
+					<td class="container-td">
+<!-- col-1 -->
+<span class="mobile-hide">&nbsp;</span><!-- /col-1 -->
+</td>
+				</tr>
+			</table>
+		</th>
+		
+		
+		<th valign="top" class="col-2-td" width="126" style="width:126px;">
+			<table cellpadding="0" cellspacing="0" border="0" width="100%" class="container-table">
+				<tr>
+					<td class="container-td">
+<!-- col-2 -->
+<!-- title -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="title-table" id="lp-block-0fqvz22ucmjsg927tach">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table" width="100%">
+				<tr>
+					<td width="100%" valign="top" class="border-td-removed">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="100%">
+							<tr>
+								<td width="100%" valign="top" class="content-td">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td width="100%" valign="top">
+			<table cellpadding="0" cellspacing="0" border="0" width="100%">
+				<tr>
+					<td width="100%" class="title-td">Wijk E</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /title -->
+<!-- /col-2 -->
+</td>
+				</tr>
+			</table>
+		</th>
+		
+		
+		
+		
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /columns -->
+
+
+
+<!-- text -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="text-table" id="lp-block-rkv9xfkrxdyqr2ttd0pa">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table">
+				<tr>
+					<td width="100%" valign="top" class="border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="content-td" style="min-width:480px;">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td width="100%" valign="top">
+			<table cellpadding="0" cellspacing="0" border="0" width="100%">
+				<tr>
+					<td width="100%" class="title-td">geen titel</td>
+				</tr>
+				
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /text -->
+
+
+
+<!-- image -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="image-table full-width" id="lp-block-cvhub4fwrwr78y40toy9">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table">
+				<tr>
+					<td width="100%" valign="top" class="border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="content-td" style="min-width:480px;">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td width="100%" valign="top">
+			<table width="100%" cellpadding="0" cellspacing="0" border="0">
+				<tr>
+					<td valign="top" align="center" class="image-td"><img src="https://koningskerkdeventer.email-provider.nl/a/squjrcacva/d/ciyltryne4/i/9d70301_w1272_bethmacdonaldqabussr.jpg" width="636" height="356" alt="" title="" /></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /image -->
+
+
+
+<!-- text -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="text-table" id="lp-block-qvg2eqf4cq0ikxxuctch">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table">
+				<tr>
+					<td width="100%" valign="top" class="border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="content-td" style="min-width:480px;">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td width="100%" valign="top">
+			<table cellpadding="0" cellspacing="0" border="0" width="100%">
+				<tr>
+					<td width="100%" class="title-td">Hoi</td>
+				</tr>
+				<tr>
+					<td width="100%" class="text-td"><p>{{voornaam}}<br /><br /><span style="font-size:14px;">Wat leuk dat je de wijkmail weer leest!&nbsp;</span></p></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /text -->
+
+
+
+<!-- textimage -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="textimage-table" id="lp-block-kwszrlakc2aupjddy3an">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table">
+				<tr>
+					<td width="100%" valign="top" class="border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="content-td" style="min-width:480px;">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0" align="left">
+	<tr>
+		<td width="100%" valign="top">
+			<table class="image-table" cellpadding="0" cellspacing="0" border="0" align="left">
+				<tr>
+					<td class="image-td" valign="top"><img src="https://koningskerkdeventer.email-provider.nl/a/squjrcacva/d/ciyltryne4/i/4146298_w1263_kerkdienstgroottrans.png" width="99" height="73" alt="" title="" /></td>
+					<td class="spacer-td"></td>
+				</tr>
+			</table>
+			<div class="text-div" style="background-color:#faf0f6;"><font face="'Trebuchet MS',Helvetica,sans-serif"><br /><span style="font-size:24px;"><strong>Kerkdienst</strong></span></font></div>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /textimage -->
+
+
+
+<!-- text -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="text-table" id="lp-block-7k8ilvn4vmuitk8wzqcl">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table">
+				<tr>
+					<td width="100%" valign="top" class="border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="content-td" style="min-width:480px;">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td width="100%" valign="top">
+			<table cellpadding="0" cellspacing="0" border="0" width="100%">
+				
+				<tr>
+					<td width="100%" class="text-td"><span style="color:#000000;">Zondagochtend&nbsp;21 november gaat ds. W.M. van Wijk voor.<br />Aanvang 10.00 uur.</span></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /text -->
+
+
+
+<!-- textimage -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="textimage-table" id="lp-block-lc13wd8j4sd1azw8l7d8">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table">
+				<tr>
+					<td width="100%" valign="top" class="border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="content-td" style="min-width:480px;">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0" align="left">
+	<tr>
+		<td width="100%" valign="top">
+			<table class="image-table" cellpadding="0" cellspacing="0" border="0" align="left">
+				<tr>
+					<td class="image-td" valign="top"><img src="https://koningskerkdeventer.email-provider.nl/a/squjrcacva/d/ciyltryne4/i/8f01c0c_w106_collecte.jpg" width="99" height="95" alt="" title="" /></td>
+					<td class="spacer-td"></td>
+				</tr>
+			</table>
+			<div class="text-div" style="background-color:#ffffff;"><font face="'Trebuchet MS',Helvetica,sans-serif"><br /><span style="font-size:24px;"><strong>Collecte</strong></span></font></div>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /textimage -->
+
+
+
+<!-- text -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="text-table" id="lp-block-wlohukd47o16t6mlsum6">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table">
+				<tr>
+					<td width="100%" valign="top" class="border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="content-td" style="min-width:480px;">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td width="100%" valign="top">
+			<table cellpadding="0" cellspacing="0" border="0" width="100%">
+				
+				<tr>
+					<td width="100%" class="text-td"><span style="color:#000000;">De collecte is voor de zending.<br />U kunt geven via de Scipio App of door het overmaken van uw gift op NL&nbsp;10&nbsp;RABO&nbsp;0117&nbsp;1615&nbsp;19 ten name van : CGK-GKV-NGK Diaconie, onder vermelding van het collectedoel.</span></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /text -->
+
+
+
+<!-- textimage -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="textimage-table" id="lp-block-gayfctf5m9ijwkyak0jx">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table">
+				<tr>
+					<td width="100%" valign="top" class="border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="content-td" style="min-width:480px;">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0" align="left">
+	<tr>
+		<td width="100%" valign="top">
+			<table class="image-table" cellpadding="0" cellspacing="0" border="0" align="left">
+				<tr>
+					<td class="image-td" valign="top"><img src="https://koningskerkdeventer.email-provider.nl/a/squjrcacva/d/ciyltryne4/i/f9af13b_w288_overdenking.png" width="92" height="41" alt="" title="" /></td>
+					<td class="spacer-td"></td>
+				</tr>
+			</table>
+			<div class="text-div" style="background-color:#ffffff;"><font face="'Trebuchet MS',Helvetica,sans-serif"><span style="font-size:24px;"><strong>Overdenking</strong></span></font></div>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /textimage -->
+
+
+
+<!-- text -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="text-table" id="lp-block-8sox37rd9jx2jn419hit">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table">
+				<tr>
+					<td width="100%" valign="top" class="border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="content-td" style="min-width:480px;">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td width="100%" valign="top">
+			<table cellpadding="0" cellspacing="0" border="0" width="100%">
+				
+				<tr>
+					<td width="100%" class="text-td"><span style="color:#000000;">Zondagochtend&nbsp;21 november gaat ds. W.M. van Wijk voor.<br />Aanvang 10.00 uur.Genieten!&nbsp;&nbsp;In een nieuwe aflevering van de podcast sta ik stil bij 'Genieten'. Een oproep van Prediker. Wat is het verschil met 'hedonisme'?&nbsp;</span></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /text -->
+
+
+
+<!-- textimage -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="textimage-table" id="lp-block-20dtvpaz2bhqyk8i8jn7">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table">
+				<tr>
+					<td width="100%" valign="top" class="border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="content-td" style="min-width:480px;">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0" align="left">
+	<tr>
+		<td width="100%" valign="top">
+			<table class="image-table" cellpadding="0" cellspacing="0" border="0" align="left">
+				<tr>
+					<td class="image-td" valign="top"><img src="https://koningskerkdeventer.email-provider.nl/a/squjrcacva/d/ciyltryne4/i/7800360_w256_meelevengroottranspa.png" width="92" height="46" alt="" title="" /></td>
+					<td class="spacer-td"></td>
+				</tr>
+			</table>
+			<div class="text-div" style="background-color:#ffffff;"><font face="'Trebuchet MS',Helvetica,sans-serif"><span style="font-size:24px;"><strong>Meeleven</strong></span></font></div>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /textimage -->
+
+
+
+<!-- text -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="text-table" id="lp-block-zonrn0kcbgr5o9rwfnye">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table">
+				<tr>
+					<td width="100%" valign="top" class="border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="content-td" style="min-width:480px;">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td width="100%" valign="top">
+			<table cellpadding="0" cellspacing="0" border="0" width="100%">
+				
+				<tr>
+					<td width="100%" class="text-td"><span style="color:#000000;">Zondagochtend&nbsp;21 november gaat ds. W.M. van Wijk voor.<br />Aanvang 10.00 uur.Genieten!&nbsp;&nbsp;In een nieuwe aflevering van de podcast sta ik stil bij 'Genieten'. Een oproep van Prediker. Wat is het verschil met 'hedonisme'?&nbsp;</span></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /text -->
+
+
+
+<!-- textimage -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="textimage-table" id="lp-block-ix9pck3ofyb39e90yk6y">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table">
+				<tr>
+					<td width="100%" valign="top" class="border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="content-td" style="min-width:480px;">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0" align="left">
+	<tr>
+		<td width="100%" valign="top">
+			<table class="image-table" cellpadding="0" cellspacing="0" border="0" align="left">
+				<tr>
+					<td class="image-td" valign="top"><img src="https://koningskerkdeventer.email-provider.nl/a/squjrcacva/d/ciyltryne4/i/6defc7a_w250_kerkelijkbureaugroot.png" width="92" height="47" alt="" title="" /></td>
+					<td class="spacer-td"></td>
+				</tr>
+			</table>
+			<div class="text-div" style="background-color:#ffffff;"><font face="'Trebuchet MS',Helvetica,sans-serif"><span style="font-size:24px;"><strong>Kerkelijk bureau</strong></span></font></div>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /textimage -->
+
+
+
+<!-- text -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="text-table" id="lp-block-9mk5izahqqf8qc39pas5">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table">
+				<tr>
+					<td width="100%" valign="top" class="border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="content-td" style="min-width:480px;">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td width="100%" valign="top">
+			<table cellpadding="0" cellspacing="0" border="0" width="100%">
+				
+				<tr>
+					<td width="100%" class="text-td"><span style="color:#000000;">Zondagochtend&nbsp;21 november gaat ds. W.M. van Wijk voor.<br />Aanvang 10.00 uur.Genieten!&nbsp;&nbsp;In een nieuwe aflevering van de podcast sta ik stil bij 'Genieten'. Een oproep van Prediker. Wat is het verschil met 'hedonisme'?&nbsp;</span></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /text -->
+
+
+
+<!-- textimage -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="textimage-table" id="lp-block-rxpmvqr1ss9hhimioq3z">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table">
+				<tr>
+					<td width="100%" valign="top" class="border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="content-td" style="min-width:480px;">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0" align="left">
+	<tr>
+		<td width="100%" valign="top">
+			<table class="image-table" cellpadding="0" cellspacing="0" border="0" align="left">
+				<tr>
+					<td class="image-td" valign="top"><img src="https://koningskerkdeventer.email-provider.nl/a/squjrcacva/d/ciyltryne4/i/6defc7a_w250_kerkelijkbureaugroot.png" width="92" height="47" alt="" title="" /></td>
+					<td class="spacer-td"></td>
+				</tr>
+			</table>
+			<div class="text-div" style="background-color:#ffffff;"><font face="'Trebuchet MS',Helvetica,sans-serif"><span style="font-size:24px;"><strong>Kerkenraad</strong></span></font></div>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /textimage -->
+
+
+
+<!-- text -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="text-table" id="lp-block-j054psnsqg3bbsk7kyuk">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table">
+				<tr>
+					<td width="100%" valign="top" class="border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="content-td" style="min-width:480px;">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td width="100%" valign="top">
+			<table cellpadding="0" cellspacing="0" border="0" width="100%">
+				
+				<tr>
+					<td width="100%" class="text-td"><span style="color:#000000;">Zondagochtend&nbsp;21 november gaat ds. W.M. van Wijk voor.<br />Aanvang 10.00 uur.Genieten!&nbsp;&nbsp;In een nieuwe aflevering van de podcast sta ik stil bij 'Genieten'. Een oproep van Prediker. Wat is het verschil met 'hedonisme'?&nbsp;</span></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /text -->
+
+
+
+<!-- textimage -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="textimage-table" id="lp-block-565hmoyf6ihmhfuk17qk">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table">
+				<tr>
+					<td width="100%" valign="top" class="border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="content-td" style="min-width:480px;">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0" align="left">
+	<tr>
+		<td width="100%" valign="top">
+			<table class="image-table" cellpadding="0" cellspacing="0" border="0" align="left">
+				<tr>
+					<td class="image-td" valign="top"><img src="https://koningskerkdeventer.email-provider.nl/a/squjrcacva/d/ciyltryne4/i/6defc7a_w250_kerkelijkbureaugroot.png" width="92" height="47" alt="" title="" /></td>
+					<td class="spacer-td"></td>
+				</tr>
+			</table>
+			<div class="text-div" style="background-color:#ffffff;"><font face="'Trebuchet MS',Helvetica,sans-serif"><span style="font-size:24px;"><strong>Prikbord</strong></span></font></div>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /textimage -->
+
+
+
+<!-- text -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="text-table" id="lp-block-8zwiwu6bmr1e12j03wsy">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table">
+				<tr>
+					<td width="100%" valign="top" class="border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="content-td" style="min-width:480px;">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td width="100%" valign="top">
+			<table cellpadding="0" cellspacing="0" border="0" width="100%">
+				
+				<tr>
+					<td width="100%" class="text-td"><span style="color:#000000;">Zondagochtend&nbsp;21 november gaat ds. W.M. van Wijk voor.<br />Aanvang 10.00 uur.Genieten!&nbsp;&nbsp;In een nieuwe aflevering van de podcast sta ik stil bij 'Genieten'. Een oproep van Prediker. Wat is het verschil met 'hedonisme'?&nbsp;</span></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /text -->
+
+
+
+<!-- textimage -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="textimage-table" id="lp-block-54zzyf4uk26iueylskp0">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table">
+				<tr>
+					<td width="100%" valign="top" class="border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="content-td" style="min-width:480px;">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0" align="left">
+	<tr>
+		<td width="100%" valign="top">
+			<table class="image-table" cellpadding="0" cellspacing="0" border="0" align="left">
+				<tr>
+					<td class="image-td" valign="top"><img src="https://koningskerkdeventer.email-provider.nl/a/squjrcacva/d/ciyltryne4/i/d362924_w1272_icoonpaars.png" width="99" height="99" alt="" title="" /></td>
+					<td class="spacer-td"></td>
+				</tr>
+			</table>
+			<div class="text-div" style="background-color:#faf0f6;"><font face="'Trebuchet MS',Helvetica,sans-serif"><br /><span style="font-size:24px;"><strong>Verjaardagen</strong></span></font></div>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /textimage -->
+
+
+
+<!-- text -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="text-table" id="lp-block-uv0l9zi2i26rb035wwxn">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table">
+				<tr>
+					<td width="100%" valign="top" class="border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="content-td" style="min-width:480px;">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td width="100%" valign="top">
+			<table cellpadding="0" cellspacing="0" border="0" width="100%">
+				
+				<tr>
+					<td width="100%" class="text-td"><ul><li>&nbsp;16 februari <strong>Mevr. J. van Keulen - Kiela</strong></li></ul></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /text -->
+
+
+
+<!-- textimage -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="textimage-table" id="lp-block-y2ap35f695oukzlqlaqn">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table">
+				<tr>
+					<td width="100%" valign="top" class="border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="content-td" style="min-width:480px;">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0" align="left">
+	<tr>
+		<td width="100%" valign="top">
+			<table class="image-table" cellpadding="0" cellspacing="0" border="0" align="left">
+				<tr>
+					<td class="image-td" valign="top"><img src="https://koningskerkdeventer.email-provider.nl/a/squjrcacva/d/ciyltryne4/i/006d336_w1272_icoonpaarsagenda.png" width="112" height="112" alt="" title="" /></td>
+					<td class="spacer-td"></td>
+				</tr>
+			</table>
+			<div class="text-div" style="background-color:#faf0f6;"><font face="'Trebuchet MS',Helvetica,sans-serif"><br /><span style="font-size:24px;"><strong>Agenda</strong></span></font></div>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /textimage -->
+
+
+
+<!-- text -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="text-table" id="lp-block-lvazcj9so4eqy0tqidkk">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table">
+				<tr>
+					<td width="100%" valign="top" class="border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="content-td" style="min-width:480px;">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td width="100%" valign="top">
+			<table cellpadding="0" cellspacing="0" border="0" width="100%">
+				
+				<tr>
+					<td width="100%" class="text-td"><ul><li>Alicia Caroline (17-01-2021), dochter van Gerrit Jan en Johanna Dijkgraaf&nbsp;(wijk C)</li><li>Isabella (30-12-2020), dochter van fam. Boeve (wijk F)</li><li>Aart Joris (01-02-2021), zoon van Annet Kwesinga en Bastiaan de Groot(wijk B)</li><li>Lieuwe Klaas (05-02-2021), zoon van Joas en Geertje de Groot (wijk D)</li></ul></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /text -->
+
+
+
+<!-- title -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="title-table" id="lp-block-7b6caghvg27lib74arda">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table">
+				<tr>
+					<td width="100%" valign="top" class="border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="content-td" style="min-width:480px;">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td width="100%" valign="top">
+			<table cellpadding="0" cellspacing="0" border="0" width="100%">
+				<tr>
+					<td width="100%" class="title-td">Wandel je mee?</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /title -->
+
+
+
+<!-- textimage -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="textimage-table" id="lp-block-gx3tt3a52682696jprug">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table">
+				<tr>
+					<td width="100%" valign="top" class="border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="content-td" style="min-width:480px;">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0" align="left">
+	<tr>
+		<td width="100%" valign="top">
+			<table class="image-table" cellpadding="0" cellspacing="0" border="0" align="right">
+				<tr>
+					<td class="spacer-td"></td><td class="image-td" valign="top"><img src="https://koningskerkdeventer.email-provider.nl/a/squjrcacva/d/ciyltryne4/i/1d7ad72_w1272_bradynshockwomybmkqo.jpg" width="268" height="182" alt="" title="" /></td>
+					
+				</tr>
+			</table>
+			<div class="text-div" style="background-color:#ffffff;"><font face="'Trebuchet MS',Helvetica,sans-serif"><span style="font-size:14px;">Over twee weken hebben we een gezellige wandeling georganiseerd. Wandel jij ook mee?&nbsp;Venduciis es et pa cone officabo. Conest, ut alit de eum facium dolente sequis sitatates etur, inverferias incto molores minvell uptamet pore dolorio voluptate simento ommodis dolupta tempernatur, conseri tiusand iosapid quae etumque net utem sunt dis doluptatem in periaesequi invelis tisque porporendis dolorep erspis doluptam antio etum, officiliqui solorup tiumqui berera de min consequibus et acepudandi blate peruntus consedicit vero tet apiciis cumquid usamus por maiores dolorei cillecti vollaciat venim quae nonsendebis ex eoste</span></font></div>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /textimage -->
+
+
+
+<!-- text -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="text-table" id="lp-block-7wu8u4m8hypaf2yxq7kb">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table">
+				<tr>
+					<td width="100%" valign="top" class="border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="content-td" style="min-width:480px;">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td width="100%" valign="top">
+			<table cellpadding="0" cellspacing="0" border="0" width="100%">
+				<tr>
+					<td width="100%" class="title-td">Titel</td>
+				</tr>
+				<tr>
+					<td width="100%" class="text-td"><span style="font-size:14px;">Venduciis es et pa cone officabo. Conest, ut alit de eum facium dolente sequis sitatates etur, inverferias incto molores minvell uptamet pore dolorio voluptate simento ommodis dolupta tempernatur, conseri tiusand iosapid quae etumque net utem sunt dis doluptatem in periaesequi invelis tisque porporendis dolorep erspis doluptam antio etum, officiliqui solorup tiumqui berera de min consequibus et acepudandi blate peruntus consedicit vero tet apiciis cumquid usamus por maiores dolorei cillecti vollaciat venim quae nonsendebis ex eoste</span></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /text -->
+
+
+
+<!-- title -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="title-table" id="lp-block-plhvrxn1fc3tm1qs9rtp">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table">
+				<tr>
+					<td width="100%" valign="top" class="border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="content-td" style="min-width:480px;">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td width="100%" valign="top">
+			<table cellpadding="0" cellspacing="0" border="0" width="100%">
+				<tr>
+					<td width="100%" class="title-td">Nieuw wijkleden stellen zich voor</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /title -->
+
+
+
+<!-- textimage -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="textimage-table" id="lp-block-fg82cx7w9oc1r6p7beyy">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table">
+				<tr>
+					<td width="100%" valign="top" class="border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="content-td" style="min-width:480px;">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0" align="left">
+	<tr>
+		<td width="100%" valign="top">
+			<table class="image-table" cellpadding="0" cellspacing="0" border="0" align="right">
+				<tr>
+					<td class="spacer-td"></td><td class="image-td" valign="top"><img src="https://koningskerkdeventer.email-provider.nl/a/squjrcacva/d/ciyltryne4/i/d08390c_w1272_charlypnxjgnxidevjku.jpg" width="268" height="196" alt="" title="" /></td>
+					
+				</tr>
+			</table>
+			<div class="text-div" style="background-color:#ffffff;"><font face="'Trebuchet MS',Helvetica,sans-serif"><span style="font-size:14px;">Venduciis es et pa cone officabo. Conest, ut alit de eum facium dolente sequis sitatates etur, inverferias incto molores minvell uptamet pore dolorio voluptate simento ommodis dolupta tempernatur, conseri tiusand iosapid quae etumque net utem sunt dis doluptatem in periaesequi invelis tisque porporendis dolorep erspis doluptam antio etum, officiliqui solorup tiumqui berera de min consequibus et acepudandi blate peruntus consedicit vero tet apiciis cumquid usamus por maiores dolorei cillecti vollaciat venim quae nonsendebis ex eoste</span></font></div>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /textimage -->
+
+
+
+<!-- follow -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="follow-table" id="lp-block-cpqicwv3ytxg10k2us67">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table">
+				<tr>
+					<td width="100%" valign="top" class="border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="content-td" style="min-width:480px;">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td width="100%" valign="top">
+			<table width="100%" cellpadding="0" cellspacing="0" border="0">
+				<tr>
+					<td valign="middle" align="center" class="follow-td"><table cellpadding="0" cellspacing="0"><tr><td><table align="left" border="0" cellpadding="0" cellspacing="0" class="item-table">
+	<tr>
+		<td align="center" valign="top" class="item-wrapper-td">
+			<table border="0" cellpadding="0" cellspacing="0" class="icon-table">
+				<tr>
+					<td align="center" valign="top" class="icon-td">
+						<a href="http://www.facebook.com"><img src="https://koningskerkdeventer.email-provider.nl/a/squjrcacva/d/ciyltryne4/i/follow-7_w256_facebook.png" width="36" alt="" title="" /></a>
+					</td>
+				</tr>
+			</table>
+			<table border="0" cellpadding="0" cellspacing="0" class="spacer-text-table">
+				<tr>
+					<td class="spacer-text-td">&nbsp;</td>
+				</tr>
+			</table>
+			<table border="0" cellpadding="0" cellspacing="0" class="text-table">
+				<tr>
+					<td align="center" valign="top" class="text-td">
+						<a href="http://www.facebook.com">Facebook</a>
+					</td>
+				</tr>
+			</table>
+		</td>
+		<td valign="top" class="spacer-wrapper">
+			<table border="0" cellpadding="0" cellspacing="0">
+				<tr>
+					<td class="spacer-h-td"></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!--[if mso]></td><![endif]--><!--[if mso]><td valign="top"><![endif]--><table align="left" border="0" cellpadding="0" cellspacing="0" class="item-table">
+	<tr>
+		<td align="center" valign="top" class="item-wrapper-td">
+			<table border="0" cellpadding="0" cellspacing="0" class="icon-table">
+				<tr>
+					<td align="center" valign="top" class="icon-td">
+						<a href="http://www.twitter.com"><img src="https://koningskerkdeventer.email-provider.nl/a/squjrcacva/d/ciyltryne4/i/follow-7_w256_twitter.png" width="36" alt="" title="" /></a>
+					</td>
+				</tr>
+			</table>
+			<table border="0" cellpadding="0" cellspacing="0" class="spacer-text-table">
+				<tr>
+					<td class="spacer-text-td">&nbsp;</td>
+				</tr>
+			</table>
+			<table border="0" cellpadding="0" cellspacing="0" class="text-table">
+				<tr>
+					<td align="center" valign="top" class="text-td">
+						<a href="http://www.twitter.com">Twitter</a>
+					</td>
+				</tr>
+			</table>
+		</td>
+		<td valign="top" class="spacer-wrapper">
+			<table border="0" cellpadding="0" cellspacing="0">
+				<tr>
+					<td class="spacer-h-td"></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!--[if mso]></td><![endif]--><!--[if mso]><td valign="top"><![endif]--><table align="left" border="0" cellpadding="0" cellspacing="0" class="item-table">
+	<tr>
+		<td align="center" valign="top" class="item-wrapper-td">
+			<table border="0" cellpadding="0" cellspacing="0" class="icon-table">
+				<tr>
+					<td align="center" valign="top" class="icon-td">
+						<a href="http://www.example.net"><img src="https://koningskerkdeventer.email-provider.nl/a/squjrcacva/d/ciyltryne4/i/follow-7_w256_website.png" width="36" alt="" title="" /></a>
+					</td>
+				</tr>
+			</table>
+			<table border="0" cellpadding="0" cellspacing="0" class="spacer-text-table">
+				<tr>
+					<td class="spacer-text-td">&nbsp;</td>
+				</tr>
+			</table>
+			<table border="0" cellpadding="0" cellspacing="0" class="text-table">
+				<tr>
+					<td align="center" valign="top" class="text-td">
+						<a href="http://www.example.net">Website</a>
+					</td>
+				</tr>
+			</table>
+		</td>
+		
+	</tr>
+</table>
+</td></tr></table></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /follow -->
+
+
+
+<!-- image -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="image-table last-table full-width" id="lp-block-9ye83kpk0ethr1cj8tx2">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table">
+				<tr>
+					<td width="100%" valign="top" class="border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="content-td" style="min-width:480px;">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td width="100%" valign="top">
+			<table width="100%" cellpadding="0" cellspacing="0" border="0">
+				<tr>
+					<td valign="top" align="center" class="image-td"><img src="https://koningskerkdeventer.email-provider.nl/a/squjrcacva/d/ciyltryne4/i/374482e_w1272_footerlogo.png" width="636" height="63" alt="" title="" /></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /image -->
+
+
+
+<!-- postfooter -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="postfooter-table" id="lp-block-isjaaqd4vinjgnk4kvtl">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="postfooter-border-table">
+				<tr>
+					<td width="100%" valign="top" class="postfooter-border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="postfooter-content-td">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" style="width:100%;min-width:100%;">
+	<tr>
+		<td width="100%" class="text-td">Deze e-mail is verstuurd aan <a href="mailto:{{email}}">{{email}}</a>.<br />Als u geen nieuwsbrief meer wilt ontvangen, kunt u zich <a href="https://koningskerkdeventer.email-provider.nl/unsubscribe/squjrcacva/hq1tcaireo">hier afmelden</a>.<br />U kunt ook uw <a href="https://koningskerkdeventer.email-provider.nl/memberforms/edit/standalone/request/?a=squjrcacva&amp;l=__________&amp;m=__________">gegevens inzien en wijzigen</a>.<br />Voor een goede ontvangst voegt u <a href="mailto:trinitas@koningskerkdeventer.nl">trinitas@koningskerkdeventer.nl</a> toe aan uw adresboek.</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /postfooter -->
+
+
+<table width="100%" cellspacing="0" cellpadding="0"><tr><td class="pad-bottom-td"></td></tr></table>
+</div><!-- /#body-div -->
+<!--[if mso]><table cellspacing="0" cellpadding="0"><tr><td><![endif]-->
+</td></tr></table>
+
+<script>var l=document.links;var c=document.location.href.split('#')[0];
+for(var i=0;i<l.length;i++) {
+	var s = l[i].href.substring(0, c.length);
+	if(s!=c)l[i].target="_blank";
+}</script>
+<script>var l=document.links;var c=document.location.href.split('#')[0];for(var i=0;i<l.length;i++){if(l[i].href==c||l[i].href==c+'#'){l[i].href='javascript:;';l[i].target='';}}</script>
+</body>
+</html>

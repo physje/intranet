@@ -1,0 +1,11 @@
+<img lp-edit src="" width="200">
+<lp-singleline lp-label="Hoofdalinea"></lp-singleline>
+<lp-webversion>Bekijk de webversie</lp-webversion>
+<lp-unsubscribe>Afmelden</lp-unsubscribe>
+<lp-editprofile>Gegevens wijzigen</lp-editprofile>
+<lp-singleline lp-label="Kop boven artikel" lp-toc>Titel</lp-singleline>
+<lp-multiline lp-label="Tekst">De eigenlijke tekst</lp-multiline>
+<img lp-edit lp-resizable src="" lp-min-width="200" lp-max-width="300" width="240" height="165"/>
+<a href=""><lp-video lp-width="556" lp-label="Plaats een video" lp-src="https://www.youtube.com/watch?v=gs59xGpLVY0" lp-resizable lp-max-width="600" lp-min-width="500" /></a>
+
+https://docs.laposta.nl/category/127-importeren-van-zelfgemaakte-sjablonen-optie-2

@@ -36,26 +36,33 @@ if(count($allRoosters) > 0) {
 # Groepen
 $allGroups = getAllGroups();	
 $myGroups = getMyGroups($_SESSION['ID']);
-if(count($allGroups) > 0) {
+$showGroupsClass = array();
+foreach($allGroups as $groep) {
+	$tonen = false;	
+	$data = getGroupDetails($groep);
+	if(in_array($groep, $myGroups)) {
+		$class = "own";
+		if($data['html-int'] != "") {
+			$tonen = true;
+		}
+	} else {
+		$class = "general";
+		if($data['html-ext'] != "") {
+			$tonen = true;
+		}
+	}
+	
+	if($tonen) {
+		$showGroupsClass[$groep] = $class;		
+	}	
+}
+
+if(count($showGroupsClass) > 0) {
 	$txtGroepen[] = "<b>Pagina's van teams</b>";
-	foreach($allGroups as $groep) {
-		$tonen = false;
+	
+	foreach($showGroupsClass as $groep => $class) {
 		$data = getGroupDetails($groep);
-		if(in_array($groep, $myGroups)) {
-			$class = "own";
-			if($data['html-int'] != "") {
-				$tonen = true;
-			}
-		} else {
-			$class = "general";
-			if($data['html-ext'] != "") {
-				$tonen = true;
-			}
-		}
-		
-		if($tonen) {
-			$txtGroepen[] = "<a class='$class' href='group.php?groep=$groep' target='_blank'>".$data['naam']."</a>";
-		}
+		$txtGroepen[] = "<a class='$class' href='group.php?groep=$groep' target='_blank'>".$data['naam']."</a>";
 	}	
 	$blockArray[] = implode("<br>".NL, $txtGroepen);
 }
@@ -121,7 +128,10 @@ if(in_array(1, getMyGroups($_SESSION['ID'])) OR in_array(43, getMyGroups($_SESSI
 		$OpenKerkLinks['openkerk/mailen.php'] = 'Rooster mailen';
 	}
 	
-	$OpenKerkLinks['openkerk/editRooster.php'] = 'Rooster wijzigen';
+	if(in_array(1, getMyGroups($_SESSION['ID'])) OR in_array(43, getMyGroups($_SESSION['ID']))) {
+		$OpenKerkLinks['openkerk/editRooster.php'] = 'Rooster wijzigen';
+	}
+		
 	$OpenKerkLinks['openkerk/showRooster.php'] = 'Rooster tonen';
 	
 	foreach($OpenKerkLinks as $link => $naam) {

@@ -1,0 +1,2130 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<head><link rel="shortcut icon" href="/img/icons/favicon.ico" /><meta property="og:url" content="https://koningskerkdeventer.email-provider.nl/web/squjrcacva/8zm2illtav"><meta property="og:type" content="website"><meta property="og:title" content="Test sjabloon"><meta property="og:description" content="Test sjabloon"><meta property="og:image" content="https://app.laposta.nl/clients/images/screenshots/Y8HqRRJPOb.2.png"><meta property="og:image:width" content="226"><meta property="og:image:height" content="268">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Test sjabloon</title>
+<style type="text/css">
+
+	/*************************/
+	/*** fix email clients ***/
+	/*************************/
+	img{-ms-interpolation-mode:bicubic;}
+
+	/********************/
+	/*** reset styles ***/
+	/********************/
+	body{margin:0;padding:0;}
+	img{border:0;line-height:100%;outline:none;text-decoration:none;display:block;}
+	table{border-collapse:collapse !important;}
+	table th {margin:0 !important;vertical-align:top;font-weight:normal;}
+	body{height:100% !important;margin:0 !important;padding:0 !important;}
+	p{margin:0;padding:0;margin-bottom:0;}
+	h1,h2,h3,h4,h5,h6{line-height:1.4em;font-weight:bold;font-style:normal;margin:0} 
+
+	/****************/
+	/*** defaults ***/
+	/****************/
+	h1 { font-size: 2em; }
+	h2 { font-size: 1.7em; }
+	h3 { font-size: 1.4em; }
+	h4 { font-size: 1em; }
+	hr { border: 0; color: #333333; background-color: #333333; height: 1px; }
+	ul, ol { margin: 0; padding: 0 }
+	ul { list-style-type: disc; list-style-position: outside; padding-left: 20px; }
+	ol { list-style-type: decimal; list-style-position: outside; padding-left: 20px; }
+	ul ul, ol ul { list-style-type: circle; list-style-position: inside; margin-left: 16px; }
+	ol ol, ul ol { list-style-type: lower-latin; list-style-position: inside; margin-left: 16px; }
+
+	/* add some spacing for Gmail: set minimum width for outer table */
+	.wrapper-td, .columns-wrapper-td {
+		padding: 0 20px;
+	}
+
+	/* but not for blocks inside columns */
+	.columns-wrapper-td .wrapper-td {
+		padding: 0;
+	}
+
+	/* prevent unnecessary vertical width in Outlook 07/10/13 */
+	.image-td, .video-td {
+		height: 1px;
+		line-height: 100%;
+	}
+
+	/* keep bullets outside image padding */
+	.textimage-table ul, .textimage-table ol {
+		overflow: hidden;
+	}
+
+	/* follow block */
+	.follow-td .text-td a {
+		text-decoration: none !important;
+		/* prevent wrapping in ios */
+		word-break: keep-all;
+	}
+
+	.follow-td .spacer-text-td {
+		font-size: 0;
+		line-height: 0;
+	}
+
+	/* share block */
+	.share-td .text-td a {
+		text-decoration: none !important;
+		/* prevent wrapping in ios */
+		word-break: keep-all;
+	}
+
+	.share-td .spacer-text-td {
+		font-size: 0;
+		line-height: 0;
+	}
+
+	/* follow & share spacers */
+	.spacer-h-td {
+		padding-top: 0 !important;
+		padding-bottom: 0 !important;
+	}
+
+	.spacer-v-td {
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+	}
+
+	/* buttons */
+	.button-td a {
+		display: inline-block;
+		text-decoration: none;
+		line-height: 125% !important;
+		text-align: center !important;
+	}
+
+	/*****************/
+	/* be responsive */
+	/*****************/
+	@media screen and (max-width: 600px) {
+
+		body,table,td,a{-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;}
+
+		/* reset Gmail padding */
+		.wrapper-td, .columns-wrapper-td {
+			padding: 0 !important;
+		}
+
+		/* remove bottom padding */
+		td.pad-top-td {
+			padding: 0 !important;
+		}
+
+		/* remove bottom padding */
+		td.pad-bottom-td {
+			padding: 0 !important;
+		}
+
+		/* add small padding to show background */
+		#body-div {
+			padding: 10px 10px !important;
+		}
+
+		/* set content at full width */
+		table.content-table {
+			width: 100% !important;
+		}
+
+		table.columns-content-table {
+			width: 100% !important;
+		}
+
+		table.border-table {
+			width: 100% !important;
+		}
+
+		table.columns-border-table {
+			width: 100% !important;
+		}
+
+		/* correct mobile gmail hack */
+		td.content-td {
+			min-width: 0 !important;
+			padding: 0 !important;
+		}
+
+		/* fixed padding for almost all content blocks */
+		/* not touched: divider, code */
+		.text-table .inner-content-td {
+			padding: 16px 16px !important;
+		}
+
+		.title-table .inner-content-td {
+			padding: 10px 16px 10px 16px !important;
+		}
+
+		.textimage-table .inner-content-td {
+			padding: 16px 16px !important;
+		}
+
+		.video-table .inner-content-td {
+			padding: 16px 16px !important;
+		}
+
+		.button-table .inner-content-td {
+			padding: 16px 16px !important;
+		}
+
+		.follow-table .inner-content-td {
+			padding: 16px 16px !important;
+		}
+
+		.share-table .inner-content-td {
+			padding: 16px 16px !important;
+		}
+
+		/* default image padding */
+		.image-table .inner-content-td {
+			padding: 16px 16px !important;
+		}
+
+		/* full width for full width images (if no horizontal padding) */
+		.image-table.full-width .inner-content-td {
+			padding: 0 !important;
+		}
+
+		/* less width for square images */
+		.image-table.square .inner-content-td {
+			padding: 16px 48px !important;
+		}
+
+		/* even less width for vertical images */
+		.image-table.vertical .inner-content-td {
+			padding: 16px 64px !important;
+		}
+
+		/* stack columns */
+		table.columns-content-table {
+			width: 100% !important;
+		}
+
+		td.columns-inner-content-td th {
+			display: block !important;
+			width: 100% !important;
+		}
+
+		td.columns-inner-content-td th.col-spacer-td {
+			display: none;
+		}
+
+		/* control vertical padding for columns */
+		td.columns-content-td {
+			padding: 0 !important;
+		}
+
+		td.columns-inner-content-td {
+			padding: 4px 0 !important;
+		}
+
+		td.columns-inner-content-td th {
+			padding: 0 !important;
+		}
+
+		/* images full width */
+		td.image-td img {
+			width: 100% !important;
+			height: auto !important;
+		}
+
+		/* vertical spacing for images in textimage block */
+		table.textimage-table .image-td {
+			padding: 6px 0 16px 0 !important;
+		}
+
+		/* video preview full width */
+		td.video-td img {
+			width: 100% !important;
+			height: auto !important;
+		}
+
+		/* buttons full width */
+		table.button-c2-table {
+			width: 100% !important;
+		}
+
+		td.button-td a {
+			display: block !important;
+		}
+
+		/* textimage images full width */
+		table.image-table {
+			width: 100% !important;
+		}
+
+		table.image-table .spacer-td {
+			padding: 0 !important;
+		}
+
+		/* follow items */
+		td.follow-td .icon-td img {
+			min-width: 40px;
+			max-width: 60px;
+		}
+
+		td.follow-td .text-td a {
+			font-size: 12px !important;
+		}
+
+		td.follow-td .spacer-text-td {
+			padding: 0 !important;
+		}
+
+		td.follow-td .spacer-item-td {
+			padding: 12px !important;
+		}
+
+		td.follow-td .item-table {
+			width: 1px;
+		}
+
+		/* share items */
+		td.share-td .icon-td img {
+			min-width: 40px;
+			max-width: 60px;
+		}
+
+		td.share-td .text-td a {
+			font-size: 12px !important;
+		}
+
+		td.share-td .spacer-text-td {
+			padding: 0 !important;
+		}
+
+		td.share-td .spacer-item-td {
+			padding: 12px !important;
+		}
+
+		td.share-td .item-table {
+			width: 1px;
+		}
+	
+		/*** global text settings ***/
+
+		/* all text */
+		body, td, div {
+			font-size: 18px !important;
+			line-height: 24px !important;
+		}
+
+		/* titles  */
+		td.title-td {
+			font-size: 34px !important;
+			line-height: 42px !important;
+			padding: 0 !important;
+		}
+
+		/* text */
+		td.text-td {
+			font-size: 18px !important;
+			line-height: 24px !important;
+		}
+
+		div.text-div {
+			font-size: 18px !important;
+			line-height: 24px !important;
+		}
+
+		/* titles inside text */
+		.text-table .title-td {
+			font-size: 26px !important;
+			line-height: 34px !important;
+		}
+
+		/*** per block settings ***/
+
+		/* hide preheader, keep border */
+		table.preheader-table .content-table {
+			display: none !important;
+		}
+
+		/* postfooter */
+		table.postfooter-table .text-td {
+			text-align: left !important;
+			font-size: 14px !important;
+			line-height: 20px !important;
+		}
+
+		/* marketing */
+		table.marketing-table .inner-content-td {
+			padding: 10px 0 !important;
+		}
+
+		table.marketing-table .text-td {
+			padding: 20px 20px !important;
+			text-align: left !important;
+			font-size: 16px !important;
+			line-height: 20px !important;
+		}
+
+		table.marketing-table .bull {
+			display: none;
+		}
+
+		table.marketing-table .line {
+			display: block;
+			padding-bottom: 16px;
+		}
+
+		table.marketing-border-table {
+			width: 100% !important;
+		}
+
+		/* misc */
+		.mobile-hide {
+			display: none;
+		}
+	}
+</style>
+<!--[if gte mso 9]>
+<style>
+ul, ol {
+   margin: 0 0 0 24px !important;
+   padding: 0 !important;
+   list-style-position: inside;
+}
+</style>
+<![endif]-->
+<!--[if gte mso 9]>
+<xml>
+  <o:OfficeDocumentSettings>
+    <o:AllowPNG/>
+    <o:PixelsPerInch>96</o:PixelsPerInch>
+ </o:OfficeDocumentSettings>
+</xml>
+<![endif]-->
+<style type="text/css">
+body {
+	background-color: #f0f0f0;
+}
+.pad-top-td {
+	padding-top: 20px;
+}
+.pad-bottom-td {
+	padding-bottom: 20px;
+}
+.content-td, .columns-content-td {
+	background-color: #ffffff;
+}
+body,td {
+	color: #000000;
+	font-family: "Trebuchet MS",Helvetica,sans-serif;
+	font-size: 14px;
+	font-weight: normal;
+	font-style: normal;
+	line-height: 200%;
+}
+
+/* [force] */
+.title-td,.text-td,.text-div,.button-td a {
+	color: #000000;
+	font-family: "Trebuchet MS",Helvetica,sans-serif;
+	font-size: 14px;
+	font-weight: normal;
+	font-style: normal;
+	line-height: 200%;
+}
+.inner-content-td {
+	text-align: left;
+}
+
+/* [force] */
+.title-td,.text-td,.text-div,.button-td a {
+	text-align: left;
+}
+body a {
+	color: #9e0091;
+	text-decoration: underline;
+}
+
+/* [force] */
+.title-td a,.text-td a,.text-div a,.button-td a a {
+	color: #9e0091;
+}
+
+/* columns */
+#lp-block-2vp4fe4s0t45ii9i6s5v .columns-inner-content-td, #lp-block-2vp4fe4s0t45ii9i6s5v .content-td {
+	background-color: #ffffff;
+}
+
+/* columns */
+#lp-block-2vp4fe4s0t45ii9i6s5v .columns-inner-content-td {
+	padding-bottom: 10px;
+}
+
+/* columns */
+#lp-block-2vp4fe4s0t45ii9i6s5v .columns-content-td {
+	padding-top: 10px;
+}
+
+/* text */
+#lp-block-zonrn0kcbgr5o9rwfnye .title-td {
+	color: #ffffff;
+	font-size: 24px;
+	font-weight: bold;
+	line-height: 200%;
+}
+/* text */
+#lp-block-zonrn0kcbgr5o9rwfnye .title-td a {
+	color: #ffffff;
+	text-decoration: none;
+}
+
+/* text */
+#lp-block-zonrn0kcbgr5o9rwfnye .text-td {
+	color: #8a1672;
+	font-size: 14px;
+}
+
+/* text */
+#lp-block-zonrn0kcbgr5o9rwfnye .inner-content-td {
+	background-color: #faf0f6;
+	padding-bottom: 20px;
+	padding-left: 40px;
+	padding-right: 40px;
+}
+
+/* text */
+#lp-block-zonrn0kcbgr5o9rwfnye .content-td {
+	padding-bottom: 10px;
+}
+
+/* textimage */
+#lp-block-4mjd0qy5x0ih7902la2c .image-table {
+	width: 16px;
+}
+
+/* textimage */
+#lp-block-4mjd0qy5x0ih7902la2c .text-div {
+	color: #8a1672;
+}
+
+/* textimage */
+#lp-block-4mjd0qy5x0ih7902la2c .inner-content-td {
+	background-color: #faf0f6;
+	padding-left: 20px;
+}
+
+/* text */
+#lp-block-xfktoutlg1kp55toggfg .title-td {
+	color: #a42179;
+	font-size: 24px;
+	font-weight: bold;
+	line-height: 125%;
+	text-align: right;
+}
+/* text */
+#lp-block-xfktoutlg1kp55toggfg .title-td a {
+	color: #a42179;
+	text-decoration: none;
+}
+
+/* text */
+#lp-block-xfktoutlg1kp55toggfg .text-td {
+	color: #a42179;
+	font-size: 13px;
+}
+
+/* text */
+#lp-block-xfktoutlg1kp55toggfg .inner-content-td {
+	padding-top: 14px;
+	padding-left: 50px;
+	padding-right: 40px;
+}
+
+/* postfooter */
+#lp-block-isjaaqd4vinjgnk4kvtl .text-td {
+	color: #888888;
+	font-size: 12px;
+	line-height: 125%;
+	text-align: center;
+}
+
+/* postfooter */
+#lp-block-isjaaqd4vinjgnk4kvtl .text-td a {
+	color: #888888;
+}
+
+/* postfooter */
+#lp-block-isjaaqd4vinjgnk4kvtl .inner-content-td {
+	padding-top: 15px;
+	padding-bottom: 15px;
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+/* textimage */
+#lp-block-gx3tt3a52682696jprug .image-table {
+	width: 50px;
+}
+
+/* textimage */
+#lp-block-gx3tt3a52682696jprug .spacer-td {
+	padding-left: 10px;
+}
+
+/* textimage */
+#lp-block-gx3tt3a52682696jprug .text-div {
+	font-size: 13px;
+}
+
+/* textimage */
+#lp-block-gx3tt3a52682696jprug .inner-content-td {
+	padding-top: 10px;
+	padding-bottom: 30px;
+	padding-left: 40px;
+	padding-right: 40px;
+}
+
+/* video */
+#lp-block-2vdoqo1ezdd0xm78m8z6 .inner-content-td {
+	background-color: #faf0f6;
+	padding-top: 40px;
+	padding-bottom: 40px;
+	padding-left: 40px;
+	padding-right: 40px;
+}
+
+/* video */
+#lp-block-2vdoqo1ezdd0xm78m8z6 .content-td {
+	padding-top: 20px;
+	padding-bottom: 20px;
+}
+
+/* text */
+#lp-block-o675ul9zow5qcswkxlbz .title-td {
+	color: #8a1672;
+	font-size: 24px;
+	font-weight: bold;
+	line-height: 200%;
+}
+/* text */
+#lp-block-o675ul9zow5qcswkxlbz .title-td a {
+	color: #8a1672;
+	text-decoration: none;
+}
+
+/* text */
+#lp-block-o675ul9zow5qcswkxlbz .inner-content-td {
+	padding-top: 21px;
+	padding-bottom: 20px;
+	padding-left: 40px;
+	padding-right: 40px;
+}
+
+/* text */
+#lp-block-ksxwgx8l1osf666pqrly .title-td {
+	font-size: 24px;
+	font-weight: bold;
+	line-height: 125%;
+}
+/* text */
+#lp-block-ksxwgx8l1osf666pqrly .title-td a {
+	text-decoration: none;
+}
+
+/* text */
+#lp-block-ksxwgx8l1osf666pqrly .inner-content-td {
+	padding-top: 10px;
+	padding-bottom: 30px;
+	padding-left: 40px;
+	padding-right: 20px;
+}
+
+/* text */
+#lp-block-u02qm6354cnm96829x77 .title-td {
+	font-size: 14px;
+	font-weight: bold;
+	line-height: 125%;
+	text-align: right;
+}
+/* text */
+#lp-block-u02qm6354cnm96829x77 .title-td a {
+	text-decoration: none;
+}
+
+/* text */
+#lp-block-u02qm6354cnm96829x77 .text-td {
+	color: #000000;
+	font-size: 14px;
+	line-height: 200%;
+	text-align: left;
+}
+
+/* text */
+#lp-block-u02qm6354cnm96829x77 .inner-content-td {
+	padding-top: 20px;
+	padding-bottom: 20px;
+	padding-left: 50px;
+	padding-right: 30px;
+}
+
+/* text */
+#lp-block-u02qm6354cnm96829x77 .content-td {
+	padding-left: 38px;
+	padding-right: 36px;
+}
+
+/* text */
+#lp-block-1a7qhxp5970ynz9x0ci0 .title-td {
+	font-size: 24px;
+	font-weight: bold;
+	line-height: 125%;
+}
+/* text */
+#lp-block-1a7qhxp5970ynz9x0ci0 .title-td a {
+	text-decoration: none;
+}
+
+/* text */
+#lp-block-1a7qhxp5970ynz9x0ci0 .text-td {
+	color: #8a1672;
+	font-weight: bold;
+}
+
+/* text */
+#lp-block-1a7qhxp5970ynz9x0ci0 .inner-content-td {
+	padding-top: 14px;
+	padding-left: 29px;
+	padding-right: 20px;
+}
+
+/* text */
+#lp-block-1a7qhxp5970ynz9x0ci0 .content-td {
+	padding-left: 38px;
+}
+
+/* textimage */
+#lp-block-or5ez08srau869bqtnss .image-table {
+	width: 16px;
+}
+
+/* textimage */
+#lp-block-or5ez08srau869bqtnss .text-div {
+	color: #8a1672;
+}
+
+/* textimage */
+#lp-block-or5ez08srau869bqtnss .inner-content-td {
+	background-color: #faf0f6;
+	padding-left: 20px;
+}
+
+/* textimage */
+#lp-block-jygzuedk1twlhhz6d9mg .image-table {
+	width: 6px;
+}
+
+/* textimage */
+#lp-block-jygzuedk1twlhhz6d9mg .image-td {
+	padding-top: 26px;
+}
+
+/* textimage */
+#lp-block-jygzuedk1twlhhz6d9mg .spacer-td {
+	padding-left: 9px;
+}
+
+/* textimage */
+#lp-block-jygzuedk1twlhhz6d9mg .text-div {
+	color: #8a1672;
+	text-align: left;
+}
+
+/* textimage */
+#lp-block-jygzuedk1twlhhz6d9mg .inner-content-td {
+	background-color: #faf0f6;
+	padding-left: 40px;
+}
+
+/* text */
+#lp-block-lvazcj9so4eqy0tqidkk .title-td {
+	font-size: 24px;
+	font-weight: bold;
+	line-height: 200%;
+}
+/* text */
+#lp-block-lvazcj9so4eqy0tqidkk .title-td a {
+	text-decoration: none;
+}
+
+/* text */
+#lp-block-lvazcj9so4eqy0tqidkk .text-td {
+	color: #8a1672;
+	font-size: 14px;
+}
+
+/* text */
+#lp-block-lvazcj9so4eqy0tqidkk .inner-content-td {
+	background-color: #faf0f6;
+	padding-top: 10px;
+	padding-bottom: 40px;
+	padding-left: 40px;
+	padding-right: 40px;
+}
+
+/* text */
+#lp-block-lvazcj9so4eqy0tqidkk .content-td {
+	padding-bottom: 10px;
+}
+
+/* text */
+#lp-block-qn3ei6aw8fl0gt6d0c1u .title-td {
+	color: #8a1672;
+	font-size: 24px;
+	font-weight: bold;
+	line-height: 200%;
+}
+/* text */
+#lp-block-qn3ei6aw8fl0gt6d0c1u .title-td a {
+	color: #8a1672;
+	text-decoration: none;
+}
+
+/* text */
+#lp-block-qn3ei6aw8fl0gt6d0c1u .inner-content-td {
+	background-color: #faf0f6;
+	padding-bottom: 20px;
+	padding-left: 40px;
+	padding-right: 40px;
+}
+
+/* text */
+#lp-block-qn3ei6aw8fl0gt6d0c1u .content-td {
+	padding-bottom: 10px;
+}
+
+/* button */
+#lp-block-hgii9mjf29a8z12nc22t .button-td a {
+	background-color: #8a1672;
+	color: #ffffff;
+	font-size: 16px;
+	font-weight: bold;
+	padding-left: 15px;
+	padding-right: 15px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+/* button */
+#lp-block-hgii9mjf29a8z12nc22t .inner-content-td {
+	padding-top: 10px;
+	padding-bottom: 10px;
+	padding-left: 39px;
+	padding-right: 20px;
+}
+
+/* textimage */
+#lp-block-kwszrlakc2aupjddy3an .image-table {
+	width: 6px;
+}
+
+/* textimage */
+#lp-block-kwszrlakc2aupjddy3an .image-td {
+	padding-top: 26px;
+}
+
+/* textimage */
+#lp-block-kwszrlakc2aupjddy3an .spacer-td {
+	padding-left: 9px;
+}
+
+/* textimage */
+#lp-block-kwszrlakc2aupjddy3an .text-div {
+	color: #8a1672;
+	text-align: left;
+}
+
+/* textimage */
+#lp-block-kwszrlakc2aupjddy3an .inner-content-td {
+	background-color: #faf0f6;
+	padding-left: 40px;
+}
+
+/* image */
+#lp-block-y0b5bldqhvqmxgeim8rw .inner-content-td {
+	padding-left: 37px;
+}
+
+/* text */
+#lp-block-r2sxw1a1h5r4gug3jrlu .title-td {
+	color: #8a1672;
+	font-size: 24px;
+	font-weight: bold;
+	line-height: 200%;
+}
+/* text */
+#lp-block-r2sxw1a1h5r4gug3jrlu .title-td a {
+	color: #8a1672;
+	text-decoration: none;
+}
+
+/* text */
+#lp-block-r2sxw1a1h5r4gug3jrlu .inner-content-td {
+	background-color: #faf0f6;
+	padding-bottom: 20px;
+	padding-left: 40px;
+	padding-right: 40px;
+}
+
+/* follow */
+#lp-block-cpqicwv3ytxg10k2us67 .icon-td {
+	width: 36px;
+}
+
+/* follow */
+#lp-block-cpqicwv3ytxg10k2us67 .spacer-h-td, #lp-block-cpqicwv3ytxg10k2us67 .spacer-v-td {
+	padding: 13px;
+}
+
+/* follow */
+#lp-block-cpqicwv3ytxg10k2us67 .spacer-text-td {
+	padding: 1px;
+}
+
+/* follow */
+#lp-block-cpqicwv3ytxg10k2us67 .text-td a {
+	color: #ffffff;
+	font-family: "Trebuchet MS",Helvetica,sans-serif;
+	font-size: 12px;
+	font-weight: normal;
+	font-style: normal;
+}
+
+/* follow */
+#lp-block-cpqicwv3ytxg10k2us67 .inner-content-td {
+	background-color: #281739;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+/* text */
+#lp-block-qvg2eqf4cq0ikxxuctch .title-td {
+	color: #8a1672;
+	font-size: 24px;
+	font-weight: bold;
+	line-height: 200%;
+}
+/* text */
+#lp-block-qvg2eqf4cq0ikxxuctch .title-td a {
+	color: #8a1672;
+	text-decoration: none;
+}
+
+/* text */
+#lp-block-qvg2eqf4cq0ikxxuctch .inner-content-td {
+	padding-top: 21px;
+	padding-bottom: 20px;
+	padding-left: 40px;
+	padding-right: 40px;
+}
+
+/* marketing */
+#lp-block-srras1wdfcknurctuflf .text-td {
+	color: #777777;
+	font-family: Arial;
+	font-size: 12px;
+	line-height: 150%;
+	font-weight: normal;
+	font-style: normal;
+	text-align: center;
+}
+
+/* marketing */
+#lp-block-srras1wdfcknurctuflf .text-td a {
+	color: #777777;
+	text-decoration: underline;
+}
+
+/* marketing */
+#lp-block-srras1wdfcknurctuflf .text-td {
+	padding-top: 20px;
+	padding-bottom: 6px;
+	padding-left: 60px;
+	padding-right: 60px;
+}
+
+/* marketing */
+#lp-block-srras1wdfcknurctuflf .logo-td {
+	padding-top: 6px;
+	padding-bottom: 20px;
+	padding-left: 24px;
+	padding-right: 24px;
+}
+
+/* marketing */
+#lp-block-srras1wdfcknurctuflf .inner-content-td {
+	padding: 20px;
+}
+
+/* preheader */
+#lp-block-zaccw0wbozaftolxwrtj .inner-content-td {
+	font-size: 12px;
+}
+
+/* [force] */
+/* preheader */
+#lp-block-zaccw0wbozaftolxwrtj .title-td,#lp-block-zaccw0wbozaftolxwrtj .text-td,#lp-block-zaccw0wbozaftolxwrtj .text-div,#lp-block-zaccw0wbozaftolxwrtj .button-td a {
+	font-size: 12px;
+}
+
+/* preheader */
+#lp-block-zaccw0wbozaftolxwrtj .inner-content-td {
+	padding-bottom: 15px;
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+/* preheader */
+#lp-block-zaccw0wbozaftolxwrtj .col-spacer {
+	padding-left: 8px;
+	padding-right: 8px;
+}</style>
+<!--[if mso]>
+<style type="text/css">
+body,td,a {
+	font-family: "Trebuchet MS",Helvetica,sans-serif !important;
+}
+
+/* follow */
+#lp-block-cpqicwv3ytxg10k2us67 .text-td a {
+	font-family: "Trebuchet MS",Helvetica,sans-serif !important;
+}
+
+/* marketing */
+#lp-block-srras1wdfcknurctuflf .text-td {
+	font-family: Arial !important;
+}
+</style>
+<![endif]-->
+</head>
+<body>
+<table width="100%" height="100%" cellspacing="0" cellpadding="0"><tr><td valign="top" id="body-td">
+<!--[if mso]></td></tr></table><![endif]-->
+<div id="body-div"><table width="100%" cellspacing="0" cellpadding="0"><tr><td class="pad-top-td"></td></tr></table>
+
+
+<!-- preheader -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="preheader-table" id="lp-block-zaccw0wbozaftolxwrtj">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="preheader-border-table">
+				<tr>
+					<td width="100%" valign="top" class="preheader-border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="preheader-content-td">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+	<tr>
+		<td width="50%" valign="top" style="text-align:left;" class="text-td">Zet hier een korte, pakkende omschrijving van uw nieuwsbrief.</td>
+		<td class="col-spacer"></td>
+		<td width="50%" valign="top" style="text-align:right;" class="text-td"><a href="https://koningskerkdeventer.email-provider.nl/web/squjrcacva/8zm2illtav">Bekijk de webversie</a></td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /preheader -->
+
+
+
+<!-- image -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="image-table first-table full-width" id="lp-block-nmou4gf1rrv0bqjc0omz">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table">
+				<tr>
+					<td width="100%" valign="top" class="border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="content-td" style="min-width:480px;">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td width="100%" valign="top">
+			<table width="100%" cellpadding="0" cellspacing="0" border="0">
+				<tr>
+					<td valign="top" align="center" class="image-td"><img src="https://koningskerkdeventer.email-provider.nl/a/squjrcacva/d/gewkmeldal/i/161eb3d_w1272_headertrinitas2.png" width="636" height="104" alt="" title="" /></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /image -->
+
+
+
+<!-- image -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="image-table full-width" id="lp-block-9ljm4z5d06ejan822znk">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table">
+				<tr>
+					<td width="100%" valign="top" class="border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="content-td" style="min-width:480px;">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td width="100%" valign="top">
+			<table width="100%" cellpadding="0" cellspacing="0" border="0">
+				<tr>
+					<td valign="top" align="center" class="image-td"><img src="https://koningskerkdeventer.email-provider.nl/a/squjrcacva/d/gewkmeldal/i/853bc90_w1272_00582018042201instar.jpg" width="636" height="358" alt="" title="" /></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /image -->
+
+
+
+<!-- columns -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="columns-table" id="lp-block-2vp4fe4s0t45ii9i6s5v">
+	<tr>
+		<td width="100%" align="center" class="columns-wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="columns-border-table">
+				<tr>
+					<td width="100%" valign="top" class="columns-border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="columns-content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="columns-content-td">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="columns-inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="columns-inner-content-td">
+<!-- skeleton -->
+<!-- use th instead of td to enable display:block on android 4 -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<th class="col-spacer-td col-0-spacer-l-td" width="20"></th>
+		<th valign="top" class="col-0-td" width="298" style="width:298px;">
+			<table cellpadding="0" cellspacing="0" border="0" width="100%" class="container-table">
+				<tr>
+					<td class="container-td">
+<!-- col-0 -->
+<!-- text -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="text-table" id="lp-block-1a7qhxp5970ynz9x0ci0">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table" width="100%">
+				<tr>
+					<td width="100%" valign="top" class="border-td-removed">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="100%">
+							<tr>
+								<td width="100%" valign="top" class="content-td">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td width="100%" valign="top">
+			<table cellpadding="0" cellspacing="0" border="0" width="100%">
+				
+				<tr>
+					<td width="100%" class="text-td">Dag&nbsp;{{voornaam}},</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /text -->
+<!-- /col-0 -->
+</td>
+				</tr>
+			</table>
+		</th>
+		
+		
+		<th valign="top" class="col-1-td" width="318" style="width:318px;">
+			<table cellpadding="0" cellspacing="0" border="0" width="100%" class="container-table">
+				<tr>
+					<td class="container-td">
+<!-- col-1 -->
+<!-- text -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="text-table" id="lp-block-xfktoutlg1kp55toggfg">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table" width="100%">
+				<tr>
+					<td width="100%" valign="top" class="border-td-removed">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="100%">
+							<tr>
+								<td width="100%" valign="top" class="content-td">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td width="100%" valign="top">
+			<table cellpadding="0" cellspacing="0" border="0" width="100%">
+				
+				<tr>
+					<td width="100%" class="text-td"><div style="text-align:right;">JAARGANG 21<strong> | NR. 6</strong></div></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /text -->
+<!-- /col-1 -->
+</td>
+				</tr>
+			</table>
+		</th>
+		
+		
+		
+		
+		
+		
+		
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /columns -->
+
+
+
+<!-- text -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="text-table" id="lp-block-u02qm6354cnm96829x77">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table">
+				<tr>
+					<td width="100%" valign="top" class="border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="content-td" style="min-width:480px;">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td width="100%" valign="top">
+			<table cellpadding="0" cellspacing="0" border="0" width="100%">
+				
+				<tr>
+					<td width="100%" class="text-td"><div><span style="font-size:14px;">Deze week in Trinitas:</span><br /><strong><span style="font-size:14px;">Meeleven</span></strong></div><strong><span style="font-size:14px;">Verjaardagen<br />Leef mee met Harmen en Alien</span></strong></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /text -->
+
+
+
+<!-- text -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="text-table" id="lp-block-ksxwgx8l1osf666pqrly">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table">
+				<tr>
+					<td width="100%" valign="top" class="border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="content-td" style="min-width:480px;">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td width="100%" valign="top">
+			<table cellpadding="0" cellspacing="0" border="0" width="100%">
+				
+				<tr>
+					<td width="100%" class="text-td">De&nbsp;Trinitas&nbsp;verschijnt wekelijks als digitale nieuwsbrief. De volgende&nbsp;Trinitasmail wordt op&nbsp;<strong>woensdag 26 mei</strong>&nbsp;verzonden.</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /text -->
+
+
+
+<!-- textimage -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="textimage-table" id="lp-block-jygzuedk1twlhhz6d9mg">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table">
+				<tr>
+					<td width="100%" valign="top" class="border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="content-td" style="min-width:480px;">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0" align="left">
+	<tr>
+		<td width="100%" valign="top">
+			<table class="image-table" cellpadding="0" cellspacing="0" border="0" align="left">
+				<tr>
+					<td class="image-td" valign="top"><img src="https://koningskerkdeventer.email-provider.nl/a/squjrcacva/d/gewkmeldal/i/b5914db_w676_11105611840647eeb790.png" width="27" height="35" alt="" title="" /></td>
+					<td class="spacer-td"></td>
+				</tr>
+			</table>
+			<div class="text-div" style="background-color:#faf0f6;"><font face="'Trebuchet MS',Helvetica,sans-serif"><br /><span style="font-size:24px;"><strong>Kerkdienst 14 febr.</strong></span></font></div>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /textimage -->
+
+
+
+<!-- text -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="text-table" id="lp-block-qn3ei6aw8fl0gt6d0c1u">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table">
+				<tr>
+					<td width="100%" valign="top" class="border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="content-td" style="min-width:480px;">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td width="100%" valign="top">
+			<table cellpadding="0" cellspacing="0" border="0" width="100%">
+				
+				<tr>
+					<td width="100%" class="text-td"><p><strong><span style="font-size:14px;">A.s. zondag 14 februari gaat ds. C.W. Lodewijk uit Wezep voor.</span></strong><br /><span style="font-size:14px;">Aanvang 10.00 uur.<br />U bent welkom om de dienst mee te maken via&nbsp;kerkdienstgemist.nl.</span><br /><br /><span style="font-size:14px;"><strong>De collecte is voor de Diaconie.</strong><br />U kunt geven via de Scipio App of door het overmaken van uw gift op NL&nbsp;10&nbsp;RABO&nbsp;0117&nbsp;1615&nbsp;19 ten name van : CGK-GKV-NGK Diaconie, onder vermelding van het collectedoel.</span></p></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /text -->
+
+
+
+<!-- textimage -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="textimage-table" id="lp-block-kwszrlakc2aupjddy3an">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table">
+				<tr>
+					<td width="100%" valign="top" class="border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="content-td" style="min-width:480px;">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0" align="left">
+	<tr>
+		<td width="100%" valign="top">
+			<table class="image-table" cellpadding="0" cellspacing="0" border="0" align="left">
+				<tr>
+					<td class="image-td" valign="top"><img src="https://koningskerkdeventer.email-provider.nl/a/squjrcacva/d/gewkmeldal/i/b5914db_w676_11105611840647eeb790.png" width="27" height="35" alt="" title="" /></td>
+					<td class="spacer-td"></td>
+				</tr>
+			</table>
+			<div class="text-div" style="background-color:#faf0f6;"><font face="'Trebuchet MS',Helvetica,sans-serif"><br /><span style="font-size:24px;"><strong>Kerkdienst 21 febr.</strong></span></font></div>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /textimage -->
+
+
+
+<!-- text -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="text-table" id="lp-block-r2sxw1a1h5r4gug3jrlu">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table">
+				<tr>
+					<td width="100%" valign="top" class="border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="content-td" style="min-width:480px;">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td width="100%" valign="top">
+			<table cellpadding="0" cellspacing="0" border="0" width="100%">
+				
+				<tr>
+					<td width="100%" class="text-td"><p><span style="font-size:14px;"><strong>A.s. zondag 21 februari gaat ds. W. van Wijk voor.</strong><br />Aanvang 10.00 uur.<br />U bent welkom om de dienst mee te maken via&nbsp;kerkdienstgemist.nl.<br /><br /><strong>De collecte is voor de fam. Huisjes.</strong><br />U kunt geven via de Scipio App of door het overmaken van uw gift op NL&nbsp;10&nbsp;RABO&nbsp;0117&nbsp;1615&nbsp;19 ten name van : CGK-GKV-NGK Diaconie, onder vermelding van het collectedoel.</span></p></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /text -->
+
+
+
+<!-- text -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="text-table" id="lp-block-qvg2eqf4cq0ikxxuctch">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table">
+				<tr>
+					<td width="100%" valign="top" class="border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="content-td" style="min-width:480px;">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td width="100%" valign="top">
+			<table cellpadding="0" cellspacing="0" border="0" width="100%">
+				<tr>
+					<td width="100%" class="title-td">Meeleven</td>
+				</tr>
+				<tr>
+					<td width="100%" class="text-td"><p><span style="font-size:14px;"><strong>Zwangerschap en geboorte</strong><br />Deze keer wat uitgebreide aandacht hiervoor.&nbsp;<br />Ik realiseer me, dat heel veel zwangerschappen en geboortes van de afgelopen tijd goed gaan. Soms is er wat grotere of kleinere zorg, maar in veel gevallen komt het goed. Iets om dankbaar voor te zijn!&nbsp;<br />Dit spreekt niet vanzelf. We hebben nog altijd te maken met 'je zwangerschap maak ik tot een zware last' (Gen 3:16).&nbsp;<br /><br />Nathan en Lydia Schreurs verwachten in een april een baby. Maar er zijn zorgen, omdat Lydia last heeft van zwangerschapsdepressie en daarnaast heeft ze ook last van reuma Die reuma is niet onder controle te krijgen, omdat ze nu geen ontstekingsremmers kan gebruiken. Met de baby gaat wel goed, en dat is iets om dankbaar voor te zijn. Ons gebed is dat Lydia kracht en moed van de Heer krijgt om dit alles te dragen.&nbsp;<br /><br />Bij de fam. Boeve is 30 december een dochtertje geboren, dat de naam Isabella heeft gekregen.&nbsp;&nbsp;<br /><br />Annet&nbsp;Kwesinga&nbsp;en Bastiaan de Groot hebben op 1 februari een zoontje gekregen. Hij heet Aart Joris de Groot. Het gaat met hen allen goed en ze zijn God daar erg dankbaar voor. Annet is lid van onze gemeente; Bastiaan is op weg daar naar toe.&nbsp;<br /><br />Joas en Geertje de Groot hebben een zoontje gekregen: Lieuwe Klaas.&nbsp;<br /><br />We feliciteren deze gezinnen met deze mooie wonderen van God. Laten deze kinderen Gods genade en liefde mogen leren kennen bij het opgroeien door de liefde van vader en moeder.&nbsp;<br />Ds&nbsp;Wim en&nbsp;ds&nbsp;Evert</span></p></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /text -->
+
+
+
+<!-- textimage -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="textimage-table" id="lp-block-4mjd0qy5x0ih7902la2c">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table">
+				<tr>
+					<td width="100%" valign="top" class="border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="content-td" style="min-width:480px;">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0" align="left">
+	<tr>
+		<td width="100%" valign="top">
+			<table class="image-table" cellpadding="0" cellspacing="0" border="0" align="left">
+				<tr>
+					<td class="image-td" valign="top"><img src="https://koningskerkdeventer.email-provider.nl/a/squjrcacva/d/gewkmeldal/i/330b980_w1272_icoonpaars.png" width="99" height="99" alt="" title="" /></td>
+					<td class="spacer-td"></td>
+				</tr>
+			</table>
+			<div class="text-div" style="background-color:#faf0f6;"><font face="'Trebuchet MS',Helvetica,sans-serif"><br /><span style="font-size:24px;"><strong>Verjaardagen</strong></span></font></div>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /textimage -->
+
+
+
+<!-- text -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="text-table" id="lp-block-zonrn0kcbgr5o9rwfnye">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table">
+				<tr>
+					<td width="100%" valign="top" class="border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="content-td" style="min-width:480px;">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td width="100%" valign="top">
+			<table cellpadding="0" cellspacing="0" border="0" width="100%">
+				
+				<tr>
+					<td width="100%" class="text-td"><ul><li>&nbsp;16 februari <strong>Mevr. J. van Keulen - Kiela</strong></li></ul></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /text -->
+
+
+
+<!-- textimage -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="textimage-table" id="lp-block-or5ez08srau869bqtnss">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table">
+				<tr>
+					<td width="100%" valign="top" class="border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="content-td" style="min-width:480px;">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0" align="left">
+	<tr>
+		<td width="100%" valign="top">
+			<table class="image-table" cellpadding="0" cellspacing="0" border="0" align="left">
+				<tr>
+					<td class="image-td" valign="top"><img src="https://koningskerkdeventer.email-provider.nl/a/squjrcacva/d/gewkmeldal/i/38eb1d8_w1272_icoonpaars2.png" width="99" height="99" alt="" title="" /></td>
+					<td class="spacer-td"></td>
+				</tr>
+			</table>
+			<div class="text-div" style="background-color:#faf0f6;"><font face="'Trebuchet MS',Helvetica,sans-serif"><br /><span style="font-size:24px;"><strong>Kerkelijk bureau</strong></span></font></div>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /textimage -->
+
+
+
+<!-- text -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="text-table" id="lp-block-lvazcj9so4eqy0tqidkk">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table">
+				<tr>
+					<td width="100%" valign="top" class="border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="content-td" style="min-width:480px;">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td width="100%" valign="top">
+			<table cellpadding="0" cellspacing="0" border="0" width="100%">
+				
+				<tr>
+					<td width="100%" class="text-td"><ul><li>Alicia Caroline (17-01-2021), dochter van Gerrit Jan en Johanna Dijkgraaf&nbsp;(wijk C)</li><li>Isabella (30-12-2020), dochter van fam. Boeve (wijk F)</li><li>Aart Joris (01-02-2021), zoon van Annet Kwesinga en Bastiaan de Groot(wijk B)</li><li>Lieuwe Klaas (05-02-2021), zoon van Joas en Geertje de Groot (wijk D)</li></ul></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /text -->
+
+
+
+<!-- text -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="text-table" id="lp-block-o675ul9zow5qcswkxlbz">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table">
+				<tr>
+					<td width="100%" valign="top" class="border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="content-td" style="min-width:480px;">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td width="100%" valign="top">
+			<table cellpadding="0" cellspacing="0" border="0" width="100%">
+				<tr>
+					<td width="100%" class="title-td">Followkamp</td>
+				</tr>
+				<tr>
+					<td width="100%" class="text-td"><p><span style="font-size:14px;">Deze zomer is het weer zover: we gaan op followkamp.&nbsp;Venduciis es et pa cone officabo. Conest, ut alit de eum facium dolente sequis sitatates etur, inverferias incto molores minvell uptamet pore dolorio voluptate simento ommodis dolupta tempernatur, conseri tiusand iosapid quae etumque net utem sunt dis doluptatem in periaesequi invelis tisque porporendis dolorep erspis doluptam antio etum, officiliqui solorup tiumqui berera de min consequibus et acepudandi blate peruntus consedicit vero tet apiciis cumquid usamus por maiores dolorei cillecti vollaciat venim quae nonsendebis ex eoste atem soluptatiam repraes consecae. Pudi imus.</span></p><p><br />Heb jij je al aangemeld?&nbsp;</p></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /text -->
+
+
+
+<!-- button -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="button-table" id="lp-block-hgii9mjf29a8z12nc22t">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table">
+				<tr>
+					<td width="100%" valign="top" class="border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="content-td" style="min-width:480px;">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td width="100%" valign="top" class="button-c1-td" align="left">
+			<table border="0" cellspacing="0" cellpadding="0" class="button-c2-table">
+				<tr>
+					<td align="center" class="button-td">
+<!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="https://example.net" style="height:40px;v-text-anchor:middle;width:167px;" arcsize="0%" stroke="f" fillcolor="#8a1672"><w:anchorlock/><center><![endif]-->
+						<a href="https://example.net">Meld je hier aan!</a>
+<!--[if mso]></center></v:roundrect><![endif]-->
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /button -->
+
+
+
+<!-- video -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="video-table" id="lp-block-2vdoqo1ezdd0xm78m8z6">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table">
+				<tr>
+					<td width="100%" valign="top" class="border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="content-td" style="min-width:480px;">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td width="100%" valign="top">
+			<table width="100%" cellpadding="0" cellspacing="0" border="0">
+				<tr>
+					<td valign="top" align="center" class="video-td"><a href="https://www.youtube.com/watch?v=gs59xGpLVY0"><img src="https://koningskerkdeventer.email-provider.nl/a/squjrcacva/d/gewkmeldal/i/47c98a9_w640_sddefault.jpg" width="556" height="417" alt="" title="" /></a></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /video -->
+
+
+
+<!-- image -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="image-table horizontal" id="lp-block-y0b5bldqhvqmxgeim8rw">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table">
+				<tr>
+					<td width="100%" valign="top" class="border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="content-td" style="min-width:480px;">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td width="100%" valign="top">
+			<table width="100%" cellpadding="0" cellspacing="0" border="0">
+				<tr>
+					<td valign="top" align="center" class="image-td"><img src="https://koningskerkdeventer.email-provider.nl/a/squjrcacva/d/gewkmeldal/i/3abd948_w1272_leefmee.png" width="599" height="122" alt="" title="" /></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /image -->
+
+
+
+<!-- textimage -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="textimage-table" id="lp-block-gx3tt3a52682696jprug">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table">
+				<tr>
+					<td width="100%" valign="top" class="border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="content-td" style="min-width:480px;">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0" align="left">
+	<tr>
+		<td width="100%" valign="top">
+			<table class="image-table" cellpadding="0" cellspacing="0" border="0" align="right">
+				<tr>
+					<td class="spacer-td"></td><td class="image-td" valign="top"><img src="https://koningskerkdeventer.email-provider.nl/a/squjrcacva/d/gewkmeldal/i/3a8c74c_w1272_charlypnxjgnxidevjku.jpg" width="268" height="187" alt="" title="" /></td>
+					
+				</tr>
+			</table>
+			<div class="text-div" style="background-color:#ffffff;"><font face="'Trebuchet MS',Helvetica,sans-serif"><span style="font-size:14px;">Bijna een jaar geleden zaten wij gespannen op de bank, want de eerste &ldquo;corona-maatregelen&rdquo; werden afgekondigd. Ik kan mij nog goed herinneren hoe wij in die eerste weken onze draai zochten.&nbsp;<br />Krampachtig probeerden we afstand te houden van alle mensen die wij tegen kwamen en een klein snifje deed ons begin maart twijfelen of we op verjaardagsvisite moesten gaan.&nbsp;<br />Die verjaardagsvisite hebben we toentertijd niet afgeslagen. Het bleek ons laatste echte feestje tot nu toe. Toen al was C&rsquo;rona het gesprek van de dag en tot vandaag is dat zo gebleven. We zijn &eacute;&eacute;n jaar verder en we weten hoe dat gelopen is&hellip;<br />Gelukkig hebben wij het gezellig samen, Alien en ik. Hoewel het leven wat minder sociaal is geworden, maken we gretig gebruik van de ruimte die er nog wel is. Zo spelen we met enige regelmaat dobbelspelletjes met vrienden en kijken we Wie is de Mol in groepjes met de &ldquo;groeps-app&rdquo; onder de duim. Zelfs het aloude schaakspel is aangeschaft, hoewel dat vaker online dan offline wordt gespeeld.<br />Beide hebben we culinaire hobby&rsquo;s. Alien bakt graag. Slagroomtaarten, sloffen en gevulde koeken. Het komt tegenwoordig niet meer uit de supermarkt, maar van eigen hand. Zelf richt ik mij meer op de hartige kant. De Italiaanse keuken is mijn favoriet. Handgedraaide pasta en verse pizza uit eigen pizza-oven zijn (&eacute;cht) het lekkerst als je het zelf hebt gemaakt. De keuken is een plek in ons huis waar we graag onze tijd besteden! Op &lsquo;the Gram&rsquo; wordt gekscherend wel eens gevraagd of we geen afhaalrestaurant kunnen beginnen. Nou&hellip; wie weet!<br />Werken doen we beide vanuit huis. Om beurten werken we hier aan de keukentafel en in ons &lsquo;kantoor&rsquo;. Zo houden we onze werkomgeving toch een beetje afwisselend. Collega&rsquo;s zien we nu beide weinig, maar een groot voordeel is dat we elkaar dit jaar meer hebben gezien dan ooit! Tussen de middag hebben we zelfs de mogelijkheid om steeds met Piet (broer/zwager) en ook andere vrienden een rondje te lopen.<br />Je leert genieten van de kleine dingetjes. Een ommetje voelt als vakantie en thuis uit eten is n&eacute;t zo lekker! Zo vinden we vaker alternatieven voor de hobby&rsquo;s die we nu moeten laten gaan. Dan zetten we bij gebrek aan live-concerten toch onze favoriete muziek op maximaal volume en dansen we de kamer rond.<br />Eerlijk is eerlijk, ook de dipjes zijn ons natuurlijk niet vreemd. De ene wat groter dan de ander kleiner, maar het lukt ons goed om met een positieve bril naar de wereld te blijven kijken!&nbsp;<br /><br />Harmen en Alien van Dijk</span></font></div>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /textimage -->
+
+
+
+<!-- follow -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="follow-table last-table" id="lp-block-cpqicwv3ytxg10k2us67">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table">
+				<tr>
+					<td width="100%" valign="top" class="border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="content-td" style="min-width:480px;">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td width="100%" valign="top">
+			<table width="100%" cellpadding="0" cellspacing="0" border="0">
+				<tr>
+					<td valign="middle" align="center" class="follow-td"><table cellpadding="0" cellspacing="0"><tr><td><table align="left" border="0" cellpadding="0" cellspacing="0" class="item-table">
+	<tr>
+		<td align="center" valign="top" class="item-wrapper-td">
+			<table border="0" cellpadding="0" cellspacing="0" class="icon-table">
+				<tr>
+					<td align="center" valign="top" class="icon-td">
+						<a href="http://www.facebook.com"><img src="https://koningskerkdeventer.email-provider.nl/a/squjrcacva/d/gewkmeldal/i/follow-7_w256_facebook.png" width="36" alt="" title="" /></a>
+					</td>
+				</tr>
+			</table>
+			<table border="0" cellpadding="0" cellspacing="0" class="spacer-text-table">
+				<tr>
+					<td class="spacer-text-td">&nbsp;</td>
+				</tr>
+			</table>
+			<table border="0" cellpadding="0" cellspacing="0" class="text-table">
+				<tr>
+					<td align="center" valign="top" class="text-td">
+						<a href="http://www.facebook.com">Facebook</a>
+					</td>
+				</tr>
+			</table>
+		</td>
+		<td valign="top" class="spacer-wrapper">
+			<table border="0" cellpadding="0" cellspacing="0">
+				<tr>
+					<td class="spacer-h-td"></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!--[if mso]></td><![endif]--><!--[if mso]><td valign="top"><![endif]--><table align="left" border="0" cellpadding="0" cellspacing="0" class="item-table">
+	<tr>
+		<td align="center" valign="top" class="item-wrapper-td">
+			<table border="0" cellpadding="0" cellspacing="0" class="icon-table">
+				<tr>
+					<td align="center" valign="top" class="icon-td">
+						<a href="http://www.example.net"><img src="https://koningskerkdeventer.email-provider.nl/a/squjrcacva/d/gewkmeldal/i/follow-7_w256_website.png" width="36" alt="" title="" /></a>
+					</td>
+				</tr>
+			</table>
+			<table border="0" cellpadding="0" cellspacing="0" class="spacer-text-table">
+				<tr>
+					<td class="spacer-text-td">&nbsp;</td>
+				</tr>
+			</table>
+			<table border="0" cellpadding="0" cellspacing="0" class="text-table">
+				<tr>
+					<td align="center" valign="top" class="text-td">
+						<a href="http://www.example.net">Website</a>
+					</td>
+				</tr>
+			</table>
+		</td>
+		
+	</tr>
+</table>
+</td></tr></table></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /follow -->
+
+
+
+<!-- postfooter -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="postfooter-table" id="lp-block-isjaaqd4vinjgnk4kvtl">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="postfooter-border-table">
+				<tr>
+					<td width="100%" valign="top" class="postfooter-border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="postfooter-content-td">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" style="width:100%;min-width:100%;">
+	<tr>
+		<td width="100%" class="text-td">Deze e-mail is verstuurd aan <a href="mailto:{{email}}">{{email}}</a>.<br />Als u geen nieuwsbrief meer wilt ontvangen, kunt u zich <a href="https://koningskerkdeventer.email-provider.nl/unsubscribe/squjrcacva/8zm2illtav">hier afmelden</a>.<br />U kunt ook uw <a href="https://koningskerkdeventer.email-provider.nl/memberforms/edit/standalone/request/?a=squjrcacva&amp;l=__________&amp;m=__________">gegevens inzien en wijzigen</a>.<br />Voor een goede ontvangst voegt u <a href="mailto:trinitas@koningskerkdeventer.nl">trinitas@koningskerkdeventer.nl</a> toe aan uw adresboek.</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /postfooter -->
+
+
+<table width="100%" cellspacing="0" cellpadding="0"><tr><td class="pad-bottom-td"></td></tr></table>
+</div><!-- /#body-div -->
+<!--[if mso]><table cellspacing="0" cellpadding="0"><tr><td><![endif]-->
+</td></tr></table>
+
+<script>var l=document.links;var c=document.location.href.split('#')[0];
+for(var i=0;i<l.length;i++) {
+	var s = l[i].href.substring(0, c.length);
+	if(s!=c)l[i].target="_blank";
+}</script>
+<script>var l=document.links;var c=document.location.href.split('#')[0];for(var i=0;i<l.length;i++){if(l[i].href==c||l[i].href==c+'#'){l[i].href='javascript:;';l[i].target='';}}</script>
+</body>
+</html>

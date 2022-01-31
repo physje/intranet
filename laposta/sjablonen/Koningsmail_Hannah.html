@@ -1,0 +1,1678 @@
+<html>
+<head>
+<title>Test sjabloon</title>
+<style type="text/css">
+
+	/*************************/
+	/*** fix email clients ***/
+	/*************************/
+	img{-ms-interpolation-mode:bicubic;}
+
+	/********************/
+	/*** reset styles ***/
+	/********************/
+	body{margin:0;padding:0;}
+	img{border:0;line-height:100%;outline:none;text-decoration:none;display:block;}
+	table{border-collapse:collapse !important;}
+	table th {margin:0 !important;vertical-align:top;font-weight:normal;}
+	body{height:100% !important;margin:0 !important;padding:0 !important;}
+	p{margin:0;padding:0;margin-bottom:0;}
+	h1,h2,h3,h4,h5,h6{line-height:1.4em;font-weight:bold;font-style:normal;margin:0} 
+
+	/****************/
+	/*** defaults ***/
+	/****************/
+	h1 { font-size: 2em; }
+	h2 { font-size: 1.7em; }
+	h3 { font-size: 1.4em; }
+	h4 { font-size: 1em; }
+	hr { border: 0; color: #333333; background-color: #333333; height: 1px; }
+	ul, ol { margin: 0; padding: 0 }
+	ul { list-style-type: disc; list-style-position: outside; padding-left: 20px; }
+	ol { list-style-type: decimal; list-style-position: outside; padding-left: 20px; }
+	ul ul, ol ul { list-style-type: circle; list-style-position: inside; margin-left: 16px; }
+	ol ol, ul ol { list-style-type: lower-latin; list-style-position: inside; margin-left: 16px; }
+
+	/* add some spacing for Gmail: set minimum width for outer table */
+	.wrapper-td, .columns-wrapper-td {
+		padding: 0 20px;
+	}
+
+	/* but not for blocks inside columns */
+	.columns-wrapper-td .wrapper-td {
+		padding: 0;
+	}
+
+	/* prevent unnecessary vertical width in Outlook 07/10/13 */
+	.image-td, .video-td {
+		height: 1px;
+		line-height: 100%;
+	}
+
+	/* keep bullets outside image padding */
+	.textimage-table ul, .textimage-table ol {
+		overflow: hidden;
+	}
+
+	/* follow block */
+	.follow-td .text-td a {
+		text-decoration: none !important;
+		/* prevent wrapping in ios */
+		word-break: keep-all;
+	}
+
+	.follow-td .spacer-text-td {
+		font-size: 0;
+		line-height: 0;
+	}
+
+	/* share block */
+	.share-td .text-td a {
+		text-decoration: none !important;
+		/* prevent wrapping in ios */
+		word-break: keep-all;
+	}
+
+	.share-td .spacer-text-td {
+		font-size: 0;
+		line-height: 0;
+	}
+
+	/* follow & share spacers */
+	.spacer-h-td {
+		padding-top: 0 !important;
+		padding-bottom: 0 !important;
+	}
+
+	.spacer-v-td {
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+	}
+
+	/* buttons */
+	.button-td a {
+		display: inline-block;
+		text-decoration: none;
+		line-height: 125% !important;
+		text-align: center !important;
+	}
+
+	/*****************/
+	/* be responsive */
+	/*****************/
+	@media screen and (max-width: 600px) {
+
+		body,table,td,a{-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;}
+
+		/* reset Gmail padding */
+		.wrapper-td, .columns-wrapper-td {
+			padding: 0 !important;
+		}
+
+		/* remove bottom padding */
+		td.pad-top-td {
+			padding: 0 !important;
+		}
+
+		/* remove bottom padding */
+		td.pad-bottom-td {
+			padding: 0 !important;
+		}
+
+		/* add small padding to show background */
+		#body-div {
+			padding: 10px 10px !important;
+		}
+
+		/* set content at full width */
+		table.content-table {
+			width: 100% !important;
+		}
+
+		table.columns-content-table {
+			width: 100% !important;
+		}
+
+		table.border-table {
+			width: 100% !important;
+		}
+
+		table.columns-border-table {
+			width: 100% !important;
+		}
+
+		/* correct mobile gmail hack */
+		td.content-td {
+			min-width: 0 !important;
+			padding: 0 !important;
+		}
+
+		/* fixed padding for almost all content blocks */
+		/* not touched: divider, code */
+		.text-table .inner-content-td {
+			padding: 16px 16px !important;
+		}
+
+		.title-table .inner-content-td {
+			padding: 10px 16px 10px 16px !important;
+		}
+
+		.textimage-table .inner-content-td {
+			padding: 16px 16px !important;
+		}
+
+		.video-table .inner-content-td {
+			padding: 16px 16px !important;
+		}
+
+		.button-table .inner-content-td {
+			padding: 16px 16px !important;
+		}
+
+		.follow-table .inner-content-td {
+			padding: 16px 16px !important;
+		}
+
+		.share-table .inner-content-td {
+			padding: 16px 16px !important;
+		}
+
+		/* default image padding */
+		.image-table .inner-content-td {
+			padding: 16px 16px !important;
+		}
+
+		/* full width for full width images (if no horizontal padding) */
+		.image-table.full-width .inner-content-td {
+			padding: 0 !important;
+		}
+
+		/* less width for square images */
+		.image-table.square .inner-content-td {
+			padding: 16px 48px !important;
+		}
+
+		/* even less width for vertical images */
+		.image-table.vertical .inner-content-td {
+			padding: 16px 64px !important;
+		}
+
+		/* stack columns */
+		table.columns-content-table {
+			width: 100% !important;
+		}
+
+		td.columns-inner-content-td th {
+			display: block !important;
+			width: 100% !important;
+		}
+
+		td.columns-inner-content-td th.col-spacer-td {
+			display: none;
+		}
+
+		/* control vertical padding for columns */
+		td.columns-content-td {
+			padding: 0 !important;
+		}
+
+		td.columns-inner-content-td {
+			padding: 4px 0 !important;
+		}
+
+		td.columns-inner-content-td th {
+			padding: 0 !important;
+		}
+
+		/* images full width */
+		td.image-td img {
+			width: 100% !important;
+			height: auto !important;
+		}
+
+		/* vertical spacing for images in textimage block */
+		table.textimage-table .image-td {
+			padding: 6px 0 16px 0 !important;
+		}
+
+		/* video preview full width */
+		td.video-td img {
+			width: 100% !important;
+			height: auto !important;
+		}
+
+		/* buttons full width */
+		table.button-c2-table {
+			width: 100% !important;
+		}
+
+		td.button-td a {
+			display: block !important;
+		}
+
+		/* textimage images full width */
+		table.image-table {
+			width: 100% !important;
+		}
+
+		table.image-table .spacer-td {
+			padding: 0 !important;
+		}
+
+		/* follow items */
+		td.follow-td .icon-td img {
+			min-width: 40px;
+			max-width: 60px;
+		}
+
+		td.follow-td .text-td a {
+			font-size: 12px !important;
+		}
+
+		td.follow-td .spacer-text-td {
+			padding: 0 !important;
+		}
+
+		td.follow-td .spacer-item-td {
+			padding: 12px !important;
+		}
+
+		td.follow-td .item-table {
+			width: 1px;
+		}
+
+		/* share items */
+		td.share-td .icon-td img {
+			min-width: 40px;
+			max-width: 60px;
+		}
+
+		td.share-td .text-td a {
+			font-size: 12px !important;
+		}
+
+		td.share-td .spacer-text-td {
+			padding: 0 !important;
+		}
+
+		td.share-td .spacer-item-td {
+			padding: 12px !important;
+		}
+
+		td.share-td .item-table {
+			width: 1px;
+		}
+	
+		/*** global text settings ***/
+
+		/* all text */
+		body, td, div {
+			font-size: 18px !important;
+			line-height: 24px !important;
+		}
+
+		/* titles  */
+		td.title-td {
+			font-size: 34px !important;
+			line-height: 42px !important;
+			padding: 0 !important;
+		}
+
+		/* text */
+		td.text-td {
+			font-size: 18px !important;
+			line-height: 24px !important;
+		}
+
+		div.text-div {
+			font-size: 18px !important;
+			line-height: 24px !important;
+		}
+
+		/* titles inside text */
+		.text-table .title-td {
+			font-size: 26px !important;
+			line-height: 34px !important;
+		}
+
+		/*** per block settings ***/
+
+		/* hide preheader, keep border */
+		table.preheader-table .content-table {
+			display: none !important;
+		}
+
+		/* postfooter */
+		table.postfooter-table .text-td {
+			text-align: left !important;
+			font-size: 14px !important;
+			line-height: 20px !important;
+		}
+
+		/* marketing */
+		table.marketing-table .inner-content-td {
+			padding: 10px 0 !important;
+		}
+
+		table.marketing-table .text-td {
+			padding: 20px 20px !important;
+			text-align: left !important;
+			font-size: 16px !important;
+			line-height: 20px !important;
+		}
+
+		table.marketing-table .bull {
+			display: none;
+		}
+
+		table.marketing-table .line {
+			display: block;
+			padding-bottom: 16px;
+		}
+
+		table.marketing-border-table {
+			width: 100% !important;
+		}
+
+		/* misc */
+		.mobile-hide {
+			display: none;
+		}
+	}
+</style>
+<!--[if gte mso 9]>
+<style>
+ul, ol {
+   margin: 0 0 0 24px !important;
+   padding: 0 !important;
+   list-style-position: inside;
+}
+</style>
+<![endif]-->
+<!--[if gte mso 9]>
+<xml>
+  <o:OfficeDocumentSettings>
+    <o:AllowPNG/>
+    <o:PixelsPerInch>96</o:PixelsPerInch>
+ </o:OfficeDocumentSettings>
+</xml>
+<![endif]-->
+<style type="text/css">
+body {
+	background-color: #f0f0f0;
+}
+.pad-top-td {
+	padding-top: 20px;
+}
+.pad-bottom-td {
+	padding-bottom: 20px;
+}
+.content-td, .columns-content-td {
+	background-color: #ffffff;
+}
+body,td {
+	color: #000000;
+	font-family: "Trebuchet MS",Helvetica,sans-serif;
+	font-size: 14px;
+	font-weight: normal;
+	font-style: normal;
+	line-height: 200%;
+}
+
+/* [force] */
+.title-td,.text-td,.text-div,.button-td a {
+	color: #000000;
+	font-family: "Trebuchet MS",Helvetica,sans-serif;
+	font-size: 14px;
+	font-weight: normal;
+	font-style: normal;
+	line-height: 200%;
+}
+.inner-content-td {
+	text-align: left;
+}
+
+/* [force] */
+.title-td,.text-td,.text-div,.button-td a {
+	text-align: left;
+}
+body a {
+	color: #9e0091;
+	text-decoration: underline;
+}
+
+/* [force] */
+.title-td a,.text-td a,.text-div a,.button-td a a {
+	color: #9e0091;
+}
+
+/* columns */
+#lp-block-jcuyn8lxthvfiynyqlcm .columns-inner-content-td, #lp-block-jcuyn8lxthvfiynyqlcm .content-td {
+	background-color: #faf0f6;
+}
+
+/* columns */
+#lp-block-jcuyn8lxthvfiynyqlcm .col-0-td, #lp-block-jcuyn8lxthvfiynyqlcm .col-0-td .content-td {
+	background-color: #faf0f6;
+}
+
+/* columns */
+#lp-block-jcuyn8lxthvfiynyqlcm .col-2-td, #lp-block-jcuyn8lxthvfiynyqlcm .col-2-td .content-td {
+	background-color: #faf0f6;
+}
+
+/* columns */
+#lp-block-jcuyn8lxthvfiynyqlcm .col-3-td, #lp-block-jcuyn8lxthvfiynyqlcm .col-3-td .content-td {
+	background-color: #faf0f6;
+}
+
+/* columns */
+#lp-block-jcuyn8lxthvfiynyqlcm .columns-content-td {
+	padding-bottom: 10px;
+}
+
+/* title */
+#lp-block-pc8cln7gwhu2mas5lfsa .title-td {
+	color: #8a1672;
+	font-size: 24px;
+	font-weight: bold;
+	line-height: 200%;
+}
+/* title */
+#lp-block-pc8cln7gwhu2mas5lfsa .title-td a {
+	color: #8a1672;
+	text-decoration: none;
+}
+
+/* title */
+#lp-block-pc8cln7gwhu2mas5lfsa .inner-content-td {
+	padding-top: 20px;
+	padding-bottom: 10px;
+	padding-left: 40px;
+	padding-right: 40px;
+}
+
+/* video */
+#lp-block-2vdoqo1ezdd0xm78m8z6 .inner-content-td {
+	background-color: #cb8fb3;
+	padding-top: 40px;
+	padding-bottom: 40px;
+	padding-left: 40px;
+	padding-right: 40px;
+}
+
+/* video */
+#lp-block-2vdoqo1ezdd0xm78m8z6 .content-td {
+	padding-top: 20px;
+	padding-bottom: 20px;
+}
+
+/* button */
+#lp-block-m1xt9hfbcz4cb6q7z7h5 .button-td a {
+	background-color: #8a1672;
+	color: #ffffff;
+	font-size: 16px;
+	font-weight: bold;
+	font-style: normal;
+	padding-left: 15px;
+	padding-right: 15px;
+	padding-top: 6px;
+	padding-bottom: 6px;
+}
+
+/* button */
+#lp-block-m1xt9hfbcz4cb6q7z7h5 .inner-content-td {
+	padding-bottom: 20px;
+	padding-left: 40px;
+	padding-right: 40px;
+}
+
+/* text */
+#lp-block-7rjy31trw189g26025xf .title-td {
+	color: #8a1672;
+	font-size: 24px;
+	font-weight: bold;
+	line-height: 200%;
+}
+/* text */
+#lp-block-7rjy31trw189g26025xf .title-td a {
+	color: #8a1672;
+	text-decoration: none;
+}
+
+/* text */
+#lp-block-7rjy31trw189g26025xf .inner-content-td {
+	padding-top: 20px;
+	padding-bottom: 20px;
+	padding-left: 40px;
+	padding-right: 40px;
+}
+
+/* image */
+#lp-block-we2ymtd4bvkg8s7kthn1 .inner-content-td {
+	background-color: #faf0f6;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+/* title */
+#lp-block-sd2d1fx1sdu7vlf7yzkb .title-td {
+	color: #8a1672;
+	font-size: 24px;
+	font-weight: bold;
+	line-height: 200%;
+}
+/* title */
+#lp-block-sd2d1fx1sdu7vlf7yzkb .title-td a {
+	color: #8a1672;
+	text-decoration: none;
+}
+
+/* title */
+#lp-block-sd2d1fx1sdu7vlf7yzkb .inner-content-td {
+	padding-top: 20px;
+	padding-bottom: 10px;
+	padding-left: 40px;
+	padding-right: 40px;
+}
+
+/* postfooter */
+#lp-block-isjaaqd4vinjgnk4kvtl .text-td {
+	color: #888888;
+	font-size: 12px;
+	line-height: 125%;
+	text-align: center;
+}
+
+/* postfooter */
+#lp-block-isjaaqd4vinjgnk4kvtl .text-td a {
+	color: #888888;
+}
+
+/* postfooter */
+#lp-block-isjaaqd4vinjgnk4kvtl .inner-content-td {
+	padding-top: 15px;
+	padding-bottom: 15px;
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+/* text */
+#lp-block-zqbdhvj3718kou07fcjz .title-td {
+	color: #8a1673;
+	font-size: 14px;
+	font-weight: bold;
+	line-height: 125%;
+}
+/* text */
+#lp-block-zqbdhvj3718kou07fcjz .title-td a {
+	color: #8a1673;
+	text-decoration: none;
+}
+
+/* text */
+#lp-block-zqbdhvj3718kou07fcjz .text-td {
+	color: #8a1673;
+	font-size: 14px;
+	font-weight: normal;
+	text-align: left;
+}
+
+/* text */
+#lp-block-zqbdhvj3718kou07fcjz .inner-content-td {
+	background-color: #ffffff;
+	padding-top: 30px;
+	padding-left: 50px;
+}
+
+/* text */
+#lp-block-zqbdhvj3718kou07fcjz .content-td {
+	padding-left: 38px;
+}
+
+/* divider */
+#lp-block-p5kg0bmctrxsv157d5hr .inner-content-td {
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+/* divider */
+#lp-block-p5kg0bmctrxsv157d5hr .divider-td {
+	border-top-width: 4px;
+	border-top-color: #cb8fb3;
+	border-top-style: solid;
+}
+
+/* image */
+#lp-block-9ilif17yh47yibk4qku0 .inner-content-td {
+	background-color: #faf0f6;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+/* textimage */
+#lp-block-gx3tt3a52682696jprug .image-table {
+	width: 50px;
+}
+
+/* textimage */
+#lp-block-gx3tt3a52682696jprug .spacer-td {
+	padding-left: 19px;
+}
+
+/* textimage */
+#lp-block-gx3tt3a52682696jprug .inner-content-td {
+	padding-top: 10px;
+	padding-bottom: 30px;
+	padding-left: 40px;
+	padding-right: 40px;
+}
+
+/* textimage */
+#lp-block-mixu4aak5upw9q6yimak .image-table {
+	width: 46px;
+}
+
+/* textimage */
+#lp-block-mixu4aak5upw9q6yimak .image-td {
+	padding-top: 2px;
+	padding-bottom: 6px;
+}
+
+/* textimage */
+#lp-block-mixu4aak5upw9q6yimak .spacer-td {
+	padding-left: 16px;
+}
+
+/* textimage */
+#lp-block-mixu4aak5upw9q6yimak .inner-content-td {
+	padding-top: 10px;
+	padding-bottom: 20px;
+	padding-left: 40px;
+	padding-right: 40px;
+}
+
+/* follow */
+#lp-block-cpqicwv3ytxg10k2us67 .icon-td {
+	width: 36px;
+}
+
+/* follow */
+#lp-block-cpqicwv3ytxg10k2us67 .spacer-h-td, #lp-block-cpqicwv3ytxg10k2us67 .spacer-v-td {
+	padding: 13px;
+}
+
+/* follow */
+#lp-block-cpqicwv3ytxg10k2us67 .spacer-text-td {
+	padding: 1px;
+}
+
+/* follow */
+#lp-block-cpqicwv3ytxg10k2us67 .text-td a {
+	color: #ffffff;
+	font-family: "Trebuchet MS",Helvetica,sans-serif;
+	font-size: 12px;
+	font-weight: normal;
+	font-style: normal;
+}
+
+/* follow */
+#lp-block-cpqicwv3ytxg10k2us67 .inner-content-td {
+	background-color: #a42179;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+/* text */
+#lp-block-qvg2eqf4cq0ikxxuctch .title-td {
+	color: #8a1672;
+	font-size: 24px;
+	font-weight: bold;
+	line-height: 200%;
+}
+/* text */
+#lp-block-qvg2eqf4cq0ikxxuctch .title-td a {
+	color: #8a1672;
+	text-decoration: none;
+}
+
+/* text */
+#lp-block-qvg2eqf4cq0ikxxuctch .inner-content-td {
+	background-color: #faf0f6;
+	padding-top: 21px;
+	padding-bottom: 20px;
+	padding-left: 40px;
+	padding-right: 40px;
+}
+
+/* marketing */
+#lp-block-srras1wdfcknurctuflf .text-td {
+	color: #777777;
+	font-family: Arial;
+	font-size: 12px;
+	line-height: 150%;
+	font-weight: normal;
+	font-style: normal;
+	text-align: center;
+}
+
+/* marketing */
+#lp-block-srras1wdfcknurctuflf .text-td a {
+	color: #777777;
+	text-decoration: underline;
+}
+
+/* marketing */
+#lp-block-srras1wdfcknurctuflf .text-td {
+	padding-top: 20px;
+	padding-bottom: 6px;
+	padding-left: 60px;
+	padding-right: 60px;
+}
+
+/* marketing */
+#lp-block-srras1wdfcknurctuflf .logo-td {
+	padding-top: 6px;
+	padding-bottom: 20px;
+	padding-left: 24px;
+	padding-right: 24px;
+}
+
+/* marketing */
+#lp-block-srras1wdfcknurctuflf .inner-content-td {
+	padding: 20px;
+}
+
+/* preheader */
+#lp-block-zaccw0wbozaftolxwrtj .inner-content-td {
+	font-size: 12px;
+}
+
+/* [force] */
+/* preheader */
+#lp-block-zaccw0wbozaftolxwrtj .title-td,#lp-block-zaccw0wbozaftolxwrtj .text-td,#lp-block-zaccw0wbozaftolxwrtj .text-div,#lp-block-zaccw0wbozaftolxwrtj .button-td a {
+	font-size: 12px;
+}
+
+/* preheader */
+#lp-block-zaccw0wbozaftolxwrtj .inner-content-td {
+	padding-bottom: 15px;
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+/* preheader */
+#lp-block-zaccw0wbozaftolxwrtj .col-spacer {
+	padding-left: 8px;
+	padding-right: 8px;
+}</style>
+<!--[if mso]>
+<style type="text/css">
+body,td,a {
+	font-family: "Trebuchet MS",Helvetica,sans-serif !important;
+}
+
+/* follow */
+#lp-block-cpqicwv3ytxg10k2us67 .text-td a {
+	font-family: "Trebuchet MS",Helvetica,sans-serif !important;
+}
+
+/* marketing */
+#lp-block-srras1wdfcknurctuflf .text-td {
+	font-family: Arial !important;
+}
+</style>
+<![endif]-->
+</head>
+<body>
+<table width="100%" height="100%" cellspacing="0" cellpadding="0"><tr><td valign="top" id="body-td">
+<!--[if mso]></td></tr></table><![endif]-->
+<div id="body-div"><table width="100%" cellspacing="0" cellpadding="0"><tr><td class="pad-top-td"></td></tr></table>
+
+
+<!-- preheader -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="preheader-table" id="lp-block-zaccw0wbozaftolxwrtj">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="preheader-border-table">
+				<tr>
+					<td width="100%" valign="top" class="preheader-border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="preheader-content-td">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+	<tr>
+		<td width="50%" valign="top" style="text-align:left;" class="text-td"><lp-singleline lp-label="Korte omschrijving">Zet hier een korte, pakkende omschrijving van uw nieuwsbrief.</lp-singleline></td>
+		<td class="col-spacer"></td>
+		<td width="50%" valign="top" style="text-align:right;" class="text-td"><lp-webversion>Bekijk de webversie</lp-webversion></td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /preheader -->
+
+
+
+<!-- image -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="image-table first-table full-width" id="lp-block-5g2pf5lmy5xwsskel5qb">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table">
+				<tr>
+					<td width="100%" valign="top" class="border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="content-td" style="min-width:480px;">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td width="100%" valign="top">
+			<table width="100%" cellpadding="0" cellspacing="0" border="0">
+				<tr>
+					<td valign="top" align="center" class="image-td"><img src="https://koningskerkdeventer.email-provider.nl/a/squjrcacva/d/isxzw8t3mu/i/58b917c_w1272_headerkoningsmail2.png" width="636" height="104" alt="" title="" /></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /image -->
+
+
+
+<!-- image -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="image-table full-width" id="lp-block-6xwe8rlksmrg4hlo04jc">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table">
+				<tr>
+					<td width="100%" valign="top" class="border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="content-td" style="min-width:480px;">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td width="100%" valign="top">
+			<table width="100%" cellpadding="0" cellspacing="0" border="0">
+				<tr>
+					<td valign="top" align="center" class="image-td"><img src="https://koningskerkdeventer.email-provider.nl/a/squjrcacva/d/isxzw8t3mu/i/27b1aa2_w1272_gemeente381553690697.jpg" width="636" height="358" alt="" title="" /></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /image -->
+
+
+
+<!-- text -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="text-table" id="lp-block-zqbdhvj3718kou07fcjz">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table">
+				<tr>
+					<td width="100%" valign="top" class="border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="content-td" style="min-width:480px;">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td width="100%" valign="top">
+			<table cellpadding="0" cellspacing="0" border="0" width="100%">
+				
+				<tr>
+					<td width="100%" class="text-td">Dag {{voornaam}},<br /><br />Deze keer de volgende berichten:<br /><lp-toc></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /text -->
+
+
+
+<!-- divider -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="divider-table" id="lp-block-p5kg0bmctrxsv157d5hr">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table">
+				<tr>
+					<td width="100%" valign="top" class="border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="content-td" style="min-width:480px;">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td width="100%" valign="top">
+			<table cellpadding="0" cellspacing="0" border="0" width="100%">
+				<tr>
+					<td width="100%" class="divider-td"></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /divider -->
+
+
+<lp-repeater>
+<lp-layout lp-label="Tekst met foto rechts">
+<!-- title -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="title-table" id="lp-block-sd2d1fx1sdu7vlf7yzkb">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table">
+				<tr>
+					<td width="100%" valign="top" class="border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="content-td" style="min-width:480px;">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td width="100%" valign="top">
+			<table cellpadding="0" cellspacing="0" border="0" width="100%">
+				<tr>
+					<td width="100%" class="title-td"><lp-singleline lp-label="Kop boven artikel" lp-toc>Kop boven artilel</lp-singleline></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /title -->
+
+
+
+<!-- textimage -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="textimage-table" id="lp-block-mixu4aak5upw9q6yimak">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table">
+				<tr>
+					<td width="100%" valign="top" class="border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="content-td" style="min-width:480px;">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0" align="left">
+	<tr>
+		<td width="100%" valign="top">
+			<table class="image-table" cellpadding="0" cellspacing="0" border="0" align="right">
+				<tr>
+					<td class="spacer-td"></td><td class="image-td" valign="top"><img src="https://koningskerkdeventer.email-provider.nl/a/squjrcacva/d/isxzw8t3mu/i/9a9ce23_w1272_austindistelpks3hczm.jpg" width="240" height="165" alt="" title="" /></td>
+					
+				</tr>
+			</table>
+			<div class="text-div" style="background-color:#ffffff;"><font face="'Trebuchet MS',Helvetica,sans-serif"></font><p><strong><span style="font-size:14px;">Op&nbsp;woensdag 16 september 2020 was de online&nbsp;Publiekspresentatie van Kerk2030. U kunt dit terugkijken via&nbsp;www.kerk2030.nl/publiekspresentatie. Tijdens deze landelijke aftrap van Kerk2030 werd het boekje&nbsp;'Geloven doe je samen'&nbsp;gepresenteerd. Dit boekje kunt u bekijken en downloaden op de website:&nbsp;www.kerk2030.nl/publicatie. Hierin wordt een model gepresenteerd dat gaat over zes praktijkvelden van kerkzijn.</span></strong></p><span style="font-size:14px;">&nbsp;<br /><strong>Webinars</strong><br />Vanaf begin december 2020 organiseert Kerk2030 webinars over deze praktijkvelden.&nbsp;Tijdens elk&nbsp;webinar staat &eacute;&eacute;n thema centraal, dat we met een&nbsp;hoofdspreker verdiepen. Afsluitend is gelegenheid tot gesprek aan de hand van vragen.&nbsp;Zo willen we samen op pad, samen nadenken en samen ontdekken wat de verschillende geloofspraktijken betekenen voor kerken anno nu en naar de toekomst.<br />Het eerste webinar was op 7 december, van 19:30-20:30, met als thema &lsquo;Christus zien en God ontmoeten&rsquo;. Hoofdspreker was&nbsp;Reinier Kramer, Predikant De Hoeksteen,&nbsp;Bergentheim.&nbsp;Luister, kijk, denk en doet u mee? Via&nbsp;www.kerk2030.nl/webinars&nbsp;kunt u zich voor eventueel andere webinars aanmelden.&nbsp;Informatie over hoe het webinar gevolgd&nbsp;kan worden volgt dan per mail.<br /><br />Met vriendelijke groet,<br />Kerk2030,&nbsp;info@kerk2030.nl</span></div>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /textimage -->
+
+
+
+<!-- text -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="text-table" id="lp-block-qvg2eqf4cq0ikxxuctch">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table">
+				<tr>
+					<td width="100%" valign="top" class="border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="content-td" style="min-width:480px;">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td width="100%" valign="top">
+			<table cellpadding="0" cellspacing="0" border="0" width="100%">
+				<tr>
+					<td width="100%" class="title-td">De titel van dit blok</td>
+				</tr>
+				<tr>
+					<td width="100%" class="text-td"><p><span style="font-size:14px;">Dit is het blok Tekst. Als u deze tekst aanklikt, kunt u deze wijzigen. Aan de linkerkant krijgt u twee tabs te zien. Onder de tab Inhoud kunt u uw tekst invoeren en iets opmaken. Hier kunt u ook de titel van dit blok aanpassen. Onder de tab Vormgeving doet u de grote opmaak, van de titel, de tekst en het vak.<br /><br />Wilt u weer naar het overzicht van blokken en de opties voor algehele opmaak? Sla dan uw blok op of klik op de buitenkant van uw nieuwsbrief.</span></p></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /text -->
+
+
+
+<!-- columns -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="columns-table" id="lp-block-jcuyn8lxthvfiynyqlcm">
+	<tr>
+		<td width="100%" align="center" class="columns-wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="columns-border-table">
+				<tr>
+					<td width="100%" valign="top" class="columns-border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="columns-content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="columns-content-td">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="columns-inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="columns-inner-content-td">
+<!-- skeleton -->
+<!-- use th instead of td to enable display:block on android 4 -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<th class="col-spacer-td col-0-spacer-l-td" width="30"></th>
+		<th valign="top" class="col-0-td" width="288" style="width:288px;">
+			<table cellpadding="0" cellspacing="0" border="0" width="100%" class="container-table">
+				<tr>
+					<td class="container-td">
+<!-- col-0 -->
+<!-- image -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="image-table full-width" id="lp-block-we2ymtd4bvkg8s7kthn1">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table" width="100%">
+				<tr>
+					<td width="100%" valign="top" class="border-td-removed">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="100%">
+							<tr>
+								<td width="100%" valign="top" class="content-td">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td width="100%" valign="top">
+			<table width="100%" cellpadding="0" cellspacing="0" border="0">
+				<tr>
+					<td valign="top" align="center" class="image-td"><img src="https://koningskerkdeventer.email-provider.nl/a/squjrcacva/d/isxzw8t3mu/i/a453834_w1272_bradynshockwomybmkqo.jpg" width="288" height="196" alt="" title="" /></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /image -->
+<!-- /col-0 -->
+</td>
+				</tr>
+			</table>
+		</th>
+		
+		
+		<th valign="top" class="col-1-td" width="288" style="width:288px;">
+			<table cellpadding="0" cellspacing="0" border="0" width="100%" class="container-table">
+				<tr>
+					<td class="container-td">
+<!-- col-1 -->
+<!-- image -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="image-table full-width" id="lp-block-9ilif17yh47yibk4qku0">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table" width="100%">
+				<tr>
+					<td width="100%" valign="top" class="border-td-removed">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="100%">
+							<tr>
+								<td width="100%" valign="top" class="content-td">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td width="100%" valign="top">
+			<table width="100%" cellpadding="0" cellspacing="0" border="0">
+				<tr>
+					<td valign="top" align="center" class="image-td"><img src="https://koningskerkdeventer.email-provider.nl/a/squjrcacva/d/isxzw8t3mu/i/ad3790e_w1272_bethmacdonaldqabussr.jpg" width="288" height="192" alt="" title="" /></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /image -->
+<!-- /col-1 -->
+</td>
+				</tr>
+			</table>
+		</th>
+		<th class="col-spacer-td col-1-spacer-r-td" width="30"></th>
+		
+		
+		
+		
+		
+		
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /columns -->
+
+
+
+<!-- text -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="text-table" id="lp-block-7rjy31trw189g26025xf">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table">
+				<tr>
+					<td width="100%" valign="top" class="border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="content-td" style="min-width:480px;">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td width="100%" valign="top">
+			<table cellpadding="0" cellspacing="0" border="0" width="100%">
+				<tr>
+					<td width="100%" class="title-td">Oliebollen actie!</td>
+				</tr>
+				<tr>
+					<td width="100%" class="text-td"><span style="font-size:14px;">Op donderdag 31 december ga ik (Nelleke Bloemhof) oliebollen bakken voor het goede doel.&nbsp;Het goede doel is:&nbsp;Meer Jezus! Hier ben ik vrijwilliger van.<br /><br />De oliebollen zullen &euro;1,- per stuk kosten.&nbsp;En 11 voor &euro;10,-<br />Graag van te voren doorgeven, als je bij mij oliebollen wilt kopen, dan weet ik een beetje waar ik rekening mee kan houden.<br />De oliebollen moeten op 31 december bij ons thuis worden opgehaald.<br />(06-40713170 of&nbsp;nellekeklapwijk@hotmail.com)</span></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /text -->
+
+
+
+<!-- button -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="button-table" id="lp-block-m1xt9hfbcz4cb6q7z7h5">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table">
+				<tr>
+					<td width="100%" valign="top" class="border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="content-td" style="min-width:480px;">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td width="100%" valign="top" class="button-c1-td" align="left">
+			<table border="0" cellspacing="0" cellpadding="0" class="button-c2-table">
+				<tr>
+					<td align="center" class="button-td">
+<!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="https://example.net" style="height:32px;v-text-anchor:middle;width:121px;" arcsize="0%" stroke="f" fillcolor="#8a1672"><w:anchorlock/><center><![endif]-->
+						<a href="https://example.net">Bestel hier</a>
+<!--[if mso]></center></v:roundrect><![endif]-->
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /button -->
+
+
+
+<!-- video -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="video-table" id="lp-block-2vdoqo1ezdd0xm78m8z6">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table">
+				<tr>
+					<td width="100%" valign="top" class="border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="content-td" style="min-width:480px;">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td width="100%" valign="top">
+			<table width="100%" cellpadding="0" cellspacing="0" border="0">
+				<tr>
+					<td valign="top" align="center" class="video-td"><a href="https://www.youtube.com/watch?v=YISQqEQ4ZPg"><img src="https://koningskerkdeventer.email-provider.nl/a/squjrcacva/d/isxzw8t3mu/i/860d2d5_w1272_maxresdefault.jpg" width="556" height="313" alt="" title="" /></a></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /video -->
+
+
+
+<!-- title -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="title-table" id="lp-block-pc8cln7gwhu2mas5lfsa">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table">
+				<tr>
+					<td width="100%" valign="top" class="border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="content-td" style="min-width:480px;">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td width="100%" valign="top">
+			<table cellpadding="0" cellspacing="0" border="0" width="100%">
+				<tr>
+					<td width="100%" class="title-td">Titel</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /title -->
+
+
+
+<!-- textimage -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="textimage-table" id="lp-block-gx3tt3a52682696jprug">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table">
+				<tr>
+					<td width="100%" valign="top" class="border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="content-td" style="min-width:480px;">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0" align="left">
+	<tr>
+		<td width="100%" valign="top">
+			<table class="image-table" cellpadding="0" cellspacing="0" border="0" align="right">
+				<tr>
+					<td class="spacer-td"></td><td class="image-td" valign="top"><img src="https://koningskerkdeventer.email-provider.nl/a/squjrcacva/d/isxzw8t3mu/i/c1e10e6_w1272_robwicks53gxelbnkf0u.jpg" width="259" height="173" alt="" title="" /></td>
+					
+				</tr>
+			</table>
+			<div class="text-div" style="background-color:#ffffff;"><font face="'Trebuchet MS',Helvetica,sans-serif"><span style="font-size:14px;">Dit is het blok Tekst met afbeelding. Als u deze tekst aanklikt, kunt u deze wijzigen. Aan de linkerkant krijgt u drie tabs te zien. Onder de tab Inhoud kunt u uw tekst invoeren en iets opmaken. Hier kunt u ook uw afbeelding invoeren. Onder de tab Vormgeving doet u de grote opmaak, van uw afbeelding, de tekst en het vak. Onder de tab Instelllingen bepaalt u of u uw afbeelding links of rechts geplaatst wilt hebben.&nbsp;Dit is het blok Tekst met afbeelding. Als u deze tekst aanklikt, kunt u deze wijzigen. Aan de linkerkant krijgt u drie tabs te zien. Onder de tab Inhoud kunt u uw tekst invoeren en iets opmaken. Hier kunt u ook uw afbeelding invoeren. Onder de tab Vormgeving doet u de grote opmaak, van uw afbeelding, de tekst en het vak. Onder de tab Instelllingen bepaalt u of u uw afbeelding links of rechts geplaatst wilt hebben.&nbsp;Dit is het blok Tekst met afbeelding. Als u deze tekst aanklikt, kunt u deze wijzigen. Aan de linkerkant krijgt u drie tabs te zien. Onder de tab Inhoud kunt u uw tekst invoeren en iets opmaken. Hier kunt u ook uw afbeelding invoeren. Onder de tab Vormgeving doet u de grote opmaak, van uw afbeelding, de tekst en het vak. Onder de tab Instelllingen bepaalt u of u uw afbeelding links of rechts geplaatst wilt hebben.</span></font></div>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /textimage -->
+
+
+
+<!-- follow -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="follow-table last-table" id="lp-block-cpqicwv3ytxg10k2us67">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="border-table">
+				<tr>
+					<td width="100%" valign="top" class="border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="content-td" style="min-width:480px;">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td width="100%" valign="top">
+			<table width="100%" cellpadding="0" cellspacing="0" border="0">
+				<tr>
+					<td valign="middle" align="center" class="follow-td"><table cellpadding="0" cellspacing="0"><tr><td><table align="left" border="0" cellpadding="0" cellspacing="0" class="item-table">
+	<tr>
+		<td align="center" valign="top" class="item-wrapper-td">
+			<table border="0" cellpadding="0" cellspacing="0" class="icon-table">
+				<tr>
+					<td align="center" valign="top" class="icon-td">
+						<a href="http://www.facebook.com"><img src="https://koningskerkdeventer.email-provider.nl/a/squjrcacva/d/isxzw8t3mu/i/follow-7_w256_facebook.png" width="36" alt="" title="" /></a>
+					</td>
+				</tr>
+			</table>
+			<table border="0" cellpadding="0" cellspacing="0" class="spacer-text-table">
+				<tr>
+					<td class="spacer-text-td">&nbsp;</td>
+				</tr>
+			</table>
+			<table border="0" cellpadding="0" cellspacing="0" class="text-table">
+				<tr>
+					<td align="center" valign="top" class="text-td">
+						<a href="http://www.facebook.com">Facebook</a>
+					</td>
+				</tr>
+			</table>
+		</td>
+		<td valign="top" class="spacer-wrapper">
+			<table border="0" cellpadding="0" cellspacing="0">
+				<tr>
+					<td class="spacer-h-td"></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!--[if mso]></td><![endif]--><!--[if mso]><td valign="top"><![endif]--><table align="left" border="0" cellpadding="0" cellspacing="0" class="item-table">
+	<tr>
+		<td align="center" valign="top" class="item-wrapper-td">
+			<table border="0" cellpadding="0" cellspacing="0" class="icon-table">
+				<tr>
+					<td align="center" valign="top" class="icon-td">
+						<a href="http://www.example.net"><img src="https://koningskerkdeventer.email-provider.nl/a/squjrcacva/d/isxzw8t3mu/i/follow-7_w256_website.png" width="36" alt="" title="" /></a>
+					</td>
+				</tr>
+			</table>
+			<table border="0" cellpadding="0" cellspacing="0" class="spacer-text-table">
+				<tr>
+					<td class="spacer-text-td">&nbsp;</td>
+				</tr>
+			</table>
+			<table border="0" cellpadding="0" cellspacing="0" class="text-table">
+				<tr>
+					<td align="center" valign="top" class="text-td">
+						<a href="http://www.example.net">Website</a>
+					</td>
+				</tr>
+			</table>
+		</td>
+		
+	</tr>
+</table>
+</td></tr></table></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /follow -->
+
+
+
+<!-- postfooter -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="postfooter-table" id="lp-block-isjaaqd4vinjgnk4kvtl">
+	<tr>
+		<td width="100%" align="center" class="wrapper-td">
+			<table cellpadding="0" cellspacing="0" border="0" class="postfooter-border-table">
+				<tr>
+					<td width="100%" valign="top" class="postfooter-border-td">
+						<table cellpadding="0" cellspacing="0" border="0" class="content-table" width="636" style="width:636px;">
+							<tr>
+								<td width="100%" valign="top" class="postfooter-content-td">
+									<table width="100%" cellpadding="0" cellspacing="0" border="0" class="inner-content-table">
+										<tr>
+											<td width="100%" valign="top" class="inner-content-td">
+<!-- skeleton -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%" style="width:100%;min-width:100%;">
+	<tr>
+		<td width="100%" class="text-td">Deze e-mail is verstuurd aan <a href="mailto:{{email}}">{{email}}</a>.<br />Als u geen nieuwsbrief meer wilt ontvangen, kunt u zich <lp-unsubscribe>hier afmelden</lp-unsubscribe>.<br />U kunt ook uw <lp-editprofile>gegevens inzien en wijzigen</lp-editprofile>.<br />Voor een goede ontvangst voegt u <a href="mailto:trinitas@koningskerkdeventer.nl">trinitas@koningskerkdeventer.nl</a> toe aan uw adresboek.</td>
+	</tr>
+</table>
+<!-- /skeleton -->
+											</td><!-- /td.inner-content-td -->
+										</tr>
+									</table>
+								</td><!-- /td.content-td -->
+							</tr>
+						</table>
+					</td><!-- /td.border-td -->
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<!-- /postfooter -->
+
+
+<table width="100%" cellspacing="0" cellpadding="0"><tr><td class="pad-bottom-td"></td></tr></table>
+</div><!-- /#body-div -->
+<!--[if mso]><table cellspacing="0" cellpadding="0"><tr><td><![endif]-->
+</td></tr></table>
+
+</body>
+</html>
