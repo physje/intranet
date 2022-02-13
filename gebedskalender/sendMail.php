@@ -48,8 +48,7 @@ if(lp_populateMail($campaignDag, $bericht)) {
 
 
 # weekelijkse mailtjes
-//if(date('w') == 0) {
-if(true) {
+if(date('w') == 0) {
 	$wPunten = getGebedspunten(date("Y-m-d"), date("Y-m-d", (time()+(6*24*60*60))));
 	$week[] = "De gebedspunten voor komende week zijn :<br>".NL;
 	$week[] = "<table>".NL;
@@ -60,8 +59,8 @@ if(true) {
 	}
 	$week[] = "</table>".NL;
 	
-	//$verzendtijd = mktime(5, 58);
-	$verzendtijd = time()+(365*24*60*60);
+	$verzendtijd = mktime(5, 58);
+	#$verzendtijd = time()+(365*24*60*60);
 
 	$info['name']			= 'Gebedskalender - week '. date('W');
 	$info['subject']	= 'Gebedspunten week '. time2str('%U');
@@ -87,8 +86,7 @@ if(true) {
 
 
 #  maandelijkse mailtjes
-//if(date('j') == 1) {
-if(true) {
+if(date('j') == 1) {
 	$mPunten = getGebedspunten(date("Y-m-d"), date("Y-m-d", mktime(0,0,1,(date("n")+1),date("j"), date("Y"))));
 	$maand[] = "De gebedspunten voor deze maand zijn :<br>".NL;
 	$maand[] = "<table>".NL;
@@ -99,8 +97,8 @@ if(true) {
 	}
 	$maand[] = "</table>".NL;
 
-	//$verzendtijd = mktime(5, 59);
-	$verzendtijd = time()+(365*24*60*60);
+	$verzendtijd = mktime(5, 59);
+	#$verzendtijd = time()+(365*24*60*60);
 
 	$info['name']			= 'Gebedskalender - '. time2str('%B');
 	$info['subject']	= 'Gebedspunten '. time2str('%B');

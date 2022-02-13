@@ -297,7 +297,6 @@ do {
 toLog('info', '', '', 'Synchronisatie naar LaPosta uitgevoerd');
 
 # Verwijder adressen die al even niet meer gezien zijn
-//$deadline = mktime (0, 0, 0, date("n"), (date("j")-1));
 $deadline = mktime ((date('H')-13));
 $sql_lp_unsub = "SELECT * FROM $TableLP WHERE $LPstatus like 'actief' AND $LPlastSeen < ". $deadline;
 $result_unsub = mysqli_query($db, $sql_lp_unsub);

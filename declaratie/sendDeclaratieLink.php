@@ -14,6 +14,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 	$diensten		= getKerkdiensten($startTijd, $eindTijd);
 	
 	foreach($diensten as $dienst) {
+		$param = array();
 		$dienstData	= getKerkdienstDetails($dienst);
 		$voorganger = $dienstData['voorganger_id'];
 		$voorgangerData = getVoorgangerData($voorganger);

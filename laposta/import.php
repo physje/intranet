@@ -3,16 +3,18 @@ include_once('../include/functions.php');
 include_once('../include/config.php');
 include_once('../include/LP_functions.php');
 
-# Dit is om de verschillende mailinglijsten uit MailChimp over te zetten naar LaPosta
-# Verwijder dus alle lijsten (muv TestLijst en Ledenlijst) in LaPosta
-# run makeLists.php
-# Download huidige leden via : https://us20.admin.mailchimp.com/lists/exports?id=55789 -> EXPORT AS CSV
+# Run al allereerst firstRun.php, dan worden alle leden in de ledenlijst gezet
+# 
+# Dit script is om de verschillende mailinglijsten uit MailChimp over te zetten naar LaPosta
+# Verwijder dus alle lijsten (muv TestLijst en Ledenlijst) in LaPosta en run makeLists.php om de lijsten aan te maken
+# Of maak alle lijsten handmatig leeg (let ook op de uitgeschreven leden, die moet je ook handmatig verwijderen)
+#
+# Download vervolgens de huidige leden via : https://us20.admin.mailchimp.com/lists/exports?id=55789 -> EXPORT AS CSV
 # pas regel 15 aan naar juiste bestandsnaam
 # run import.php
 #
-# Om de Ledenlijst te vullen, gebruik firstRun.php
-#
-$filename = 'subscribed_members_export_482dc3d96e.csv';
+
+$filename = 'subscribed_members_export_a52a08686a.csv';
 
 # De eerste regel bevat koppen, die hoeven we niet mee te nemen
 $start = getParam('start', 1);
@@ -38,8 +40,8 @@ foreach($uitsnede as $persoon) {
 	$tussenvoegsel	= $velden[2];
 	$achternaam			= $velden[3];
 	$scipioID			= $velden[7];
-	$mailing				= $velden[9];
-	$tag						= $velden[26];
+	$mailing				= $velden[10];
+	$tag						= $velden[27];
 	
 	$mailings				= explode(',', $mailing);
 	$tags						= explode(',', $tag);
@@ -48,9 +50,9 @@ foreach($uitsnede as $persoon) {
 	$custom_fields_short['tussenvoegsel'] = $tussenvoegsel;
 	$custom_fields_short['achternaam'] = $achternaam;
 	
-	if(in_array('"man"', $tags)) {
+	if(in_array('"man"', $tags) AND !in_array('"vrouw"', $tags)) {
 		$custom_fields_short['geslacht'] = 'Man';
-	} elseif(in_array('"vrouw"', $tags)) {
+	} elseif(in_array('"vrouw"', $tags) AND !in_array('"man"', $tags)) {
 		$custom_fields_short['geslacht'] = 'Vrouw';
 	} else {
 		$custom_fields_short['geslacht'] = '';
@@ -59,7 +61,7 @@ foreach($uitsnede as $persoon) {
 	$naamMC = str_replace('  ', ' ', $voornaam .' '. $tussenvoegsel .' '. $achternaam);
 	$naamScipio = makeName($scipioID, 5);
 	
-	$waarde = levenshtein($naamMC, $naamScipio);
+	#$waarde = levenshtein($naamMC, $naamScipio);
 	
 	echo $naamMC ."|".$naamScipio;
 	

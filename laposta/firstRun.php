@@ -37,6 +37,7 @@ if(mysqli_num_rows($result) == $stap) {
 } else {
 	echo '<b>Laatste keer</b>';
 	echo '<br>';
+	echo "<a href='import.php'>Importeer leden</a>";
 }
 
 do {
@@ -69,16 +70,18 @@ do {
 		$addMember = lp_addMember($LPLedenListID, $email, $custom_fields);
 		if($addMember === true) {				
 			echo makeName($scipioID, 6) ." toegevoegd aan de LaPosta ledenlijst<br>\n";
-		} else {
-			echo makeName($scipioID, 6) ." <b>niet</b> toegevoegd aan de LaPosta ledenlijst<br>\n";
-			toLog('error', '', $scipioID, 'ledenlijst: '. $addMember['error']);
 			
 			# De wijzigingen aan de LP kant moeten ook verwerkt worden in mijn lokale mailchimp-database
 			$sql_lp_insert = "INSERT INTO $TableLP ($LPID, $LPgeslacht, $LPmail, $LPVoornaam, $LPTussenvoegsel, $LPAchternaam, $LPwijk, $LPstatus, $LPrelatie, $LPdoop, $LPlastChecked, $LPlastSeen) VALUES ($scipioID, '". $data['geslacht'] ."', '". $data['mail'] ."', '". $data['voornaam'] ."', '". urlencode($data['tussenvoegsel']) ."', '". $data['achternaam'] ."', '". $data['wijk'] ."', 'actief', '". $data['relatie'] ."', '". $data['belijdenis'] ."', ". time() .", ". time() .")";
 			if(!mysqli_query($db, $sql_lp_insert)) {			
 				echo $sql_lp_insert;
-				toLog('error', '', $scipioID, 'Kon na sync niets toevoegen in lokale LP-tabel');
+				toLog('error', '', $scipioID, 'Kon na insert niets toevoegen in lokale LP-tabel');
 			}
+			
+		} else {
+			echo makeName($scipioID, 6) ." <b>niet</b> toegevoegd aan de LaPosta ledenlijst<br>\n";
+			echo json_encode($custom_fields);
+			toLog('error', '', $scipioID, 'ledenlijst: '. $addMember['error']);			
 		}		
 	} else {			
 		# Updaten in leden-lijst
