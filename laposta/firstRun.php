@@ -31,7 +31,7 @@ $row = mysqli_fetch_array($result);
 if(mysqli_num_rows($result) == $stap) {
 	echo '<html>';
 	echo '<head>';
-	echo '	<meta http-equiv="refresh" content="0; url=?start='. ($start+$stap) .'" />';
+	echo '	<meta http-equiv="refresh" content="1; url=?start='. ($start+$stap) .'" />';
 	echo '</head>';
 	echo '<body>';
 } else {

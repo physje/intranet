@@ -240,7 +240,6 @@ do {
 							toLog('info', '', $scipioID, "Wijk gewijzigd ($oudeWijk -> $wijk), verplaatst naar nieuwe LaPosta lijst");
 							$sql_update[] = "$LPwijk = '$wijk'";
 						} else {
-							//toLog('error', '', $scipioID, "Wijk gewijzigd ($oudeWijk -> $wijk) maar niet verplaatst in LaPosta");
 							toLog('error', '', $scipioID, "-> $wijk: ". $addmember['error']);
 							toLog('error', '', $scipioID, "$oudeWijk ->: ". $unsubscribeMember['error']);
 						}
@@ -296,9 +295,13 @@ do {
 
 toLog('info', '', '', 'Synchronisatie naar LaPosta uitgevoerd');
 
-# Verwijder adressen die al even niet meer gezien zijn
+
+#
+# Verwijder adressen die 2 ronde's (uitgaande van elke 12 uur een check) niet meer gezien zijn
+# Er is een limiet van 4 per keer om de LaPosta-API niet te overvragen
+#
 $deadline = mktime ((date('H')-13));
-$sql_lp_unsub = "SELECT * FROM $TableLP WHERE $LPstatus like 'actief' AND $LPlastSeen < ". $deadline;
+$sql_lp_unsub = "SELECT * FROM $TableLP WHERE $LPstatus like 'actief' AND $LPlastSeen < ". $deadline ." LIMIT 0, 4";
 $result_unsub = mysqli_query($db, $sql_lp_unsub);
 if($row_unsub = mysqli_fetch_array($result_unsub)) {
 	do {
@@ -325,5 +328,7 @@ if($row_unsub = mysqli_fetch_array($result_unsub)) {
 			toLog('info', '', $row_unsub[$LPID], $email.' lijkt vaker voor te komen, niet uitgeschreven bij LaPosta');
 		}
 	} while($row_unsub = mysqli_fetch_array($result_unsub));
+	
+	//toLog('debug', '', '', 'Leden uitgeschreven uit LaPosta');
 }
 ?>

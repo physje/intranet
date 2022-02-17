@@ -12,8 +12,8 @@ $Staart[] = "Graag voor de 15e van de maand  mailen naar <a href='mailto:gebedsk
 $Staart[] = "<br>";
 $Staart[] = "Met groet,<br>";
 $Staart[] = "het gebedskalenderteam<br>";
-$Staart[] = "<br>";
-$Staart[] = "Ps. De gebedspunten worden ook dagelijks in de 3GK Scipio-app getoond. Nog geen 3GK Scipio app? Bekijk <a href='http://www.draijer.org/download/3GK/InstallatieHandleidingScipioApp3GK.pdf'>hier</a> de handleiding.";
+//$Staart[] = "<br>";
+//$Staart[] = "Ps. De gebedspunten worden ook dagelijks in de 3GK Scipio-app getoond. Nog geen 3GK Scipio app? Bekijk <a href='http://www.draijer.org/download/3GK/InstallatieHandleidingScipioApp3GK.pdf'>hier</a> de handleiding.";
 	
 
 # dagelijkse mailtjes
@@ -22,8 +22,8 @@ $dData = getGebedspunt($dPunt[0]);
 $dag[] = "Het gebedspunt voor vandaag is :<br>".NL;
 $dag[] = '<blockquote>'.$dData['gebedspunt'] .'</blockquote><br>'.NL;
 
-//$verzendtijd = mktime(5, 57);
-$verzendtijd = time()+(365*24*60*60);
+$verzendtijd = mktime(5, 57);
+#$verzendtijd = time()+(365*24*60*60);
 
 $info['name']			= 'Gebedskalender - '. date('y.m.d');
 $info['subject']	= 'Gebedspunt voor '. time2str('%A %e %B');
