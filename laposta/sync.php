@@ -59,7 +59,7 @@ do {
 		#  en alle variabelen ingesteld
 		if(mysqli_num_rows($result_lp) == 0) {
 			# Komt ook niet voor in LP
-			if(!lp_onList($LPLedenListID, $email)) {			
+			if(!lp_onList($LPLedenListID, $email)) {
 				# Toevoegen aan de leden-lijst
 				$addMember = lp_addMember($LPLedenListID, $email, $custom_fields);
 				if($addMember === true) {

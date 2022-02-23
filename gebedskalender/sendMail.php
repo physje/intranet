@@ -3,6 +3,8 @@ include_once('../include/functions.php');
 include_once('../include/config.php');
 include_once('../include/LP_functions.php');
 
+$afzenderAdress = 'gebedskalender@koningskerkdeventer.nl';
+
 $Kop[] = "Beste {{voornaam}},<br>";
 $Kop[] = "<br>";
 		
@@ -12,11 +14,10 @@ $Staart[] = "Graag voor de 15e van de maand  mailen naar <a href='mailto:gebedsk
 $Staart[] = "<br>";
 $Staart[] = "Met groet,<br>";
 $Staart[] = "het gebedskalenderteam<br>";
-//$Staart[] = "<br>";
-//$Staart[] = "Ps. De gebedspunten worden ook dagelijks in de 3GK Scipio-app getoond. Nog geen 3GK Scipio app? Bekijk <a href='http://www.draijer.org/download/3GK/InstallatieHandleidingScipioApp3GK.pdf'>hier</a> de handleiding.";
-	
 
-# dagelijkse mailtjes
+# Dagelijkse mailtjes
+$info = $bericht = $verzendtijd = '';
+
 $dPunt = getGebedspunten(date("Y-m-d"), date("Y-m-d"));
 $dData = getGebedspunt($dPunt[0]);		
 $dag[] = "Het gebedspunt voor vandaag is :<br>".NL;
@@ -27,7 +28,8 @@ $verzendtijd = mktime(5, 57);
 
 $info['name']			= 'Gebedskalender - '. date('y.m.d');
 $info['subject']	= 'Gebedspunt voor '. time2str('%A %e %B');
-$info['from']			= array('name' => 'Gebedskalender','email' => 'matthijs.draijer@koningskerkdeventer.nl');
+$info['from']			= array('name' => 'Gebedskalender','email' => $afzenderAdress);
+$info['reply_to'] = $afzenderAdress;
 $info['list_ids']	= array($LPGebedDagListID);
 
 $preheader = $disclaimer = $afmelding = '';
@@ -41,14 +43,15 @@ $bericht .= implode("\n", $LaPostaFooter);
 $campaignDag = lp_createMail($info);
 if(lp_populateMail($campaignDag, $bericht)) {
 	lp_scheduleMail($campaignDag, $verzendtijd);
+	toLog('debug', '', '', 'Dagelijkse gebedskalender verstuurd');
 }
 
 
 
-
-
-# weekelijkse mailtjes
+# Weekelijkse mailtjes
 if(date('w') == 0) {
+	$info = $bericht = $verzendtijd = '';
+	
 	$wPunten = getGebedspunten(date("Y-m-d"), date("Y-m-d", (time()+(6*24*60*60))));
 	$week[] = "De gebedspunten voor komende week zijn :<br>".NL;
 	$week[] = "<table>".NL;
@@ -62,9 +65,10 @@ if(date('w') == 0) {
 	$verzendtijd = mktime(5, 58);
 	#$verzendtijd = time()+(365*24*60*60);
 
-	$info['name']			= 'Gebedskalender - week '. date('W');
+	$info['name']			= 'Gebedskalender - week '. date('W', (time() + (24*60*60)));
 	$info['subject']	= 'Gebedspunten week '. time2str('%U');
-	$info['from']			= array('name' => 'Gebedskalender','email' => 'matthijs.draijer@koningskerkdeventer.nl');
+	$info['from']			= array('name' => 'Gebedskalender','email' => $afzenderAdress);
+	$info['reply_to'] = $afzenderAdress;
 	$info['list_ids']	= array($LPGebedWeekListID);
 
 	$preheader = $disclaimer = $afmelding = '';
@@ -78,6 +82,7 @@ if(date('w') == 0) {
 	$campaignWeek = lp_createMail($info);
 	if(lp_populateMail($campaignWeek, $bericht)) {
 		lp_scheduleMail($campaignWeek, $verzendtijd);
+		toLog('debug', '', '', 'Wekelijkse gebedskalender verstuurd');
 	}
 }
 
@@ -87,6 +92,8 @@ if(date('w') == 0) {
 
 #  maandelijkse mailtjes
 if(date('j') == 1) {
+	$info = $bericht = $verzendtijd = '';
+	
 	$mPunten = getGebedspunten(date("Y-m-d"), date("Y-m-d", mktime(0,0,1,(date("n")+1),date("j"), date("Y"))));
 	$maand[] = "De gebedspunten voor deze maand zijn :<br>".NL;
 	$maand[] = "<table>".NL;
@@ -102,7 +109,8 @@ if(date('j') == 1) {
 
 	$info['name']			= 'Gebedskalender - '. time2str('%B');
 	$info['subject']	= 'Gebedspunten '. time2str('%B');
-	$info['from']			= array('name' => 'Gebedskalender','email' => 'matthijs.draijer@koningskerkdeventer.nl');
+	$info['from']			= array('name' => 'Gebedskalender','email' => $afzenderAdress);
+	$info['reply_to'] = $afzenderAdress;
 	$info['list_ids']	= array($LPGebedWeekListID);
 
 	$preheader = $disclaimer = $afmelding = '';
@@ -116,6 +124,7 @@ if(date('j') == 1) {
 	$campaignMaand = lp_createMail($info);
 	if(lp_populateMail($campaignMaand, $bericht)) {
 		lp_scheduleMail($campaignMaand, $verzendtijd);
+		toLog('debug', '', '', 'Maandelijkse gebedskalender verstuurd');
 	}
 }
 
