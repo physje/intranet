@@ -243,6 +243,7 @@ $PlainTextText								= "plain";
                     					
 $TableMail										= "mail_log";
 $MailID												= "id";
+$MailSuccess									= "succes";
 $MailTime											= "tijd";
 $MailMail											= "bericht";
 

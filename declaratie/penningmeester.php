@@ -29,7 +29,6 @@ if($showLogin) {
 $toegestaan = array_merge(getGroupMembers(1), getGroupMembers(38));
 
 if(in_array($_SESSION['ID'], $toegestaan)) {	
-
 	if(isset($_REQUEST['key'])) {	
 		$sql = "SELECT * FROM $TableEBDeclaratie WHERE $EBDeclaratieHash like '". $_REQUEST['key'] ."'";
 		$result = mysqli_query($db, $sql);
@@ -349,6 +348,57 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 			
 			$page[] = "Declaratie is gemarkeerd als verwijderd. Neem contact op met de webmaster mocht dit onjuist zijn.<br>";
 			$page[] = "<br>Ga terug naar <a href='". $_SERVER['PHP_SELF']."'>het overzicht</a>.";			
+		} elseif(isset($_POST['reroute'])) {
+			if(isset($_REQUEST['send_reroute'])) {
+				
+				$parameter['to'][]			= array($FinAdminAddress);
+				$parameter['subject']		= 'Handmatig verwerken';
+				$parameter['message'] 	= $_POST['toelichting'];
+				$parameter['from']			= $declaratieReplyAddress;
+				$parameter['fromName']	= $declaratieReplyName;
+								
+				foreach($JSON['bijlage'] as $key => $bestand) {
+					$parameter['attachment'][$key]['file'] = $bestand;
+					$parameter['attachment'][$key]['name'] = $JSON['bijlage_naam'][$key];
+				}
+				
+				$parameter['testen'] = 'ja';
+				
+				if(!sendMail_new($parameter)) {
+					toLog('error', $_SESSION['ID'], $indiener, "Problemen met declaratie [". $_REQUEST['key'] ."] kenmerken als niet exploitatie");
+					$page[] = "Er zijn problemen met het doorsturen naar de financiele administratie voor afhandeling.<br>";
+				} else {
+					toLog('info', $_SESSION['ID'], $indiener, "Declaratie [". $_REQUEST['key'] ."] betreft geen exploitatie");
+					$page[] = "Declaratie is doorgestuurd naar de financiele administratie voor verdere afhandeling als zijnde geen declaratie. Neem contact op met de webmaster mocht dit onjuist zijn.<br>";
+					
+					setDeclaratieStatus(8, $row[$EBDeclaratieID], $data['user']);
+					setDeclaratieActionDate($_REQUEST['key']);				
+				}
+								
+				$page[] = "<br>Ga terug naar <a href='". $_SERVER['PHP_SELF']."'>het overzicht</a>.";				
+			} else {				
+				$page[] = "<form method='post' action='". $_SERVER['PHP_SELF']."'>";
+				$page[] = "<input type='hidden' name='key' value='". $_REQUEST['key'] ."'>";				
+				$page[] = "<input type='hidden' name='reroute' value='1'>";
+				$page[] = '<table border=0>';
+				$page[] = "<tr>";
+				$page[] = "		<td align='left'>Hieronder kan een korte toelichting voor de financiele administratie gegeven worden.<br>Deze toelichting zal samen met de bijlages worden opgenomen als tekst in de mail.</td>";
+				$page[] = "</tr>";	
+				$page[] = "<tr>";
+				$page[] = "		<td>&nbsp;</td>";
+				$page[] = "</tr>";	
+				$page[] = "<tr>";
+				$page[] = "		<td align='center'><textarea name='toelichting' cols=75 rows=10>". $data['opmerking_cluco'] ."</textarea></td>";
+				$page[] = "</tr>";
+				$page[] = "<tr>";
+				$page[] = "		<td>&nbsp;</td>";
+				$page[] = "</tr>";
+				$page[] = "<tr>";
+				$page[] = "		<td align='center'><input type='submit' name='send_reroute' value='Verstuur'></td>";
+				$page[] = "</tr>";	
+				$page[] = "</table>";
+				$page[] = "</form>";			
+			}			
 		} else {
 			$page[] = "<form method='post' action='". $_SERVER['PHP_SELF']."'>";
 			$page[] = "<input type='hidden' name='key' value='". $_REQUEST['key'] ."'>";
@@ -478,13 +528,18 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 			$page[] = "<tr>";
 			$page[] = "		<td colspan='6'>&nbsp;</td>";
 			$page[] = "</tr>";
-			$page[] = "<tr>";	
-			$page[] = "		<td colspan='2'><input type='submit' name='reject' value='Terug naar clustercoordinator'></td>";
-			$page[] = "		<td colspan='2' align='center'><input type='submit' name='dump' value='Verwijderen'></td>";
-			//$page[] = "		<td>&nbsp;</td>";
-			$page[] = "		<td colspan='2' align='right'><input type='submit' name='accept' value='Invoeren in e-boekhouden.nl'></td>";
-			//$page[] = "		<td colspan='6' align='right'><input type='submit' name='accept' value='Invoeren in e-boekhouden.nl'></td>";
-			$page[] = "</tr>";	
+			$page[] = "<tr>";
+			$page[] = "		<td colspan='6'>";			
+			$page[] = "		<table width='100%'>";
+			$page[] = "		<tr>";			
+			$page[] = "			<td><input type='submit' name='reject' value='Terug naar clustercoordinator'></td>";
+			$page[] = "			<td align='center'><input type='submit' name='reroute' value='Betreft geen declaratie'></td>";
+			$page[] = "			<td align='center'><input type='submit' name='dump' value='Verwijderen'></td>";
+			$page[] = "			<td align='right'><input type='submit' name='accept' value='Invoeren in e-boekhouden.nl'></td>";			
+			$page[] = "		</tr>";
+			$page[] = "		</table>";			
+			$page[] = "</td>";
+			$page[] = "</tr>";			
 			$page[] = "</table>";
 			$page[] = "</form>";		
 		}

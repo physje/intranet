@@ -1008,23 +1008,23 @@ function sendMail_new($parameter) {
 		$mail->SMTPAuth   = true;
 		$mail->Username		= $SMTPUsername;
 		$mail->Password		= $SMTPPassword;
-						
-		if(!$mail->Send()) {
-			toLog('error', '', '', 'Problemen met verzenden');
+		
+		# We schrijven de mail weg in de database (standaard als niet succes-vol verstuurd)
+		# Versturen hem
+		# Passen in de database aan dat de mail succesvol is verstuurd
+		# Op deze manier kunnen we mislukte mails makkelijk opnieuw versturen
+		$sql = "INSERT INTO $TableMail ($MailTime, $MailMail) VALUES (". time() .", '". urlencode(json_encode($parameter))."')";
+		
+		if(!mysqli_query($db, $sql)) {
+			toLog('debug', '', '', 'Problemen met wegschrijven mail');
+			return false;
+		} elseif(!$mail->Send()) {
+			toLog('error', '', '', 'Problemen met verzenden mail');
 			return false;		
-		} else {		
-			$sql = "INSERT INTO $TableMail ($MailTime, $MailMail) VALUES (". time() .", '". urlencode(json_encode($parameter))."')";
-			
-			$fp = fopen('mails.txt', 'a+');
-			fwrite($fp, json_encode($parameter)."\n");
-			fclose($fp);
-			
-			if(!mysqli_query($db, $sql)) {			
-				toLog('debug', '', '', 'Problemen met wegschrijven mail');
-				return false;			
-			} else {
-				return true;
-			}
+		} else {
+			$sql = "UPDATE $TableMail SET $MailSuccess = '1' WHERE $MailID = ". mysqli_insert_id($db);
+			mysqli_query($db, $sql);
+			return true;
 		}
 	} else {
 		foreach($parameter as $key => $value) echo $key .' -> '. $value .'<br>';
