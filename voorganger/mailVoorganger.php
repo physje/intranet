@@ -49,7 +49,8 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 		$voorgangerAchterNaam = makeVoorgangerName($dienstData['voorganger_id'], 7);
 		
 		# Als er geen mailadres van de voorganger bekend is
-		if(isValidEmail($voorgangerData['mail']) AND (date("H", $dienstData['start']) > 5 AND date("H", $dienstData['eind']) < 17)) {
+		//if(isValidEmail($voorgangerData['mail']) AND (date("H", $dienstData['start']) > 5 AND date("H", $dienstData['eind']) < 17)) {
+		if(isValidEmail($voorgangerData['mail'])) {
 			# Nieuw mail-object aanmaken
 			unset($param);
 		
@@ -168,6 +169,8 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 			}
 		
 			setVoorgangerLastSeen($dienstData['voorganger_id'], $dienstData['start']);
+		} elseif(trim($voorgangerData['mail']) == '') {
+			toLog('info', '', '', "Geen voorgangersmail verstuurd voor ". $dagdeel .' van '. date('j-n', $dienstData['start']) ." omdat geen voorganger bekend is");
 		} else {
 			toLog('error', '', '', "Kon geen voorgangersmail versturen voor ". $dagdeel .' van '. date('j-n', $dienstData['start']) .", ongeldig mailadres");
 		}

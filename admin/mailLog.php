@@ -13,6 +13,8 @@ if(isset($_POST['id'])) {
 
 if(isset($_POST['volgende'])) {
 	$start = ($_POST['start']+25);
+} elseif(isset($_POST['vorige'])) {
+	$start = ($_POST['start']-25);
 } elseif(isset($_POST['start'])) {
 	$start = $_POST['start'];
 } else {
@@ -28,16 +30,24 @@ if($row = mysqli_fetch_array($result)) {
 	$block[] = "<input type='hidden' name='start' value='$start'>";
 	$block[] = "<table border=0>";
 	$block[] = "<tr>";
+	$block[] = "	<td><b>Succes</b></td>";
 	$block[] = "	<td><b>Tijdstip</b></td>";
 	$block[] = "	<td><b>Ontvanger</b></td>";
 	$block[] = "	<td><b>Onderwerp</b></td>";
 	$block[] = "	<td>&nbsp;</td>";
 	$block[] = "</tr>";
 	
-	do {
+	do {		
 		$param = json_decode(urldecode($row[$MailMail]), true);
 		
 		$block[] = "<tr>";
+		
+		if($row[$MailSuccess] == '0') {
+			$block[] = "	<td>&nbsp;</td>";
+		} else {
+			$block[] = "	<td>x</td>";
+		}
+		
 		$block[] = "	<td>". time2str('%a %e %b %H:%M ', $row[$MailTime]) ."</td>";
 		$eersteOntvanger = current($param['to']);
 		
@@ -55,10 +65,11 @@ if($row = mysqli_fetch_array($result)) {
 			$block[] = "	<td><input type='submit' name='id[".$row[$MailID]."]' value='+'></td>";
 		}
 		$block[] = "</tr>";
+		
 		if(isset($id) AND $id == $row[$MailID]) {
 			$block[] = "<tr>";
 			$block[] = "	<td>&nbsp;</td>";
-			$block[] = "	<td colspan='2'>";
+			$block[] = "	<td colspan='3'>";
 			$block[] = "	<table border=1>";
 			
 			foreach($mailVariabele as $key) {			
@@ -105,9 +116,16 @@ if($row = mysqli_fetch_array($result)) {
 	
 	$block[] = "<tr>";
 	$block[] = "	<td>&nbsp;</td>";
-	$block[] = "	<td colspan='3' align='center'><input type='submit' name='volgende' value='Volgende'></td>";
-	$block[] = "</tr>";
-		
+	
+	if($start > 20) {
+		$block[] = "	<td align='left'><input type='submit' name='vorige' value='Vorige'></td>";
+	} else {
+		$block[] = "	<td>&nbsp;</td>";
+	}
+	
+	$block[] = "	<td>&nbsp;</td>";
+	$block[] = "	<td align='right'><input type='submit' name='volgende' value='Volgende'></td>";
+	$block[] = "</tr>";		
 	$block[] = "</table>";
 	$block[] = "</form>";
 }

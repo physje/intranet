@@ -15,10 +15,18 @@ $row = mysqli_fetch_array($result);
 
 do {	
 	$xml[] = '<contact>';
-	$xml[] = '	<category>'. array_search($row[$UserWijk],$wijkArray) .'</category>';
+	//$xml[] = '	<category>'. array_search($row[$UserWijk],$wijkArray) .'</category>';
+	# 0 =  gewoon; 1 = VIP
+	$xml[] = '	<category>0</category>';
 	$xml[] = '	<person><realName>'. makeName($row[$UserID], 5) .'</realName></person>';
 	$xml[] = '	<telephony nid="1">';
-	$xml[] = '		<number type="home" prio="1" id="0">'. str_replace('-', '', $row[$UserTelefoon]) .'</number>';
+	
+	if(substr(trim($row[$UserTelefoon]),0,2) == '06') {
+		$xml[] = '		<number type="mobile" prio="1" id="0">'. str_replace('-', '', $row[$UserTelefoon]) .'</number>';
+	} else {
+		$xml[] = '		<number type="home" prio="1" id="0">'. str_replace('-', '', $row[$UserTelefoon]) .'</number>';
+	}	
+	
 	$xml[] = '	</telephony>';
 	//$xml[] = '	<uniqueid>2795</uniqueid>';
 	$xml[] = '</contact>';

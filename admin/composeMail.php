@@ -72,6 +72,16 @@ if(isset($_POST['send'])) {
 	$block[] = "	<td>&nbsp;</td>";
 	$block[] = "	<td colspan='3' align='center'><input type='submit' name='send' value='Versturen'></td>";
 	$block[] = "</tr>";	
+
+	$block[] = "<tr>";
+	$block[] = "	<td>&nbsp;</td>";
+	$block[] = "	<td colspan='3' align='center'><textarea name='JSON' cols=75 rows=25>". urldecode($row[$MailMail]) ."</textarea></td>";
+	$block[] = "</tr>";
+	$block[] = "<tr>";
+	$block[] = "	<td>&nbsp;</td>";
+	$block[] = "	<td colspan='3' align='center'><input type='submit' name='send' value='Versturen'></td>";
+	$block[] = "</tr>";
+
 	$block[] = "</table>";
 	$block[] = "</form>";
 }

@@ -30,10 +30,10 @@ if(isset($_POST['remove'])) {
 	
 	if(mysqli_query($db, $query)) {
 		$text[] = "De afspraak '". $_POST['titel'] ."' is verwijderd";
-		toLog('info', $_SESSION['ID'], '', "Agenda-item '". $_POST['titel'] ."' verwijderd");
+		toLog('info', $_SESSION['ID'], '', "Agenda-item '". $_POST['titel'] ."' [". $_POST['id'] ."] verwijderd");
 	} else {
 		$text[] = "Het verwijderen van '". $_POST['titel'] ."' is niet gelukt.";
-		toLog('error', $_SESSION['ID'], '', "Kan agenda-item '". $_POST['titel'] ."' niet verwijderen");
+		toLog('error', $_SESSION['ID'], '', "Kan agenda-item '". $_POST['titel'] ."' [". $_POST['id'] ."] niet verwijderen");
 	}
 } elseif(isset($_POST['save'])) {
 	$startTijd = mktime($_POST['sUur'], $_POST['sMin'], 0, $_POST['Maand'], $_POST['Dag'], $_POST['Jaar']);
@@ -43,11 +43,11 @@ if(isset($_POST['remove'])) {
 		$query = "UPDATE $TableAgenda SET $AgendaStart = '$startTijd', $AgendaEind = '$eindTijd', $AgendaTitel = '". urlencode($_POST['titel']) ."', $AgendaDescr = '". urlencode($_POST['omschrijving']) ."', $AgendaOwner = '". $_POST['eigenaar'] ."' WHERE $AgendaID like ". $_POST['id'];
 				
 		if(mysqli_query($db, $query)) {
-			$text[] = "De afspraak '". $_POST['titel'] ."' is opgeslagen";
+			$text[] = "De afspraak '". $_POST['titel'] ."' [". $_POST['id'] ."] is opgeslagen";
 			toLog('info', $_SESSION['ID'], '', "Agenda-item '". $_POST['titel'] ."' gewijzigd");
 		} else {
 			$text[] = "Het opslaan van de afspraak is niet gelukt.";
-			toLog('error', $_SESSION['ID'], '', "Kan agenda-item '". $_POST['titel'] ."' niet wijzigen");
+			toLog('error', $_SESSION['ID'], '', "Kan agenda-item '". $_POST['titel'] ."' [". $_POST['id'] ."] niet wijzigen");
 		}
 		$text[] = "<p>";
 		$text[] = "<a href='". $_SERVER['PHP_SELF'] ."'>Terug naar het overzicht</a>.";
@@ -56,6 +56,7 @@ if(isset($_POST['remove'])) {
 		
 		if(mysqli_query($db, $query)) {			
 			$UserData = getMemberDetails($_SESSION['ID']);
+			$newID = mysqli_insert_id($db);
 			
 			$mail[] = "Beste ". $UserData['voornaam'];
 			$mail[] = "";
@@ -67,7 +68,7 @@ if(isset($_POST['remove'])) {
 			$mail[] = "Datum : ". time2str("%A %d %B", $startTijd);
 			$mail[] = "Tijd: ". time2str("%H:%M", $startTijd) ." tot ". time2str("%H:%M", $eindTijd);
 			$mail[] = "";
-			$mail[] = "Om deze afspraak te beheren kan je <a href='". $ScriptURL ."agenda/agenda.php?id=". mysqli_insert_id($db) ."&hash=". $UserData['hash_long'] ."'>deze link</a> gebruiken, daarmee kom je direct weer bij deze afspraak terecht";
+			$mail[] = "Om deze afspraak te beheren kan je <a href='". $ScriptURL ."agenda/agenda.php?id=". $newID ."&hash=". $UserData['hash_long'] ."'>deze link</a> gebruiken, daarmee kom je direct weer bij deze afspraak terecht";
 			
 			$text[] = "De afspraak '". $_POST['titel'] ."' is toegevoegd.<br>";
 			toLog('info', $_SESSION['ID'], '', "Agenda-item '". $_POST['titel'] ."' toegevoegd");
@@ -78,13 +79,11 @@ if(isset($_POST['remove'])) {
 						
 			if(sendMail_new($param)) {
 				$text[] = "Je hebt een bevestigingsmail ontvangen.";
-				toLog('debug', $_SESSION['ID'], '', "Bevestigingsmail voor '". $_POST['titel'] ."' verstuurd");
+				toLog('debug', $_SESSION['ID'], '', "Bevestigingsmail voor '". $_POST['titel'] ."' [$newID] verstuurd");
 			} else {
 				$text[] = "Het versturen van een bevestigingsmail is helaas mislukt.<br>";
-				toLog('error', $_SESSION['ID'], '', "Kan geen bevestigingsmail voor '". $_POST['titel'] ."' versturen");
-			}
-			
-			
+				toLog('error', $_SESSION['ID'], '', "Kan geen bevestigingsmail voor '". $_POST['titel'] ."' [$newID] versturen");
+			}			
 		} else {
 			$text[] = "Het opslaan van de afspraak is niet gelukt.";
 			toLog('error', $_SESSION['ID'], '', "Kan agenda-item '". $_POST['titel'] ."' niet opslaan");
