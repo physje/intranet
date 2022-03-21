@@ -789,7 +789,7 @@ function sendMail_new($parameter) {
 	global $ScriptURL, $ScriptMailAdress, $ScriptTitle, $SubjectPrefix;
 	global $MailHeader, $MailFooter;
 	global $SMTPHost, $SMTPPort, $SMTPSSL, $SMTPUsername, $SMTPPassword;
-	global $db, $TableMail, $MailTime, $MailMail;
+	global $db, $TableMail, $MailID, $MailSuccess, $MailTime, $MailMail;
 	
 	# $parameter['to'][]					= array(adres, naam);
 	# $parameter['subject']				= '';
