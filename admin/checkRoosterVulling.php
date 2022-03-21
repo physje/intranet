@@ -107,9 +107,8 @@ foreach($roosters as $rooster) {
 					$beheerders = array();
 					$beheerders = getGroupMembers($roosterData['beheerder']);
 					
-					foreach($beheerders as $lid => $dummy)	$namenBeheerders[$lid] = makeName($lid, 1);
-					
-      	
+					foreach($beheerders as $dummy => $lid)	$namenBeheerders[$lid] = makeName($lid, 1);
+					      	
 					foreach($beheerders as $beheerder) {
 						$andereOntvangers = excludeID($namenBeheerders, $beheerder);
 						
