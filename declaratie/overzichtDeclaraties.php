@@ -55,9 +55,10 @@ if(isset($_REQUEST['key'])) {
 	$statusNaam[4] = 'Penningmeester';
 	$statusNaam[5] = 'Afgerond';
 	$statusNaam[7] = 'Verwijderd';
+	$statusNaam[8] = 'Doorgestuurd';
 		
 	$statusActive = array(3,4);
-	$statusInactive = array(5);
+	$statusInactive = array(5,8);
 	$statusDelete = array(6,7);
 	
 	do {

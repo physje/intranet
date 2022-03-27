@@ -361,9 +361,7 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 					$parameter['attachment'][$key]['file'] = $bestand;
 					$parameter['attachment'][$key]['name'] = $JSON['bijlage_naam'][$key];
 				}
-				
-				#$parameter['testen'] = 'ja';
-				
+								
 				if(!sendMail_new($parameter)) {
 					toLog('error', $_SESSION['ID'], $indiener, "Problemen met declaratie [". $_REQUEST['key'] ."] kenmerken als niet exploitatie");
 					$page[] = "Er zijn problemen met het doorsturen naar de financiele administratie voor afhandeling.<br>";

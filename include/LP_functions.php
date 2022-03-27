@@ -6,6 +6,8 @@ require_once('laposta/Laposta.php');
 
 
 
+## LEDEN ##
+
 function lp_addMember($list, $email, $custom_fields) {
 	global $LaPostaAPIKey;
 	Laposta::setApiKey($LaPostaAPIKey);
@@ -155,7 +157,6 @@ function lp_onList($list, $mail) {
 
 
 
-
 function lp_getMemberData($list, $mail) {
 	global $LaPostaAPIKey;
 	Laposta::setApiKey($LaPostaAPIKey);
@@ -175,6 +176,7 @@ function lp_getMemberData($list, $mail) {
 }
 
 
+## MAILS ##
 
 # $input['name'] (verplicht)
 # $input['subject'] (verplicht)
@@ -205,6 +207,7 @@ function lp_createMail($input) {
 }
 
 
+
 function lp_populateMail($campaign_id, $html) {
 	global $LaPostaAPIKey;
 	Laposta::setApiKey($LaPostaAPIKey);
@@ -222,6 +225,8 @@ function lp_populateMail($campaign_id, $html) {
 		return array('error' => $e);
 	}
 }
+
+
 
 function lp_scheduleMail($campaign_id, $time) {
 	global $LaPostaAPIKey;
@@ -242,6 +247,49 @@ function lp_scheduleMail($campaign_id, $time) {
 }
 
 
+
+function lp_getArchief($list) {
+	global $LaPostaAPIKey;
+	Laposta::setApiKey($LaPostaAPIKey);
+	Laposta::setHttpsDisableVerifyPeer(true);
+	
+	$output = array();
+	$campaign = new Laposta_Campaign();
+	
+	try {
+		$result = $campaign->all();
+		
+		foreach($result['data'] as $campaign) {
+			if(array_keys($campaign['campaign']['list_ids'])[0] == $list) {
+				$output[] = $campaign['campaign']['campaign_id'];
+			}
+		}		
+		return $output;		
+	} catch (Exception $e) {
+		return array('error' => $e);
+	}
+}
+
+
+
+function lp_getMailData($campaign_id) {
+	global $LaPostaAPIKey;
+	Laposta::setApiKey($LaPostaAPIKey);
+	Laposta::setHttpsDisableVerifyPeer(true);
+	
+	$campaign = new Laposta_Campaign();
+	
+	try {
+		$result = $campaign->get($campaign_id);
+		return $result['campaign'];
+	} catch (Exception $e) {
+		return array('error' => $e);
+	}
+}
+
+
+## LIJST ##
+
 # $info['name'] (verplicht)
 # $info['remarks']
 # $info['subscribe_notification_email']
@@ -260,6 +308,7 @@ function lp_createList($info) {
 		return array('error' => $e);
 	}
 }
+
 
 
 # $data['name']			(verplicht)
@@ -284,5 +333,9 @@ function lp_addFieldToList($list, $data) {
 		return array('error' => $e);
 	}
 }
+
+
+
+
 
 ?>

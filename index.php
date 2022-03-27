@@ -220,19 +220,21 @@ if(in_array(1, getMyGroups($_SESSION['ID']))) {
 }
 */
 
-# Mailchimp
-if(in_array(1, getMyGroups($_SESSION['ID']))) {
-	$adminDeel = $adminLinks = array();
-	$adminDeel[] = "<b>LaPosta</b>";
+# LaPosta
+$adminDeel = $adminLinks = array();
+$adminDeel[] = "<b>LaPosta</b>";
 
-	$adminLinks['mailchimp/sync.php'] = 'Synchroniseren LaPosta';
-		
-	foreach($adminLinks as $link => $naam) {
-		$adminDeel[] = "<a href='$link' target='_blank'>$naam</a>";
-	}
-	
-	$blockArray[] = implode("<br>".NL, $adminDeel);
+$adminLinks['laposta/archief.php'] = 'Mail archief';
+if(in_array(1, getMyGroups($_SESSION['ID']))) {
+	$adminLinks['laposta/sync.php'] = 'Synchroniseren LaPosta';
 }
+
+foreach($adminLinks as $link => $naam) {
+	$adminDeel[] = "<a href='$link' target='_blank'>$naam</a>";
+}
+	
+$blockArray[] = implode("<br>".NL, $adminDeel);
+
 
 # e-boekhouden.nl
 $adminDeel = $adminLinks = array();
