@@ -2171,6 +2171,7 @@ function encode_clean_JSON($input) {
 	$string = $input;
 	$string = json_encode($string);
 	$string = str_replace('\r\n', ' ', $string);
+	$string = str_replace('"', "'", $string);
 	
 	return $string;
 }
