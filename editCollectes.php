@@ -23,22 +23,24 @@ if(isset($_POST['save']) OR isset($_POST['maanden'])) {
 			
 		if(mysqli_query($db, $sql)) {
 			if($oldData['collecte_1'] != $collectes[1]) {
+				$dagdeel = formatDagdeel($oldData['start']);				
 				if($oldData['collecte_1'] != '' AND $collectes[1] != '' ) {
-					$bericht[] = '1ste collecte van '. date('d-m-y', $oldData['start']).' is gewijzigd van <i>'. $oldData['collecte_1'] .'</i> naar <i>'. $collectes[1] .'</i>';
+					$bericht[] = '1ste collecte van de '. $dagdeel.' van '. date('d-m-y', $oldData['start']).' is gewijzigd van <i>'. $oldData['collecte_1'] .'</i> naar <i>'. $collectes[1] .'</i>';
 				} elseif($collectes[1] == '') {
-					$bericht[] = '<i>'. $oldData['collecte_1'] .'</i> is als 1ste collecte van '. date('d-m-y', $oldData['start']).' verwijderd.';
+					$bericht[] = '<i>'. $oldData['collecte_1'] .'</i> is als 1ste collecte van de '. $dagdeel.' van '. date('d-m-y', $oldData['start']).' verwijderd.';
 				} else {
-					$bericht[] = '<i>'. $collectes[1] .'</i> is als 1ste collecte van '. date('d-m-y', $oldData['start']).' toegevoegd.';
+					$bericht[] = '<i>'. $collectes[1] .'</i> is als 1ste collecte van de '. $dagdeel.' van '. date('d-m-y', $oldData['start']).' toegevoegd.';
 				}
 			}
 			
 			if($oldData['collecte_2'] != $collectes[2]) {
+				$dagdeel = formatDagdeel($oldData['start']);
 				if($oldData['collecte_2'] != '' AND $collectes[2] != '') {
-					$bericht[] = '2de collecte van '. date('d-m-y', $oldData['start']).' is gewijzigd van <i>'. $oldData['collecte_2'] .'</i> naar <i>'. $collectes[2] .'</i>';
+					$bericht[] = '2de collecte van de '. $dagdeel.' van '. date('d-m-y', $oldData['start']).' is gewijzigd van <i>'. $oldData['collecte_2'] .'</i> naar <i>'. $collectes[2] .'</i>';
 				} elseif($collectes[2] == '') {
-					$bericht[] = '<i>'. $oldData['collecte_2'] .'</i> is als 2de collecte van '. date('d-m-y', $oldData['start']).' verwijderd.';
+					$bericht[] = '<i>'. $oldData['collecte_2'] .'</i> is als 2de collecte van de '. $dagdeel.' van '. date('d-m-y', $oldData['start']).' verwijderd.';
 				} else {
-					$bericht[] = '<i>'. $collectes[2] .'</i> is als 2de collecte van '. date('d-m-y', $oldData['start']).' toegevoegd.';
+					$bericht[] = '<i>'. $collectes[2] .'</i> is als 2de collecte van de '. $dagdeel.' van '. date('d-m-y', $oldData['start']).' toegevoegd.';
 				}
 			}
 		} else {

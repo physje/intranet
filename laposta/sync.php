@@ -116,7 +116,7 @@ do {
 				}			
 			}		
 					
-			# De wijzigingen aan de LP kant moeten ook verwerkt worden in mijn lokale mailchimp-database
+			# De wijzigingen aan de LP kant moeten ook verwerkt worden in mijn lokale laposta-database
 			$sql_lp_insert = "INSERT INTO $TableLP ($LPID, $LPgeslacht, $LPmail, $LPVoornaam, $LPTussenvoegsel, $LPAchternaam, $LPwijk, $LPstatus, $LPrelatie, $LPdoop, $LPlastChecked, $LPlastSeen) VALUES ($scipioID, '". $data['geslacht'] ."', '". $data['mail'] ."', '". $data['voornaam'] ."', '". urlencode($data['tussenvoegsel']) ."', '". $data['achternaam'] ."', '". $data['wijk'] ."', 'actief', '". $data['relatie'] ."', '". $data['belijdenis'] ."', ". time() .", ". time() .")";
 			if(mysqli_query($db, $sql_lp_insert)) {
 				toLog('debug', '', $scipioID, 'LaPosta-data na sync toegevoegd in lokale LP-tabel');
@@ -284,7 +284,7 @@ do {
 				}			
 			}
 			
-			# De wijzigingen aan de LP kant moeten ook verwerkt worden in mijn lokale mailchimp-database
+			# De wijzigingen aan de LP kant moeten ook verwerkt worden in mijn lokale laposta-database
 			$sql_lp_update = "UPDATE $TableLP SET ". implode(', ', $sql_update)." WHERE $LPID like $scipioID";
 			mysqli_query($db, $sql_lp_update);
 		}

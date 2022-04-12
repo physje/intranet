@@ -479,7 +479,7 @@ if(isset($_POST['correct'])) {
 			(isset($_POST['reset_files']))
 		) {
 			$page[] = "<tr>";
-			$page[] = "	<td colspan='3'><input type='file' name='bijlage[]' accept='application/pdf' multiple><br><small>max. 2 files en 1MB/stuk</small></td>";
+			$page[] = "	<td colspan='3'><input type='file' name='bijlage[]' accept='application/pdf' multiple><br><small>Alleen PDF; max. 2 files; max 1 MB/stuk</small></td>";
 			$page[] = "	<td>&nbsp;</td>";
 			$page[] = "</tr>";
 			
