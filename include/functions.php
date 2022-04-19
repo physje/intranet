@@ -2169,10 +2169,10 @@ function showDeclaratieDetails($input) {
 # vervangen door een spatie
 function encode_clean_JSON($input) {
 	$string = $input;
+	$string = str_replace('"', "'", $string);
 	$string = json_encode($string);
 	$string = str_replace('\r\n', ' ', $string);
-	$string = str_replace('"', "'", $string);
-	
+		
 	return $string;
 }
 
