@@ -38,7 +38,7 @@ foreach($diensten as $dienst) {
 	$vulling = getRoosterVulling($_REQUEST['rooster'], $dienst);
 	
 	# Zijn er namen of is er een tekststring
-	if(count($vulling) > 0 OR $vulling != '') {
+	if(isset($vulling) AND (count($vulling) > 0 OR $vulling != '')) {
 		if($RoosterData['text_only'] == 0) {		
 			$namen = array();
 				

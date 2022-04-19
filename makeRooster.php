@@ -72,16 +72,18 @@ if(isset($_POST['save']) OR isset($_POST['maanden'])) {
 		}
 	}
 	
-	foreach($_POST['opmerking'] as $dienst => $opmerking) {
-		if($opmerking != '') {
-			updateRoosterOpmerking($_POST['rooster'], $dienst, $opmerking);
+	if(is_array($_POST['opmerking'])) {
+		foreach($_POST['opmerking'] as $dienst => $opmerking) {
+			if($opmerking != '') {
+				updateRoosterOpmerking($_POST['rooster'], $dienst, $opmerking);
+			}
 		}
 	}
 	
 	toLog('info', $_SESSION['ID'], '', 'Rooster '. $RoosterData['naam'] .' aangepast');
 	
 	if(in_array(1, $myGroups) OR in_array($beheerder, $myGroups)) {
-		$sql = "UPDATE $TableRoosters SET $RoostersGelijk = '". $_POST['gelijkeDiensten'] ."', $RoostersOpmerking = '". $_POST['interneOpmerking'] ."', $RoostersLastChange = '". date("Y-m-d H:i:s") ."' WHERE $RoostersID like ". $_POST['rooster'];
+		$sql = "UPDATE $TableRoosters SET $RoostersGelijk = '". $_POST['gelijkeDiensten'] ."', ". (isset($_POST['interneOpmerking']) ? $RoostersOpmerking ." = '". $_POST['interneOpmerking'] ."', " : ""). $RoostersLastChange ." = '". date("Y-m-d H:i:s") ."' WHERE $RoostersID like ". $_POST['rooster'];
 		mysqli_query($db, $sql);
 	}
 }
@@ -162,6 +164,8 @@ if($RoosterData['opmerking'] == 1)	$block_1[] = "	<td align='left'><b>Interne op
 $block_1[] = "	<td align='left'><b>Bijzonderheid</b></td>";
 $block_1[] = "</tr>";
 
+$statistiek = array();
+
 foreach($diensten as $dienst) {
 	if(toonDienst($dienst, $RoosterData['gelijk'])) {	
 		$details = getKerkdienstDetails($dienst);
@@ -181,7 +185,10 @@ foreach($diensten as $dienst) {
 			$selected = current($vulling);
 			
 			for($n=0 ; $n < $nrFields ; $n++) {
-				if($selected != 0) $statistiek[$selected]++;
+				if($selected != 0) {
+					if(!isset($statistiek[$selected])	$statistiek[$selected] = 0;
+					$statistiek[$selected]++;
+				}
 				$block_1[] = "	<td><select name='persoon[$dienst][]'>";
 				$block_1[] = "	<option value=''>&nbsp;</option>";
 								
