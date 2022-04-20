@@ -707,21 +707,28 @@ function makeName($id, $type) {
 	$result = mysqli_query($db, $sql);
 	$row = mysqli_fetch_array($result);
 	
-	$voorletters = $row[$UserVoorletters];
+	$voorletters = $voornaam = $tussen = $achter = $achter_m = '';
 	
-	if($row[$UserVoornaam] != '') {
+	if(isset($row[$UserVoorletters]) AND $row[$UserVoorletters] != '') {
+		$voorletters = $row[$UserVoorletters];
+	}
+	
+	if(isset($row[$UserVoornaam]) AND $row[$UserVoornaam] != '') {
 		$voornaam	= ucfirst($row[$UserVoornaam]);		
 	} else {
 		$voornaam = $voorletters;
 	}
 	
-	$tussen 	= strtolower($row[$UserTussenvoegsel]);
-	$achter 	= ucfirst($row[$UserAchternaam]);
+	if(isset($row[$UserTussenvoegsel]) AND $row[$UserTussenvoegsel] != '') {
+		$tussen 	= strtolower($row[$UserTussenvoegsel]);
+	}
 	
-	if($row[$UserMeisjesnaam] != '') {
+	if(isset($row[$UserAchternaam]) AND $row[$UserAchternaam] != '') {
+		$achter 	= ucfirst($row[$UserAchternaam]);
+	}
+	
+	if(isset($row[$UserMeisjesnaam]) AND $row[$UserMeisjesnaam] != '') {
 		$achter_m = $row[$UserMeisjesnaam];
-	} else {
-		$achter_m = '';
 	}
 	
 	# 1 = voornaam													Alberdien
@@ -1309,11 +1316,10 @@ function getRoosterOpmerking($rooster, $dienst) {
 function getAgendaItems($user, $tijd) {
 	global $TableAgenda, $AgendaID, $AgendaOwner, $AgendaStart;
 	
-	$db = connect_db();
-	if($user != 'all') {
-		$where[] = "$AgendaOwner = $user";
-	}
+	$ids = array();
 	
+	$db = connect_db();
+	if($user != 'all')	$where[] = "$AgendaOwner = $user";	
 	$where[] = "$AgendaStart > $tijd";
 		
 	$sql = "SELECT * FROM $TableAgenda WHERE ". implode(' AND ', $where) ." ORDER BY $AgendaStart";

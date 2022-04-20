@@ -114,9 +114,11 @@ if(isset($_POST['remove'])) {
 		$sMin		= getParam('sMin', date("i"));
 		$eUur		= getParam('eUur', date("H", time()+3600));
 		$eMin		= getParam('eMin', date("i"));
+		
+		$titel = $descr = '';
 	}
 	
-	if(!in_array(1, getMyGroups($_SESSION['ID'])) AND $details['eigenaar'] != $_SESSION['ID'] AND !isset($_REQUEST['new'])) {
+	if(!in_array(1, getMyGroups($_SESSION['ID'])) AND isset($details['eigenaar']) AND $details['eigenaar'] != $_SESSION['ID'] AND !isset($_REQUEST['new'])) {
 		$text = array('Toestemmingsprobleem, dit id hoort niet bij een afspraak van jou');
 	} else {	
 		$text[] = "<table>";
