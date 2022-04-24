@@ -186,7 +186,7 @@ foreach($diensten as $dienst) {
 			
 			for($n=0 ; $n < $nrFields ; $n++) {
 				if($selected != 0) {
-					if(!isset($statistiek[$selected])	$statistiek[$selected] = 0;
+					if(!isset($statistiek[$selected]))	$statistiek[$selected] = 0;
 					$statistiek[$selected]++;
 				}
 				$block_1[] = "	<td><select name='persoon[$dienst][]'>";

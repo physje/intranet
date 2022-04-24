@@ -8,7 +8,6 @@ $db = connect_db();
 
 # Omdat de server deze dagelijks moet draaien wordt toegang niet gedaan op basis
 # van naam+wachtwoord maar op basis van IP-adres
-
 if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 	$startTijd = mktime(0, 0, 0, date("n"), (date("j")+3), date("Y"));
 	$eindTijd = mktime(23, 59, 59, date("n"), (date("j")+3), date("Y"));
@@ -23,12 +22,14 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 		foreach($roosters as $r) {
 			$vulling = getRoosterVulling($r, $d);
 			
-			$teamVulling = array();
-			foreach($vulling as $lid) {
-				$teamVulling[$lid] = makeName($lid, 5);
+			if(is_array($vulling)) {
+				$teamVulling = array();
+				foreach($vulling as $lid) {
+					$teamVulling[$lid] = makeName($lid, 5);
+				}
+				
+				$teams[$d][$r] = $teamVulling;
 			}
-			
-			$teams[$d][$r] = $teamVulling;
 		}
 	}
 	
