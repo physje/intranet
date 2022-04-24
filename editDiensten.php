@@ -57,25 +57,31 @@ if(isset($_REQUEST['delete'])) {
 	toLog('info', $_SESSION['ID'], '', 'Dienst van '. date("d-m-Y", $details['start']) .' verwijderd');
 }
 
+$blokGrootte = (92*24*60*60);
 
-# Als er op de knop van 3 maanden extra geklikt is, 3 maanden bij de eindtijd toevoegen
-# Eerst initeren, event. later ophogen
-if(isset($_POST['blokken'])) {
-	$blokken = $_POST['blokken'];
+if(isset($_POST['start'])) {
+	$start = $_POST['start'];
 } else {
-	$blokken = 1;
+	$start = time();
 }
 
-if(isset($_POST['maanden'])) {
-	$blokken++;
+if(isset($_POST['next'])) {
+	$start = ($start + $blokGrootte);
 }
+
+if(isset($_POST['prev'])) {
+	$start = ($start - $blokGrootte);
+}
+
+
+$einde = $start + $blokGrootte;
 
 # Haal alle kerkdiensten binnen een tijdsvak op
-$diensten = getKerkdiensten(mktime(0,0,0), mktime(date("H"),date("i"),date("s"),(date("n")+(3*$blokken))));
+$diensten = getKerkdiensten($start, $einde);
 
 $text[] = "<form method='post' action='$_SERVER[PHP_SELF]'>";
-$text[] = "<input type='hidden' name='blokken' value='$blokken'>";
-$text[] = "<table>";
+$text[] = "<input type='hidden' name='start' value='$start'>";
+$text[] = "<table border=0>";
 $text[] = "<tr>";
 $text[] = "	<td>Datum</td>";
 $text[] = "	<td>Start</td>";
@@ -149,7 +155,15 @@ foreach($diensten as $dienst) {
 }
 
 $text[] = "<tr>";
-$text[] = "<td colspan='6' align='middle'><input type='submit' name='save' value='Diensten opslaan'>&nbsp;<input type='submit' name='maanden' value='Volgende 3 maanden'></td>";
+$text[] = "<td colspan='5' align='middle'>";
+$text[] = "<table width='100%'>";
+$text[] = "<tr>";
+$text[] = "	<td width='33%' align='left'><input type='submit' name='prev' value='Vorige 3 maanden'></td>";
+$text[] = "	<td width='33%' align='center'><input type='submit' name='save' value='Diensten opslaan'></td>";
+$text[] = "	<td width='33%' align='right'><input type='submit' name='next' value='Volgende 3 maanden'></td>";
+$text[] = "</tr>";
+$text[] = "</table>";
+$text[] = "</td>";
 $text[] = "</tr>";
 $text[] = "</table>";
 $text[] = "</form>";

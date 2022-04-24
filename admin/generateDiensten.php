@@ -23,13 +23,90 @@ if(isset($_POST['save'])) {
 		$eind_2		= mktime(18,00,0,date("n", $startTijd),(date("j", $startTijd)+$offset), date("Y", $startTijd));
 		
 		if($eind_2 < $eindTijd) {
-			$querys[] = "INSERT INTO $TableDiensten ($DienstStart, $DienstEind) VALUES ('$start_1', '$eind_1')";
-			$querys[] = "INSERT INTO $TableDiensten ($DienstStart, $DienstEind) VALUES ('$start_2', '$eind_2')";
+			if(isset($_POST['ochtend']))	$querys[] = "INSERT INTO $TableDiensten ($DienstStart, $DienstEind) VALUES ('$start_1', '$eind_1')";
+			if(isset($_POST['middag']))		$querys[] = "INSERT INTO $TableDiensten ($DienstStart, $DienstEind) VALUES ('$start_2', '$eind_2')";
 			$i++;
 		} else {
 			$doorgaan = false;
 		}
-	}	
+	}
+	
+	# Biddag (Biddag wordt altijd op de tweede woensdag van maart gehouden)
+	if(isset($_POST['biddag'])) {
+		$offset = 0;
+		
+		# Op welke dag valt 1 maart
+		$marker = date("N", mktime(0, 0, 1, 3, 1, $_POST['sJaar']));
+				
+		# $marker = 1 (maandag)		=> 10-3
+		# $marker = 2 (dinsdag)		=> 9-3
+		# $marker = 3 (woensdag)	=> 8-3
+		# $marker = 4 (donderdag)	=> 14-3
+		# $marker = 5 (vrijdag)		=> 13-3
+		# $marker = 6 (zaterdag)	=> 12-3
+		# $marker = 7 (zondag)		=> 11-3
+		
+		# Als $marker > 4 (lees 1 maart is na woensdag), dan week erbij op
+		if($marker > 3)	$offset = 7;
+		
+		$start_biddag = mktime(19, 30, 0, 3, (11-$marker+$offset), $_POST['sJaar']);
+		$eind_biddag = mktime(21, 00, 0, 3, (11-$marker+$offset), $_POST['sJaar']);
+				
+		$querys[] = "INSERT INTO $TableDiensten ($DienstStart, $DienstEind, $DienstOpmerking) VALUES ('$start_biddag', '$eind_biddag', 'Biddag')";
+	}
+	
+	# Dankdag (wordt iedere eerste woensdag van november gehouden)
+	if(isset($_POST['dankdag'])) {
+		$offset = 0;
+		
+		# Op welke dag valt 1 november
+		$marker = date("N", mktime(0, 0, 1, 11, 1, $_POST['sJaar']));
+
+		# $marker = 1 (maandag)		=> 3-11
+		# $marker = 2 (dinsdag)		=> 2-11
+		# $marker = 3 (woensdag)	=> 1-11
+		# $marker = 4 (donderdag)	=> 7-11
+		# $marker = 5 (vrijdag)		=> 6-11
+		# $marker = 6 (zaterdag)	=> 5-11
+		# $marker = 7 (zondag)		=> 4-11
+
+		# Als $marker > 4 (lees 1 maart is na woensdag), dan week erbij op
+		if($marker > 3)	$offset = 7;
+
+		$start_dankdag = mktime(19, 30, 0, 11, (4-$marker+$offset), $_POST['sJaar']);
+		$eind_dankdag = mktime(21, 00, 0, 11, (4-$marker+$offset), $_POST['sJaar']);
+
+		$querys[] = "INSERT INTO $TableDiensten ($DienstStart, $DienstEind, $DienstOpmerking) VALUES ('$start_dankdag', '$eind_dankdag', 'Dankdag')";
+	}
+	
+	# Dienst van 1ste kerstdag inplannen
+	if(isset($_POST['kerst'])) {
+		# Op welke dag valt 25 december
+		$marker = date("N", mktime(0, 0, 1, 12, 25, $_POST['sJaar']));
+		
+		# Als 1ste Kerstdag op zondag valt zal er geen dienst zijn
+		if($marker < 7) {
+			$start_kerst = mktime(10, 00, 0, 12, 25, $_POST['sJaar']);
+			$eind_kerst = mktime(11, 30, 0, 12, 25, $_POST['sJaar']);
+
+			$querys[] = "INSERT INTO $TableDiensten ($DienstStart, $DienstEind, $DienstOpmerking) VALUES ('$start_kerst', '$eind_kerst', '1ste+Kerstdag')";
+		}
+	}
+	
+	# Oudjaars-dienst inplannen
+	if(isset($_POST['oudjaar'])) {		
+		# Op welke dag valt 31 december
+		$marker = date("N", mktime(0, 0, 1, 12, 31, $_POST['sJaar']));
+		
+		# Als Oud & Nieuw op zondag valt zal er geen dienst zijn
+		if($marker < 7) {
+			$start_oudjaar = mktime(19, 30, 0, 12, 31, $_POST['sJaar']);
+			$eind_oudjaar = mktime(21, 00, 0, 12, 31, $_POST['sJaar']);
+			
+			$querys[] = "INSERT INTO $TableDiensten ($DienstStart, $DienstEind, $DienstOpmerking) VALUES ('$start_oudjaar', '$eind_oudjaar', 'Oudjaar')";
+		}
+	}
+	
 } else {
 	$querys = array();
 	$sql = "SELECT * FROM $TableDiensten ORDER BY $DienstEind DESC LIMIT 0,1";
@@ -45,7 +122,7 @@ if(isset($_POST['save'])) {
 	$eJaar	= getParam('eJaar', date("Y")+1);
 
 	$text[] = "<form action='". htmlspecialchars($_SERVER['PHP_SELF']) ."' method='post'>";
-	$text[] = "<table>";
+	$text[] = "<table border=0>";
 	$text[] = "<tr>";
 	$text[] = "	<td>Startdatum</td>";
 	$text[] = "	<td><select name='sDag'>";
@@ -63,8 +140,8 @@ if(isset($_POST['save'])) {
 		$text[] = "	<option value='$j'". ($j == $sJaar ? ' selected' : '') .">$j</option>";
 	}
 	$text[] = "	</select></td>";
-	$text[] = "	<td rowspan='2'>&nbsp;</td>";
-	$text[] = "	<td rowspan='2'><input type='submit' name='save' value='Genereer'></td>";
+	$text[] = "	<td rowspan='3'>&nbsp;</td>";
+	$text[] = "	<td rowspan='3'><input type='submit' name='save' value='Genereer'></td>";
 	$text[] = "</tr>";
 	$text[] = "<tr>";
 	$text[] = "	<td>Einddatum</td>";
@@ -83,9 +160,21 @@ if(isset($_POST['save'])) {
 		$text[] = "	<option value='$j'". ($j == $eJaar ? ' selected' : '') .">$j</option>";
 	}
 	$text[] = "	</select></td>";
-	$text[] = "</tr>";	
+	$text[] = "</tr>";
+	$text[] = "<tr>";
+	$text[] = "	<td colspan='2'><input type='checkbox' name='ochtend' value='1' checked> Ochtenddiensten | <input type='checkbox' name='middag' value='1' checked> Middagdiensten</td>";
+	$text[] = "</tr>";
+	$text[] = "<tr>";
+	$text[] = "	<td colspan='2'><input type='checkbox' name='biddag' value='1'> Biddag | <input type='checkbox' name='dankdag' value='1'> Dankdag<br><input type='checkbox' name='kerst' value='1'> Kerst | <input type='checkbox' name='oudjaar' value='1'> Oudjaar<br></td>";
+	$text[] = "</tr>";
 	$text[] = "</table>";
 	$text[] = "</form>";
+	
+	# Pasen en Pinksteren rekenen is een ramp
+	# Die moeten dus even handmatig opgezocht worden	
+	# Pasen (zoek de eerste volle maan op of na 21 maart | zoek de eerstvolgende zondag na deze volle maan. Voilà, je hebt Eerste Paasdag te pakken)
+	# Hemelvaart (Hemelvaart is 39 dagen na Eerste Paasdag)
+	# Pinksteren (Eerste Pinksterdag is dus tien dagen na Hemelvaart)	
 }
 
 if(count($querys) > 0) {
