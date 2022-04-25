@@ -170,8 +170,7 @@ if(isset($_POST['save'])) {
 	$text[] = "</table>";
 	$text[] = "</form>";
 	
-	# Pasen en Pinksteren rekenen is een ramp
-	# Die moeten dus even handmatig opgezocht worden	
+	# Pasen en Pinksteren rekenen is een ramp; Die moeten dus even handmatig opgezocht worden	
 	# Pasen (zoek de eerste volle maan op of na 21 maart | zoek de eerstvolgende zondag na deze volle maan. Voilà, je hebt Eerste Paasdag te pakken)
 	# Hemelvaart (Hemelvaart is 39 dagen na Eerste Paasdag)
 	# Pinksteren (Eerste Pinksterdag is dus tien dagen na Hemelvaart)	

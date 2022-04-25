@@ -8,7 +8,6 @@ $db = connect_db();
 $kmPrijs = 19; #in centen
 
 $minUserLevel = 1;
-//$requiredUserGroups = array(1, 38);
 $cfgProgDir = '../auth/';
 include($cfgProgDir. "secure.php");
 
@@ -23,6 +22,8 @@ if($productieOmgeving) {
 	
 	//echo 'Test-omgeving';
 }
+
+$iban = $opm_cluco = $relatie = '';
 
 $gebruikersData = getMemberDetails($_SESSION['ID']);
 $page[] = "<form method='post' action='". $_SERVER['PHP_SELF']."' enctype='multipart/form-data'>";
@@ -234,10 +235,11 @@ if(isset($_POST['correct'])) {
 		}
 		
 		# Is er wel iets te declareren ?
-		if(((isset($reis_van) AND $reis_van == '') OR (isset($reis_naar) AND $reis_naar == '')) AND count($overige) < 2 AND $overige[0] == '') {
+		if( ( (isset($reis_van) AND $reis_van == '') OR (isset($reis_naar) AND $reis_naar == '') OR (!isset($reis_van)) OR (!isset($reis_naar)) ) AND count($overige) < 2 AND $overige[0] == '') {
 			$checkFields = false;
-			$meldingDeclaratie = 'Vul declaratie in (reiskosten en/of overige kosten)';
+			$meldingDeclaratie = 'Vul declaratie in'. ($_POST['eigen'] == 'Nee' ? '' : ' (reiskosten en/of overige kosten)');
 		}
+		
 		
 		# Bewijs
 		if(count($overige) > 0 AND isset($_FILES['bijlage']['tmp_name']) AND strlen($_FILES['bijlage']['tmp_name'][0]) == 0) {
@@ -276,7 +278,7 @@ if(isset($_POST['correct'])) {
 			# Alleen PDF's
 			foreach($_FILES['bijlage']['name'] as $bestandsnaam) {
 				$path_parts = pathinfo($bestandsnaam);
-				if($path_parts['extension'] != 'pdf') {
+				if(isset($path_parts['extension']) AND $path_parts['extension'] != 'pdf') {
 					$checkFields = false;
 					$meldingBestand = 'Alleen PDF toegestaan';
 				}
@@ -508,7 +510,7 @@ if(isset($_POST['correct'])) {
 		$page[] = "	<td colspan='4'><b>Eventueel korte toelichting voor de clustercoordinator</b><br>Deze toelichting zal <u>niet</u> opgenomen worden in de definitieve declaratie.</td>";
 		$page[] = "</tr>";		
 		$page[] = "<tr>";
-		$page[] = "	<td colspan='4'><textarea name='opm_cluco' cols=75 rows=5>". $_POST['opm_cluco'] ."</textarea></td>";
+		$page[] = "	<td colspan='4'><textarea name='opm_cluco' cols=75 rows=5>". (isset($_POST['opm_cluco']) ? $_POST['opm_cluco'] : '') ."</textarea></td>";
 		$page[] = "</tr>";		
 		$page[] = "<tr>";
 		$page[] = "	<td colspan='4'>&nbsp;</td>";
