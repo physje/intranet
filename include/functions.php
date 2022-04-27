@@ -1113,6 +1113,26 @@ function getParam($name, $default = '') {
 	return isset($_REQUEST[$name]) ? $_REQUEST[$name] : $default;
 }
 
+
+function getString($start, $end, $string, $offset) {
+	if ($start != '') {
+		$startPos = strpos ($string, $start, $offset) + strlen($start);
+	} else {
+		$startPos = 0;
+	}
+	
+	if ($end != '') {
+		$eindPos	= strpos ($string, $end, $startPos);
+	} else {
+		$eindPos = strlen($string);
+	}
+		
+	$text	= substr ($string, $startPos, $eindPos-$startPos);
+	$rest	= substr ($string, $eindPos);
+		
+	return array($text, $rest);
+}
+
 function getLogData($start, $end, $types, $dader, $subject, $message, $aantal) {
 	global $db, $TableLog, $LogID, $LogTime, $LogType, $LogUser, $LogSubject, $LogMessage;
 		
@@ -2221,6 +2241,45 @@ function getOpenKerkVulling($week, $dag, $uur) {
 	}
 	
 	return $data;	
+}
+
+
+# Pasen = 1ste zondag in de lente na volle maan
+# kei-moeilijk uit te rekenen
+# Daarom niet uitrekenen maar volle maan opvragen
+function getPasen($jaar) {
+	$lente = mktime(0,0,1,3,21,$jaar);
+	$url = 'https://www.kalender-365.nl/maan/maanstanden.html';
+	$i = 0;
+	$doorgaan = true;
+	$data = array();
+
+	$contents = file_get_contents($url);
+	$rijen = explode('<tr><td>', $contents);
+
+	#echo $lente .'<br>';
+	
+	do {
+		$i++;
+		$rij = $rijen[$i];
+		$maan = getString('', '</td><td', $rij, 0);
+		$tijd = getString('data-value="', '">', $rij, 0);
+		$datum = getString('">', '</td>', $tijd[1], 0);
+		
+		#echo $tijd[0] .'|'. $maan[0] .'|'. $datum[0] .'<br>';
+		
+		if(($i > (count($rijen)-2)) OR ($maan[0] == '<b>Volle maan</b>' AND ($tijd[0] > $lente))) {	
+			$doorgaan = false;
+		}		
+	} while($doorgaan);
+	
+	#echo $maan[0] .'|'. $datum[0];
+	#echo $tijd[0];
+	
+	$data['dag']		=	date("j", $tijd[0])+(7-date("N", $tijd[0]));
+	$data['maand']	= date("n", $tijd[0]);
+	
+	return $data;
 }
 
 
