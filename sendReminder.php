@@ -29,6 +29,8 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 				}
 				
 				$teams[$d][$r] = $teamVulling;
+			} else {
+				$teams[$d][$r] = array();
 			}
 		}
 	}

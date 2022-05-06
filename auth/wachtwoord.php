@@ -6,13 +6,16 @@ include_once('../include/HTML_TopBottom.php');
 
 $db = connect_db();
 
-if(isset($_POST['opvragen'])) {
+if(isset($_POST['opvragen']) AND isset($_POST['invoer']) AND trim($_POST['invoer']) != '') {
 	$invoer	= $_POST['invoer'];
 	$sql		= "SELECT $UserID FROM $TableUsers WHERE $UserUsername like '$invoer' OR $UserMail like '$invoer'";	
 	$result = mysqli_query($db, $sql);
 			
 	if(mysqli_num_rows($result) == 0) {
 		$text[] = "Er is helaas niks gevonden met '$invoer'";
+	} elseif(mysqli_num_rows($result) > 1) {
+		$text[] = "Er konden helaas geen inloggegevens verstuurd worden met '$invoer'";
+		toLog('error', $id, '', 'Inloggegevens gezocht met $invoer, meer dan 1 resultaat');
 	} else {
 		$row	= mysqli_fetch_array($result);
 		$id		= $row[$UserID];
@@ -40,19 +43,28 @@ if(isset($_POST['opvragen'])) {
 			toLog('info', $id, '', "Inloggegevens verstuurd naar ". makeName($id, 5));
 			$text[] = "Inloggegevens zijn verstuurd";
 		}		
-	}	
+	}
 } else {
+	$invoer = getParam('invoer', '');
+	
 	$text[] = "<form action='". htmlspecialchars($_SERVER['PHP_SELF']) ."' method='post'>\n";
 	$text[] = "<table>";
 	$text[] = "<tr>";
 	$text[] = "	<td>Voer uw loginnaam of email-adres in. Het systeem zal dan een link sturen waarmee u een nieuw wachtwoord kunt instellen.</td>";
 	$text[] = "</tr>";
 	$text[] = "<tr>";
-	$text[] = "	<td><input type='text' name='invoer' value='". $_REQUEST['invoer'] ."' size='75'></td>";
+	$text[] = "	<td><input type='text' name='invoer' value='$invoer' size='75'></td>";
 	$text[] = "</tr>";
+	
+	if(isset($_POST['invoer']) AND trim($_POST['invoer']) == '')	{
+		$text[] = "<tr>";
+		$text[] = "	<td><i>Veld lijkt leeg te zijn, vul gebruikersnaam of mailadres in</i></td>";
+		$text[] = "</tr>";
+	}
+	
 	$text[] = "<tr>";
 	$text[] = "	<td>&nbsp;</td>";
-	$text[] = "</tr>";
+	$text[] = "</tr>";	
 	$text[] = "<tr>";
 	$text[] = "	<td align='center'><input type='submit' name='opvragen' value='Opvragen'></td>";
 	$text[] = "</tr>";

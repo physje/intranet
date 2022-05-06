@@ -26,9 +26,9 @@ if($showLogin) {
 $RoosterData = getRoosterDetails($_REQUEST['rooster']);
 $diensten = getAllKerkdiensten(true);
 $IDs = getGroupMembers($RoosterData['groep']);
+$leeg = true;
 
 toLog('debug', $_SESSION['ID'], '', 'Rooster '. $RoosterData['naam'] .' bekeken');
-
 
 $text[] = "<h1>". $RoosterData['naam'] ."</h1>".NL;
 $block_1[] = '<table border=0>'.NL;
@@ -38,7 +38,7 @@ foreach($diensten as $dienst) {
 	$vulling = getRoosterVulling($_REQUEST['rooster'], $dienst);
 	
 	# Zijn er namen of is er een tekststring
-	if(isset($vulling) AND (count($vulling) > 0 OR $vulling != '')) {
+	if(isset($vulling) AND (is_array($vulling) AND (count($vulling) > 0) OR $vulling != '')) {
 		if($RoosterData['text_only'] == 0) {		
 			$namen = array();
 				
@@ -66,8 +66,15 @@ foreach($diensten as $dienst) {
 			$block_1[] = "	<td valign='top'><a href='roosterKomendeWeek.php?id=$dienst'>".time2str("%a %d %b %H:%M", $details['start'])."</a></td>".NL;
 			$block_1[] = "	<td valign='top'>". $RoosterString ."</td>".NL;
 			$block_1[] = "</tr>".NL;
+			$leeg = false;
 		}
 	}
+}
+
+if($leeg) {
+	$block_1[] = "<tr>".NL;
+	$block_1[] = "	<td colspan='2'>Dit rooster is leeg</td>".NL;
+	$block_1[] = "</tr>".NL;
 }
 
 $block_1[] = '</table>'.NL;

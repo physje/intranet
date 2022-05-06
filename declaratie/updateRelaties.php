@@ -10,7 +10,8 @@ $updateLeden				= true;
 $updateVoorgangers	= false;
 
 if($updateLeden) {
-	$sql = "SELECT * FROM $TableUsers WHERE $UserEBRelatie > 0 LIMIT 0,1";
+	# Op 4 mei 2022 waren er 80 relaties
+	$sql = "SELECT * FROM $TableUsers WHERE $UserEBRelatie > 0 LIMIT 0,10";
 	$result = mysqli_query($db, $sql);
 	$row = mysqli_fetch_array($result);
 	
@@ -24,7 +25,7 @@ if($updateLeden) {
 		
 		if(is_numeric($UserData['eb_code']) AND $UserData['eb_code'] > 0) {
 			$code = $UserData['eb_code'];
-			$data['naam'] = makeName($scipioID, 15);
+			$data['naam'] = makeName($scipioID, 16);
 			$data['geslacht'] = $UserData['geslacht'];
 			$data['adres'] = $UserData['straat'].' '.$UserData['huisnummer'].$UserData['huisletter'].($UserData['toevoeging'] != '' ? '-'.$UserData['toevoeging'] : '');
 			$data['postcode'] = str_replace(' ', '', $UserData['PC']);

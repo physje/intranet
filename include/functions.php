@@ -731,21 +731,22 @@ function makeName($id, $type) {
 		$achter_m = $row[$UserMeisjesnaam];
 	}
 	
-	# 1 = voornaam													Alberdien
-	# 2 = korte achternaam									Jong
-	# 3 = volledige achternaam (man)				de Jong
-	# 4 = volledige achternaam (vrouw)			de Jong-van Ginkel
-	# 5 = voornaam achternaam (man)					Alberdien de Jong
-	# 6 = voornaam achternaam (vrouw)				Alberdien de Jong-van Ginkel
-	# 7 = voornaam achternaam (vrouw)				Alberdien van Ginkel	
-	# 8 = achternaam, voornaam							Jong; de, Alberdien
-	# 9 = voorletters achternaam (man)			A. de Jong
-	# 10 = voorletters achternaam (vrouw)		A. de Jong-van Ginkel
-	# 11 = voorletters achternaam (vrouw)		A. van Ginkel
-	# 12 = voorletters achternaam (man)			A. (Alberdien) de Jong
-	# 13 = voorletters achternaam (vrouw)		A. (Alberdien) de Jong-van Ginkel
-	# 14 = voorletters achternaam (vrouw)		A. (Alberdien) van Ginkel
-	# 15 = achternaam, voorletters (vrouw)	Jong-van Ginkel; de, Alberdien
+	# 1 = voornaam																		Alberdien
+	# 2 = korte achternaam														Jong
+	# 3 = volledige achternaam (man)									de Jong
+	# 4 = volledige achternaam (vrouw)								de Jong-van Ginkel
+	# 5 = voornaam achternaam (man)										Alberdien de Jong
+	# 6 = voornaam achternaam (vrouw)									Alberdien de Jong-van Ginkel
+	# 7 = voornaam achternaam (vrouw)									Alberdien van Ginkel	
+	# 8 = achternaam, voornaam												Jong; de, Alberdien
+	# 9 = voorletters achternaam (man)								A. de Jong
+	# 10 = voorletters achternaam (vrouw)							A. de Jong-van Ginkel
+	# 11 = voorletters achternaam (vrouw)							A. van Ginkel
+	# 12 = voorletters achternaam (man)								A. (Alberdien) de Jong
+	# 13 = voorletters achternaam (vrouw)							A. (Alberdien) de Jong-van Ginkel
+	# 14 = voorletters achternaam (vrouw)							A. (Alberdien) van Ginkel
+	# 15 = volledige achternaam, voornaam (vrouw)			Jong-van Ginkel; de, Alberdien
+	# 16 = volledige achternaam, voorletters (vrouw)	Jong-van Ginkel; de, A.
 	
 	if($achter_m != '' AND ($type == 4 OR $type == 6 OR $type == 10 OR $type == 13 OR $type == 15)) {
 		$achter .= '-'.$achter_m;
@@ -788,6 +789,8 @@ function makeName($id, $type) {
 		}
 	} elseif($type == 15) {
 		return urldecode($achternaam.', '. $voornaam);
+	} elseif($type == 16) {
+		return urldecode($achternaam.', '. $voorletters);
 	}
 }
 
