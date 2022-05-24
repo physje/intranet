@@ -134,9 +134,9 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 						$param['ouderCC']			= true;
 									
 						if(sendMail_new($param)) {
-							toLog('info', '', $lid, 'reminder-mail '. $roosterData['naam'] .' verstuurd');
+							toLog('info', '', $lid, 'herinnering-mail '. $roosterData['naam'] .' verstuurd');
 						} else {
-							toLog('error', '', $lid, 'problemen met reminder-mail '. $roosterData['naam'] .' versturen');
+							toLog('error', '', $lid, 'problemen met herinnering-mail '. $roosterData['naam'] .' versturen');
 						}
 					}
 				}
@@ -144,7 +144,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 		}
 	}
 } else {
-	toLog('error', '', 'Poging handmatige run remindermail, IP:'.$_SERVER['REMOTE_ADDR']);
+	toLog('error', '', 'Poging handmatige run herinneringmail, IP:'.$_SERVER['REMOTE_ADDR']);
 }
 
 ?>
