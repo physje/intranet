@@ -36,7 +36,7 @@ if($row		= mysqli_fetch_array($result)) {
 			$memberData['geslacht'] = $extern[$persoon]['geslacht'];
 		}
 		$mail[] = "<br>";
-		$mail[] = "dit is een reminder dat je voor morgen op het rooster staat als gast".($memberData['geslacht'] == 'M' ? 'heer' : 'vrouw') ." voor Open Kerk<br>";
+		$mail[] = "dit is een herinnering dat je voor morgen op het rooster staat als gast".($memberData['geslacht'] == 'M' ? 'heer' : 'vrouw') ." voor Open Kerk<br>";
 		$mail[] = "Je bent op de volgende tijden ingedeeld :";
 		$mail[] = "<ul>";
 		
@@ -65,7 +65,7 @@ if($row		= mysqli_fetch_array($result)) {
 			$mail[] = "Ps : mocht je onderling geruild hebben, wil je deze mail dan doorsturen naar de betreffende persoon?";
 		}
 				
-		$parameter['subject']				= "Reminder morgen gast".($memberData['geslacht'] == 'M' ? 'heer' : 'vrouw') ." Open Kerk";
+		$parameter['subject']				= "Herinnering morgen gast".($memberData['geslacht'] == 'M' ? 'heer' : 'vrouw') ." Open Kerk";
 		$parameter['message'] 			= implode("\n", $mail);
 		$parameter['from']					= $ScriptMailAdress;
 		$parameter['fromName']			= 'Open Kerk reminder';
