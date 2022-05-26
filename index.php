@@ -271,6 +271,7 @@ if(in_array(1, getMyGroups($_SESSION['ID'])) OR in_array(36, getMyGroups($_SESSI
 	$blockArray[] = implode("<br>".NL, $gebedsDeel);
 }
 
+/*
 # Trinitas
 $trinitasDeel[] = "<b>Trinitas</b>";
 $TrinitasLinks['trinitas/archief.php']	= 'Archief';
@@ -285,7 +286,7 @@ foreach($TrinitasLinks as $url => $titel) {
 }
 
 $blockArray[] = implode("<br>".NL, $trinitasDeel);
-
+*/
 
 # Hyperlinks
 $links[] = "<b>Links</b>";

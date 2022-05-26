@@ -748,7 +748,7 @@ function makeName($id, $type) {
 	# 15 = volledige achternaam, voornaam (vrouw)			Jong-van Ginkel; de, Alberdien
 	# 16 = volledige achternaam, voorletters (vrouw)	Jong-van Ginkel; de, A.
 	
-	if($achter_m != '' AND ($type == 4 OR $type == 6 OR $type == 10 OR $type == 13 OR $type == 15)) {
+	if($achter_m != '' AND ($type == 4 OR $type == 6 OR $type == 10 OR $type == 13 OR $type == 15 OR $type == 16)) {
 		$achter .= '-'.$achter_m;
 	} elseif($achter_m != '' AND ($type == 7 OR $type == 11)) {
 		$achter = $achter_m;
@@ -762,7 +762,7 @@ function makeName($id, $type) {
 		
 		if($type == 2 OR $type == 7) {
 			$achternaam	= $achter;
-		} elseif($type == 8 OR $type == 15) {
+		} elseif($type == 8 OR $type == 15 OR $type == 16) {
 			$achternaam	= $achter.'; '.$tussen;
 		} else {
 			$achternaam	= $tussen.' '.$achter;
