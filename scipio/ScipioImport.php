@@ -12,7 +12,6 @@ $db = connect_db();
 # Omdat de server deze dagelijks moet draaien wordt toegang niet gedaan op basis
 # van naam+wachtwoord maar op basis van IP-adres
 if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
-//if(true) {
 	$client = new SoapClient("ScipioConnect.wsdl");
 	
 	if(!$test) {
@@ -51,7 +50,8 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 		//$velden[] = $element->aanschrijfnaam;
 		$velden[$UserVoornaam] = trim($element->roepnaam);
 		$velden[$UserGeslacht] = trim($element->geslacht);
-		$velden[$UserGeboorte] = substr($element->gebdatum, 0, 4).'-'.substr($element->gebdatum, 4, 2).'-'.substr($element->gebdatum, 6, 2);
+		#$velden[$UserGeboorte] = substr($element->gebdatum, 0, 4).'-'.substr($element->gebdatum, 4, 2).'-'.substr($element->gebdatum, 6, 2);
+		$velden[$UserGeboorte] = substr($element->gebdatum, 0, 4).'-'.substr($element->gebdatum, 4, 2).'-01';
 		$velden[$UserStatus] = trim($element->status);
 		$velden[$UserBurgelijk] = trim($element->burgstaat);
 		$velden[$UserBelijdenis] = trim($element->kerkstaat);
@@ -64,6 +64,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 		$velden[$UserPC] = trim($element->postcode);
 		$velden[$UserPlaats] = trim($element->plaats);
 		$velden[$UserVestiging] = trim($element->vestigingsdatum);
+		$velden[$UsersLastSeen] = time();
 		
 		# $element->wijk kan Wijk X zijn of ICF
 		# Op deze manier vis ik die laatste eruit, weet nog niet wat ik met die laatste aanmoet

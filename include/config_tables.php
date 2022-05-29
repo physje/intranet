@@ -36,6 +36,7 @@ $UserRelatie									= "relatie";
 $UserVestiging								= "vestiging";
 $UserLastChange								= "last_change";
 $UserLastVisit								= "last_visit";
+$UsersLastSeen								= "last_scipio";
 $UserWijk											= "wijk";
 $UserEBRelatie								= "eb_code";
 $UserUsername									= "username";
@@ -191,12 +192,6 @@ $LPrelatie										= "relatie";
 $LPdoop												= "doop";
 $LPlastSeen										= "last_seen";
 $LPlastChecked								= "last_checked";
-                    					
-$TableEBoekhouden 						= "eb_relatie"; # Als deze tabel verwijderd is, kan dit deel ook weg
-#$EBoekhoudenID								= "id";
-#$EBoekhoudenCode							= "code";
-#$EBoekhoudenIBAN							= "iban";
-#$EBoekhoudenNaam							= "naam";
 
 $TableEBBoekstuk							= "eb_boekstuk";
 $EBBoekstukJaar								= "jaar";
