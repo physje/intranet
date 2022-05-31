@@ -156,7 +156,7 @@ if($aToon['mail'] AND $personData['mail'] != '') {
 	echo "	</tr>".NL;
 }
 
-if($aToon['form_mail'] AND $personData['form_mail'] != '') {
+if($aToon['form_mail']) {
 	echo "	<tr>".NL;
 	echo "		<td><b>Formeel mailadres</b></td>".NL;
 	echo "		<td><input type='text' name='form_mail' value='". $personData['form_mail'] ."'></td>".NL;
