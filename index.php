@@ -313,7 +313,7 @@ if(in_array(1, getMyGroups($_SESSION['ID']))) {
 $site[] = "<a href='auth/objects/logout.php' target='_blank'>Uitloggen</a>";
 $blockArray[] = implode("<br>".NL, $site);
 
-
+/*
 # Jarigen vandaag
 $jarigen = getJarigen(date("d"), date("m"));
 if(count($jarigen) > 0) {
@@ -338,6 +338,7 @@ if(count($jarigen) > 0) {
 	}
 	$blockArray[] = implode("<br>".NL, $morgen);
 }
+*/
 
 # Pagina tonen
 echo $HTMLHeader;
