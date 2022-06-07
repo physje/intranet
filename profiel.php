@@ -64,7 +64,6 @@ if(in_array($_SESSION['ID'], $wijkteam)) {
 	$aToon['PC'] = true;
 	$aToon['tel'] = true;
 	$aToon['mail'] = true;
-	$aToon['geboorte'] = true;
 	$aToon['familie'] = true;
 }
 
@@ -74,7 +73,6 @@ if($_SESSION['ID'] == $id) {
 	$aToon['PC'] = true;
 	$aToon['tel'] = true;
 	$aToon['mail'] = true;
-	$aToon['geboorte'] = true;
 	$aToon['username'] = true;
 	$aToon['familie'] = true;
 }
