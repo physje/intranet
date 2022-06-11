@@ -4,6 +4,7 @@ include_once('../include/config.php');
 include_once('../include/LP_functions.php');
 
 $afzenderAdress = 'gebedskalender@koningskerkdeventer.nl';
+$rust = 2;
 
 $Kop[] = "Beste {{voornaam}},<br>";
 $Kop[] = "<br>";
@@ -16,12 +17,13 @@ $Staart[] = "Met groet,<br>";
 $Staart[] = "het gebedskalenderteam<br>";
 
 # Dagelijkse mailtjes
-$info = $bericht = $verzendtijd = '';
+$info = array();
+$bericht = $verzendtijd = '';
 
 $dPunt = getGebedspunten(date("Y-m-d"), date("Y-m-d"));
 $dData = getGebedspunt($dPunt[0]);		
 $dag[] = "Het gebedspunt voor vandaag is :<br>".NL;
-$dag[] = '<blockquote>'.$dData['gebedspunt'] .'</blockquote><br>'.NL;
+$dag[] = '<blockquote>'.$dData['gebedspunt'] .'</blockquote>'.NL;
 
 $verzendtijd = mktime(5, 57);
 #$verzendtijd = time()+(365*24*60*60);
@@ -41,7 +43,9 @@ $bericht .= implode("\n", $Staart);
 $bericht .= implode("\n", $LaPostaFooter);
 
 $campaignDag = lp_createMail($info);
+sleep($rust);
 if(lp_populateMail($campaignDag, $bericht)) {
+	sleep($rust);
 	lp_scheduleMail($campaignDag, $verzendtijd);
 	toLog('debug', '', '', 'Dagelijkse gebedskalender verstuurd');
 }
@@ -50,7 +54,8 @@ if(lp_populateMail($campaignDag, $bericht)) {
 
 # Weekelijkse mailtjes
 if(date('w') == 0) {
-	$info = $bericht = $verzendtijd = '';
+	$info = array();
+	$bericht = $verzendtijd = '';
 	
 	$wPunten = getGebedspunten(date("Y-m-d"), date("Y-m-d", (time()+(6*24*60*60))));
 	$week[] = "De gebedspunten voor komende week zijn :<br>".NL;
@@ -80,7 +85,9 @@ if(date('w') == 0) {
 	$bericht .= implode("\n", $LaPostaFooter);
 	
 	$campaignWeek = lp_createMail($info);
+	sleep($rust);
 	if(lp_populateMail($campaignWeek, $bericht)) {
+		sleep($rust);
 		lp_scheduleMail($campaignWeek, $verzendtijd);
 		toLog('debug', '', '', 'Wekelijkse gebedskalender verstuurd');
 	}
@@ -92,7 +99,8 @@ if(date('w') == 0) {
 
 #  maandelijkse mailtjes
 if(date('j') == 1) {
-	$info = $bericht = $verzendtijd = '';
+	$info = array();
+	$bericht = $verzendtijd = '';
 	
 	$mPunten = getGebedspunten(date("Y-m-d"), date("Y-m-d", mktime(0,0,1,(date("n")+1),date("j"), date("Y"))));
 	$maand[] = "De gebedspunten voor deze maand zijn :<br>".NL;
@@ -122,7 +130,9 @@ if(date('j') == 1) {
 	$bericht .= implode("\n", $LaPostaFooter);
 	
 	$campaignMaand = lp_createMail($info);
+	sleep($rust);
 	if(lp_populateMail($campaignMaand, $bericht)) {
+		sleep($rust);
 		lp_scheduleMail($campaignMaand, $verzendtijd);
 		toLog('debug', '', '', 'Maandelijkse gebedskalender verstuurd');
 	}

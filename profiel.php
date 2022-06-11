@@ -64,6 +64,7 @@ if(in_array($_SESSION['ID'], $wijkteam)) {
 	$aToon['PC'] = true;
 	$aToon['tel'] = true;
 	$aToon['mail'] = true;
+	$aToon['geboorte'] = true;
 	$aToon['familie'] = true;
 }
 
@@ -73,6 +74,7 @@ if($_SESSION['ID'] == $id) {
 	$aToon['PC'] = true;
 	$aToon['tel'] = true;
 	$aToon['mail'] = true;
+	$aToon['geboorte'] = true;
 	$aToon['username'] = true;
 	$aToon['familie'] = true;
 }
@@ -170,8 +172,9 @@ if($aToon['wijk']) {
 
 if($aToon['geboorte']) {
 	echo "	<tr>".NL;
-	echo "		<td><b>Geboortedatum</b></td>".NL;
-	echo "		<td>". time2str("%d %B '%y", $personData['geb_unix']) ."</td>".NL;
+	echo "		<td><b>Geboortemaand</b></td>".NL;
+	//echo "		<td>". time2str("%d %B '%y", $personData['geb_unix']) ."</td>".NL;
+	echo "		<td>". time2str("%B '%y", $personData['geb_unix']) ."</td>".NL;
 	echo "	</tr>".NL;
 }
 

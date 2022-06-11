@@ -43,12 +43,12 @@ foreach($diensten as $dienst) {
 	
 	$key = strftime('%d%m%y', $data['start']);
 	
-	if($data['collecte_1'] != '' AND ((isset($history[$key]) AND $history[$key] != $data['collecte_1']) OR !isset($history[$key]))) {
+	if($data['collecte_1'] != ''	AND (isset($history[$key]) AND $history[$key] != trim($data['collecte_1']) OR	!isset($history[$key]))) {
 		$veld = array();			
 		if($data['collecte_2'] != '') {
-			$veld[] = '1e collecte voor '. $data['collecte_1'];
+			$veld[] = '1e collecte voor '. trim($data['collecte_1']);
 		} else {
-			$veld[] = 'Collecte voor '. $data['collecte_1'];
+			$veld[] = 'Collecte voor '. trim($data['collecte_1']);
 		}
 		$veld[] = time2str('%d-%m-%Y', $data['start']-$dag);
 		$veld[] = time2str('%d-%m-%Y', $data['eind']+$dag);
@@ -62,10 +62,9 @@ foreach($diensten as $dienst) {
 		$history[$key] = $data['collecte_1'];
 	}
 
-	if($data['collecte_2'] != '' AND ((isset($history[$key]) AND $history[$key] != $data['collecte_2']) OR !isset($history[$key]))) {
-		$veld = array();
-		//$veld[] = '2e collecte '. time2str('%e %B', $data['start']) .': '. $data['collecte_2'];
-		$veld[] = '2e collecte voor '. $data['collecte_2'];
+	if($data['collecte_2'] != ''	AND (isset($history[$key]) AND $history[$key] != trim($data['collecte_2']) OR	!isset($history[$key]))) {
+		$veld = array();		
+		$veld[] = '2e collecte voor '. trim($data['collecte_2']);
 		$veld[] = time2str('%d-%m-%Y', $data['start']-$dag);
 		$veld[] = time2str('%d-%m-%Y', $data['eind']+$dag);	
 		$veld[] = '';
