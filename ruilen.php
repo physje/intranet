@@ -30,21 +30,15 @@ if(isset($_REQUEST['dader']) AND isset($_REQUEST['slachtoffer'])) {
 		if($value == $slachtoffer)	$vulling_s[$key] = $dader;			
 	}
 	
-	#array_splice ($vulling_d, array_search($dader, $vulling_d), 1, array($slachtoffer));
-	#array_splice ($vulling_s, array_search($slachtoffer, $vulling_s), 1, array($dader));
-	
 	# Alle gegevens voor de dienst verwijderen
 	removeFromRooster($rooster, $dienst_d);
 	removeFromRooster($rooster, $dienst_s);
 	
-	foreach($vulling_d as $pos => $persoon) {
-		add2Rooster($rooster, $dienst_d, $persoon, $pos);
-	}
-	
-	foreach($vulling_s as $pos => $persoon) {
-		add2Rooster($rooster, $dienst_s, $persoon, $pos);
-	}
-			
+	# Voeg de nieuwe data toe voor de dienst van de dader
+	# En de nieuwe data voor de dienst van het slachtoffer
+	foreach($vulling_d as $pos => $persoon)		add2Rooster($rooster, $dienst_d, $persoon, $pos);
+	foreach($vulling_s as $pos => $persoon)		add2Rooster($rooster, $dienst_s, $persoon, $pos);
+				
 	$details_d = getKerkdienstDetails($dienst_d);
 	$details_s = getKerkdienstDetails($dienst_s);
 	
@@ -55,15 +49,12 @@ if(isset($_REQUEST['dader']) AND isset($_REQUEST['slachtoffer'])) {
 	$mail[] = "Jij staat nu ingepland op ". time2str("%e %B", $details_d['start']) ." en ". makeName($dader, 1) ." op ". time2str("%e %B", $details_s['start']);
 	$mail[] = "";
 	$mail[] = "Klik <a href='".$ScriptURL."showRooster.php?rooster=$rooster'>hier</a> voor het meest recente rooster";	
-	
-	
+		
 	$param_dader['to'][]			= array($slachtoffer);
 	$param_dader['message']	= implode("<br>\n", $mail);
 	$param_dader['subject']	= "Er is met jou geruild voor '". $roosterData['naam'] ."'";
-		
-	if(sendMail_new($param_dader)) {
-		toLog('debug', $dader, '', 'verplaatst van dienst '. $dienst_d .' naar '. $dienst_s);
-	}
+			
+	if(sendMail_new($param_dader))			toLog('debug', $dader, '', 'verplaatst van dienst '. $dienst_d .' naar '. $dienst_s);
 				
 	$mail = array();
 	$mail[] = "Dag ". makeName($dader, 1) .",";
@@ -76,20 +67,19 @@ if(isset($_REQUEST['dader']) AND isset($_REQUEST['slachtoffer'])) {
 	$param_slachtoffer['to'][]			= array($dader);
 	$param_slachtoffer['message']	= implode("<br>\n", $mail);
 	$param_slachtoffer['subject']	= "Je hebt geruild voor '". $roosterData['naam'] ."'";
-		
-	if(sendMail_new($param_slachtoffer)) {
-		toLog('debug', $slachtoffer, '', 'verplaatst van dienst '. $dienst_s .' naar '. $dienst_d);
-	}
+	
+	if(sendMail_new($param_slachtoffer))		toLog('debug', $slachtoffer, '', 'verplaatst van dienst '. $dienst_s .' naar '. $dienst_d);
 		
 	$text[] = 'Er is een bevestigingsmail naar jullie allebei gestuurd.';
 	toLog('info', $dader, $slachtoffer, "geruild voor '". $roosterData['naam'] ."'");
 } elseif($slachtoffer != '' OR $dader != '') {
 	$diensten = getAllKerkdiensten(true);
+	$familie			= getFamilieleden($_SESSION['ID']);
 	
 	if(isset($_REQUEST['dader'])) {
-		$text[] = "Met wie wil je ruilen ?<br>";
+		$text[] = "Met wie wil ". ($_REQUEST['dader'] == $_SESSION['ID'] ? 'je' : makeName($_REQUEST['dader'], 1)) ." ruilen ?<br>";
 	} else {
-		$text[] = "Welke dienst neemt ". makeName($slachtoffer, 5) ." van jou over?<br>";	
+		$text[] = "Welke dienst neemt ". makeName($slachtoffer, 5) ." over?<br>";	
 	}
 	
 	$text[] = '<table>';
@@ -99,16 +89,16 @@ if(isset($_REQUEST['dader']) AND isset($_REQUEST['slachtoffer'])) {
 		$vulling = getRoosterVulling($rooster, $dienst);
 		
 		$namen = array();
-				
+						
 		foreach($vulling as $lid) {
-			if(isset($_REQUEST['slachtoffer']) AND $lid == $_SESSION['ID'] AND $dienst != $dienst_s) {
-				$namen[] = "<a href='ruilen.php?rooster=$rooster&dienst_d=$dienst&dienst_s=$dienst_s&slachtoffer=$slachtoffer&dader=$lid'>". makeName($lid, 5) ."</a>";
-				$tonen = true;
-			} elseif(isset($_REQUEST['dader']) AND $lid != $dader AND $dienst != $dienst_d) {
+			if(isset($_REQUEST['dader']) AND $lid != $dader AND $dienst != $dienst_d) {
 				$namen[] = "<a href='ruilen.php?rooster=$rooster&dienst_d=$dienst_d&dienst_s=$dienst&slachtoffer=$lid&dader=$dader'>". makeName($lid, 5) ."</a>";
 				$tonen = true;
-			//} else {
-			//	$namen[] = makeName($lid, 5);
+			} elseif(isset($slachtoffer) AND $slachtoffer != '' AND in_array($lid, $familie) AND $dienst != $dienst_s) {
+				$namen[] = "<a href='ruilen.php?rooster=$rooster&dienst_d=$dienst&dienst_s=$dienst_s&slachtoffer=$slachtoffer&dader=$lid'>". makeName($lid, 5) ."</a>";
+				$tonen = true;			
+			} else {
+				$namen[] = makeName($lid, 5);
 			}
 		}
 		

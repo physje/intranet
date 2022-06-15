@@ -23,10 +23,20 @@ if($showLogin) {
 	$db = connect_db();
 }
 
-$RoosterData = getRoosterDetails($_REQUEST['rooster']);
-$diensten = getAllKerkdiensten(true);
-$IDs = getGroupMembers($RoosterData['groep']);
-$leeg = true;
+$RoosterData	= getRoosterDetails($_REQUEST['rooster']);
+$diensten			= getAllKerkdiensten(true);
+$IDs					= getGroupMembers($RoosterData['groep']);
+$familie			= getFamilieleden($_SESSION['ID']);
+$leeg					= true;
+$showRuilen		= false;
+
+# Moet het symbool voor ruilen getoond worden
+#		1a) Je zit in de groep waar dit rooster voor geldt
+#		1b)	Een van je familie-leden zit in de groep die op het rooster staat
+#		2)	Het is een rooster wat niet geimporteerd wordt 
+if((in_array($_SESSION['ID'], $IDs) OR count(array_intersect($familie, $IDs)) > 0) AND !in_array($_REQUEST['rooster'], $importRoosters)) {
+	$showRuilen = true;
+}
 
 toLog('debug', $_SESSION['ID'], '', 'Rooster '. $RoosterData['naam'] .' bekeken');
 
@@ -41,19 +51,18 @@ foreach($diensten as $dienst) {
 	if(isset($vulling) AND (is_array($vulling) AND (count($vulling) > 0) OR $vulling != '')) {
 		if($RoosterData['text_only'] == 0) {		
 			$namen = array();
-				
+							
 			foreach($vulling as $lid) {
 				//$data = getMemberDetails($lid);
 				$string = "<a href='profiel.php?id=$lid'>". makeName($lid, 5) ."</a>";
 				
-				if((in_array($_SESSION['ID'], $IDs) OR in_array($_SESSION['ID'], $vulling)) AND !in_array($_REQUEST['rooster'], $importRoosters)) {
-					if($lid == $_SESSION['ID']) {
-						$string .= " <a href='ruilen.php?rooster=". $_REQUEST['rooster'] ."&dienst_d=$dienst&dader=$lid' title='klik om ruiling door te geven'><img src='images/wisselen.png'></a>";
-					} else {
-						$string .= " <a href='ruilen.php?rooster=". $_REQUEST['rooster'] ."&dienst_s=$dienst&slachtoffer=$lid' title='klik ruiling door te geven'><img src='images/wisselen.png'></a>";
-					}
+				#if((in_array($_SESSION['ID'], $IDs) OR in_array($_SESSION['ID'], $vulling)) AND !in_array($_REQUEST['rooster'], $importRoosters)) {
+				if($showRuilen AND in_array($lid, $familie)) {
+					$string .= " <a href='ruilen.php?rooster=". $_REQUEST['rooster'] ."&dienst_d=$dienst&dader=$lid' title='klik om ruiling door te geven'><img src='images/wisselen.png'></a>";
+				} elseif($showRuilen) {
+					$string .= " <a href='ruilen.php?rooster=". $_REQUEST['rooster'] ."&dienst_s=$dienst&slachtoffer=$lid' title='klik ruiling door te geven'><img src='images/wisselen.png'></a>";
 				}
-				
+								
 				$namen[] = $string;
 			}			
 			$RoosterString = implode('<br>', $namen);
