@@ -25,10 +25,11 @@ if(isset($_REQUEST['hash'])) {
 	$hash = urldecode($_REQUEST['hash']);
 	$dienst = $_REQUEST['d'];
 	$voorganger = $_REQUEST['v'];
+	
+	$dienstData = getKerkdienstDetails($dienst);
 
-	# De hash klopt
-	if(password_verify($dienst.'$'.$randomCodeDeclaratie.'$'.$voorganger,$hash)) {
-		$dienstData = getKerkdienstDetails($dienst);
+	# De hash klopt en de predikant staat ook op het rooster
+	if(password_verify($dienst.'$'.$randomCodeDeclaratie.'$'.$voorganger,$hash) AND $dienstData['voorganger_id'] == $voorganger) {		
 		$firstData = getVoorgangerData($voorganger);
 		$secondData = getDeclaratieData($voorganger, $dienstData['start']);		
 		$voorgangerData = array_merge($firstData, $secondData);
@@ -502,7 +503,7 @@ if(isset($_REQUEST['hash'])) {
 		}
 	} else {
 		# Direct-link om te declareren is niet correct
-		$page[] = "Deze link is niet correct.<br><br>";
+		$page[] = "Deze link is niet (meer) geldig.<br><br>";
 		$page[] = "U kunt via <a href='". $_SERVER['PHP_SELF'] ."?draad=predikant'>deze pagina</a> een nieuwe link aanvragen.<br><br>";
 		$page[] = "Mocht dat het probleem niet oplossen dan kunt u contact opnemen met <a href='mailto:$ScriptMailAdress'>de webmaster</a>.";
 	}
