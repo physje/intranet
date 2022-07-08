@@ -94,8 +94,8 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 			
 			if($bandleider > 0) {
 				$mailText[] = "";
-				$mailText[] = "<b>Bandleider</b>";
-				$mailText[] = "De muzikale begeleiding wordt geco&ouml;rdineerd door ". makeName($bandleider, 5) .". De liturgie ".($voorgangerData['stijl'] == 0 ? 'kunt u' : 'kun je')." afstemmen met ". makeName($bandleider, 1) .". ". ($bandData['geslacht'] == 'M' ? 'Hij' : 'Zij') ." kan dan aangeven of liederen bekend en of geschikt zijn in onze gemeente en eventuele suggesties doen voor een vervangend lied. Vanwege de onlinedienst gaan we uit van drie &aacute; vier liederen.";
+				$mailText[] = "<b>Bandleider</b>";				
+				$mailText[] = "De muzikale begeleiding wordt gecoördineerd door geco&ouml;rdineerd door ". makeName($bandleider, 5) .". Wanneer ".($voorgangerData['stijl'] == 0 ? 'u' : 'je')." het preekthema en de te lezen bijbelteksten een week van tevoren aanlevert, zal de bandleider geschikte liederen uitzoeken die passen binnen de gemeentezang. Mocht ".($voorgangerData['stijl'] == 0 ? 'u' : 'je')." zelf nog liederen in gedachten hebben, dan ".($voorgangerData['stijl'] == 0 ? 'kunt u' : 'kun je')." deze altijd ter suggestie aandragen bij ". makeName($bandleider, 1) .".";
 				$mailText[] = ($voorgangerData['stijl'] == 0 ? 'Wilt u' : 'Wil je')." de liturgie een week van te voren doorgeven zodat de band kan oefenen?";
 			}
 			
