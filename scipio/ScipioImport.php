@@ -260,6 +260,16 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 			}
 		}
 	}
+	
+	# Adressen die niet meer doorkomen verwijderen
+	# Bijvoorbeeld omdat mensen vanuit AVG niet meer gevonden willen worden
+	$sql_delete = "DELETE FROM $TableUsers WHERE $UsersLastSeen < ". mktime(date('H')-25);
+	$result = mysqli_query($db, $sql_delete);	
+	if(!$result) {
+		toLog('error', '', 'Verwijderen van oudleden : '. $sql_delete);
+	} elseif(mysqli_num_rows($result) > 0) {
+		toLog('info', '', 'Oudleden verwijderd');		
+	}
 		
 	if(count($mailBlockNew) > 0 OR count($mailBlockChange) > 0) {
 		foreach($wijkArray as $wijk) {
