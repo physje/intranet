@@ -27,9 +27,10 @@ if(isset($_REQUEST['hash'])) {
 	$voorganger = $_REQUEST['v'];
 	
 	$dienstData = getKerkdienstDetails($dienst);
+	$declaratieStatus = getVoorgangerDeclaratieStatus($dienst);
 
-	# De hash klopt en de predikant staat ook op het rooster
-	if(password_verify($dienst.'$'.$randomCodeDeclaratie.'$'.$voorganger,$hash) AND $dienstData['voorganger_id'] == $voorganger) {		
+	# De hash klopt & de predikant staat ook op het rooster & er is nog niet eerder een declaratie ingediend
+	if(password_verify($dienst.'$'.$randomCodeDeclaratie.'$'.$voorganger,$hash) AND $dienstData['voorganger_id'] == $voorganger AND $declaratieStatus < 8) {		
 		$firstData = getVoorgangerData($voorganger);
 		$secondData = getDeclaratieData($voorganger, $dienstData['start']);		
 		$voorgangerData = array_merge($firstData, $secondData);

@@ -1444,21 +1444,13 @@ function getVoorgangerData($id) {
 function getDeclaratieData($voorganger, $tijdstip) {
 	global $TableVoorganger, $VoorgangerID, $VoorgangerHonorarium, $VoorgangerHonorariumOld, $VoorgangerHonorariumNew, $VoorgangerHonorariumSpecial, $VoorgangerKM, $VoorgangerVertrekpunt, $VoorgangerEBRelatie;
 	
-	# 1577836800 = 1-1-2020 00:00:00
-	$grens = 1577836800;
-	
 	$db = connect_db();
 	$sql = "SELECT * FROM $TableVoorganger WHERE $VoorgangerID = $voorganger";
 
 	$result = mysqli_query($db, $sql);
 	$row = mysqli_fetch_array($result);
 					
-	if($tijdstip > $grens) {
-		$data['honorarium'] = $row[$VoorgangerHonorariumNew];
-	} else {
-		$data['honorarium'] = $row[$VoorgangerHonorariumOld];
-	}
-	
+	$data['honorarium'] = $row[$VoorgangerHonorariumNew];
 	$data['honorarium_oud'] = $row[$VoorgangerHonorariumOld];
 	$data['honorarium_nieuw'] = $row[$VoorgangerHonorariumNew];
 	$data['honorarium_spec'] = $row[$VoorgangerHonorariumNew];
@@ -1672,6 +1664,29 @@ function setVoorgangerDeclaratieStatus($status, $dienst) {
 		return false;
 	}	
 }
+
+function getVoorgangerDeclaratieStatus($dienst) {
+	global $db, $TableDiensten, $DienstDeclStatus, $DienstID;
+	
+	$descr[0] = 'geen';							# standaard status bij nieuwe kerkdienst
+	$descr[1] = 'open';							# Status wordt op 'open' gezet in mailVoorganger.php (20 dagen van te voren)
+	$descr[2] = 'link verstuurd';		# Status wordt op 'link verstuurd' gezet na versturen van link op de dag van voorgaan
+	$descr[3] = 'link bezocht';			# Status wordt op 'link bezocht' gezet als de link uit vorige mail bezocht is
+	$descr[4] = 'opgeslagen';				# (nog) niet ingebruik
+	$descr[5] = 'bij CluCo';				# (nog) niet ingebruik
+	$descr[6] = 'bij lid';					# (nog) niet ingebruik
+	$descr[7] = 'afgekeurd';				# (nog) niet ingebruik
+	$descr[8] = 'afgerond';					# Status wordt op 'afgerond' gezet als declaratie is ingediend
+	$descr[9] = 'afgezien';
+	
+	$sql = "SELECT $DienstDeclStatus FROM $TableDiensten $DienstID = $dienst";
+	$result = mysqli_query($db, $sql);
+	$row = mysqli_fetch_array($result);
+	
+	return $row[$DienstDeclStatus];
+}
+
+
 
 function setDeclaratieStatus($status, $declaratie, $lid) {
 	global $db, $TableEBDeclaratie, $EBDeclaratieID, $EBDeclaratieStatus;
