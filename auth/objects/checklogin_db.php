@@ -41,12 +41,14 @@ if(mysqli_num_rows($userQuery) != 0) {
 	$userArray = mysqli_fetch_array($userQuery);
 	
 	if ($login != $userArray[$cfgDbLoginfield]) {
+		toLog('debug', '', '', 'Inlogpoging vanaf '. $_SERVER['REMOTE_ADDR'] .', verkeerd getypte username |'. $login .'|');
 		# Case sensative user not present in database
 		$phpSP_message = $strUserNotExist;
-    include($cfgProgDir . "interface.php");
-    exit;
+    		include($cfgProgDir . "interface.php");
+    		exit;
 	}
 } else {
+	toLog('debug', '', '', 'Inlogpoging vanaf '. $_SERVER['REMOTE_ADDR'] .', onbekende username |'. $login .'|');
 	# user not present in database
 	$phpSP_message = $strUserNotExist;
   include($cfgProgDir . "interface.php");
@@ -61,7 +63,7 @@ if(!$userArray[$cfgDbPasswordfield]) {
 }
 
 if(!password_verify($password, $userArray["$cfgDbPasswordfield"])) {
-#if(stripslashes($userArray["$cfgDbPasswordfield"]) != $password) {
+	toLog('debug', '', '', 'Inlogpoging vanaf '. $_SERVER['REMOTE_ADDR'] .', verkeerd wachtwoord |'. $password .'|');
 	# password is wrong
 	$phpSP_message = $strPwFalse;
 	include($cfgProgDir . "interface.php");
@@ -75,9 +77,6 @@ if(isset($userArray["$cfgDbUserIDfield"]) && !empty($cfgDbUserIDfield)) {
 		toLog('info', $_SESSION['ID'], '', 'Inlogpoging vanaf '. $_SERVER['REMOTE_ADDR']);
 		
 		# Noteer de laatste keer dat deze persoon is ingelogd
-		# En schrijf het wachtwoord in een nieuw formaat weg. Op deze manier kunnen we
-		# over x-aantal maanden "geruisloos" over op een nieuwe manier van wachtwoord opslaan
-		//$sql = "UPDATE $TableUsers SET $UserLastVisit = '". time() ."', $UserNewPassword = '". password_hash($entered_password, PASSWORD_DEFAULT) ."' WHERE $UserID like ". $_SESSION['ID'];
 		$sql = "UPDATE $TableUsers SET $UserLastVisit = '". time() ."' WHERE $UserID like ". $_SESSION['ID'];
 		mysqli_query($db, $sql);
 		
