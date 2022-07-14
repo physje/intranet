@@ -63,7 +63,7 @@ if(!$userArray[$cfgDbPasswordfield]) {
 }
 
 if(!password_verify($password, $userArray["$cfgDbPasswordfield"])) {
-	toLog('debug', '', '', 'Inlogpoging vanaf '. $_SERVER['REMOTE_ADDR'] .', verkeerd wachtwoord |'. $password .'|');
+	toLog('debug', '', '', 'Inlogpoging vanaf '. $_SERVER['REMOTE_ADDR'] .', verkeerd wachtwoord |'. $password .'|, username |'. $login .'|');
 	# password is wrong
 	$phpSP_message = $strPwFalse;
 	include($cfgProgDir . "interface.php");
