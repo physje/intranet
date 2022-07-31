@@ -1216,6 +1216,31 @@ function getWijkMembers($wijk) {
 	return $data;	
 }
 
+function getWijkledenByAdres($wijk) {
+	global $TableUsers, $UserStatus, $UserID, $UserAdres, $UserWijk, $UserAchternaam, $UserRelatie, $UserGeboorte;
+	$db = connect_db();
+	
+	$data = array();
+	$sql_adressen = "SELECT $UserAdres FROM $TableUsers WHERE $UserStatus = 'actief' AND $UserWijk like '$wijk' GROUP BY $UserAdres ORDER BY $UserAchternaam";
+			
+	$result_adressen = mysqli_query($db, $sql_adressen);
+	if($row_adressen = mysqli_fetch_array($result_adressen)) {
+		do {
+			$adres = $row_adressen[$UserAdres];
+
+			$sql_leden = "SELECT $UserID FROM $TableUsers WHERE $UserStatus = 'actief' AND $UserAdres like '$adres' ORDER BY FIELD($UserRelatie,'gezinshoofd') DESC";
+			$result_leden = mysqli_query($db, $sql_leden);
+			$row_leden = mysqli_fetch_array($result_leden);
+			
+			do {
+				$data[$adres][] = $row_leden[$UserID];
+			} while($row_leden = mysqli_fetch_array($result_leden));			
+		} while($row_adressen = mysqli_fetch_array($result_adressen));		
+	}
+	return $data;	
+	
+}
+
 function toonDienst($dienst, $gelijk) {
 	if($gelijk == 0) {
 		return true;
