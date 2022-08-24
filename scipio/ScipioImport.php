@@ -319,15 +319,19 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 					$replacedBericht = str_replace('[[voornaam]]', $data['voornaam'], $replacedBericht);
 					
 					unset($param);
-					$param['to'][]		= array($lid);
-					$param['message']	= $replacedBericht;
-					$param['subject']	= implode(' en ', $subject);
-					$param['formeel'] = true;
+					$param['to'][]				= array($lid);
+					$param['message']			= $replacedBericht;
+					$param['subject']			= implode(' en ', $subject);
+					$param['formeel'] 		= true;
+					$param['ReplyTo']			= 'kerkelijkbureau@koningskerkdeventer.nl';
+					$param['ReplyToName']	= 'Kerkelijk Bureau';
 					
+					# Sommige mails lijken niet aan te komen
+					# Even debuggen
 					if($lid == 984323) {
 						$param['cc'] = 984285;
 					}
-					
+										
 					if(sendMail_new($param)) {
 						toLog('info', '', $lid, "Wijzigingsmail wijkteam wijk $wijk verstuurd");
 						echo "Mail verstuurd naar ". makeName($lid, 1) ." (wijkteam wijk $wijk)<br>\n";

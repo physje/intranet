@@ -155,22 +155,22 @@ $WijkteamWijk									= "wijk";
 $WijkteamLid									= "lid";
 $WijkteamRol									= "rol";
                     					
-$TableMC											= "mc_data";
-$MCID													= "scipio_id";
-$MCgeslacht										= "geslacht";
-$MCfname											= "fname";
-$MCtname											= "tname";
-$MClname											= "lname";
-$MCmail												= "mail";
-$MCwijk												= "wijk";
-$MCmark												= "mark";
-$MCstatus											= "status";
-$MCrelatie										= "relatie";
-$MCdoop												= "doop";
-$MCtempTag										= "tempTag";
-$MCleeftijd										= "leeftijd";
-$MClastSeen										= "last_seen";
-$MClastChecked								= "last_checked";
+#$TableMC											= "mc_data";
+#$MCID													= "scipio_id";
+#$MCgeslacht										= "geslacht";
+#$MCfname											= "fname";
+#$MCtname											= "tname";
+#$MClname											= "lname";
+#$MCmail												= "mail";
+#$MCwijk												= "wijk";
+#$MCmark												= "mark";
+#$MCstatus											= "status";
+#$MCrelatie										= "relatie";
+#$MCdoop												= "doop";
+#$MCtempTag										= "tempTag";
+#$MCleeftijd										= "leeftijd";
+#$MClastSeen										= "last_seen";
+#$MClastChecked								= "last_checked";
                     					
 $TableCommMC									= "mc_comm";
 $CommMCID											= "scipio_id";
@@ -264,7 +264,19 @@ $OKRoosterPersoon							= "persoon";
 $TableOpenKerkOpmerking				= "openkerk_opmerking";
 $OKOpmerkingTijd							= "tijd";
 $OKOpmerkingOpmerking					= "opmerking";
-                    					
+
+$TablePastoraat								= "pastoraat";
+$PastoraatID									= "id";
+$PastoraatIndiener						= "indiener";
+$PastoraatTijdstip						= "tijdstip";
+$PastoraatLid									= "lid";
+$PastoraatType								= "type";
+$PastoraatLocatie							= "locatie";
+#$PastoraatPrive								= "prive";
+$PastoraatZichtOud 						= "zicht_oud";
+$PastoraatZichtPred 					= "zicht_pred";
+$PastoraatZichtPas						= "zicht_pas";
+                                                  					
 $ArchiveDir										= 'trinitas';
 
 $wijkArray			= array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'ICF');
