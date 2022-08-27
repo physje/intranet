@@ -272,10 +272,15 @@ $PastoraatTijdstip						= "tijdstip";
 $PastoraatLid									= "lid";
 $PastoraatType								= "type";
 $PastoraatLocatie							= "locatie";
-#$PastoraatPrive								= "prive";
+$PastoraatPrive								= "prive";
 $PastoraatZichtOud 						= "zicht_oud";
 $PastoraatZichtPred 					= "zicht_pred";
 $PastoraatZichtPas						= "zicht_pas";
+$PastoraatNote								= "aantekening";
+
+$TablePastorVerdeling					= "pastoraat_verdeling";
+$PastorVerdelingLid						= "lid";
+$PastorVerdelingPastor				= "pastor";
                                                   					
 $ArchiveDir										= 'trinitas';
 

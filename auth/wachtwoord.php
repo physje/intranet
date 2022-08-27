@@ -8,14 +8,14 @@ $db = connect_db();
 
 if(isset($_POST['opvragen']) AND isset($_POST['invoer']) AND trim($_POST['invoer']) != '') {
 	$invoer	= $_POST['invoer'];
-	$sql		= "SELECT $UserID FROM $TableUsers WHERE $UserUsername like '$invoer' OR $UserMail like '$invoer'";	
+	$sql		= "SELECT $UserID FROM $TableUsers WHERE $UserUsername like '$invoer' OR $UserMail like '$invoer' OR $UserFormeelMail like '$invoer'";	
 	$result = mysqli_query($db, $sql);
 			
 	if(mysqli_num_rows($result) == 0) {
 		$text[] = "Er is helaas niks gevonden met '$invoer'";
 	} elseif(mysqli_num_rows($result) > 1) {
-		$text[] = "Er konden helaas geen inloggegevens verstuurd worden met '$invoer'";
-		toLog('error', $id, '', 'Inloggegevens gezocht met $invoer, meer dan 1 resultaat');
+		$text[] = "Er zijn meer leden die voldoen aan '$invoer'. Probeer het op een andere manier.";
+		toLog('error', $id, '', 'Inloggegevens gezocht met '. $invoer .', meer dan 1 resultaat');
 	} else {
 		$row	= mysqli_fetch_array($result);
 		$id		= $row[$UserID];

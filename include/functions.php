@@ -1201,9 +1201,8 @@ function excludeID($oldArray, $id) {
 }
 
 function getWijkMembers($wijk) {
-	global $TableUsers, $UserStatus, $UserID, $UserWijk, $UserAchternaam;
-	$db = connect_db();
-	
+	global $TableUsers, $UserStatus, $UserID, $UserWijk, $UserAchternaam, $db;
+
 	$data = array();
 	$sql = "SELECT $UserID FROM $TableUsers WHERE $UserStatus = 'actief' AND $UserWijk like '$wijk' ORDER BY $UserAchternaam";
 			
@@ -1216,9 +1215,8 @@ function getWijkMembers($wijk) {
 	return $data;	
 }
 
-function getWijkledenByAdres($wijk) {
-	global $TableUsers, $UserStatus, $UserID, $UserAdres, $UserWijk, $UserAchternaam, $UserRelatie, $UserGeboorte;
-	$db = connect_db();
+function getWijkledenByAdres($wijk, $kids = true) {
+	global $TableUsers, $UserStatus, $UserID, $UserAdres, $UserWijk, $UserAchternaam, $UserRelatie, $UserGeboorte, $db;
 	
 	$data = array();
 	$sql_adressen = "SELECT $UserAdres FROM $TableUsers WHERE $UserStatus = 'actief' AND $UserWijk like '$wijk' GROUP BY $UserAdres ORDER BY $UserAchternaam";
@@ -1227,8 +1225,13 @@ function getWijkledenByAdres($wijk) {
 	if($row_adressen = mysqli_fetch_array($result_adressen)) {
 		do {
 			$adres = $row_adressen[$UserAdres];
+			
+			if($kids) {
+			    $sql_leden = "SELECT $UserID FROM $TableUsers WHERE $UserStatus = 'actief' AND $UserAdres like '$adres' ORDER BY FIELD($UserRelatie,'gezinshoofd') DESC";			    
+			} else {
+			    $sql_leden = "SELECT $UserID FROM $TableUsers WHERE $UserStatus = 'actief' AND $UserAdres like '$adres' AND $UserRelatie NOT like 'zoon' AND $UserRelatie NOT like 'dochter' ORDER BY FIELD($UserRelatie,'gezinshoofd') DESC";
+			}
 
-			$sql_leden = "SELECT $UserID FROM $TableUsers WHERE $UserStatus = 'actief' AND $UserAdres like '$adres' ORDER BY FIELD($UserRelatie,'gezinshoofd') DESC";
 			$result_leden = mysqli_query($db, $sql_leden);
 			$row_leden = mysqli_fetch_array($result_leden);
 			
@@ -1237,8 +1240,8 @@ function getWijkledenByAdres($wijk) {
 			} while($row_leden = mysqli_fetch_array($result_leden));			
 		} while($row_adressen = mysqli_fetch_array($result_adressen));		
 	}
-	return $data;	
 	
+	return $data;	
 }
 
 function toonDienst($dienst, $gelijk) {
@@ -1564,6 +1567,83 @@ function getWijkteamLeden($wijk) {
 	
 	return $leden;	
 }
+
+function getPastor($lid) {
+	global $TablePastorVerdeling, $PastorVerdelingLid, $PastorVerdelingPastor, $db;
+	
+	$pastor = 0;
+	
+	$sql = "SELECT * FROM $TablePastorVerdeling WHERE $PastorVerdelingLid = $lid";
+	$result = mysqli_query($db, $sql);
+	if($row = mysqli_fetch_array($result)){
+		$pastor = $row[$PastorVerdelingPastor];
+	}
+	
+	return $pastor;
+}
+
+function getPastoraleBezoeken($lid, $teamlid) {
+	global $TablePastoraat, $PastoraatID, $PastoraatLid, $PastoraatIndiener, $PastoraatZichtOud, $PastoraatZichtPas, $PastoraatZichtPred, $PastoraatTijdstip, $db;
+	
+	$bezoeken = array();
+	
+	$data			= getMemberDetails($lid);
+	$wijk			= $data['wijk'];
+	$wijkteam = getWijkteamLeden($wijk);
+	$rol			= $wijkteam[$teamlid];
+	
+	$sql = "SELECT $PastoraatID FROM $TablePastoraat WHERE $PastoraatLid = ". $lid ." AND ($PastoraatIndiener = ". $teamlid;
+	
+	if($rol == 1 OR $rol == 4 OR $rol == 5 OR $rol == 7) {
+		$sql .= " OR ";
+			
+		# Ouderling
+		if($rol == 1) {
+			$sql .= "$PastoraatZichtOud = '1'";
+		# Bezoekbroeder/zuster
+		} elseif($rol == 4 OR $rol == 5) {
+			$sql .= "$PastoraatZichtPas = '1'";
+		# Predikant
+		} elseif($rol == 7) {
+			$sql .= "$PastoraatZichtPred = '1'";
+		}
+	}						
+						
+	$sql .= ") ORDER BY $PastoraatTijdstip DESC";
+	$result = mysqli_query($db, $sql);
+	
+	if($row = mysqli_fetch_array($result)) {		
+		do {
+			$bezoeken[] = $row[$PastoraatID];
+		} while($row = mysqli_fetch_array($result));
+	}
+	
+	return $bezoeken;	
+}
+
+function getPastoraalbezoekDetails($ID) {
+	global $TablePastoraat, $PastoraatID, $PastoraatIndiener, $PastoraatTijdstip, $PastoraatLid, $PastoraatType, $PastoraatLocatie, $PastoraatZichtOud, $PastoraatZichtPred, $PastoraatZichtPas, $PastoraatNote, $db;
+	
+	$sql = "SELECT * FROM $TablePastoraat WHERE $PastoraatID = ". $ID;
+	$result = mysqli_query($db, $sql);
+	
+	if($row = mysqli_fetch_array($result)) {
+		$data = array();
+		
+		$data['indiener'] 	= $row[$PastoraatIndiener];
+		$data['datum'] 			= $row[$PastoraatTijdstip];
+		$data['lid'] 				= $row[$PastoraatLid];
+		$data['type'] 			= $row[$PastoraatType];
+		$data['locatie']		= $row[$PastoraatLocatie];
+		$data['ouderling']	= $row[$PastoraatZichtOud];
+		$data['predikant']	= $row[$PastoraatZichtPred];
+		$data['bezoeker'] 	= $row[$PastoraatZichtPas];
+		$data['note']				= $row[$PastoraatNote];
+	}
+	
+	return $data;
+}
+
 
 function formatPrice($price, $euro = true) {
 	$input = $price/100;
