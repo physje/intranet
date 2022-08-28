@@ -23,6 +23,7 @@ if(isset($_REQUEST['ID'])) {
 		if(count($bezoeken) > 0) {
 			$text[] = "<table>";
 			$text[] = "<tr>";
+			$text[] = "	<td>&nbsp;</td>";
 			$text[] = "	<td><b>Datum</b></td>";
 			$text[] = "	<td>&nbsp;</td>";
 			$text[] = "	<td><b>Door</b></td>";
@@ -38,6 +39,11 @@ if(isset($_REQUEST['ID'])) {
 				$details = getPastoraalbezoekDetails($bezoek);
 				
 				$text[] = "<tr>";
+				if($details['indiener'] == $_SESSION['ID']) {
+					$text[] = "	<td><a href='edit.php?id=$bezoek'><img src='../images/wisselen.png' height='16' title='Wijzig dit bezoek'></a></td>";
+				} else {
+					$text[] = "	<td>&nbsp;</td>";
+				}
 				$text[] = "	<td>". time2str("%e %B %Y", $details['datum']) ."</td>";
 				$text[] = "	<td>&nbsp;</td>";
 				$text[] = "	<td>". makeName($details['indiener'], 5) ."</td>";
@@ -46,7 +52,7 @@ if(isset($_REQUEST['ID'])) {
 				$text[] = "	<td>&nbsp;</td>";
 				$text[] = "	<td>". $locatiePastoraat[$details['locatie']] ."</td>";
 				$text[] = "	<td>&nbsp;</td>";
-				$text[] = "	<td>". urldecode($details['note']) ."</td>";
+				$text[] = "	<td>". str_rot13(urldecode($details['note'])) ."</td>";
 				$text[] = "</tr>";
 			}
 			$text[] = "</table>";

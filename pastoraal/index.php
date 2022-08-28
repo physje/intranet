@@ -77,7 +77,7 @@ if(isset($_REQUEST['wijk'])) {
 			$text[] = "</form>";
 		} else {
 			if(isset($_POST['save'])) {
-				$sql = "INSERT INTO $TablePastoraat ($PastoraatIndiener, $PastoraatTijdstip, $PastoraatLid, $PastoraatType, $PastoraatLocatie, $PastoraatZichtOud, $PastoraatZichtPred, $PastoraatZichtPas, $PastoraatNote) VALUES (". $_SESSION['ID'] .", ". mktime(12,12,0,$_POST['maand'],$_POST['dag'],$_POST['jaar']) .", ". $_POST['lid'] .", ". $_POST['type'] .", ". $_POST['locatie'] .", '". (isset($_POST['ouderling']) ? 1 : 0) ."', '". (isset($_POST['predikant']) ? 1 : 0) ."', '". (isset($_POST['bezoeker']) ? 1 : 0) ."', '". urlencode($_POST['aantekening']) ."')";
+				$sql = "INSERT INTO $TablePastoraat ($PastoraatIndiener, $PastoraatTijdstip, $PastoraatLid, $PastoraatType, $PastoraatLocatie, $PastoraatZichtOud, $PastoraatZichtPred, $PastoraatZichtPas, $PastoraatNote) VALUES (". $_SESSION['ID'] .", ". mktime(12,12,0,$_POST['maand'],$_POST['dag'],$_POST['jaar']) .", ". $_POST['lid'] .", ". $_POST['type'] .", ". $_POST['locatie'] .", '". (isset($_POST['ouderling']) ? 1 : 0) ."', '". (isset($_POST['predikant']) ? 1 : 0) ."', '". (isset($_POST['bezoeker']) ? 1 : 0) ."', '". urlencode(str_rot13($_POST['aantekening'])) ."')";
 				if(mysqli_query($db, $sql)) {
 					$text[] = "Opgeslagen<br>";
 				} else {
@@ -128,7 +128,7 @@ if(isset($_REQUEST['wijk'])) {
 					}
 					
 					if(count($data) > 0) {
-					    $text[] = "	<td><a href='details.php?ID=$lid' title='". implode("\n", $data) ."'>". $datum ."</a></td>";
+					    $text[] = "	<td><a href='details.php?ID=$lid' title='". implode("\n", $data) ."' target='bezoek'>". $datum ."</a></td>";
 					} else {
 					    $text[] = "	<td>&nbsp;</td>";
 					}
