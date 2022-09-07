@@ -78,11 +78,8 @@ if(isset($userArray["$cfgDbUserIDfield"]) && !empty($cfgDbUserIDfield)) {
 		
 		# Noteer de laatste keer dat deze persoon is ingelogd
 		$sql = "UPDATE $TableUsers SET $UserLastVisit = '". time() ."' WHERE $UserID like ". $_SESSION['ID'];
-		mysqli_query($db, $sql);
-		
-		$_SESSION['logged'] = true;
-	}
-	
+		mysqli_query($db, $sql);		
+	}	
 }
 
 if(isset($requiredUserGroups)) {
@@ -91,10 +88,36 @@ if(isset($requiredUserGroups)) {
 	
 	if(count($overlap) == 0) {
 		# this user does not have the required user level
+		toLog('info', $_SESSION['ID'], '', 'Ingelogd maar onvoldoende rechten');
 		$phpSP_message = $strUserNotAllowed;
 		include($cfgProgDir . "interface.php");
 		exit;
 	}		
 }
+
+if(!$_SESSION['logged']) {
+	$secret_key = get2FACode($_SESSION['ID']);
+	
+	# Alleen als er een secret-key bekend is, en 2FA dus aan staat
+	# de loop van 2FA doorlopen
+	if($secret_key != '') {		
+		if(isset($_POST['entered_2FA'])) {
+			include_once($cfgProgDir.'../include/google2fa/2FA.php');
+  		$google2fa = new \PragmaRX\Google2FA\Google2FA();
+  		
+			if(!$google2fa->verifyKey($secret_key, $_POST['entered_2FA'])) {			
+				toLog('debug', $_SESSION['ID'], '', 'Foutieve 2FA-code');
+				$phpSP_message = 'Onjuiste code';
+				include($cfgProgDir . "2FA.php");
+				exit;
+			}
+		} else {
+			include($cfgProgDir . "2FA.php");
+			exit;
+		}
+	}
+}
+
+$_SESSION['logged'] = true;
 
 ?>

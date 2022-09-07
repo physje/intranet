@@ -2406,4 +2406,17 @@ function getPasen($jaar) {
 }
 
 
+function get2FACode($user) {
+	global $TableUsers, $User2FA, $UserID, $db;
+	
+	$sql = "SELECT $User2FA FROM $TableUsers WHERE $UserID = $user";
+	$result = mysqli_query($db, $sql);
+
+	if($row	= mysqli_fetch_array($result)) {
+		return $row[$User2FA];
+	} else {
+		return '';
+	}
+}
+
 ?>

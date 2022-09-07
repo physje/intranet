@@ -41,7 +41,8 @@ if(isset($_POST['username']) AND ($_POST['username'] != $personData['username'])
 }
 
 if(isset($_POST['data_opslaan']) AND $unique) {
-	$sql = "UPDATE $TableUsers SET `$UserUsername` = '". addslashes($_POST['username']) ."'". ($_POST['wachtwoord'] != '' ? ", `$UserPassword` = '". md5($_POST['wachtwoord']) ."', $UserNewPassword = '". password_hash($_POST['wachtwoord'], PASSWORD_DEFAULT) ."'" : '') ." WHERE `$UserID` = ". $_POST['id'];
+	#$sql = "UPDATE $TableUsers SET `$UserUsername` = '". addslashes($_POST['username']) ."'". ($_POST['wachtwoord'] != '' ? ", `$UserPassword` = '". md5($_POST['wachtwoord']) ."', $UserNewPassword = '". password_hash($_POST['wachtwoord'], PASSWORD_DEFAULT) ."'" : '') ." WHERE `$UserID` = ". $_POST['id'];
+	$sql = "UPDATE $TableUsers SET `$UserUsername` = '". addslashes($_POST['username']) ."'". ($_POST['wachtwoord'] != '' ? ", $UserNewPassword = '". password_hash($_POST['wachtwoord'], PASSWORD_DEFAULT) ."'" : '') ." WHERE `$UserID` = ". $_POST['id'];
 		
 	if(!mysqli_query($db, $sql) ) {
 		$text[] = "Er is een fout opgetreden.";
@@ -59,15 +60,15 @@ if(isset($_POST['data_opslaan']) AND $unique) {
 	}
 	$text[] = "<table border=0 width=100%>";
 	$text[] = "<tr>";
-	$text[] = "	<td width=4%>&nbsp;</td>";
+	$text[] = "	<td width=4% rowspan='2'>&nbsp;</td>";
 	$text[] = "	<td width=44%><h1>Accountgegevens</h1></td>";
-	$text[] = "	<td width=4%>&nbsp;</td>";
-	$text[] = "	<td width=44%>&nbsp;</td>";
-	$text[] = "	<td width=4%>&nbsp;</td>";
+	$text[] = "	<td width=4% rowspan='2'>&nbsp;</td>";
+	$text[] = "	<td width=44%><h1>2 factor toegang (2FA)</h1></td>";
+	$text[] = "	<td width=4% rowspan='2'>&nbsp;</td>";
 	$text[] = "</tr>";
 	$text[] = "<tr>";
-	$text[] = "	<td width=4%>&nbsp;</td>";
-	$text[] = "	<td width=44% valign='top'>";
+	//$text[] = "	<td>&nbsp;</td>";
+	$text[] = "	<td valign='top'>";
 	$text[] = "	<table width='100%' border=0>";
 	$text[] = "	<tr>";
 	$text[] = "		<td colspan='2'>Mocht u niet tevreden zijn met uw huidige gebruikersnaam en wachtwoord dan kunt u die hier wijzigen.</td>";
@@ -93,9 +94,12 @@ if(isset($_POST['data_opslaan']) AND $unique) {
 	$text[] = "	</tr>";
 	$text[] = "	</table>";
 	$text[] = "	</td>";
-	$text[] = "	<td width=4%>&nbsp;</td>";
-	$text[] = "	<td width=44%>&nbsp;</td>";
-	$text[] = "	<td width=4%>&nbsp;</td>";
+	$text[] = "	<td valign='top'>";
+	$text[] = " Het is mogelijk uw account beter te beveiligen door naast een gebruikersnaam & wachtwoord-combinatie, ook gebruik te maken van een code die uw telefoon genereert als u wilt inloggen. Dat heeft 2-factor authenticatie. Op die manier moet u inloggen met iets dat u weet (gebruikersnaam & wachtwoord) en iets dat u heeft (telefoon), dubbel zo veilig dus.<br>";
+	$text[] = "Via onderstaande link krijgt u meer informatie over 2-factor authenticatie en hoe dat in te stellen.<br>";
+	$text[] = "<br>";
+	$text[] = "<a href='2FA.php'>".(get2FACode($_SESSION['ID']) != '' ? 'Zet 2FA uit' : 'Zet 2FA aan')."</a>.";
+	$text[] = "	</td>";
 	$text[] = "</tr>";
 	$text[] = "</table>";
 }

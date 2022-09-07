@@ -42,6 +42,7 @@ $UserEBRelatie								= "eb_code";
 $UserUsername									= "username";
 $UserPassword									= "password";
 $UserNewPassword							= "password_new";
+$User2FA											= "2FA_code";
 #$UserHash											= "hash";
 $UserHashShort								= "hash_short";
 $UserHashLong									= "hash_long";
