@@ -84,43 +84,54 @@ if(isset($_REQUEST['wijk'])) {
 					$text[] = "Probelemen met opslaan<br>";
 				}
 			}
-												
-			# Alle wijkleden opvragen, zonder zonen en dochters (= false)				
-			$wijkLeden = getWijkledenByAdres($wijk, false);
-			$vorig_adres = 0;
 			
-			$text[] = '<table>';
+			$filter = false;
+			if(isset($_REQUEST['filter']) AND $_REQUEST['filter'] == 'true')	$filter = true;
+																		
+			# Alle wijkleden opvragen, zonder zonen en dochters (= false)				
+			$wijkLeden = getWijkledenByAdres($wijk, 0);
+			
+			# Een tabel met 2 kolommen
+			# In de linker kolom de lijst met alle leden
+			# In de rechter kolom de lijst met wijkteam-leden
+			$text[] = "<table border=0 width='100%'>";
+			$text[] = "<tr>";
+			$text[] = "	<td>";
+			
+			# Linker kolom
+			$text[] = '<table border=0>';
 			$text[] = '<tr>';
-			$text[] = "	<td><b>Lid</b></td>";
+			$text[] = "	<td colspan='2'><b>Lid</b></td>";
 			$text[] = "	<td>&nbsp;</td>";
-			$text[] = "	<td><b>Bezoeker</b></td>";
+			$text[] = "	<td><b>Ouderling</b></td>";
+			$text[] = "	<td>&nbsp;</td>";
+			$text[] = "	<td><b>Pastoraal bezoeker</b></td>";
 			$text[] = "	<td>&nbsp;</td>";
 			$text[] = "	<td><b>Bezoeken</b></td>";
 			$text[] = "	<td colspan='2'>&nbsp;</td>";			
 			$text[] = '</tr>';
 			
-			foreach($wijkLeden as $adres => $leden) {
-				foreach($leden as $lid) {
+			foreach($wijkLeden as $adres => $leden) {					
+				$lid = $leden[0];
+								
+				$pastor		= getPastor($lid);
+				$bezoeker	= getBezoeker($lid);				
+								
+				if(($filter AND ($_SESSION['ID'] == $pastor OR $_SESSION['ID'] == $bezoeker)) OR !$filter) {
 					$data = array();
 					$datum = '';
-
+				
+					$adres		= getWoonAdres($lid);
+					$bezoeken	= getPastoraleBezoeken($lid, $_SESSION['ID']);
+					
 					$text[] = '<tr>';
-					
-					if($adres != $vorig_adres) {
-						$text[] = "	<td><b>". makeName($lid, 5) ."</b></td>";
-						$vorig_adres = $adres;
-					} else {
-						$text[] = "	<td>". makeName($lid, 5) ."</td>";
-					}
-					
-					$pastor = getPastor($lid);
-					$text[] = "	<td>&nbsp;</td>";
-					$text[] = "	<td>". ($pastor > 0 ? makeName($pastor, 5) : '&nbsp;') ."</td>";
-					$text[] = "	<td>&nbsp;</td>";
-					
-					$bezoeken = getPastoraleBezoeken($lid, $_SESSION['ID']);					
-										
-					foreach($bezoeken as $bezoekID) {
+					$text[] = "	<td colspan='2'><b>". makeName($lid, 3) ."</b></td>";				
+					$text[] = "	<td rowspan='2'>&nbsp;</td>";
+					$text[] = "	<td rowspan='2' valign='top'>". ($pastor > 0 ? makeName($pastor, 5) : '&nbsp;') ."</td>";
+					$text[] = "	<td rowspan='2'>&nbsp;</td>";
+					$text[] = "	<td rowspan='2' valign='top'>". ($bezoeker > 0 ? makeName($bezoeker, 5) : '&nbsp;') ."</td>";
+					$text[] = "	<td rowspan='2'>&nbsp;</td>";
+					foreach($bezoeken as $bezoekID) {					
 						$details = getPastoraalbezoekDetails($bezoekID);
 						
 						if(count($data) == 0)	$datum = date('d-m-Y', $details['datum']);
@@ -128,21 +139,51 @@ if(isset($_REQUEST['wijk'])) {
 					}
 					
 					if(count($data) > 0) {
-					    $text[] = "	<td><a href='details.php?ID=$lid' title='". implode("\n", $data) ."' target='bezoek'>". $datum ."</a></td>";
+						$text[] = "	<td rowspan='2' valign='top'><a href='details.php?ID=$lid' title='". implode("\n", $data) ."' target='bezoek'>". $datum ."</a></td>";
 					} else {
-					    $text[] = "	<td>&nbsp;</td>";
+					  $text[] = "	<td rowspan='2'>&nbsp;</td>";
 					}
-					
-					$text[] = "	<td>&nbsp;</td>";
-					$text[] = "	<td><a href='". $_SERVER['PHP_SELF'] ."?wijk=$wijk&addID=$lid'><img src='../images/add-icon.png' height='16' title='Voeg bezoek aan ". makeName($lid, 1) ." toe'></a></td>";
-					$text[] = "</tr>";		
+						
+					$text[] = "	<td rowspan='2'>&nbsp;</td>";
+					$text[] = "	<td rowspan='2' valign='top'><a href='". $_SERVER['PHP_SELF'] ."?wijk=$wijk&addID=$lid'><img src='../images/add-icon.png' height='16' title='Voeg bezoek aan ". makeName($lid, 1) ." toe'></a></td>";
+					$text[] = "</tr>";
+					$text[] = "<tr>";
+					$text[] = "	<td width='10'>&nbsp;</td>";
+					$text[] = "	<td>$adres</td>";
+					$text[] = "</tr>";
 				}
 			}
 			
+			$text[] = "<tr>";
+			$text[] = "	<td colspan='7'>&nbsp;</td>";			
+			$text[] = "</tr>";
 			$text[] = '</table>';
-			$text[] = "</form>";
-			$text[] = "</form>";
+			
+			# Middelste & rechter kolom
+			$text[] = "</td>";
+			$text[] = "<td width=25>&nbsp;</td>";
+			$text[] = "<td valign='top'>";
+			
+			$text[] = "<table border=0>";
+			foreach($wijkteam as $lid => $rol) {
+				$text[] = "<tr>";
+				$text[] = "	<td>". makeName($lid, 5) ."</td>";
+				$text[] = "	<td>". $teamRollen[$rol] ."</td>";
+				$text[] = "</tr>";
+			}
+			$text[] = "</table>";
+			$text[] = "<br>";
+			$text[] = "<br>";
+			$text[] = "<a href='". $_SERVER['PHP_SELF'] ."?wijk=$wijk&filter=".($filter ? 'false' : 'true')."'>".($filter ? 'Toon alle leden van wijk '. $wijk : 'Toon alleen leden waar ik aan ben toegewezen')."</a>";
+			$text[] = "<br>";
+			$text[] = "<br>";
 			$text[] = "<a href='verdeling.php?wijk=$wijk'>Pas verdeling over wijkteam aan</a>";
+			
+			$text[] = "</td>";
+			$text[] = "</tr>";
+			$text[] = "</table>";
+			
+			
 		}
 	} else {
 		$text[] = "Ben je wel lid van het wijkteam van wijk $wijk ?";

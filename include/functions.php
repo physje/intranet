@@ -49,9 +49,8 @@ function generateUsername($id) {
  * @return boolean
  */
 function isUniqueUsername($username) {
-	global $TableUsers, $UserUsername;
-	$db = connect_db();
-	
+	global $TableUsers, $UserUsername, $db;
+		
 	$sql = "SELECT * FROM $TableUsers WHERE $UserUsername like '$username'";
 	$result = mysqli_query($db, $sql);
 	if(mysqli_num_rows($result) == 0) {
@@ -134,8 +133,7 @@ function generateID($length=8) {
 }
 
 function getAllKerkdiensten($fromNow = false) {
-	global $TableDiensten, $DienstID, $DienstEind;
-	$db = connect_db();
+	global $TableDiensten, $DienstID, $DienstEind, $db;	
 		
 	if($fromNow) {
 		$startTijd = time();
@@ -151,8 +149,8 @@ function getAllKerkdiensten($fromNow = false) {
 
 
 function getKerkdiensten($startTijd, $eindTijd) {
-	global $TableDiensten, $DienstID, $DienstEind;
-	$db = connect_db();
+	global $TableDiensten, $DienstID, $DienstEind, $db;
+	
 	$id = array();
 				
 	$sql = "SELECT $DienstID FROM $TableDiensten WHERE $DienstEind BETWEEN $startTijd AND $eindTijd ORDER BY $DienstEind ASC";
@@ -168,9 +166,8 @@ function getKerkdiensten($startTijd, $eindTijd) {
 
 
 function getKerkdienstDetails($id) {
-	global $TableDiensten, $DienstID, $DienstStart, $DienstEind, $DienstVoorganger, $DienstCollecte_1, $DienstCollecte_2, $DienstOpmerking, $DienstRuiling, $DienstLiturgie;
-	$db = connect_db();
-	
+	global $TableDiensten, $DienstID, $DienstStart, $DienstEind, $DienstVoorganger, $DienstCollecte_1, $DienstCollecte_2, $DienstOpmerking, $DienstRuiling, $DienstLiturgie, $db;
+		
 	$data = $voorgangerData = array();
 	
 	$sql = "SELECT * FROM $TableDiensten WHERE $DienstID = $id";
@@ -204,9 +201,8 @@ function getKerkdienstDetails($id) {
 }
 
 function getMembers($type = 'all') {
-	global $TableUsers, $UserStatus, $UserID, $UserAdres, $UserGeboorte, $UserAchternaam, $UserRelatie;	
-	$db = connect_db();
-	
+	global $TableUsers, $UserStatus, $UserID, $UserAdres, $UserGeboorte, $UserAchternaam, $UserRelatie, $db;	
+		
 	$data = array();
 	
 	if($type == 'all') {
@@ -227,10 +223,8 @@ function getMembers($type = 'all') {
 }
 
 function getGroupMembers($commID) {
-	global $TableGrpUsr, $GrpUsrGroup, $GrpUsrUser;
-	global $TableUsers, $UserID, $UserAchternaam;
-	$db = connect_db();
-	
+	global $TableGrpUsr, $GrpUsrGroup, $GrpUsrUser, $TableUsers, $UserID, $UserAchternaam, $db;
+		
 	$data = array();
 	$sql = "SELECT $TableGrpUsr.$GrpUsrUser FROM $TableGrpUsr, $TableUsers WHERE $TableUsers.$UserID = $TableGrpUsr.$GrpUsrUser AND $TableGrpUsr.$GrpUsrGroup = $commID ORDER BY $TableUsers.$UserAchternaam";
 	
@@ -247,10 +241,8 @@ function getMemberDetails($id) {
 	global $TableUsers, $UserID, $UserStatus, $UserAdres, $UserGeslacht, $UserVoorletters, $UserVoornaam, $UserTussenvoegsel,
 	$UserAchternaam, $UserMeisjesnaam, $UserUsername, $UserHashShort, $UserGeboorte, $UserTelefoon, $UserMail, $UserEBRelatie,
 	$UserFormeelMail, $UserBelijdenis, $UserLastChange, $UserLastVisit, $UserBurgelijk, $UserRelatie, $UserStraat, $UserHuisnummer,
-	$UserHuisletter, $UserToevoeging, $UserPC, $UserPlaats, $UserWijk, $UserHashLong, $UserVestiging, $UserLastChange, $UserLastVisit;
-	
-	$db = connect_db();
-	
+	$UserHuisletter, $UserToevoeging, $UserPC, $UserPlaats, $UserWijk, $UserHashLong, $UserVestiging, $UserLastChange, $UserLastVisit, $db;
+		
 	$data = array();
 		
 	$sql = "SELECT * FROM $TableUsers WHERE $UserID = $id";
@@ -296,8 +288,7 @@ function getMemberDetails($id) {
 }
 
 function getAllGroups() {
-	global $TableGroups, $GroupID, $GroupNaam;	
-	$db = connect_db();
+	global $TableGroups, $GroupID, $GroupNaam, $db;
 	
 	$data = array();
 	
@@ -313,9 +304,8 @@ function getAllGroups() {
 }
 
 function getMyGroups($id) {
-	global $TableGrpUsr, $GrpUsrGroup, $GrpUsrUser, $GroupNaam;	
-	$db = connect_db();
-	
+	global $TableGrpUsr, $GrpUsrGroup, $GrpUsrUser, $GroupNaam, $db;	
+		
 	$data = array();
 	
 	$sql = "SELECT $GrpUsrGroup FROM $TableGrpUsr WHERE $GrpUsrUser = $id";
@@ -330,8 +320,8 @@ function getMyGroups($id) {
 }
 
 function getMyGroupsBeheer($id) {
-	global $TableGroups, $TableGrpUsr, $GroupBeheer, $GrpUsrGroup, $GrpUsrUser, $GroupID, $GroupNaam;
-	$db = connect_db();
+	global $TableGroups, $TableGrpUsr, $GroupBeheer, $GrpUsrGroup, $GrpUsrUser, $GroupID, $GroupNaam, $db;
+	
 	$data = array();
 	
 	$sql = "SELECT $TableGroups.$GroupID FROM $TableGroups, $TableGrpUsr WHERE $TableGroups.$GroupBeheer = $TableGrpUsr.$GrpUsrGroup AND $TableGrpUsr.$GrpUsrUser = $id ORDER BY $TableGroups.$GroupNaam";
@@ -345,9 +335,8 @@ function getMyGroupsBeheer($id) {
 }
 
 function getGroupDetails($id) {
-	global $TableGroups, $GroupID, $GroupNaam, $GroupHTMLIn, $GroupHTMLEx, $GroupShowIn, $GroupShowEx, $GroupBeheer, $GroupMCTag;
-	$db = connect_db();
-	
+	global $TableGroups, $GroupID, $GroupNaam, $GroupHTMLIn, $GroupHTMLEx, $GroupShowIn, $GroupShowEx, $GroupBeheer, $GroupMCTag, $db;
+		
 	$data = array();
 	
 	$sql = "SELECT * FROM $TableGroups WHERE $GroupID = '$id'";
@@ -364,9 +353,8 @@ function getGroupDetails($id) {
 
 
 function getGroupIDbyMCtag($tag) {
-	global $TableGroups, $GroupID, $GroupMCTag;
+	global $TableGroups, $GroupID, $GroupMCTag, $db;
 	
-	$db = connect_db();
 	$sql = "SELECT * FROM $TableGroups WHERE $GroupMCTag = '$tag'";
 	$result = mysqli_query($db, $sql);
 	if($row = mysqli_fetch_array($result)) {
@@ -378,8 +366,7 @@ function getGroupIDbyMCtag($tag) {
 
 
 function getRoosters($id = 0) {
-	global $TableRoosters, $RoostersID, $RoostersNaam, $RoostersGroep, $TableGrpUsr, $GrpUsrGroup, $GrpUsrUser;
-	$db = connect_db();
+	global $TableRoosters, $RoostersID, $RoostersNaam, $RoostersGroep, $TableGrpUsr, $GrpUsrGroup, $GrpUsrUser, $db;
 	
 	$data = array();
 	
@@ -399,11 +386,10 @@ function getRoosters($id = 0) {
 }
 
 function getMyRoostersBeheer($id) {	
-	global $TableRoosters, $TableGroups, $TableGrpUsr, $RoostersID, $RoostersBeheerder, $RoostersPlanner, $GroupID, $GrpUsrGroup, $GrpUsrUser;	
+	global $TableRoosters, $TableGroups, $TableGrpUsr, $RoostersID, $RoostersBeheerder, $RoostersPlanner, $GroupID, $GrpUsrGroup, $GrpUsrUser, $db;	
 	
 	$data = array();	
-	$db = connect_db();
-		
+			
 	$sql = "SELECT $TableRoosters.$RoostersID FROM $TableRoosters, $TableGroups, $TableGrpUsr WHERE ($TableRoosters.$RoostersBeheerder = $TableGroups.$GroupID OR $TableRoosters.$RoostersPlanner = $TableGroups.$GroupID) AND $TableGroups.$GroupID = $TableGrpUsr.$GrpUsrGroup AND $TableGrpUsr.$GrpUsrUser = $id";	
 	$result = mysqli_query($db, $sql);
 	if($row = mysqli_fetch_array($result)) {		
@@ -415,8 +401,7 @@ function getMyRoostersBeheer($id) {
 }
 
 function getRoosterDetails($id) {
-	global $TableRoosters, $RoostersID, $RoostersNaam, $RoostersBeheerder, $RoostersGroep, $RoostersPlanner, $RoostersFields, $RoostersReminder, $RoostersMail, $RoostersSubject, $RoostersFrom, $RoostersFromAddr, $RoostersGelijk, $RoostersTextOnly, $RoostersAlert, $RoostersOpmerking;
-	$db = connect_db();
+	global $TableRoosters, $RoostersID, $RoostersNaam, $RoostersBeheerder, $RoostersGroep, $RoostersPlanner, $RoostersFields, $RoostersReminder, $RoostersMail, $RoostersSubject, $RoostersFrom, $RoostersFromAddr, $RoostersGelijk, $RoostersTextOnly, $RoostersAlert, $RoostersOpmerking, $db;
 	
 	$data = array();
 	
@@ -442,8 +427,7 @@ function getRoosterDetails($id) {
 }
 
 function getBeheerder($groep) {
-	global $TableGroups, $GroupID, $GroupBeheer;
-	$db = connect_db();
+	global $TableGroups, $GroupID, $GroupBeheer, $db;
 	
 	$sql = "SELECT $GroupBeheer FROM $TableGroups WHERE $GroupID = $groep";
 	$result = mysqli_query($db, $sql);
@@ -474,10 +458,8 @@ function getBeheerder($groep) {
 #	return $row[$GroupBeheer];	
 #}
 
-function updateGebedkalItemById($id, $categorie, $contactpersoon, $mailadres, $opmerking)
-{
-	global $GebedsKalId, $TableGebedKalMailOverzicht, $GebedKalCategorie, $GebedKalContactPersoon, $GebedKalMailadres, $GebedKalOpmerkingen;
-	$db = connect_db();
+function updateGebedkalItemById($id, $categorie, $contactpersoon, $mailadres, $opmerking) {
+	global $GebedsKalId, $TableGebedKalMailOverzicht, $GebedKalCategorie, $GebedKalContactPersoon, $GebedKalMailadres, $GebedKalOpmerkingen, $db;
 
 	$sql = "UPDATE $TableGebedKalMailOverzicht SET $GebedKalCategorie='$categorie', $GebedKalContactPersoon='$contactpersoon', $GebedKalMailadres='$mailadres', $GebedKalOpmerkingen='$opmerking' WHERE $GebedsKalId=$id";
 				
@@ -489,8 +471,7 @@ function updateGebedkalItemById($id, $categorie, $contactpersoon, $mailadres, $o
 }
 
 function addGebedkalItem($categorie, $contactpersoon, $mailadres, $opmerking) {
-	global $TableGebedKalMailOverzicht, $GebedKalCategorie, $GebedKalContactPersoon, $GebedKalMailadres, $GebedKalOpmerkingen;
-	$db = connect_db();
+	global $TableGebedKalMailOverzicht, $GebedKalCategorie, $GebedKalContactPersoon, $GebedKalMailadres, $GebedKalOpmerkingen, $db;
 
 	$sql = "INSERT INTO $TableGebedKalMailOverzicht ($GebedKalCategorie, $GebedKalContactPersoon, $GebedKalMailadres, $GebedKalOpmerkingen) VALUES ('$categorie', '$contactpersoon', '$mailadres', '$opmerking')";
 				
@@ -502,13 +483,11 @@ function addGebedkalItem($categorie, $contactpersoon, $mailadres, $opmerking) {
 }
 
 function getGebedkalItemById($id) {
-	global $TableGebedKalMailOverzicht, $GebedsKalId, $GebedKalCategorie, $GebedKalContactPersoon, $GebedKalMailadres, $GebedKalOpmerkingen;
+	global $TableGebedKalMailOverzicht, $GebedsKalId, $GebedKalCategorie, $GebedKalContactPersoon, $GebedKalMailadres, $GebedKalOpmerkingen, $db;
 
 	$data = array();	
-	$db = connect_db();
-		
+			
 	$sql = "SELECT * FROM $TableGebedKalMailOverzicht WHERE $GebedsKalId = $id";
-
 	$result = mysqli_query($db, $sql);
 
 	if($row = mysqli_fetch_array($result)) {		
@@ -521,13 +500,11 @@ function getGebedkalItemById($id) {
 }
 
 function getGebedkalAllItems() {
-	global $TableGebedKalMailOverzicht, $GebedsKalId, $GebedKalCategorie, $GebedKalContactPersoon, $GebedKalMailadres, $GebedKalOpmerkingen;
+	global $TableGebedKalMailOverzicht, $GebedsKalId, $GebedKalCategorie, $GebedKalContactPersoon, $GebedKalMailadres, $GebedKalOpmerkingen, $db;
 
-	$data = array();	
-	$db = connect_db();
-		
+	$data = array();
+			
 	$sql = "SELECT * FROM $TableGebedKalMailOverzicht ORDER BY $GebedKalCategorie";
-
 	$result = mysqli_query($db, $sql);
 	if($row = mysqli_fetch_array($result)) {
 		do {
@@ -538,8 +515,7 @@ function getGebedkalAllItems() {
 }
 
 function removeGebedkalItem($ID) {
-	global $TableGebedKalMailOverzicht, $GebedsKalId;	
-	$db = connect_db();
+	global $TableGebedKalMailOverzicht, $GebedsKalId, $db;
 	
 	$sql = "DELETE FROM $TableGebedKalMailOverzicht WHERE $GebedsKalId = '$ID'";
 	if(mysqli_query($db, $sql)) {
@@ -550,8 +526,7 @@ function removeGebedkalItem($ID) {
 }
 
 function addGroupLid($lidID, $commID) {
-	global $TableGrpUsr, $GrpUsrGroup, $GrpUsrUser;	
-	$db = connect_db();
+	global $TableGrpUsr, $GrpUsrGroup, $GrpUsrUser, $db;
 	
 	$sql = "INSERT INTO $TableGrpUsr ($GrpUsrGroup, $GrpUsrUser) VALUES ($commID, $lidID)";
 	if(mysqli_query($db, $sql)) {
@@ -562,8 +537,7 @@ function addGroupLid($lidID, $commID) {
 }
 
 function removeGroupLeden($commID) {
-	global $TableGrpUsr, $GrpUsrGroup;	
-	$db = connect_db();
+	global $TableGrpUsr, $GrpUsrGroup, $db;
 	
 	$sql = "DELETE FROM $TableGrpUsr WHERE $GrpUsrGroup = $commID";
 	if(mysqli_query($db, $sql)) {
@@ -577,8 +551,7 @@ function removeFromRooster($rooster, $dienst) {
 	global $TablePlanning, $PlanningDienst, $PlanningGroup;
 	global $TableRoosOpm, $RoosOpmDienst, $RoosOpmRoos;
 	global $TablePlanningTxt, $PlanningTxTDienst, $PlanningTxTGroup;
-	
-	$db = connect_db();
+	global $db;
 	
 	$query[0] = false;
 	$query[1] = false;
@@ -601,8 +574,7 @@ function removeFromRooster($rooster, $dienst) {
 }
 
 function add2Rooster($rooster, $dienst, $persoon, $positie) {
-	global $TablePlanning, $PlanningDienst, $PlanningGroup, $PlanningUser, $PlanningPositie;
-	$db = connect_db();
+	global $TablePlanning, $PlanningDienst, $PlanningGroup, $PlanningUser, $PlanningPositie, $db;
 	
 	$sql = "INSERT INTO $TablePlanning ($PlanningDienst, $PlanningGroup, $PlanningPositie, $PlanningUser) VALUES ($dienst, $rooster, $positie, $persoon)";
 	if(mysqli_query($db, $sql)) {
@@ -614,8 +586,7 @@ function add2Rooster($rooster, $dienst, $persoon, $positie) {
 
 function getRoosterVulling($rooster, $dienst) {
 	global $TablePlanning, $PlanningDienst, $PlanningGroup, $PlanningUser, $PlanningPositie;
-	global $TablePlanningTxt, $PlanningTxTDienst, $PlanningTxTGroup, $PlanningTxTText;
-	$db = connect_db();
+	global $TablePlanningTxt, $PlanningTxTDienst, $PlanningTxTGroup, $PlanningTxTText, $db;
 	
 	$details = getRoosterDetails($rooster);
 	if($details['text_only'] == 0) {
@@ -700,8 +671,7 @@ function convertName($naam) {
 }
 
 function makeName($id, $type) {
-	global $TableUsers, $UserID, $UserVoorletters, $UserVoornaam, $UserTussenvoegsel, $UserAchternaam, $UserMeisjesnaam;
-	$db = connect_db();
+	global $TableUsers, $UserID, $UserVoorletters, $UserVoornaam, $UserTussenvoegsel, $UserAchternaam, $UserMeisjesnaam, $db;
 	
 	$sql = "SELECT * FROM $TableUsers WHERE $UserID = $id";
 	$result = mysqli_query($db, $sql);
@@ -794,6 +764,16 @@ function makeName($id, $type) {
 	}
 }
 
+
+function getWoonAdres($id) {
+	global $TableUsers, $UserID, $UserStraat, $UserHuisnummer, $UserHuisletter, $UserToevoeging, $db;
+	
+	$sql = "SELECT * FROM $TableUsers WHERE $UserID = $id";
+	$result = mysqli_query($db, $sql);
+	$row = mysqli_fetch_array($result);
+	
+	return $row[$UserStraat].' '.$row[$UserHuisnummer].($row[$UserHuisletter] != '' ? ' '.$row[$UserHuisletter] : '').($row[$UserToevoeging] != '' ? ' '.$row[$UserToevoeging] : '');	
+}
 
 function sendMail_new($parameter) {
 	global $ScriptURL, $ScriptMailAdress, $ScriptTitle, $SubjectPrefix;
@@ -1055,8 +1035,7 @@ function showBlock($block, $width) {
 }
 
 function getFamilieleden($id, $all = false) {
-	global $TableUsers, $UserAdres, $UserStatus, $UserID;
-	$db = connect_db();
+	global $TableUsers, $UserAdres, $UserStatus, $UserID, $db;
 	
 	$data = array();
 	
@@ -1086,8 +1065,7 @@ function getParents($id, $hoofd = false) {
 }
 
 function getJarigen($dag, $maand) {
-	global $TableUsers, $UserStatus, $UserID, $UserGeboorte;
-	$db = connect_db();
+	global $TableUsers, $UserStatus, $UserID, $UserGeboorte, $db;
 	
 	$data = array();
 	
@@ -1102,8 +1080,7 @@ function getJarigen($dag, $maand) {
 }
 
 function toLog($type, $dader, $slachtoffer, $message) {
-	global $db,$TableLog, $LogID, $LogTime, $LogType, $LogUser, $LogSubject, $LogMessage;	
-	$db = connect_db();
+	global $db,$TableLog, $LogID, $LogTime, $LogType, $LogUser, $LogSubject, $LogMessage, $db;
  	
 	$tijd = time();	
 	$sql = "INSERT INTO $TableLog ($LogTime, $LogType, $LogUser, $LogSubject, $LogMessage) VALUES ($tijd, '$type', '$dader', '$slachtoffer', '". addslashes($message) ."')";
@@ -1215,8 +1192,11 @@ function getWijkMembers($wijk) {
 	return $data;	
 }
 
-function getWijkledenByAdres($wijk, $kids = true) {
-	global $TableUsers, $UserStatus, $UserID, $UserAdres, $UserWijk, $UserAchternaam, $UserRelatie, $UserGeboorte, $db;
+function getWijkledenByAdres($wijk, $type = 0) {
+	# type = 0, alleen gezinshoofd of zelfstandig
+	# type = 1, alle belijdende leden
+	# type = 2, alle leden 
+	global $TableUsers, $UserStatus, $UserID, $UserAdres, $UserWijk, $UserAchternaam, $UserRelatie, $UserBelijdenis, $db;
 	
 	$data = array();
 	$sql_adressen = "SELECT $UserAdres FROM $TableUsers WHERE $UserStatus = 'actief' AND $UserWijk like '$wijk' GROUP BY $UserAdres ORDER BY $UserAchternaam";
@@ -1226,10 +1206,12 @@ function getWijkledenByAdres($wijk, $kids = true) {
 		do {
 			$adres = $row_adressen[$UserAdres];
 			
-			if($kids) {
-			    $sql_leden = "SELECT $UserID FROM $TableUsers WHERE $UserStatus = 'actief' AND $UserAdres like '$adres' ORDER BY FIELD($UserRelatie,'gezinshoofd') DESC";			    
+			if($type == 0) {
+				$sql_leden = "SELECT $UserID FROM $TableUsers WHERE $UserStatus = 'actief' AND $UserAdres like '$adres' AND ($UserRelatie like 'gezinshoofd' OR $UserRelatie like 'zelfstandig') ORDER BY FIELD($UserRelatie,'gezinshoofd') DESC";
+			} elseif($type == 1) {
+				$sql_leden = "SELECT $UserID FROM $TableUsers WHERE $UserStatus = 'actief' AND $UserAdres like '$adres' AND $UserBelijdenis like 'belijdend lid' ORDER BY FIELD($UserRelatie,'gezinshoofd') DESC";
 			} else {
-			    $sql_leden = "SELECT $UserID FROM $TableUsers WHERE $UserStatus = 'actief' AND $UserAdres like '$adres' AND $UserRelatie NOT like 'zoon' AND $UserRelatie NOT like 'dochter' ORDER BY FIELD($UserRelatie,'gezinshoofd') DESC";
+			  $sql_leden = "SELECT $UserID FROM $TableUsers WHERE $UserStatus = 'actief' AND $UserAdres like '$adres' ORDER BY FIELD($UserRelatie,'gezinshoofd') DESC";			  
 			}
 
 			$result_leden = mysqli_query($db, $sql_leden);
@@ -1302,9 +1284,7 @@ function array_search_closest($input, $array) {
 }
 
 function isValidHash($hash) {
-	global $TableUsers, $UserID, $UserHashLong;
-	
-	$db = connect_db();
+	global $TableUsers, $UserID, $UserHashLong, $db;
 	
 	$sql = "SELECT $UserID FROM $TableUsers WHERE $UserHashLong like '$hash'";
 	$result	= mysqli_query($db, $sql);
@@ -1318,9 +1298,8 @@ function isValidHash($hash) {
 }
 
 function updateRoosterOpmerking($rooster, $dienst, $opmerking) {
-	global $TableRoosOpm, $RoosOpmRoos, $RoosOpmDienst, $RoosOpmOpmerking;
+	global $TableRoosOpm, $RoosOpmRoos, $RoosOpmDienst, $RoosOpmOpmerking, $db;
 	
-	$db = connect_db();	
 	$sql = "SELECT * FROM $TableRoosOpm WHERE $RoosOpmRoos = $rooster AND $RoosOpmDienst = $dienst";
 	$result	= mysqli_query($db, $sql);
 	
@@ -1334,9 +1313,8 @@ function updateRoosterOpmerking($rooster, $dienst, $opmerking) {
 }
 
 function updateRoosterText($rooster, $dienst, $invulling) {
-	global $TablePlanningTxt, $PlanningTxTDienst, $PlanningTxTGroup, $PlanningTxTText;
+	global $TablePlanningTxt, $PlanningTxTDienst, $PlanningTxTGroup, $PlanningTxTText, $db;
 	
-	$db = connect_db();	
 	$sql = "SELECT * FROM $TablePlanningTxt WHERE $PlanningTxTGroup = $rooster AND $PlanningTxTDienst = $dienst";
 	$result	= mysqli_query($db, $sql);
 	
@@ -1351,9 +1329,8 @@ function updateRoosterText($rooster, $dienst, $invulling) {
 
 
 function getRoosterOpmerking($rooster, $dienst) {
-	global $TableRoosOpm, $RoosOpmRoos, $RoosOpmDienst, $RoosOpmOpmerking;
+	global $TableRoosOpm, $RoosOpmRoos, $RoosOpmDienst, $RoosOpmOpmerking, $db;
 	
-	$db = connect_db();	
 	$sql = "SELECT * FROM $TableRoosOpm WHERE $RoosOpmRoos = $rooster AND $RoosOpmDienst = $dienst";
 	$result	= mysqli_query($db, $sql);
 	if(mysqli_num_rows($result) != 0) {
@@ -1365,11 +1342,10 @@ function getRoosterOpmerking($rooster, $dienst) {
 }
 
 function getAgendaItems($user, $tijd) {
-	global $TableAgenda, $AgendaID, $AgendaOwner, $AgendaStart;
+	global $TableAgenda, $AgendaID, $AgendaOwner, $AgendaStart, $db;
 	
 	$ids = array();
 	
-	$db = connect_db();
 	if($user != 'all')	$where[] = "$AgendaOwner = $user";	
 	$where[] = "$AgendaStart > $tijd";
 		
@@ -1385,9 +1361,8 @@ function getAgendaItems($user, $tijd) {
 }
 
 function getAgendaDetails($id) {
-	global $TableAgenda, $AgendaID, $AgendaStart, $AgendaEind, $AgendaTitel, $AgendaDescr, $AgendaOwner;
+	global $TableAgenda, $AgendaID, $AgendaStart, $AgendaEind, $AgendaTitel, $AgendaDescr, $AgendaOwner, $db;
 	
-	$db = connect_db();
 	$sql = "SELECT * FROM $TableAgenda WHERE $AgendaID like $id";
 	$result = mysqli_query($db, $sql);
 	$row = mysqli_fetch_array($result);
@@ -1402,9 +1377,8 @@ function getAgendaDetails($id) {
 }
 
 function getVoorgangers() {
-	global $TableVoorganger, $VoorgangerID, $VoorgangerAchter;
+	global $TableVoorganger, $VoorgangerID, $VoorgangerAchter, $db;
 	
-	$db = connect_db();
 	$sql = "SELECT * FROM $TableVoorganger ORDER BY $VoorgangerAchter";
 	$result = mysqli_query($db, $sql);
 	if($row = mysqli_fetch_array($result)) {
@@ -1417,9 +1391,8 @@ function getVoorgangers() {
 }
 
 function getLiturgie($id) {
-	global $DienstLiturgie, $TableDiensten, $DienstID;
-
-	$db = connect_db();
+	global $DienstLiturgie, $TableDiensten, $DienstID, $db;
+	
 	$sql = "SELECT $DienstLiturgie FROM $TableDiensten WHERE $DienstID = $id";
 
 	$result = mysqli_query($db, $sql);
@@ -1435,11 +1408,10 @@ function getLiturgie($id) {
 }
 
 function getVoorgangerData($id) {
-	global $TableVoorganger, $VoorgangerID, $VoorgangerTitel, $VoorgangerVoor, $VoorgangerInit, $VoorgangerTussen, $VoorgangerAchter, $VoorgangerTel, $VoorgangerTel2, $VoorgangerPVNaam, $VoorgangerPVTel, $VoorgangerMail, $VoorgangerPlaats, $VoorgangerDenom, $VoorgangerOpmerking, $VoorgangerAandacht, $VoorgangerDeclaratie, $VoorgangerLastAandacht, $VoorgangerStijl, $VoorgangerLastSeen;
+	global $TableVoorganger, $VoorgangerID, $VoorgangerTitel, $VoorgangerVoor, $VoorgangerInit, $VoorgangerTussen, $VoorgangerAchter, $VoorgangerTel, $VoorgangerTel2, $VoorgangerPVNaam, $VoorgangerPVTel, $VoorgangerMail, $VoorgangerPlaats, $VoorgangerDenom, $VoorgangerOpmerking, $VoorgangerAandacht, $VoorgangerDeclaratie, $VoorgangerLastAandacht, $VoorgangerStijl, $VoorgangerLastSeen, $db;
 	
 	$data = array();
-	
-	$db = connect_db();
+		
 	$sql = "SELECT * FROM $TableVoorganger WHERE $VoorgangerID = $id";
 
 	$result = mysqli_query($db, $sql);
@@ -1470,9 +1442,8 @@ function getVoorgangerData($id) {
 
 
 function getDeclaratieData($voorganger, $tijdstip) {
-	global $TableVoorganger, $VoorgangerID, $VoorgangerHonorarium, $VoorgangerHonorariumOld, $VoorgangerHonorariumNew, $VoorgangerHonorariumSpecial, $VoorgangerKM, $VoorgangerVertrekpunt, $VoorgangerEBRelatie;
+	global $TableVoorganger, $VoorgangerID, $VoorgangerHonorarium, $VoorgangerHonorariumOld, $VoorgangerHonorariumNew, $VoorgangerHonorariumSpecial, $VoorgangerKM, $VoorgangerVertrekpunt, $VoorgangerEBRelatie, $db;
 	
-	$db = connect_db();
 	$sql = "SELECT * FROM $TableVoorganger WHERE $VoorgangerID = $voorganger";
 
 	$result = mysqli_query($db, $sql);
@@ -1490,17 +1461,15 @@ function getDeclaratieData($voorganger, $tijdstip) {
 }
 
 function setLastAandachtspunten($id) {
-	global $TableVoorganger, $VoorgangerLastAandacht, $VoorgangerID;
+	global $TableVoorganger, $VoorgangerLastAandacht, $VoorgangerID, $db;
 	
-	$db = connect_db();
 	$sql = "UPDATE $TableVoorganger SET $VoorgangerLastAandacht = ". time() ." WHERE $VoorgangerID = $id";
 	mysqli_query($db, $sql);
 }
 
 function setVoorgangerLastSeen($id, $tijd) {
-	global $TableVoorganger, $VoorgangerLastSeen, $VoorgangerID;
+	global $TableVoorganger, $VoorgangerLastSeen, $VoorgangerID, $db;
 	
-	$db = connect_db();
 	$sql = "UPDATE $TableVoorganger SET $VoorgangerLastSeen = $tijd WHERE $VoorgangerID = $id";
 	mysqli_query($db, $sql);
 }
@@ -1573,7 +1542,7 @@ function getPastor($lid) {
 	
 	$pastor = 0;
 	
-	$sql = "SELECT * FROM $TablePastorVerdeling WHERE $PastorVerdelingLid = $lid";
+	$sql = "SELECT $PastorVerdelingPastor FROM $TablePastorVerdeling WHERE $PastorVerdelingLid = $lid";
 	$result = mysqli_query($db, $sql);
 	if($row = mysqli_fetch_array($result)){
 		$pastor = $row[$PastorVerdelingPastor];
@@ -1581,6 +1550,21 @@ function getPastor($lid) {
 	
 	return $pastor;
 }
+
+function getBezoeker($lid) {
+	global $TablePastorVerdeling, $PastorVerdelingLid, $PastorVerdelingBezoeker, $db;
+	
+	$bezoeker = 0;
+	
+	$sql = "SELECT $PastorVerdelingBezoeker FROM $TablePastorVerdeling WHERE $PastorVerdelingLid = $lid";
+	$result = mysqli_query($db, $sql);
+	if($row = mysqli_fetch_array($result)){
+		$bezoeker = $row[$PastorVerdelingBezoeker];
+	}
+	
+	return $bezoeker;
+}
+
 
 function getPastoraleBezoeken($lid, $teamlid) {
 	global $TablePastoraat, $PastoraatID, $PastoraatLid, $PastoraatIndiener, $PastoraatZichtOud, $PastoraatZichtPas, $PastoraatZichtPred, $PastoraatTijdstip, $db;

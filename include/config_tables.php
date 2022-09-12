@@ -282,6 +282,7 @@ $PastoraatNote								= "aantekening";
 $TablePastorVerdeling					= "pastoraat_verdeling";
 $PastorVerdelingLid						= "lid";
 $PastorVerdelingPastor				= "pastor";
+$PastorVerdelingBezoeker			= "bezoeker";
                                                   					
 $ArchiveDir										= 'trinitas';
 
