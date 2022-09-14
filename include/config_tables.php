@@ -251,6 +251,7 @@ $GebedKalMailadres            = "mailadres";
 $GebedKalOpmerkingen          = "opmerking";
 
 $TableOpenKerkTemplate				= "openkerk_template";
+$OKTemplateTemplate						= "template";
 $OKTemplateWeek								= "week";
 $OKTemplateDag								= "dag";
 $OKTemplateTijd								= "tijd";

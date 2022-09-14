@@ -13,17 +13,19 @@ $leden = getGroupMembers(43);
 $namen = array_merge($leden, $extern);
 
 if(isset($_POST['save'])) {
+	$template = $_POST['template']; 
+	
 	foreach($_POST['item'] as $week => $sub) {
 		foreach($sub as $dag => $sub2) {
 			foreach($sub2 as $uur => $sub3) {
 				foreach($sub3 as $pos => $persoon) {
 					//$text[] = $week .' -> '. $dag .' -> '. $uur .' -> '. $persoon .'<br>';
-					$sql_delete = "DELETE FROM $TableOpenKerkTemplate WHERE $OKTemplateWeek = $week AND $OKTemplateDag = $dag AND $OKTemplateTijd = $uur AND $OKTemplatePos = $pos";
+					$sql_delete = "DELETE FROM $TableOpenKerkTemplate WHERE $OKTemplateTemplate = $template AND $OKTemplateWeek = $week AND $OKTemplateDag = $dag AND $OKTemplateTijd = $uur AND $OKTemplatePos = $pos";
 					mysqli_query($db, $sql_delete);
 					//$text[] = $sql_delete .'<br>';
 					
 					if($persoon != '') {
-						$sql_insert = "INSERT INTO $TableOpenKerkTemplate ($OKTemplateWeek, $OKTemplateDag, $OKTemplateTijd, $OKTemplatePos, $OKTemplatePersoon) VALUES ('$week', '$dag', '$uur', '$pos', '$persoon')";
+						$sql_insert = "INSERT INTO $TableOpenKerkTemplate ($OKTemplateTemplate, $OKTemplateWeek, $OKTemplateDag, $OKTemplateTijd, $OKTemplatePos, $OKTemplatePersoon) VALUES ('$template', '$week', '$dag', '$uur', '$pos', '$persoon')";
 						mysqli_query($db, $sql_insert);
 						//$text[] = $sql_insert .'<br>';
 					}
@@ -33,6 +35,8 @@ if(isset($_POST['save'])) {
 	}
 	$text[] = 'Wijzigingen in het template zijn opgeslagen, deze zijn dus nog niet doorgevoerd in het rooster';
 } elseif(isset($_POST['enroll'])) {
+	$template = $_POST['template']; 
+	
 	if(isset($_POST['uitrollen'])) {				
 		$offset	= 0;
 		$start	= mktime(0,0,0,$_POST['start_maand'],$_POST['start_dag'],$_POST['start_jaar']);
@@ -47,7 +51,7 @@ if(isset($_POST['save'])) {
 			for($uur=$minUur; $uur < $maxUur ; $uur++) {
 				$tijdstip = mktime($uur,0,0,date('n', $nieuweDag),date('j', $nieuweDag), date('Y', $nieuweDag));
 												
-				$vulling = getOpenKerkVulling($week, $dag, $uur);
+				$vulling = getOpenKerkVulling($template, $week, $dag, $uur);
 				
 				foreach($vulling as $pos => $persoon) {
 					$sql_insert = "INSERT INTO $TableOpenKerkRooster ($OKRoosterTijd, $OKRoosterPos, $OKRoosterPersoon) VALUES (".$tijdstip .", $pos, '$persoon')";
@@ -59,7 +63,7 @@ if(isset($_POST['save'])) {
 			$offset++;
 		} while($nieuweDag < $eind);
 		
-		$text[] = 'Het rooster is op basis van het template uitgerold van '. strftime('%e %B', $start) .' tot '. strftime('%e %B', $eind) .'.<br>';
+		$text[] = 'Het rooster is op basis van template <i>'. $openKerkTemplateNamen[$template] .'</i> uitgerold van '. strftime('%e %B', $start) .' tot '. strftime('%e %B', $eind) .'.<br>';
 		
 	} else {
 		$sql = "SELECT * FROM $TableOpenKerkRooster WHERE $OKRoosterTijd > ". time() ." ORDER BY $OKRoosterTijd DESC";
@@ -76,6 +80,7 @@ if(isset($_POST['save'])) {
 		
 		$text[] = "<form action='". htmlspecialchars($_SERVER['PHP_SELF']) ."' method='post'>";
 		$text[] = "<input type='hidden' name='uitrollen' value='true'>";
+		$text[] = "<input type='hidden' name='template' value='$template'>";
 		$text[] = "<table border=0>";
 		$text[] = "	<tr>";
 		$text[] = "		<td colspan='2'>Selecteer hieronder de start- en einddatum<br>waarvoor het rooster gevuld moet worden.<br><br><i>Let wel op dat de startdatum vervroegen<br>tot dubbelingen in het rooster leidt.</i></td>";
@@ -117,7 +122,7 @@ if(isset($_POST['save'])) {
 		$text[] = "	</table>";
 		$text[] = "</form>";
 	}		
-} else {
+} elseif(isset($_POST['template'])) {
 	# Een keer alle namen ophalen en in een array zetten zodat dit later hergebruikt kan worden
 	foreach($namen as $key => $value) {
 		if(is_array($value)) {
@@ -127,7 +132,10 @@ if(isset($_POST['save'])) {
 		}
 	}
 	
+	$template = $_POST['template'];
+	
 	$text[] = "<form action='". htmlspecialchars($_SERVER['PHP_SELF']) ."' method='post'>";
+	$text[] = "<input type='hidden' name='template' value='$template'>";
 	$text[] = "<table border=0>";
 	for($week = 0; $week < 2 ; $week++) {	
 		$text[] = "	<tr>";
@@ -145,7 +153,7 @@ if(isset($_POST['save'])) {
 			for($dag=$minDag; $dag <= $maxDag ; $dag++) {
 				$text[] = "		<td>";
 				
-				$vulling = getOpenKerkVulling($week, $dag, $uur);
+				$vulling = getOpenKerkVulling($template, $week, $dag, $uur);
 				
 				for($positie=0; $positie < $aantal ; $positie++) {
 					$text[] = "<select name='item[$week][$dag][$uur][$positie]'>";
@@ -178,6 +186,34 @@ if(isset($_POST['save'])) {
 	
 	$text[] = "		<td colspan='$helft' align='center'><input type='submit' name='enroll' value='Template uitrollen'></td>";
 	$text[] = "	</tr>";
+	$text[] = "</table>";
+	$text[] = "</form>";
+} else {	
+	$text[] = "<form action='". htmlspecialchars($_SERVER['PHP_SELF']) ."' method='post'>";
+	$text[] = "<table border=0 align='center'>";
+	$text[] = "	<tr>";
+	$text[] = "		<td>Welk template wil je aanpassen</td>";
+	$text[] = "	</tr>";
+	
+	$text[] = "	<tr>";
+	$text[] = "		<td><select name='template'>";
+	$text[] = "		<option value=''></option>";
+	
+	foreach($openKerkTemplateNamen as $id => $naam) {
+		$text[] = "<option value='$id'>$naam</option>";
+	}
+	
+	$text[] = "</select></td>";
+	$text[] = "	</tr>";
+	$text[] = "	<tr>";
+	$text[] = "		<td>&nbsp;</td>";
+	$text[] = "	</tr>";
+	
+	$text[] = "	<tr>";
+	$text[] = "		<td align='center'><input type='submit' name='template_select' value='Doorgaan'></td>";
+	$text[] = "	</tr>";
+	$text[] = "</table>";
+	$text[] = "</form>";
 	$text[] = "</table>";
 	$text[] = "</form>";
 }

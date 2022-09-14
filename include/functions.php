@@ -2332,11 +2332,11 @@ function setDeclaratieActionDate($declaratie, $tijd = 0) {
 }
 
 
-function getOpenKerkVulling($week, $dag, $uur) {
-	global $db, $TableOpenKerkTemplate, $OKTemplateWeek, $OKTemplateDag, $OKTemplateTijd, $OKTemplatePos, $OKTemplatePersoon;
+function getOpenKerkVulling($template, $week, $dag, $uur) {
+	global $db, $TableOpenKerkTemplate, $OKTemplateTemplate, $OKTemplateWeek, $OKTemplateDag, $OKTemplateTijd, $OKTemplatePos, $OKTemplatePersoon;
 	
 	$data = array();
-	$sql = "SELECT * FROM $TableOpenKerkTemplate WHERE $OKTemplateWeek = '$week' AND $OKTemplateDag = '$dag' AND $OKTemplateTijd = '$uur'";
+	$sql = "SELECT * FROM $TableOpenKerkTemplate WHERE $OKTemplateTemplate = $template AND $OKTemplateWeek = '$week' AND $OKTemplateDag = '$dag' AND $OKTemplateTijd = '$uur'";
 	
 	$result = mysqli_query($db, $sql);
 
@@ -2350,6 +2350,8 @@ function getOpenKerkVulling($week, $dag, $uur) {
 	return $data;	
 }
 
+
+# https://www.kalender-365.nl/feestdagen/2024.html
 
 # Pasen = 1ste zondag in de lente na volle maan
 # kei-moeilijk uit te rekenen
