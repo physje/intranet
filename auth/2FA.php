@@ -45,7 +45,7 @@ if ($phpSP_message) {
     <h1><?php echo $strLoginInterface; ?></h1>    
     <div>
             <label for="login_password">2FA-code</label>
-            <input type="number" name="entered_2FA" class="field required" />
+            <input type="text" name="entered_2FA" class="field required" autofocus />
     </div>
     <div class="submit">
         <button type="submit">Ga door</button>

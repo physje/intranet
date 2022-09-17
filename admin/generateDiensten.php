@@ -161,7 +161,7 @@ if(isset($_POST['save'])) {
 		$text[] = "	<option value='$j'". ($j == $Jaar ? ' selected' : '') .">$j</option>";
 	}
 	$text[] = "	</select></td>";
-	$text[] = "	<td rowspan='5'><input type='submit' name='save' value='Genereer'></td>";
+	$text[] = "	<td rowspan='6'><input type='submit' name='save' value='Genereer'></td>";
 	$text[] = "</tr>";
 	
 	/*
@@ -229,9 +229,8 @@ if(isset($_POST['save'])) {
 	$text[] = "</table>";
 	$text[] = "</form>";
 	
-	# Pasen en Pinksteren rekenen is een ramp; Die moeten dus even handmatig opgezocht worden	
+	# Pasen en Pinksteren rekenen is een ramp; Die moeten dus even handmatig gecontroleerd worden
 	# Pasen (zoek de eerste volle maan op of na 21 maart | zoek de eerstvolgende zondag na deze volle maan. Voilà, je hebt Eerste Paasdag te pakken)
-	
 	# Pinksteren (Eerste Pinksterdag is dus tien dagen na Hemelvaart)	
 }
 
@@ -247,7 +246,6 @@ if(count($querys) > 0) {
 # Dit kan pas doorlopen worden als hierboven de diensten zijn ingevoerd
 # Vandaar deze wat gekunstelde oplossing
 if(isset($_POST['omschrijving'])) {
-#if(true) {
 	$details[] = array(18, 12, 24, 12, '4e Advent');
 	$details[] = array(11, 12, 17, 12, '3e Advent');
 	$details[] = array(4, 12, 10, 12, '2e Advent');
