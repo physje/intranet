@@ -46,130 +46,154 @@ if(isset($_REQUEST['new'])) {
 	$query	= "INSERT INTO $TableDiensten ($DienstStart, $DienstEind) VALUES ('$start', '$eind')";
 	$result = mysqli_query($db, $query);
 			
-	toLog('info', $_SESSION['ID'], '', 'Dienst van '. date("d-m-Y", $start) .' toegevoegd');
+	toLog('info', $_SESSION['ID'], '', 'Dienst voor '. date("d-m-Y", $start) .' toegevoegd');
 }
 
-if(isset($_REQUEST['delete'])) {
+if(isset($_REQUEST['delete']) AND !isset($_REQUEST['cancel'])) {
 	$details	= getKerkdienstDetails($_REQUEST['id']);
-	$query	= "DELETE FROM $TableDiensten WHERE $DienstID = ". $_REQUEST['id'];
-	$result = mysqli_query($db, $query);
+	
+	if(isset($_REQUEST['sureDelete'])) {
+		$query	= "DELETE FROM $TableDiensten WHERE $DienstID = ". $_REQUEST['id'];
+		$result = mysqli_query($db, $query);
 			
-	toLog('info', $_SESSION['ID'], '', 'Dienst van '. date("d-m-Y", $details['start']) .' verwijderd');
-}
-
-$blokGrootte = (92*24*60*60);
-
-if(isset($_POST['start'])) {
-	$start = $_POST['start'];
-} else {
-	$start = time();
-}
-
-if(isset($_POST['next'])) {
-	$start = ($start + $blokGrootte);
-}
-
-if(isset($_POST['prev'])) {
-	$start = ($start - $blokGrootte);
-}
-
-
-$einde = $start + $blokGrootte;
-
-# Haal alle kerkdiensten binnen een tijdsvak op
-$diensten = getKerkdiensten($start, $einde);
-
-$text[] = "<form method='post' action='$_SERVER[PHP_SELF]'>";
-$text[] = "<input type='hidden' name='start' value='$start'>";
-$text[] = "<table border=0>";
-$text[] = "<tr>";
-$text[] = "	<td>Datum</td>";
-$text[] = "	<td>Start</td>";
-$text[] = "	<td>Eind</td>";
-$text[] = "	<td>Bijzonderheid</td>";
-if(in_array(1, getMyGroups($_SESSION['ID']))) {
-	$text[] = "	<td>&nbsp;</td>";
-}
-$text[] = "</tr>";
-
-foreach($diensten as $dienst) {
-	$data = getKerkdienstDetails($dienst);
-	
-	$sMin		= date("i", $data['start']);
-	$sUur		= date("H", $data['start']);
-	
-	$eMin		= date("i", $data['eind']);
-	$eUur		= date("H", $data['eind']);
-	
-	$text[] = "<tr>";
-	
-	if(in_array(1, getMyGroups($_SESSION['ID']))) {
-		$sDag			= date("d", $data['start']);
-		$sMaand		= date("m", $data['start']);
-		$sJaar		= date("Y", $data['start']);
-		
-		$text[] = "	<td><select name='sDag[$dienst]'>";
-		for($d=1; $d<=31 ; $d++) {
-			$text[] = "	<option value='$d'". ($d == $sDag ? ' selected' : '') .">$d</option>";
-		}
-		$text[] = "	</select>";
-		$text[] = "	<select name='sMaand[$dienst]'>";
-		for($m=1; $m<=12 ; $m++) {
-			$text[] = "	<option value='$m'". ($m == $sMaand ? ' selected' : '') .">". $maandArray[$m] . "</option>";
-		}
-		$text[] = "	</select>";
-		$text[] = "	<select name='sJaar[$dienst]'>";
-		for($j=date('Y'); $j<=(date('Y')+2) ; $j++) {
-			$text[] = "	<option value='$j'". ($j == $sJaar ? ' selected' : '') .">$j</option>";
-		}		
-		$text[] = "	</select></td>";				
+		toLog('info', $_SESSION['ID'], '', formatDagdeel($details['start']).' van '. date("d-m-Y", $details['start']) .' ['. $_REQUEST['id'] .'] verwijderd');
 	} else {
-		$text[] = "	<td align='right'>". time2str("%a %e %b", $data['start']) ."</td>";
+		$text[] = "<form method='post' action='$_SERVER[PHP_SELF]'>";
+		$text[] = "<input type='hidden' name='delete' value='ja'>";
+		$text[] = "<input type='hidden' name='id' value='".$_REQUEST['id']."'>";
+		$text[] = "<table>";
+		$text[] = "<tr>";
+		$text[] = "	<td colspan='2'>Weet je zeker dat je de ".formatDagdeel($details['start']).' van '. time2str('%e %B %Y', $details['start']) ." wilt verwijderen ?</td>";
+		$text[] = "</tr>";
+		$text[] = "	<td colspan='2'>Als je deze dienst verwijderd, worden ook alle roosters voor deze dienst verwijderd<br>";
+		$text[] = "	Verwijder een dienst dus alleen als deze niet doorgaat</td>";
+		$text[] = "</tr>";
+		$text[] = "<tr>";
+		$text[] = "	<td colspan='2'>&nbsp;</td>";
+		$text[] = "</tr>";		
+		$text[] = "<tr>";
+		$text[] = "	<td><input type='submit' name='sureDelete' value='Zeker weten'></td>";
+		$text[] = "	<td align='right'><input type='submit' name='cancel' value='Annuleren'></td>";
+		$text[] = "</tr>";
+		$text[] = "</table>";		
+		$text[] = "</form>";		
+	}	
+}
+
+if(!isset($_REQUEST['delete']) OR (isset($_REQUEST['delete']) AND isset($_REQUEST['sureDelete'])) OR (isset($_REQUEST['delete']) AND isset($_REQUEST['cancel']))) {
+	$blokGrootte = (92*24*60*60);
+	
+	if(isset($_POST['start'])) {
+		$start = $_POST['start'];
+	} else {
+		$start = time();
 	}
-	//$text[] = "	<td align='right'>". date("d m Y", $data['start']) ."</td>";
-	$text[] = "	<td><select name='sUur[$dienst]'>";
-	for($u=0; $u<24 ; $u++) {
-		$text[] = "	<option value='$u'". ($u == $sUur ? ' selected' : '') .">$u</option>";
+	
+	if(isset($_POST['next'])) {
+		$start = ($start + $blokGrootte);
 	}
-	$text[] = "	</select>";
-	$text[] = "	<select name='sMin[$dienst]'>";
-	for($m=0; $m<60 ; $m=$m+15) {
-		$text[] = "	<option value='$m'". ($m == $sMin ? ' selected' : '') .">". substr('0'.$m, -2) ."</option>";
-	}
-	$text[] = "	</select></td>";
-	$text[] = "	<td><select name='eUur[$dienst]'>";
-	for($u=0; $u<24 ; $u++) {
-		$text[] = "	<option value='$u'". ($u == $eUur ? ' selected' : '') .">$u</option>";
-	}
-	$text[] = "	</select>";
-	$text[] = "	<select name='eMin[$dienst]'>";
-	for($m=0; $m<60 ; $m=$m+15) {
-		$text[] = "	<option value='$m'". ($m == $eMin ? ' selected' : '') .">". substr('0'.$m, -2) ."</option>";
-	}
-	$text[] = "	</select></td>";	
-	$text[] = "	<td><input type='text' name='bijz[$dienst]' value=\"". $data['bijzonderheden'] ."\" size='30'></td>";	
+	
+	if(isset($_POST['prev'])) {
+		$start = ($start - $blokGrootte);
+	}	
+	
+	$einde = $start + $blokGrootte;
+	
+	# Haal alle kerkdiensten binnen een tijdsvak op
+	$diensten = getKerkdiensten($start, $einde);
+	
+	$text[] = "<form method='post' action='$_SERVER[PHP_SELF]'>";
+	$text[] = "<input type='hidden' name='start' value='$start'>";
+	$text[] = "<table border=0>";
+	$text[] = "<tr>";
+	$text[] = "	<td>Datum</td>";
+	$text[] = "	<td>Start</td>";
+	$text[] = "	<td>Eind</td>";
+	$text[] = "	<td>Bijzonderheid</td>";
 	if(in_array(1, getMyGroups($_SESSION['ID']))) {
-		$text[] = "	<td align='right'><a href='?delete=ja&id=$dienst'>-</a></td>";
+		$text[] = "	<td>&nbsp;</td>";
 	}
 	$text[] = "</tr>";
-}
-
-$text[] = "<tr>";
-$text[] = "<td colspan='5' align='middle'>";
-$text[] = "<table width='100%'>";
-$text[] = "<tr>";
-$text[] = "	<td width='33%' align='left'><input type='submit' name='prev' value='Vorige 3 maanden'></td>";
-$text[] = "	<td width='33%' align='center'><input type='submit' name='save' value='Diensten opslaan'></td>";
-$text[] = "	<td width='33%' align='right'><input type='submit' name='next' value='Volgende 3 maanden'></td>";
-$text[] = "</tr>";
-$text[] = "</table>";
-$text[] = "</td>";
-$text[] = "</tr>";
-$text[] = "</table>";
-$text[] = "</form>";
-
-if(in_array(1, getMyGroups($_SESSION['ID']))) {
-	$text[] = "<a href='?new'>Extra dienst toevoegen</a>";
+	
+	foreach($diensten as $dienst) {
+		$data = getKerkdienstDetails($dienst);
+		
+		$sMin		= date("i", $data['start']);
+		$sUur		= date("H", $data['start']);
+		
+		$eMin		= date("i", $data['eind']);
+		$eUur		= date("H", $data['eind']);
+		
+		$text[] = "<tr>";
+		
+		if(in_array(1, getMyGroups($_SESSION['ID']))) {
+			$sDag			= date("d", $data['start']);
+			$sMaand		= date("m", $data['start']);
+			$sJaar		= date("Y", $data['start']);
+			
+			$text[] = "	<td><select name='sDag[$dienst]'>";
+			for($d=1; $d<=31 ; $d++) {
+				$text[] = "	<option value='$d'". ($d == $sDag ? ' selected' : '') .">$d</option>";
+			}
+			$text[] = "	</select>";
+			$text[] = "	<select name='sMaand[$dienst]'>";
+			for($m=1; $m<=12 ; $m++) {
+				$text[] = "	<option value='$m'". ($m == $sMaand ? ' selected' : '') .">". $maandArray[$m] . "</option>";
+			}
+			$text[] = "	</select>";
+			$text[] = "	<select name='sJaar[$dienst]'>";
+			for($j=date('Y'); $j<=(date('Y')+2) ; $j++) {
+				$text[] = "	<option value='$j'". ($j == $sJaar ? ' selected' : '') .">$j</option>";
+			}		
+			$text[] = "	</select></td>";				
+		} else {
+			$text[] = "	<td align='right'>". time2str("%a %e %b", $data['start']) ."</td>";
+		}
+		//$text[] = "	<td align='right'>". date("d m Y", $data['start']) ."</td>";
+		$text[] = "	<td><select name='sUur[$dienst]'>";
+		for($u=0; $u<24 ; $u++) {
+			$text[] = "	<option value='$u'". ($u == $sUur ? ' selected' : '') .">$u</option>";
+		}
+		$text[] = "	</select>";
+		$text[] = "	<select name='sMin[$dienst]'>";
+		for($m=0; $m<60 ; $m=$m+15) {
+			$text[] = "	<option value='$m'". ($m == $sMin ? ' selected' : '') .">". substr('0'.$m, -2) ."</option>";
+		}
+		$text[] = "	</select></td>";
+		$text[] = "	<td><select name='eUur[$dienst]'>";
+		for($u=0; $u<24 ; $u++) {
+			$text[] = "	<option value='$u'". ($u == $eUur ? ' selected' : '') .">$u</option>";
+		}
+		$text[] = "	</select>";
+		$text[] = "	<select name='eMin[$dienst]'>";
+		for($m=0; $m<60 ; $m=$m+15) {
+			$text[] = "	<option value='$m'". ($m == $eMin ? ' selected' : '') .">". substr('0'.$m, -2) ."</option>";
+		}
+		$text[] = "	</select></td>";	
+		$text[] = "	<td><input type='text' name='bijz[$dienst]' value=\"". $data['bijzonderheden'] ."\" size='30'></td>";	
+		if(in_array(1, getMyGroups($_SESSION['ID']))) {
+			$text[] = "	<td align='right'><a href='?delete=ja&id=$dienst'><img src='images\delete.png'></a></td>";
+		}
+		$text[] = "</tr>";
+	}
+	
+	$text[] = "<tr>";
+	$text[] = "<td colspan='5' align='middle'>";
+	$text[] = "<table width='100%'>";
+	$text[] = "<tr>";
+	$text[] = "	<td width='33%' align='left'><input type='submit' name='prev' value='Vorige 3 maanden'></td>";
+	$text[] = "	<td width='33%' align='center'><input type='submit' name='save' value='Diensten opslaan'></td>";
+	$text[] = "	<td width='33%' align='right'><input type='submit' name='next' value='Volgende 3 maanden'></td>";
+	$text[] = "</tr>";
+	$text[] = "</table>";
+	$text[] = "</td>";
+	$text[] = "</tr>";
+	$text[] = "</table>";
+	$text[] = "</form>";
+	
+	if(in_array(1, getMyGroups($_SESSION['ID']))) {
+		$text[] = "<a href='?new'>Extra dienst toevoegen</a>";
+	}
 }
 
 echo $HTMLHeader;

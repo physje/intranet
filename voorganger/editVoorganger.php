@@ -45,6 +45,13 @@ if(isset($_REQUEST['voorgangerID'])) {
 			$sql .= "$VoorgangerOpmerking = '". $_POST['opm'] ."', ";
 			$sql .= "$VoorgangerStijl = '". $_POST['stijl'] ."', ";		
 			//$sql .= "$VoorgangerHonorarium = '". $_POST['honorarium'] ."', ";
+			
+			if(isset($_POST['honorarium_old']))     $sql .= "$VoorgangerHonorariumOld = '". $_POST['honorarium_old'] ."', ";
+			if(isset($_POST['honorarium_new']))     $sql .= "$VoorgangerHonorariumNew = '". $_POST['honorarium_new'] ."', ";
+			if(isset($_POST['honorarium_spec']))    $sql .= "$VoorgangerHonorariumSpecial = '". $_POST['honorarium_spec'] ."', ";
+			if(isset($_POST['km_vergoeding']))      $sql .= "$VoorgangerKM = '". $_POST['km_vergoeding'] ."', ";
+			if(isset($_POST['EB_relatie']))         $sql .= "$VoorgangerEBRelatie = '". $_POST['EB_relatie'] ."', ";		
+			
 			$sql .= "$VoorgangerHonorariumOld = '". $_POST['honorarium_old'] ."', ";
 			$sql .= "$VoorgangerHonorariumNew = '". $_POST['honorarium_new'] ."', ";
 			$sql .= "$VoorgangerHonorariumSpecial = '". $_POST['honorarium_spec'] ."', ";
