@@ -6,9 +6,9 @@ $minDag = 1;
 $maxDag = 5;
 
 $uren[1] = array(11, 00, 12, 00);
-$uren[2] = array(12, 00, 12, 30);
-$uren[3] = array(12, 30, 13, 00);
-$uren[4] = array(13, 00, 14, 00);
+$uren[2] = array(12, 00, 13, 00);
+$uren[3] = array(13, 00, 13, 30);
+$uren[4] = array(13, 30, 14, 00);
 $uren[5] = array(14, 00, 15, 00);
 $uren[6] = array(15, 00, 16, 00);
 

@@ -6,6 +6,10 @@ include_once('../include/HTML_HeaderFooter.php');
 
 $db = connect_db();
 
+$opties[1] = 'Ja';
+$opties[0] = 'Nee';
+$opties[2] = 'Blanco';
+
 if(isset($_REQUEST['token'])) {
 	if(validVotingCode($_REQUEST['token'])) {
 		if(uniqueVotingCode($_REQUEST['token'])) {
@@ -22,9 +26,11 @@ if(isset($_REQUEST['token'])) {
 				$text[] = "<input type='hidden' name='token' value='". $_REQUEST['token'] ."'>";
 				$text[] = "Vindt u dat wij ds. Reinier Kramer moeten beroepen?<br>";
 				$text[] = "<br>";
-				$text[] = "<input type='radio' name='keuze' value='1'".($_REQUEST['keuze'] == 1 ? ' checked' : '') ."> Ja<br>";
-				$text[] = "<input type='radio' name='keuze' value='0'".($_REQUEST['keuze'] == 0 ? ' checked' : '') ."> Nee<br>";
-				$text[] = "<input type='radio' name='keuze' value='2'".($_REQUEST['keuze'] == 2 ? ' checked' : '') ."> Blanco<br>";
+				
+				foreach($opties as $id => $naam) {
+					$text[] = "<input type='radio' name='keuze' value='$id'".($_REQUEST['keuze'] == $id ? ' checked' : '') ."> $naam<br>";
+				}			
+				
 				$text[] = "<br>";
 				$text[] = "<input type='submit' name='save' value='Stem uitbrengen'><br>";
 				$text[] = "</form>";

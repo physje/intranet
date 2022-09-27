@@ -51,14 +51,14 @@ do {
 			
 	# LaPosta staat of valt met een correct mailadres
 	# Eerst dus even een check of het adres geldig is
-	if(isValidEmail($email)) {		
+	if(isValidEmail($email) AND $data['belijdenis'] == 'belijdend lid') {		
 		if(lp_onList($hoofdLijst, $email)) {
 			$list = $partnerLijst;			
 		} else {
 			$list = $hoofdLijst;
 		}		
 		$addAdres = true;	
-	} elseif($data['relatie'] != 'zoon' AND $data['relatie'] != 'dochter' AND $data['relatie'] != 'inw. persoon' AND $email == '') {
+	} elseif($data['relatie'] != 'zoon' AND $data['relatie'] != 'dochter' AND $data['relatie'] != 'inw. persoon' AND $data['belijdenis'] == 'belijdend lid' AND $email == '') {
 		$sql_partner = "SELECT * FROM $TableUsers WHERE $UserStatus = 'actief' AND $UserRelatie like 'gezinshoofd' AND $UserAdres = ". $row[$UserAdres];
 		$result_partner = mysqli_query($db, $sql_partner);
 		
