@@ -1566,6 +1566,7 @@ function getBezoeker($lid) {
 }
 
 
+/*
 function getPastoraleBezoeken($lid, $teamlid) {
 	global $TablePastoraat, $PastoraatID, $PastoraatLid, $PastoraatIndiener, $PastoraatZichtOud, $PastoraatZichtPas, $PastoraatZichtPred, $PastoraatTijdstip, $db;
 	
@@ -1604,6 +1605,26 @@ function getPastoraleBezoeken($lid, $teamlid) {
 	
 	return $bezoeken;	
 }
+*/
+
+function getPastoraleBezoeken($lid) {
+	#global $TablePastoraat, $PastoraatID, $PastoraatLid, $PastoraatIndiener, $PastoraatZichtOud, $PastoraatZichtPas, $PastoraatZichtPred, $PastoraatTijdstip, $db;
+	global $TablePastoraat, $PastoraatID, $PastoraatLid, $PastoraatTijdstip, $db;
+	
+	$bezoeken = array();
+			
+	$sql = "SELECT $PastoraatID FROM $TablePastoraat WHERE $PastoraatLid = ". $lid ." ORDER BY $PastoraatTijdstip DESC";
+	$result = mysqli_query($db, $sql);
+	
+	if($row = mysqli_fetch_array($result)) {		
+		do {
+			$bezoeken[] = $row[$PastoraatID];
+		} while($row = mysqli_fetch_array($result));
+	}
+	
+	return $bezoeken;	
+}
+
 
 function getPastoraalbezoekDetails($ID) {
 	global $TablePastoraat, $PastoraatID, $PastoraatIndiener, $PastoraatTijdstip, $PastoraatLid, $PastoraatType, $PastoraatLocatie, $PastoraatZichtOud, $PastoraatZichtPred, $PastoraatZichtPas, $PastoraatNote, $db;
@@ -2332,11 +2353,11 @@ function setDeclaratieActionDate($declaratie, $tijd = 0) {
 }
 
 
-function getOpenKerkVulling($template, $week, $dag, $uur) {
+function getOpenKerkVulling($template, $week, $dag, $slot) {
 	global $db, $TableOpenKerkTemplate, $OKTemplateTemplate, $OKTemplateWeek, $OKTemplateDag, $OKTemplateTijd, $OKTemplatePos, $OKTemplatePersoon;
 	
 	$data = array();
-	$sql = "SELECT * FROM $TableOpenKerkTemplate WHERE $OKTemplateTemplate = $template AND $OKTemplateWeek = '$week' AND $OKTemplateDag = '$dag' AND $OKTemplateTijd = '$uur'";
+	$sql = "SELECT * FROM $TableOpenKerkTemplate WHERE $OKTemplateTemplate = $template AND $OKTemplateWeek = '$week' AND $OKTemplateDag = '$dag' AND $OKTemplateTijd = '$slot'";
 	
 	$result = mysqli_query($db, $sql);
 
@@ -2356,6 +2377,7 @@ function getOpenKerkVulling($template, $week, $dag, $uur) {
 # Pasen = 1ste zondag in de lente na volle maan
 # kei-moeilijk uit te rekenen
 # Daarom niet uitrekenen maar volle maan opvragen
+/*
 function getPasen($jaar) {
 	$lente = mktime(0,0,1,3,21,$jaar);
 	$url = 'https://www.kalender-365.nl/maan/maanstanden.html';
@@ -2390,7 +2412,40 @@ function getPasen($jaar) {
 	
 	return $data;
 }
+*/
 
+function getPasen($jaar) {
+	$url = 'https://www.kalender-365.nl/feestdagen/pasen.html';
+		
+	$i = 0;
+	$doorgaan = true;
+	$data = array();
+
+	$contents = file_get_contents($url);
+	$rijen = explode('<tr><td', $contents);
+	
+	$start	= mktime(0,0,0, 1, 1,$jaar);
+	$end		= mktime(0,0,0,12,31,$jaar);
+		
+	do {
+		$i++;
+		$rij = $rijen[$i];
+		
+		$tijd = getString('data-value="', '"', $rij, 0);
+		$datum = getString('class="dtr tar">', '</td>', $rij, 0);
+		
+		#echo $tijd[0] .'|'. $datum[0] .'<br>';
+		
+		if(($i > (count($rijen)-2)) OR ($tijd[0] > $start AND $tijd[0] < $end)) {	
+			$doorgaan = false;
+		}		
+	} while($doorgaan);
+	
+	$data['dag']		=	date("j", $tijd[0]);
+	$data['maand']	= date("n", $tijd[0]);
+	
+	return $data;
+}
 
 function get2FACode($user) {
 	global $TableUsers, $User2FA, $UserID, $db;

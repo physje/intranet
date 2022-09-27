@@ -11,7 +11,7 @@ $db = connect_db();
 $startDag = mktime(0,0,0,date('n'),(date('j')+1));
 $eindDag = $startDag + (24*60*60);
 
-$sql		= "SELECT * FROM $TableOpenKerkRooster WHERE $OKRoosterTijd BETWEEN $startDag AND $eindDag GROUP BY $OKRoosterPersoon";
+$sql		= "SELECT * FROM $TableOpenKerkRooster WHERE $OKRoosterStart BETWEEN $startDag AND $eindDag GROUP BY $OKRoosterPersoon";
 $result	= mysqli_query($db, $sql);
 
 # Niet alle dagen is er een mail te versturen
@@ -22,7 +22,7 @@ if($row		= mysqli_fetch_array($result)) {
 		$persoon = $row[$OKRoosterPersoon];
 		
 		# Vraag de tijden voor deze persoon op
-		$sql_tijden			= "SELECT * FROM $TableOpenKerkRooster WHERE $OKRoosterTijd BETWEEN $startDag AND $eindDag AND $OKRoosterPersoon = '". $persoon ."'";
+		$sql_tijden			= "SELECT * FROM $TableOpenKerkRooster WHERE $OKRoosterStart BETWEEN $startDag AND $eindDag AND $OKRoosterPersoon = '". $persoon ."'";
 		$result_tijden	= mysqli_query($db, $sql_tijden);
 		$row_tijden			= mysqli_fetch_array($result_tijden);
 		
@@ -42,7 +42,7 @@ if($row		= mysqli_fetch_array($result)) {
 		
 		do {
 			$opmerking = '';
-			$startTijd = $row_tijden[$OKRoosterTijd];
+			$startTijd = $row_tijden[$OKRoosterStart];
 			$eindTijd = $startTijd + (60*60);
 			
 			$sql_opmerking = "SELECT * FROM $TableOpenKerkOpmerking WHERE $OKOpmerkingTijd = ". $startTijd;

@@ -142,6 +142,21 @@ if(in_array(1, getMyGroups($_SESSION['ID'])) OR in_array(43, getMyGroups($_SESSI
 }
 
 
+# Beroepingscommissie
+if(in_array(1, getMyGroups($_SESSION['ID'])) OR in_array(48, getMyGroups($_SESSION['ID']))) {
+	$BeroepingsDeel[] = "<b>Beroepingscommissie</b>";
+	
+	$BeroepingsLinks['beroepingscommissie/verdeling.php'] = 'Tussenstand bekijken';
+				
+	foreach($BeroepingsLinks as $link => $naam) {
+		$BeroepingsDeel[] = "<a href='$link' target='_blank'>$naam</a>";
+	}
+	
+	$blockArray[] = implode("<br>".NL, $BeroepingsDeel);
+}
+
+
+
 # Gegevens wijzigen-deel
 # 1 = Admin
 # 20 = Preekvoorziening

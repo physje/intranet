@@ -19,12 +19,12 @@ $header[] = 'Datum';
 $header[] = 'Personen';
 $header[] = 'Opmerking';
 
-$sql		= "SELECT * FROM $TableOpenKerkRooster WHERE $OKRoosterTijd > ". time() ." GROUP BY $OKRoosterTijd ORDER BY $OKRoosterTijd ASC";
+$sql		= "SELECT * FROM $TableOpenKerkRooster WHERE $OKRoosterStart > ". time() ." GROUP BY $OKRoosterStart ORDER BY $OKRoosterStart ASC";
 $result	= mysqli_query($db, $sql);
 
 if($row		= mysqli_fetch_array($result)) {
 	do {
-		$datum = $row[$OKRoosterTijd];
+		$datum = $row[$OKRoosterStart];
 		$eindTijd = $datum + (60*60);
 	
 		# Opmaak voor HTML
@@ -37,7 +37,7 @@ if($row		= mysqli_fetch_array($result)) {
 		$rij[] = time2str("%a %d %b %H:%M", $datum) .'-'. time2str("%H:%M", $eindTijd);
 		$people = array();
 		
-		$sql_datum		= "SELECT * FROM $TableOpenKerkRooster WHERE $OKRoosterTijd = ". $datum;
+		$sql_datum		= "SELECT * FROM $TableOpenKerkRooster WHERE $OKRoosterStart = ". $datum;
 		$result_datum	= mysqli_query($db, $sql_datum);
 		$row_datum = mysqli_fetch_array($result_datum);
 		

@@ -259,7 +259,9 @@ $OKTemplatePos								= "pos";
 $OKTemplatePersoon						= "persoon";
 
 $TableOpenKerkRooster					= "openkerk_rooster";
-$OKRoosterTijd								= "tijd";
+$OKRoosterID									= "id";
+$OKRoosterStart								= "tijd";
+$OKRoosterEind								= "eind";
 $OKRoosterPos									= "pos";
 $OKRoosterPersoon							= "persoon";
 

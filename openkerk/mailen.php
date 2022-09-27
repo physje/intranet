@@ -19,22 +19,22 @@ if(isset($_POST['versturen'])) {
 	$header = array('Datum', 'Personen', 'Opmerking');
 	$data = array();
 
-	$sql		= "SELECT * FROM $TableOpenKerkRooster WHERE $OKRoosterTijd > ". time() ." GROUP BY $OKRoosterTijd ORDER BY $OKRoosterTijd ASC";
+	$sql		= "SELECT * FROM $TableOpenKerkRooster WHERE $OKRoosterStart > ". time() ." GROUP BY $OKRoosterStart ORDER BY $OKRoosterStart ASC";
 	$result	= mysqli_query($db, $sql);
 
 	if($row		= mysqli_fetch_array($result)) {
 		do {
 			# Eerste datum opslaan voor bestandsnaam
-			if(!isset($first)) $first = $row[$OKRoosterTijd];
+			if(!isset($first)) $first = $row[$OKRoosterStart];
 			
-			$datum = $row[$OKRoosterTijd];
+			$datum = $row[$OKRoosterStart];
 			$eindTijd = $datum + (60*60);
 			
 			# Genereer regel	
 			$rij = $people = array();
 			$rij[] = time2str("%a %d %b %H:%M", $datum) .'-'. time2str("%H:%M", $eindTijd);
 					
-			$sql_datum		= "SELECT * FROM $TableOpenKerkRooster WHERE $OKRoosterTijd = ". $datum;
+			$sql_datum		= "SELECT * FROM $TableOpenKerkRooster WHERE $OKRoosterStart = ". $datum;
 			$result_datum	= mysqli_query($db, $sql_datum);
 			$row_datum = mysqli_fetch_array($result_datum);
 		
@@ -121,13 +121,13 @@ if(isset($_POST['versturen'])) {
 	if(isset($_POST['begeleidendeTekst'])) {
 		$begeleidendeTekst = $_POST['begeleidendeTekst'];
 	} else {
-		$sql_last 		= "SELECT * FROM $TableOpenKerkRooster ORDER BY $OKRoosterTijd DESC LIMIT 0,1";
+		$sql_last 		= "SELECT * FROM $TableOpenKerkRooster ORDER BY $OKRoosterStart DESC LIMIT 0,1";
 		$result_last	= mysqli_query($db, $sql_last);
 		$row_last			= mysqli_fetch_array($result_last);
 	
 		$standaardTekst[] = "Beste [[voornaam]],";
 		$standaardTekst[] = "";
-		$standaardTekst[] = "Hierbij krijg je als bijlage bij het rooster \"Open Kerk\" voor de periode tot en met ". time2str("%A %e %B", $row_last[$OKRoosterTijd]) .".";
+		$standaardTekst[] = "Hierbij krijg je als bijlage bij het rooster \"Open Kerk\" voor de periode tot en met ". time2str("%A %e %B", $row_last[$OKRoosterStart]) .".";
 		$standaardTekst[] = "";
 		$standaardTekst[] = "Je kan je persoonlijke open-kerk-rooster opnemen in je digitale agenda door eenmalig <a href='[[url-agenda]]'>deze link</a> toe te voegen.";
 		$standaardTekst[] = "";
@@ -172,7 +172,7 @@ if(isset($_POST['versturen'])) {
 	$text[] = "</table>";
 	$text[] = "</form>";	
 } else {
-	$sql		= "SELECT * FROM $TableOpenKerkRooster WHERE $OKRoosterTijd > ". time() ." GROUP BY $OKRoosterPersoon";
+	$sql		= "SELECT * FROM $TableOpenKerkRooster WHERE $OKRoosterStart > ". time() ." GROUP BY $OKRoosterPersoon";
 	$result	= mysqli_query($db, $sql);
 
 	if($row		= mysqli_fetch_array($result)) {

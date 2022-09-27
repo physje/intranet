@@ -1,12 +1,16 @@
 <?php
 
-$aantal = 3;
+$aantal = 2;
 
 $minDag = 1;
 $maxDag = 5;
 
-$minUur = 10;
-$maxUur = 16;
+$uren[1] = array(11, 00, 12, 00);
+$uren[2] = array(12, 00, 12, 30);
+$uren[3] = array(12, 30, 13, 00);
+$uren[4] = array(13, 00, 14, 00);
+$uren[5] = array(14, 00, 15, 00);
+$uren[6] = array(15, 00, 16, 00);
 
 $dagNamen[0] = 'Zondag';
 $dagNamen[1] = 'Maandag';
@@ -23,20 +27,5 @@ $extern['extern01'] = array(
 	'voornaam' => 'Henk'
 	);
 
-/*	
-$extern['extern02'] = array(
-	'geslacht' => 'V',
-	'mail' => 'mariona1664@gmail.com',
-	'naam' => 'Marion Andrews',
-	'voornaam' => 'Marion'
-	);
-	
-$extern['extern03'] = array(
-	'geslacht' => 'M',
-	'mail' => 'johna6334@gmail.com',
-	'naam' => 'John Andrews',
-	'voornaam' => 'John'
-	);
-*/
 
 ?>

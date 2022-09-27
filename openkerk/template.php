@@ -17,15 +17,15 @@ if(isset($_POST['save'])) {
 	
 	foreach($_POST['item'] as $week => $sub) {
 		foreach($sub as $dag => $sub2) {
-			foreach($sub2 as $uur => $sub3) {
+			foreach($sub2 as $slot => $sub3) {
 				foreach($sub3 as $pos => $persoon) {
 					//$text[] = $week .' -> '. $dag .' -> '. $uur .' -> '. $persoon .'<br>';
-					$sql_delete = "DELETE FROM $TableOpenKerkTemplate WHERE $OKTemplateTemplate = $template AND $OKTemplateWeek = $week AND $OKTemplateDag = $dag AND $OKTemplateTijd = $uur AND $OKTemplatePos = $pos";
+					$sql_delete = "DELETE FROM $TableOpenKerkTemplate WHERE $OKTemplateTemplate = $template AND $OKTemplateWeek = $week AND $OKTemplateDag = $dag AND $OKTemplateTijd = $slot AND $OKTemplatePos = $pos";
 					mysqli_query($db, $sql_delete);
 					//$text[] = $sql_delete .'<br>';
 					
 					if($persoon != '') {
-						$sql_insert = "INSERT INTO $TableOpenKerkTemplate ($OKTemplateTemplate, $OKTemplateWeek, $OKTemplateDag, $OKTemplateTijd, $OKTemplatePos, $OKTemplatePersoon) VALUES ('$template', '$week', '$dag', '$uur', '$pos', '$persoon')";
+						$sql_insert = "INSERT INTO $TableOpenKerkTemplate ($OKTemplateTemplate, $OKTemplateWeek, $OKTemplateDag, $OKTemplateTijd, $OKTemplatePos, $OKTemplatePersoon) VALUES ('$template', '$week', '$dag', '$slot', '$pos', '$persoon')";
 						mysqli_query($db, $sql_insert);
 						//$text[] = $sql_insert .'<br>';
 					}
@@ -43,36 +43,35 @@ if(isset($_POST['save'])) {
 		$eind		= mktime(0,0,0,$_POST['eind_maand'],$_POST['eind_dag'],$_POST['eind_jaar']);
 		
 		do {
-		#for($offset=0 ; $offset <= 14 ; $offset++) {			
 			$nieuweDag	= mktime(0,0,0,date('n', $start),(date('j', $start)+$offset));
 			$week				= fmod(strftime('%W', $nieuweDag), 2);
 			$dag				= strftime('%w', $nieuweDag);
 						
-			for($uur=$minUur; $uur < $maxUur ; $uur++) {
-				$tijdstip = mktime($uur,0,0,date('n', $nieuweDag),date('j', $nieuweDag), date('Y', $nieuweDag));
+			foreach($uren as $slotID => $slot) {
+				$startTijd = mktime($slot[0],$slot[1],0,date('n', $nieuweDag),date('j', $nieuweDag), date('Y', $nieuweDag));
+				$eindTijd = mktime($slot[2],$slot[3],0,date('n', $nieuweDag),date('j', $nieuweDag), date('Y', $nieuweDag));
 												
-				$vulling = getOpenKerkVulling($template, $week, $dag, $uur);
+				$vulling = getOpenKerkVulling($template, $week, $dag, $slotID);
 				
 				foreach($vulling as $pos => $persoon) {
-					$sql_insert = "INSERT INTO $TableOpenKerkRooster ($OKRoosterTijd, $OKRoosterPos, $OKRoosterPersoon) VALUES (".$tijdstip .", $pos, '$persoon')";
+					$sql_insert = "INSERT INTO $TableOpenKerkRooster ($OKRoosterStart, $OKRoosterPos, $OKRoosterPersoon) VALUES (".$tijdstip .", $pos, '$persoon')";
 					mysqli_query($db, $sql_insert);					
 				}
 			}
-			
-			//$text[] = strftime('%a %e %B', $nieuweDag).' -> '. implode('|', $vulling) .'<br>';			
+						
 			$offset++;
 		} while($nieuweDag < $eind);
 		
 		$text[] = 'Het rooster is op basis van template <i>'. $openKerkTemplateNamen[$template] .'</i> uitgerold van '. strftime('%e %B', $start) .' tot '. strftime('%e %B', $eind) .'.<br>';
 		
 	} else {
-		$sql = "SELECT * FROM $TableOpenKerkRooster WHERE $OKRoosterTijd > ". time() ." ORDER BY $OKRoosterTijd DESC";
+		$sql = "SELECT * FROM $TableOpenKerkRooster WHERE $OKRoosterStart > ". time() ." ORDER BY $OKRoosterStart DESC";
 		$result = mysqli_query($db, $sql);
 		if(mysqli_num_rows($result) == 0) {
 			$laatste = time();
 		} else {
 			$row = mysqli_fetch_array($result);
-			$laatste = $row[$OKRoosterTijd]+(24*60*60);
+			$laatste = $row[$OKRoosterStart]+(24*60*60);
 		}
 	
 		$start = mktime(0,0,0,date('n', $laatste),date('j', $laatste));
@@ -147,16 +146,17 @@ if(isset($_POST['save'])) {
 			$text[] = "		<td>". $dagNamen[$dag] ."</td>";
 		}
 			
-		for($uur=$minUur; $uur < $maxUur ; $uur++) {
+		#for($uur=$minUur; $uur < $maxUur ; $uur++) {
+		foreach($uren as $slotID => $slot) {
 			$text[] = "	<tr>";
-			$text[] = "		<td>$uur:00 - ". ($uur+1).":00</td>";
+			$text[] = "		<td>". $slot[0] .":". substr('0'.$slot[1], -2) ." - ". $slot[2] .":". substr('0'.$slot[3], -2) ."</td>";
 			for($dag=$minDag; $dag <= $maxDag ; $dag++) {
 				$text[] = "		<td>";
 				
-				$vulling = getOpenKerkVulling($template, $week, $dag, $uur);
+				$vulling = getOpenKerkVulling($template, $week, $dag, $slotID);
 				
 				for($positie=0; $positie < $aantal ; $positie++) {
-					$text[] = "<select name='item[$week][$dag][$uur][$positie]'>";
+					$text[] = "<select name='item[$week][$dag][$slotID][$positie]'>";
 					$text[] = "<option value=''></option>";
 					
 					foreach($namenArray as $id => $naam) {

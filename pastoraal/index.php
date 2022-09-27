@@ -10,12 +10,19 @@ include($cfgProgDir. "secure.php");
 
 # Als bekend is welke wijk
 # Dan checken wie er in het wijkteam zitten van die wijk
-if(isset($_REQUEST['wijk'])) {
-	$wijk			= $_REQUEST['wijk'];
-	$wijkteam = getWijkteamLeden($wijk);	
+if(isset($_REQUEST['wijk'])) {	
+	$wijk			= strtoupper($_REQUEST['wijk']);
+	$wijkteam = getWijkteamLeden($wijk);
+	
+	$inWijkteam = false;
+	
+	if(array_key_exists($_SESSION['ID'], $wijkteam)) {
+		$rol = $wijkteam[$_SESSION['ID']];
+		$inWijkteam = true;		
+	}
 
-	# Zit je in het wijkteam, dan mag je verder
-	if(array_key_exists($_SESSION['ID'], $wijkteam)) {		
+	# Zit je in het wijkteam & heb je de juiste rol, dan mag je verder
+	if($inWijkteam AND $rol <> 3 AND $rol <> 6) {		
 		# Moet er een bezoek worden toegevoegd
 		# En is er nog niet op SAVE geklikt
 		# Toon dan het formulier
@@ -58,15 +65,15 @@ if(isset($_REQUEST['wijk'])) {
 			$text[] = "</tr>";
 			$text[] = "<tr>";
 			$text[] = "	<td valign='top'>Aantekening</td>";
-			$text[] = "	<td><textarea name='aantekening'></textarea></td>";
+			$text[] = "	<td><textarea name='aantekening'></textarea><br><small>Dit is voor het hele wijkteam zichtbaar</small></td>";
 			$text[] = "</tr>";
-			$text[] = "<tr>";
-			$text[] = "	<td valign='top'>Zichtbaar voor</td>";
-			$text[] = "	<td>"; #<input type='checkbox' name='prive'> Alleen mijzelf<br>";
-			$text[] = "<input type='checkbox' name='predikant' value='1' checked> Predikant<br>";
-			$text[] = "<input type='checkbox' name='ouderling' value='1' checked> Ouderling<br>";
-			$text[] = "<input type='checkbox' name='bezoeker' value='1' checked> Pastoraal bezoekers</td>";
-			$text[] = "</tr>";	
+			#$text[] = "<tr>";
+			#$text[] = "	<td valign='top'>Zichtbaar voor</td>";
+			#$text[] = "	<td>"; #<input type='checkbox' name='prive'> Alleen mijzelf<br>";
+			#$text[] = "<input type='checkbox' name='predikant' value='1' checked> Predikant<br>";
+			#$text[] = "<input type='checkbox' name='ouderling' value='1' checked> Ouderling<br>";
+			#$text[] = "<input type='checkbox' name='bezoeker' value='1' checked> Pastoraal bezoekers</td>";
+			#$text[] = "</tr>";	
 			$text[] = "<tr>";
 			$text[] = "	<td colspan='2'>&nbsp;</td>";
 			$text[] = "</tr>";
@@ -122,10 +129,10 @@ if(isset($_REQUEST['wijk'])) {
 					$datum = '';
 				
 					$adres		= getWoonAdres($lid);
-					$bezoeken	= getPastoraleBezoeken($lid, $_SESSION['ID']);
+					$bezoeken	= getPastoraleBezoeken($lid);
 					
 					$text[] = '<tr>';
-					$text[] = "	<td colspan='2'><b>". makeName($lid, 3) ."</b></td>";				
+					$text[] = "	<td colspan='2'><b>". makeName($lid, 8) ."</b></td>";				
 					$text[] = "	<td rowspan='2'>&nbsp;</td>";
 					$text[] = "	<td rowspan='2' valign='top'>". ($pastor > 0 ? makeName($pastor, 5) : '&nbsp;') ."</td>";
 					$text[] = "	<td rowspan='2'>&nbsp;</td>";
@@ -165,19 +172,26 @@ if(isset($_REQUEST['wijk'])) {
 			$text[] = "<td valign='top'>";
 			
 			$text[] = "<table border=0>";
-			foreach($wijkteam as $lid => $rol) {
+			$text[] = "<tr>";
+			$text[] = "	<td colspan='2'><b>Wijkteam wijk $wijk</b></td>";
+			$text[] = "</tr>";
+			
+			foreach($wijkteam as $lid => $wijkteamRol) {
 				$text[] = "<tr>";
 				$text[] = "	<td>". makeName($lid, 5) ."</td>";
-				$text[] = "	<td>". $teamRollen[$rol] ."</td>";
+				$text[] = "	<td>". $teamRollen[$wijkteamRol] ."</td>";
 				$text[] = "</tr>";
 			}
 			$text[] = "</table>";
 			$text[] = "<br>";
 			$text[] = "<br>";
 			$text[] = "<a href='". $_SERVER['PHP_SELF'] ."?wijk=$wijk&filter=".($filter ? 'false' : 'true')."'>".($filter ? 'Toon alle leden van wijk '. $wijk : 'Toon alleen leden waar ik aan ben toegewezen')."</a>";
-			$text[] = "<br>";
-			$text[] = "<br>";
-			$text[] = "<a href='verdeling.php?wijk=$wijk'>Pas verdeling over wijkteam aan</a>";
+			
+			if($rol == 1) {
+				$text[] = "<br>";
+				$text[] = "<br>";
+				$text[] = "<a href='verdeling.php?wijk=$wijk'>Wijs ouderling/bezoeker aan wijkleden toe</a>";
+			}
 			
 			$text[] = "</td>";
 			$text[] = "</tr>";
@@ -185,8 +199,10 @@ if(isset($_REQUEST['wijk'])) {
 			
 			
 		}
-	} else {
-		$text[] = "Ben je wel lid van het wijkteam van wijk $wijk ?";
+	} elseif($inWijkteam) {
+		$text[] = "Helaas, als ". strtolower($teamRollen[$rol]) ." van wijk $wijk heb je geen toegang";
+	} else {		
+		$text[] = "Je bent niet bekend als lid van het wijkteam van wijk $wijk";
 	}
 } else {
 	$text[] = "Welke wijk wil je bekijken";

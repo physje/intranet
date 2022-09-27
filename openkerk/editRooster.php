@@ -17,18 +17,21 @@ if(isset($_POST['save'])) {
 	# Doorloop alle tijden
 	# Verwijder de huidige
 	# En voer de nieuwe in
+	# item[$datum][$slotID][$positie]
 	foreach($_POST['item'] as $datum => $sub) {
-		foreach($sub as $uur => $sub2) {
-			foreach($sub2 as $pos => $persoon) {
-				$sql_delete = "DELETE FROM $TableOpenKerkRooster WHERE $OKRoosterTijd = $datum AND $OKRoosterPos = $pos";
+		foreach($sub as $slotID => $sub2) {
+			$start	= mktime($uren[$slotID][0], $uren[$slotID][1], 0, date('n', $datum), date('j', $datum), date('Y', $datum));
+			$eind		= mktime($uren[$slotID][2], $uren[$slotID][3], 0, date('n', $datum), date('j', $datum), date('Y', $datum));
+			foreach($sub2 as $pos => $persoon) {							
+				$sql_delete = "DELETE FROM $TableOpenKerkRooster WHERE $OKRoosterStart = $start AND $OKRoosterPos = $pos";
 				if(!mysqli_query($db, $sql_delete)) {
 				    echo $sql_delete .'<br>';
 				}
 				
-				if($persoon != '') {
-					$sql_insert = "INSERT INTO $TableOpenKerkRooster ($OKRoosterTijd, $OKRoosterPos, $OKRoosterPersoon) VALUES ('$datum', '$pos', '$persoon')";
+				if($persoon != '') {					
+					$sql_insert = "INSERT INTO $TableOpenKerkRooster ($OKRoosterStart, $OKRoosterEind, $OKRoosterPos, $OKRoosterPersoon) VALUES ('$start', '$eind', '$pos', '$persoon')";
 					if(!mysqli_query($db, $sql_insert)) {
-					    echo $sql_delete .'<br>';
+					    echo $sql_insert .'<br>';
 					}
 				}
 			}
@@ -71,11 +74,19 @@ if(isset($_POST['next_week'])) {
 
 $einde = $start + $blokGrootte;
 
-//$sql		= "SELECT * FROM $TableOpenKerkRooster WHERE $OKRoosterTijd > ". time() ." ORDER BY $OKRoosterTijd DESC";
-$sql		= "SELECT * FROM $TableOpenKerkRooster WHERE $OKRoosterTijd BETWEEN ". $start ." AND ". $einde ." ORDER BY $OKRoosterTijd DESC";
+# Een keer alle namen ophalen en in een array zetten zodat dit later hergebruikt kan worden
+foreach($namen as $key => $value) {
+	if(is_array($value)) {
+		$namenArray[$key] = $value['naam'];
+	} else {
+		$namenArray[$value] = makeName($value, 5);
+	}
+}
+
+$sql		= "SELECT * FROM $TableOpenKerkRooster WHERE $OKRoosterStart BETWEEN ". $start ." AND ". $einde ." ORDER BY $OKRoosterStart DESC LIMIT 0,1";
 $result = mysqli_query($db, $sql);
 $row		= mysqli_fetch_array($result);
-$lastDag	= $row[$OKRoosterTijd];
+$lastDag	= $row[$OKRoosterStart];
 
 $text[] = "<form action='". htmlspecialchars($_SERVER['PHP_SELF']) ."' method='post'>";
 $text[] = "<input type='hidden' name='start' value='$start'>";
@@ -88,30 +99,24 @@ $text[] = "</tr>";
 $dag = 0;
 $datum = $start;
 
-# Een keer alle namen ophalen en in een array zetten zodat dit later hergebruikt kan worden
-foreach($namen as $key => $value) {
-	if(is_array($value)) {
-		$namenArray[$key] = $value['naam'];
-	} else {
-		$namenArray[$value] = makeName($value, 5);
-	}
-}
-
 while($datum < $lastDag) {
-	for($uur=$minUur; $uur < $maxUur ; $uur++) {
-		$datum = mktime($uur, 0, 0, date('n', $start), (date('j', $start)+$dag));
-		$weekdag = date('w', $datum);
+	foreach($uren as $slotID => $slot) {
+		
+		$datum		= mktime(0, 0, 0, date('n', $start), (date('j', $start)+$dag));
+		$tijdstip	= mktime($slot[0], $slot[1], 0, date('n', $start), (date('j', $start)+$dag));
+		$eind			= mktime($slot[2], $slot[3], 0, date('n', $start), (date('j', $start)+$dag));
+		$weekdag	= date('w', $tijdstip);
 		
 		if(($minDag <= $weekdag) AND ($weekdag <= $maxDag)) {
 			$text[] = "<tr>";
-			$text[] = "		<td valign='top'>".time2str("%a %d %b %H:%M", $datum)."</td>";
+			$text[] = "		<td valign='top'>".time2str("%a %d %b %H:%M", $tijdstip)." - ".time2str("%H:%M", $eind)."</td>";
 			$text[] = "		<td valign='top'>";
 					
 			for($positie=0; $positie < $aantal ; $positie++) {
-				$text[] = "<select name='item[$datum][$uur][$positie]'>";
+				$text[] = "<select name='item[$datum][$slotID][$positie]'>";
 				$text[] = "<option value=''></option>";
 				
-				$sql_vulling		= "SELECT * FROM $TableOpenKerkRooster WHERE $OKRoosterTijd = ". $datum ." AND $OKRoosterPos = ". $positie;
+				$sql_vulling		= "SELECT * FROM $TableOpenKerkRooster WHERE $OKRoosterStart = ". $tijdstip ." AND $OKRoosterPos = ". $positie;
 				$result_vulling = mysqli_query($db, $sql_vulling);
 				$row_vulling		= mysqli_fetch_array($result_vulling);
 				
@@ -122,12 +127,12 @@ while($datum < $lastDag) {
 				$text[] = "		</select>&nbsp;";
 			}	
 			
-			$sql_opmerking = "SELECT * FROM $TableOpenKerkOpmerking WHERE $OKOpmerkingTijd = $datum";
+			$sql_opmerking = "SELECT * FROM $TableOpenKerkOpmerking WHERE $OKOpmerkingTijd = $tijdstip";
 			$result_opmerking = mysqli_query($db, $sql_opmerking);
 			$row_opmerking = mysqli_fetch_array($result_opmerking);
 						
 			$text[] = "</td>";
-			$text[] = "<td><input type='text' name='opmerking[$datum]' value='". (isset($row_opmerking[$OKOpmerkingOpmerking]) ? urldecode($row_opmerking[$OKOpmerkingOpmerking]) : '') ."'></td>";
+			$text[] = "<td><input type='text' name='opmerking[$tijdstip]' value='". (isset($row_opmerking[$OKOpmerkingOpmerking]) ? urldecode($row_opmerking[$OKOpmerkingOpmerking]) : '') ."'></td>";
 			$text[] = "</tr>";
 		}				
 	}

@@ -100,11 +100,11 @@ foreach($ids as $id) {
 	$result_2 = mysqli_query($db, $sql_2);
 	if($row_2 = mysqli_fetch_array($result_2)) {
 		do {
-			$start = $row_2[$OKRoosterTijd];
+			$start = $row_2[$OKRoosterStart];
 			$einde = $start + (60*60);
 			
 			$ics[] = "BEGIN:VEVENT";	
-			$ics[] = "UID:3GK-". $row_2[$OKRoosterTijd] .'.OK.'. substr('00'.$id, -3);
+			$ics[] = "UID:3GK-". $row_2[$OKRoosterStart] .'.OK.'. substr('00'.$id, -3);
 			$ics[] = "DTSTART;TZID=Europe/Amsterdam:". date("Ymd\THis", $start);
 			$ics[] = "DTEND;TZID=Europe/Amsterdam:". date("Ymd\THis", $einde);	
 			$ics[] = "LAST-MODIFIED:". date("Ymd\THis", time());				

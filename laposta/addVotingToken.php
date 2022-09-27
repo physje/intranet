@@ -8,6 +8,7 @@ $stap = 5;
 
 $hoofdLijst = '3t0kfm4zfi';
 $partnerLijst = 'aw8rbmpmtq';
+$fileName = 'adressenlijst.csv';
 
 # Ga op zoek naar alle personen met een mailadres
 # Mailadres is daarbij alles met een @-teken erin
@@ -41,13 +42,13 @@ do {
 	$email = $data['mail'];
 	
 	$addAdres = false;
-	$list = '';
+	$list = $rij = '';
 	
 	$custom_fields['voornaam']			= ($data['voornaam'] == '' ? $data['voorletters'] : $data['voornaam']);
 	$custom_fields['tussenvoegsel'] = $data['tussenvoegsel'];
 	$custom_fields['achternaam']		= $data['achternaam'];
 	$custom_fields['votingtoken']		= generateID(12);
-		
+			
 	# LaPosta staat of valt met een correct mailadres
 	# Eerst dus even een check of het adres geldig is
 	if(isValidEmail($email)) {		
@@ -57,7 +58,7 @@ do {
 			$list = $hoofdLijst;
 		}		
 		$addAdres = true;	
-	} elseif($data['relatie'] != 'zoon' AND $data['relatie'] != 'dochter' AND $email == '') {
+	} elseif($data['relatie'] != 'zoon' AND $data['relatie'] != 'dochter' AND $data['relatie'] != 'inw. persoon' AND $email == '') {
 		$sql_partner = "SELECT * FROM $TableUsers WHERE $UserStatus = 'actief' AND $UserRelatie like 'gezinshoofd' AND $UserAdres = ". $row[$UserAdres];
 		$result_partner = mysqli_query($db, $sql_partner);
 		
@@ -80,15 +81,22 @@ do {
 			echo $custom_fields['voornaam'] .' '. $custom_fields['achternaam'] .'|'. $email .' -> '. $list .'<br>';
 			
 			$sql_token = "INSERT INTO `votingcodes` (`votingtoken`) VALUES ('". $custom_fields['votingtoken'] ."')";
-			mysqli_query($db, $sql_token);
-			
+			mysqli_query($db, $sql_token);			
 		} else {
 			echo $custom_fields['voornaam'] .' '. $custom_fields['achternaam'] .' mislukt<br>';
 		}
+		
+		$rij = $custom_fields['achternaam'].';'.$custom_fields['tussenvoegsel'].';'.$custom_fields['voornaam'].';'.$email;
 				
 		# ff rusten voor we verder gaan
 		sleep(2);
+	} else {
+		$rij = $custom_fields['achternaam'].';'.$custom_fields['tussenvoegsel'].';'.$custom_fields['voornaam'].';geen';
 	}
+	
+	$fp = fopen($fileName, 'a+');
+	fwrite($fp, $rij ."\n");
+	fclose($fp);
 	
 } while($row = mysqli_fetch_array($result));
 
