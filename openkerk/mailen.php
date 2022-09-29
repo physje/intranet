@@ -28,7 +28,7 @@ if(isset($_POST['versturen'])) {
 			if(!isset($first)) $first = $row[$OKRoosterStart];
 			
 			$datum = $row[$OKRoosterStart];
-			$eindTijd = $datum + (60*60);
+			$eindTijd = $row[$OKRoosterEind];
 			
 			# Genereer regel	
 			$rij = $people = array();

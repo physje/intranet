@@ -286,6 +286,17 @@ $TablePastorVerdeling					= "pastoraat_verdeling";
 $PastorVerdelingLid						= "lid";
 $PastorVerdelingPastor				= "pastor";
 $PastorVerdelingBezoeker			= "bezoeker";
+
+$TablePastorConvert						= "pastoraat_convert";
+$PastorConvertFamID						= "fam_id";
+$PastorConvertFamName					= "famname";
+$PastorConvertScipioID				= "scipio";
+$PastorConvertWijk						= "wijk";
+
+$TablePastorConvertPas				= "pastoraat_convert_pastor";
+$PastorConvertPastor					= "pastor";
+$PastorConvertPastorName			= "naam";
+$PastorConvertPastorScipio		= "scipio";
                                                   					
 $ArchiveDir										= 'trinitas';
 

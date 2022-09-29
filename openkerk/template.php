@@ -54,8 +54,12 @@ if(isset($_POST['save'])) {
 				$vulling = getOpenKerkVulling($template, $week, $dag, $slotID);
 				
 				foreach($vulling as $pos => $persoon) {
-					$sql_insert = "INSERT INTO $TableOpenKerkRooster ($OKRoosterStart, $OKRoosterPos, $OKRoosterPersoon) VALUES (".$tijdstip .", $pos, '$persoon')";
-					mysqli_query($db, $sql_insert);					
+					$sql_insert = "INSERT INTO $TableOpenKerkRooster ($OKRoosterStart, $OKRoosterEind, $OKRoosterPos, $OKRoosterPersoon) VALUES ('$startTijd', '$eindTijd', '$pos', '$persoon')";					
+					#$sql_insert = "INSERT INTO $TableOpenKerkRooster ($OKRoosterStart, $OKRoosterPos, $OKRoosterPersoon) VALUES (".$tijdstip .", $pos, '$persoon')";
+					mysqli_query($db, $sql_insert);
+					
+					#echo time2str("%a %d %b %H:%M", $startTijd) .'-'. time2str("%H:%M", $eindTijd) .'|'. $pos .'|'. makeName($persoon, 5) .'<br>';
+					
 				}
 			}
 						

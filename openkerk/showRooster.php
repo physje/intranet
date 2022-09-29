@@ -25,8 +25,8 @@ $result	= mysqli_query($db, $sql);
 if($row		= mysqli_fetch_array($result)) {
 	do {
 		$datum = $row[$OKRoosterStart];
-		$eindTijd = $datum + (60*60);
-	
+		$eindTijd = $row[$OKRoosterEind];
+			
 		# Opmaak voor HTML
 		$text[] = "<tr>";
 		$text[] = "		<td valign='top'>".time2str("%a %d %b %H:%M", $datum) .'-'. time2str("%H:%M", $eindTijd) ."</td>";
