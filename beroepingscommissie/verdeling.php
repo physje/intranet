@@ -28,7 +28,7 @@ $text[] = "<table width='100%'>";
 
 foreach($opties as $id => $naam) {
 	$text[] = "<tr>";
-	$text[] = "	<td width='40'>$naam</td>";
+	$text[] = "	<td width='75'>$naam</td>";
 	$text[] = "	<td width='25'>". $aantal[$id] ."</td>";
 	$text[] = "	<td>";
 	$text[] = "	<table width='100%' border='0'>";
@@ -41,7 +41,21 @@ foreach($opties as $id => $naam) {
 	$text[] = "</tr>";
 }
 
+$text[] = "<tr>";
+$text[] = "	<td colspan='3'>&nbsp;</td>";
+$text[] = "</tr>";
+
+$sql_all = "SELECT * FROM `votingcodes`";
+$max = mysqli_num_rows(mysqli_query($db, $sql_all));
+
+$text[] = "<tr>";
+$text[] = "	<td colspan='2'>Opkomst</td>";
+$text[] = "	<td>$totaal van $max (". number_format(($totaal/$max)*100, 1) ."%)</td>";
+$text[] = "</tr>";
+
+
 $text[] = "</table>";
+
 
 echo $HTMLHeader;
 echo implode("\n", $text);

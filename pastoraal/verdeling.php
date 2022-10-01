@@ -37,7 +37,7 @@ if(isset($_REQUEST['wijk'])) {
 				}
 			}
 			
-			$text[] = "<b>Wijzigingen opgeslagen</b><p>&nbsp;</p>";			
+			$text[] = "<b>Wijzigingen opgeslagen</b><br><br>Je kan dit venster sluiten om terug te gaan naar het wijk-overzicht.<p>&nbsp;</p>";
 		}
 
 		# Leden opvragen

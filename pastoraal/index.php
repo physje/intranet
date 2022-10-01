@@ -14,13 +14,18 @@ if(isset($_REQUEST['wijk'])) {
 	$wijk			= strtoupper($_REQUEST['wijk']);
 	$wijkteam = getWijkteamLeden($wijk);
 	
-	$inWijkteam = false;
+	$inWijkteam = false;	
 	
 	if(array_key_exists($_SESSION['ID'], $wijkteam)) {
 		$rol = $wijkteam[$_SESSION['ID']];
 		$inWijkteam = true;		
 	}
-
+	
+	if(in_array(49, getMyGroups($_SESSION['ID']))) {	
+		$inWijkteam = true;
+		$rol = 1;
+	}
+	
 	# Zit je in het wijkteam & heb je de juiste rol, dan mag je verder
 	if($inWijkteam AND $rol <> 3 AND $rol <> 6) {		
 		# Moet er een bezoek worden toegevoegd
@@ -190,7 +195,7 @@ if(isset($_REQUEST['wijk'])) {
 			if($rol == 1) {
 				$text[] = "<br>";
 				$text[] = "<br>";
-				$text[] = "<a href='verdeling.php?wijk=$wijk'>Wijs ouderling/bezoeker aan wijkleden toe</a>";
+				$text[] = "<a href='verdeling.php?wijk=$wijk' target='_blank'>Wijs ouderling/bezoeker aan wijkleden toe</a>";
 			}
 			
 			$text[] = "</td>";

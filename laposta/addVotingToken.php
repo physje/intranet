@@ -27,7 +27,13 @@ if(mysqli_num_rows($result) == $stap) {
 } else {
 	echo '<b>Laatste keer</b>';
 	echo '<br>';
-	echo "<a href='import.php'>Importeer leden</a>";
+}
+
+if($start == 0) {
+	$kop = 'Achternaam;Tussenvoegsel;Voornaam;Type;Email';
+	$fp = fopen($fileName, 'w+');
+	fwrite($fp, $kop ."\n");
+	fclose($fp);
 }
 
 do {
@@ -51,7 +57,7 @@ do {
 			
 	# LaPosta staat of valt met een correct mailadres
 	# Eerst dus even een check of het adres geldig is
-	if(isValidEmail($email) AND $data['belijdenis'] == 'belijdend lid') {		
+	if(isValidEmail($email) AND $data['belijdenis'] == 'belijdend lid' AND $email != '') {		
 		if(lp_onList($hoofdLijst, $email)) {
 			$list = $partnerLijst;			
 		} else {
@@ -59,7 +65,7 @@ do {
 		}		
 		$addAdres = true;	
 	} elseif($data['relatie'] != 'zoon' AND $data['relatie'] != 'dochter' AND $data['relatie'] != 'inw. persoon' AND $data['belijdenis'] == 'belijdend lid' AND $email == '') {
-		$sql_partner = "SELECT * FROM $TableUsers WHERE $UserStatus = 'actief' AND $UserRelatie like 'gezinshoofd' AND $UserAdres = ". $row[$UserAdres];
+		$sql_partner = "SELECT * FROM $TableUsers WHERE $UserStatus = 'actief' AND $UserRelatie like 'gezinshoofd' AND $UserMail not like '' AND $UserAdres = ". $row[$UserAdres];
 		$result_partner = mysqli_query($db, $sql_partner);
 		
 		if($row_partner = mysqli_fetch_array($result_partner)) {
@@ -71,6 +77,8 @@ do {
 			} else {
 				$list = $hoofdLijst;
 			}		
+		} else {
+		    echo $custom_fields['voornaam'] .' '. $custom_fields['achternaam'] .' heeft geen gezinshoofd met mailadres<br>';
 		}
 	} else {
 		echo $custom_fields['voornaam'] .' '. $custom_fields['achternaam'] .' overgeslagen<br>';
@@ -86,12 +94,12 @@ do {
 			echo $custom_fields['voornaam'] .' '. $custom_fields['achternaam'] .' mislukt<br>';
 		}
 		
-		$rij = $custom_fields['achternaam'].';'.$custom_fields['tussenvoegsel'].';'.$custom_fields['voornaam'].';'.$email;
+		$rij = $custom_fields['achternaam'].';'.$custom_fields['tussenvoegsel'].';'.$custom_fields['voornaam'].';'. $data['belijdenis'] .';'.$email;
 				
 		# ff rusten voor we verder gaan
 		sleep(2);
 	} else {
-		$rij = $custom_fields['achternaam'].';'.$custom_fields['tussenvoegsel'].';'.$custom_fields['voornaam'].';geen';
+		$rij = $custom_fields['achternaam'].';'.$custom_fields['tussenvoegsel'].';'.$custom_fields['voornaam'].';'. $data['belijdenis'] .';geen';
 	}
 	
 	$fp = fopen($fileName, 'a+');

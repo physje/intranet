@@ -6,9 +6,10 @@ include_once('../include/HTML_HeaderFooter.php');
 
 $db = connect_db();
 
-$opties[1] = 'Ja';
-$opties[0] = 'Nee';
+$opties[1] = 'Ja, ik sta achter het voorstel van de KR om ds Reinier Kramer te beroepen';
+$opties[0] = 'Nee, ik sta niet achter het voorstel van de KR om ds Reinier Kramer te beroepen';
 $opties[2] = 'Blanco';
+
 
 if(isset($_REQUEST['token'])) {
 	if(validVotingCode($_REQUEST['token'])) {
@@ -24,7 +25,7 @@ if(isset($_REQUEST['token'])) {
 			} else {
 				$text[] = "<form action='stemming.php' method='post'>";
 				$text[] = "<input type='hidden' name='token' value='". $_REQUEST['token'] ."'>";
-				$text[] = "Vindt u dat wij ds. Reinier Kramer moeten beroepen?<br>";
+				$text[] = "Staat u achter het voorstel ds. Reinier Kramer te beroepen?<br>";
 				$text[] = "<br>";
 				
 				foreach($opties as $id => $naam) {
