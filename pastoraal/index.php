@@ -108,7 +108,7 @@ if(isset($_REQUEST['wijk'])) {
 			# In de rechter kolom de lijst met wijkteam-leden
 			$text[] = "<table border=0 width='100%'>";
 			$text[] = "<tr>";
-			$text[] = "	<td>";
+			$text[] = "	<td width='60%'>";
 			
 			# Linker kolom
 			$text[] = '<table border=0>';
@@ -137,7 +137,7 @@ if(isset($_REQUEST['wijk'])) {
 					$bezoeken	= getPastoraleBezoeken($lid);
 					
 					$text[] = '<tr>';
-					$text[] = "	<td colspan='2'><b>". makeName($lid, 8) ."</b></td>";				
+					$text[] = "	<td colspan='2'><b><a href='../profiel.php?id=$lid' target='profiel'>". makeName($lid, 8) ."</a></b></td>";
 					$text[] = "	<td rowspan='2'>&nbsp;</td>";
 					$text[] = "	<td rowspan='2' valign='top'>". ($pastor > 0 ? makeName($pastor, 5) : '&nbsp;') ."</td>";
 					$text[] = "	<td rowspan='2'>&nbsp;</td>";
@@ -174,7 +174,7 @@ if(isset($_REQUEST['wijk'])) {
 			# Middelste & rechter kolom
 			$text[] = "</td>";
 			$text[] = "<td width=25>&nbsp;</td>";
-			$text[] = "<td valign='top'>";
+			$text[] = "<td width='38' valign='top'>";
 			
 			$text[] = "<table border=0>";
 			$text[] = "<tr>";
@@ -195,7 +195,7 @@ if(isset($_REQUEST['wijk'])) {
 			if($rol == 1) {
 				$text[] = "<br>";
 				$text[] = "<br>";
-				$text[] = "<a href='verdeling.php?wijk=$wijk' target='_blank'>Wijs ouderling/bezoeker aan wijkleden toe</a>";
+				$text[] = "<a href='verdeling.php?wijk=$wijk' target='verdeling'>Wijs ouderling/bezoeker aan wijkleden toe</a>";
 			}
 			
 			$text[] = "</td>";

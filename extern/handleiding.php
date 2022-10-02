@@ -13,25 +13,89 @@ if(isset($_REQUEST['showLogin'])) {
 
 if(!isset($_SESSION['ID'])) {
 	session_start(['cookie_lifetime' => $cookie_lifetime]);
-}
-
-if(isset($_SESSION['ID'])) {
-	$memberData = getMemberDetails($_SESSION['ID']);
-	$agendaURL = $ScriptURL ."ical/".$memberData['username'].'-'. $memberData['hash_short'] .".ics";
-	$agendaNaam = "3GK (". makeName($_SESSION['ID'], 1) .")";
+	$ingelogd = false;
 } else {
-	$agendaURL = '';
-	$agendaNaam = '';
+	$memberData = getMemberDetails($_SESSION['ID']);
+	$ingelogd = true;
 }
 
-$text[] = "<h1>Handleiding toevoegen digitale agenda</h1><br>";
+$text[] = "<h1>Handleiding ". $ScriptTitle ."</h1><br>";
+$text[] = "Welkom op de site met de handleiding voor ". $ScriptTitle .".<br>";
+$text[] = "<br>";
+$text[] = "Deze handleiding legt per onderdeel uit wat er mogelijk is en hoe je bepaalde zaken doet of regelt.";
+$text[] = "<br>";
+
+if(!$ingelogd) {	
+	$text[] = "De handleiding is nu nog algemeen, als je bent <a href='?showLogin=true'>ingelogd</a> worden een aantal onderdelen en links persoonlijk gemaakt.<br>";
+}
+
+/*
+$text[] = "<br>";
+$text[] = "<a id='achtergrond'></a><h2>Achtergrond</h2>";
+$text[] = "Scipio vs site";
+*/
+
+if(!$ingelogd) {	
+	$text[] = "<a id='inloggen'></a><h2>Inloggen</h2>";
+	$text[] = "Om in te loggen heb je inloggegevens nodig. Deze gegevens zijn gekoppeld aan een account met hetzelfde mailadres zoals dat in Scipio/bij het kerkelijk bureau bekend is.<br>";
+	$text[] = "Mocht je je inloggegevens niet weten, dan kan je die opvragen door <a href='../auth/wachtwoord.php'>deze link</a> te volgen en het bij Scipio bekende mailadres in te vullen en op 'Opvragen' te klikken. Er zal dan een mail gestuurd worden met instructies om de inloggegevens te bemachtigen<br>";
+	$text[] = "Met deze inloggegevens kan je vervolgens inloggen op <a href='$ScriptURL'>$ScriptURL</a><br>";
+}
+
+#$text[] = "<a id='account'></a><h2>Account</h2>";
+#$text[] = "2FA";
+#$text[] = "<br>";
+
+$text[] = "<a id='rooster'></a><h2>Roosters</h2>";
+$text[] = "Als je bent ingelogd";
+$text[] = "Cursief is rooster waar jij mogelijk op staat<br>";
+$text[] = "Verwijzing naar digitale agenda<br>";
+$text[] = "Verwijzing naar combi rooster<br>";
+$text[] = "<a id='rooster_beheer'></a><h3>Roosters beheren</h3>";
+$text[] = "<br>";
+
+$text[] = "<a id='groepen'></a><h2>Groepen</h2>";
+$text[] = "<a id='groepen_beheer'></a><h3>Groepen beheren</h3>";
+$text[] = "<br>";
+
+$text[] = "<a id='open_kerk'></a><h2>Open kerk</h2>";
+$text[] = "<br>";
+
+$text[] = "<a id='laposta'></a><h2>La Posta</h2>";
+$text[] = "<br>";
+
+$text[] = "<a id='declaratie'></a><h2>Declaratie</h2>";
+$text[] = "<br>";
+
+
+$text[] = "<a id='agenda'></a><h2>Agenda Scipio</h2>";
+$text[] = "<br>";
+
+$text[] = "<a id='laposta'></a><h2>La Posta</h2>";
+$text[] = "<br>";
+
+$text[] = "<a id='gebed'></a><h2>Gebedskalender</h2>";
+$text[] = "<br>";
+
+$text[] = "<a id='laposta'></a><h2>Overig</h2>";
+$text[] = "Account<br>";
+$text[] = "Profiel<br>";
+$text[] = "Ledenlijst<br>";
+$text[] = "<br>";
+
+$text[] = "<a id='preek'></a><h2>Preekvoorziening</h2>";
+$text[] = "<br>";
+
+$text[] = "<a id='faq'></a><h2>Veel gestelde vragen</h2>";
+$text[] = "Koppeling met Scipio";
+$text[] = "<br>";
+/*
+
+
 $text[] = "Het is mogelijk om aan jouw digitale agenda, een losse agenda toe te voegen met daarin alle momenten dat jij voor de Koningskerk op het rooster staat. Wijzigingen op de site worden automatisch doorgevoerd in deze agenda.<br>";
 $text[] = "<br>";
 $text[] = "Op deze pagina staat een korte uitleg hoe je eean voor <a href='#android'>Android</a> of <a href='#ios'>iOS</a> instelt.<br>";
 
-if($agendaURL == '') {
-	$text[] = "De handleiding is nu nog algemeen, als je bent <a href='?showLogin=true'>ingelogd</a> worden een aantal punten specifiek persoonlijk gemaakt.<br>";
-}
 
 $text[] = "<br>";
 $text[] = "<a id='android'></a><h2>Android</h2>";
@@ -86,6 +150,7 @@ $text[] = "<li>Ga op je iPhone naar 'Instellingen' -> 'Agenda' -> 'Accounts' -> 
 $text[] = "<li>Klik op de agendanaam en scroll helemaal naar beneden, naar de knop '<i>Verwijder account</i>'.</li>";
 $text[] = "<li>Er komt nu een pop-up-venster om te bevestigen dat je de agenda wilt verwijderen. Bevestig dit door op '<i>verwijderen account</i>' te klikken.</li>";
 $text[] = "</ol>";
+*/
 
 echo $HTMLHeader;
 echo '<table border=0 width=100%>'.NL;

@@ -7,7 +7,7 @@ include_once('../include/HTML_HeaderFooter.php');
 $db = connect_db();
 
 # Om zo te kunnen controleren of iemand is ingelogd, even de sessie starten.
-session_start();
+session_start(['cookie_lifetime' => $cookie_lifetime]);
 
 # Het eerste scherm waarin men de keuze kan maken welk type declaratie men wil uitvoeren
 $page[] = "In welke hoedanigheid wilt u een declaratie doen?<br>";

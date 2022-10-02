@@ -29,6 +29,8 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 	
 	$xml = new SimpleXMLElement($xmlfile);
 	
+	$mailBlockNew = $mailBlockChange = array();
+	
 	foreach ($xml->persoon as $element) {
 		set_time_limit(10);
 		
@@ -264,10 +266,10 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 	# Adressen die niet meer doorkomen verwijderen
 	# Bijvoorbeeld omdat mensen vanuit AVG niet meer gevonden willen worden
 	$sql_delete = "DELETE FROM $TableUsers WHERE $UsersLastSeen < ". mktime(date('H')-25);
-	$result = mysqli_query($db, $sql_delete);	
-	if(!$result) {
+	$result_delete = mysqli_query($db, $sql_delete);	
+	if(!$result_delete) {
 		toLog('error', '', 'Verwijderen van oudleden : '. $sql_delete);
-	} elseif(mysqli_num_rows($result) > 0) {
+	} elseif(mysqli_num_rows($result_delete) > 0) {
 		toLog('info', '', 'Oudleden verwijderd');		
 	}
 		

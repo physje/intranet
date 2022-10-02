@@ -278,13 +278,14 @@ if(in_array(1, getMyGroups($_SESSION['ID'])) OR in_array(36, getMyGroups($_SESSI
 	$gebedsLinks['gebedskalender/import.php'] = 'Import';
 	$gebedsLinks['gebedskalender/edit.php'] = 'Wijzig';
 	$gebedsLinks['gebedskalender/mailadressenOverzicht.php'] = 'Mailadressen overzicht';
-	
-	foreach($gebedsLinks as $link => $naam) {
-		$gebedsDeel[] = "<a href='$link' target='_blank'>$naam</a>";
-	}
-
-	$blockArray[] = implode("<br>".NL, $gebedsDeel);
 }
+	
+foreach($gebedsLinks as $link => $naam) {
+	$gebedsDeel[] = "<a href='$link' target='_blank'>$naam</a>";
+}
+
+$blockArray[] = implode("<br>".NL, $gebedsDeel);
+
 
 /*
 # Trinitas
@@ -306,9 +307,9 @@ $blockArray[] = implode("<br>".NL, $trinitasDeel);
 # Hyperlinks
 $links[] = "<b>Links</b>";
 
-if(!in_array(1, getMyGroups($_SESSION['ID'])) AND !in_array(36, getMyGroups($_SESSION['ID']))) {
-	$links[] = "<a href='../gebedskalender/' target='_blank'>Gebedskalender</a>";
-}
+//if(!in_array(1, getMyGroups($_SESSION['ID'])) AND !in_array(36, getMyGroups($_SESSION['ID']))) {
+//	$links[] = "<a href='../gebedskalender/' target='_blank'>Gebedskalender</a>";
+//}
 
 $links[] = "<a href='http://www.koningskerkdeventer.nl/' target='_blank'>koningskerkdeventer.nl</a>";
 $links[] = "<a href='agenda/agenda.php' target='_blank'>Agenda voor Scipio</a>";

@@ -25,13 +25,13 @@ if ( !defined("LOADED_PROPERLY") || isset($_GET['cfgProgDir']) || isset($_POST['
 
 if (!isset($entered_login) && !isset($entered_password)) {
 	# use data from session
-	session_start();
+	session_start(['cookie_lifetime' => $cookie_lifetime]);
 	
 	if (isset($_SESSION['login'])) $login = $_SESSION['login'];
 	if (isset($_SESSION['password'])) $password = $_SESSION['password'];
 } else {
 	# use entered data
-	session_start();
+	session_start(['cookie_lifetime' => $cookie_lifetime]);
 		
 	# entered login & password
 	# will be encrypt later on
