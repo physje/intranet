@@ -47,10 +47,22 @@ if(!$ingelogd) {
 #$text[] = "<br>";
 
 $text[] = "<a id='rooster'></a><h2>Roosters</h2>";
-$text[] = "Als je bent ingelogd";
-$text[] = "Cursief is rooster waar jij mogelijk op staat<br>";
+$text[] = "Als je bent ingelogd zie je linksboven aan het kopje \"<b>Roosters</b>\" met daaronder alle roosters zoals die momenteel bekend zijn.<br>";
+$text[] = "<br>";
+$text[] = "Het kan zijn dat in deze lijst met roosters een of meer roosters <i>cursief</i> zijn weergegeven. Als een rooster cursief staat, betekent dit dat jij in de poule zit van mensen die  op dit rooster kunnen komen.<br>";
+$text[] = "<br>";
+$text[] = "Als je op een rooster klikt, zie je het betreffende rooster.<br>";
+$text[] = "Door rechtsboven op \"PDF-versie\" te klikken wordt het huidige rooster als PDF getoond. Deze PDF kan je opslaan of uitprinten (je moet dat wel oppassen dat je regelmatig kijkt op de PDF nog wel up-to-date is).<br>";
+$text[] = "Door in het rooster op een datum te klikken, krijg je een overzicht van wie er op die specifieke datum voor de verschillende roosters is ingedeeld.<br>";
+$text[] = "<br>";
+$text[] = "Helemaal onderaan de lijst met roosters staat \"<a href='../showCombineRooster.php'>Toon combinatie-rooster</a>\" en \"<a href='../roosterKomendeWeek.php'>Toon rooster komende week</a>\"<br>";
+#
+#
+
 $text[] = "Verwijzing naar digitale agenda<br>";
 $text[] = "Verwijzing naar combi rooster<br>";
+$text[] = "<a id='ruilen'></a><h3>Ruilen</h3>";
+$text[] = "<br>";
 $text[] = "<a id='rooster_beheer'></a><h3>Roosters beheren</h3>";
 $text[] = "<br>";
 
