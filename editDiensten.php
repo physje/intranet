@@ -197,7 +197,7 @@ if(!isset($_REQUEST['delete']) OR (isset($_REQUEST['delete']) AND isset($_REQUES
 }
 
 echo $HTMLHeader;
-echo implode("\n", $text);
+echo implode(NL, $text);
 echo $HTMLFooter;
 
 ?>

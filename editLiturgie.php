@@ -75,6 +75,6 @@ if(isset($_REQUEST['dienstID'])) {
 }
 
 echo $HTMLHeader;
-echo implode("\n", $text);
+echo implode(NL, $text);
 echo $HTMLFooter;
 ?>

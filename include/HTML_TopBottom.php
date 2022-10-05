@@ -1,7 +1,9 @@
 <?php
 
 # Header
-$HTMLHead	= "<!--     Deze pagina is onderdeel van $ScriptTitle $Version gemaakt door Matthijs Draijer     -->\n\n";
+$HTMLHead	=  "<!--     Deze pagina is onderdeel van $ScriptTitle $Version gemaakt door Matthijs Draijer     -->".NL;
+$HTMLHead	.= "<!--     Gegenereerd op ". time2str("%A %e %B %Y %H:%M:%S") ."     -->".NL;
+$HTMLHead	.= NL;
 $HTMLHead	.= '<html>'.NL;
 $HTMLHead	.= '<head>'.NL;
 $HTMLHead	.= "	<title>$ScriptTitle ". ((isset($pageTitle) AND $pageTitle != '') ? "| $pageTitle" : $Version) ."</title>\n";

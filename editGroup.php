@@ -57,7 +57,7 @@ foreach($GroupMembers as $lid) {
 	$block_1[] = "<input type='checkbox' name='ids[]' value='$lid' checked> <a href='profiel.php?id=$lid'>". makeName($lid, 5) ."</a><br>";
 }
 
-$block_1[] = "<br>\n";
+$block_1[] = "<br>";
 $block_1[] = "Voer naam in om persoon toe te voegen.<br>";
 $block_1[] = "<input type='text' name='nieuw_lid' id=\"namen\" size='50'><br>";
 $block_1[] = "<br>";

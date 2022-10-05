@@ -110,7 +110,7 @@ $text[] = "</table>";
 $text[] = "</form>";
 
 echo $HTMLHeader;
-echo implode("\n", $text);
+echo implode(NL, $text);
 echo $HTMLFooter;
 
 ?>

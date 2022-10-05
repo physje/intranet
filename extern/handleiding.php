@@ -53,22 +53,31 @@ $text[] = "Het kan zijn dat in deze lijst met roosters een of meer roosters <i>c
 $text[] = "<br>";
 $text[] = "Als je op een rooster klikt, zie je het betreffende rooster.<br>";
 $text[] = "Door rechtsboven op \"PDF-versie\" te klikken wordt het huidige rooster als PDF getoond. Deze PDF kan je opslaan of uitprinten (je moet dat wel oppassen dat je regelmatig kijkt op de PDF nog wel up-to-date is).<br>";
-$text[] = "Door in het rooster op een datum te klikken, krijg je een overzicht van wie er op die specifieke datum voor de verschillende roosters is ingedeeld.<br>";
+$text[] = "Door in het rooster op een datum te klikken, krijg je een overzicht van wie er op die specifieke datum een taak rondom de dienst heeft.<br>";
 $text[] = "<br>";
-$text[] = "Helemaal onderaan de lijst met roosters staat \"<a href='../showCombineRooster.php'>Toon combinatie-rooster</a>\" en \"<a href='../roosterKomendeWeek.php'>Toon rooster komende week</a>\"<br>";
+$text[] = "Helemaal onderaan de lijst met roosters staat \"<a href='../showCombineRooster.php'>Toon combinatie-rooster</a>\" en \"<a href='../roosterKomendeWeek.php'>Toon rooster komende week</a>\". Met \"<a href='../showCombineRooster.php'>Toon combinatie-rooster</a>\" kunnen verschillende roosters naast elkaar getoond worden. Bijvoorbeeld als verschillende gezinsleden op verschillende roosters staan, kan met deze optie 1 familie-overzicht gemaakt worden. Ook deze kan worden opgeslagen als PDF (met ook hier de waarschuwing dat deze kan verouderen).<br>";
+$text[] = "Zoals de titel al zegt, kan met \"<a href='../roosterKomendeWeek.php'>Toon rooster komende week</a>\" het rooster van komende week getoond worden. Wil je snel een overzicht hebben wie komende week een rol in de dienst hebben, dan kan je dat met deze pagina zien.<br>";
 #
 #
+#$text[] = "Verwijzing naar digitale agenda<br>";
 
-$text[] = "Verwijzing naar digitale agenda<br>";
-$text[] = "Verwijzing naar combi rooster<br>";
 $text[] = "<a id='ruilen'></a><h3>Ruilen</h3>";
+$text[] = "Het kan zijn dat je voor een rooster bent ingedeeld op een moment dat <br>";
 $text[] = "<br>";
-$text[] = "<a id='rooster_beheer'></a><h3>Roosters beheren</h3>";
-$text[] = "<br>";
+
+$myRoosterBeheer = getMyRoostersBeheer($_SESSION['ID']);
+if($ingelogd AND count($myRoosterBeheer) > 0) {
+	$text[] = "<a id='rooster_beheer'></a><h3>Roosters beheren</h3>";
+	$text[] = "<br>";
+}
 
 $text[] = "<a id='groepen'></a><h2>Groepen</h2>";
-$text[] = "<a id='groepen_beheer'></a><h3>Groepen beheren</h3>";
-$text[] = "<br>";
+
+$myGroepBeheer = getMyGroupsBeheer($_SESSION['ID']);
+if($ingelogd AND count($myGroepBeheer) > 0) {
+	$text[] = "<a id='groepen_beheer'></a><h3>Groepen beheren</h3>";
+	$text[] = "<br>";
+}
 
 $text[] = "<a id='open_kerk'></a><h2>Open kerk</h2>";
 $text[] = "<br>";
@@ -95,8 +104,10 @@ $text[] = "Profiel<br>";
 $text[] = "Ledenlijst<br>";
 $text[] = "<br>";
 
-$text[] = "<a id='preek'></a><h2>Preekvoorziening</h2>";
-$text[] = "<br>";
+if(in_array(1, getMyGroups($_SESSION['ID'])) OR in_array(20, getMyGroups($_SESSION['ID'])) OR in_array(22, getMyGroups($_SESSION['ID'])) OR in_array(28, getMyGroups($_SESSION['ID']))) {
+	$text[] = "<a id='preek'></a><h2>Preekvoorziening</h2>";
+	$text[] = "<br>";
+}
 
 $text[] = "<a id='faq'></a><h2>Veel gestelde vragen</h2>";
 $text[] = "Koppeling met Scipio";

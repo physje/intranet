@@ -227,8 +227,8 @@ if(isset($_POST['search'])) {
 echo $HTMLHeader;
 echo "<table width='100%'>";
 echo "<tr>";
-echo "	<td width='50%' valign='top'>". implode("\n", $links) .'</td>';
-echo "	<td width='50%' valign='top'>". implode("\n", $rechts) .'</td>';
+echo "	<td width='50%' valign='top'>". implode(NL, $links) .'</td>';
+echo "	<td width='50%' valign='top'>". implode(NL, $rechts) .'</td>';
 echo "<tr>";
 echo "<table>";
 echo $HTMLFooter;

@@ -120,7 +120,7 @@ if(get2FACode($_SESSION['ID']) != '') {
 }
 
 echo $HTMLHeader;
-echo implode("\n", $text);
+echo implode(NL, $text);
 echo $HTMLFooter;
 
 ?>

@@ -8,10 +8,19 @@ $db = connect_db();
 
 $memberData = getMemberDetails($_SESSION['ID']);
 
-# Roosters
+# Data over gebruiker icm roosters opvragen
 $allRoosters = getRoosters(0);
 $myRoosters = getRoosters($_SESSION['ID']);
+$myRoosterBeheer = getMyRoostersBeheer($_SESSION['ID']);
 
+# Data over gebruiker icm groepen opvragen
+$allGroups = getAllGroups();	
+$myGroups = getMyGroups($_SESSION['ID']);
+$myGroepBeheer = getMyGroupsBeheer($_SESSION['ID']);
+
+
+
+# Roosters
 if(count($allRoosters) > 0) {
 	$txtRooster[] = "<b>Roosters</b>";
 	
@@ -34,9 +43,8 @@ if(count($allRoosters) > 0) {
 
 
 # Groepen
-$allGroups = getAllGroups();	
-$myGroups = getMyGroups($_SESSION['ID']);
 $showGroupsClass = array();
+
 foreach($allGroups as $groep) {
 	$tonen = false;	
 	$data = getGroupDetails($groep);
@@ -70,7 +78,6 @@ if(count($showGroupsClass) > 0) {
 
 
 # Groepen-beheer
-$myGroepBeheer = getMyGroupsBeheer($_SESSION['ID']);
 if(count($myGroepBeheer) > 0) {
 	$txtGroepBeheer[] = "<b>Teams die ik beheer</b>";
 	foreach($myGroepBeheer as $groep) {
@@ -81,8 +88,8 @@ if(count($myGroepBeheer) > 0) {
 }
 
 
+
 # Rooster-beheer
-$myRoosterBeheer = getMyRoostersBeheer($_SESSION['ID']);
 if(count($myRoosterBeheer) > 0) {
 	$txtRoosterBeheer[] = "<b>Roosters die ik kan wijzigen</b>";
 	foreach($myRoosterBeheer as $rooster) {
@@ -95,7 +102,7 @@ if(count($myRoosterBeheer) > 0) {
 
 	
 # Admin-groepen
-if(in_array(1, getMyGroups($_SESSION['ID']))) {	
+if(in_array(1, $myGroups)) {	
 	$txtGroepAdmin[] = "<b>Beheer teams</b> (Admin)";
 	foreach($allGroups as $groep) {
 		$data = getGroupDetails($groep);
@@ -108,7 +115,7 @@ if(in_array(1, getMyGroups($_SESSION['ID']))) {
 
 
 # Admin-rooster
-if(in_array(1, getMyGroups($_SESSION['ID']))) {
+if(in_array(1, $myGroups)) {
 	$adminRoosters[] = "<b>Beheer roosters</b> (Admin)";
 	
 	foreach($allRoosters as $rooster) {
@@ -119,16 +126,18 @@ if(in_array(1, getMyGroups($_SESSION['ID']))) {
 	$blockArray[] = implode("<br>".NL, $adminRoosters);
 }
 
+
+
 # Open Kerk
-if(in_array(1, getMyGroups($_SESSION['ID'])) OR in_array(43, getMyGroups($_SESSION['ID'])) OR in_array(44, getMyGroups($_SESSION['ID']))) {
+if(in_array(1, $myGroups) OR in_array(43, $myGroups) OR in_array(44, $myGroups)) {
 	$OpenKerkDeel[] = "<b>Open kerk</b>";
 	
-	if(in_array(1, getMyGroups($_SESSION['ID'])) OR in_array(44, getMyGroups($_SESSION['ID']))) {
+	if(in_array(1, $myGroups) OR in_array(44, $myGroups)) {
 		$OpenKerkLinks['openkerk/template.php'] = 'Template bekijken/aanpassen';
 		$OpenKerkLinks['openkerk/mailen.php'] = 'Rooster mailen';
 	}
 	
-	if(in_array(1, getMyGroups($_SESSION['ID'])) OR in_array(43, getMyGroups($_SESSION['ID']))) {
+	if(in_array(1, $myGroups) OR in_array(43, $myGroups)) {
 		$OpenKerkLinks['openkerk/editRooster.php'] = 'Rooster wijzigen';
 	}
 		
@@ -142,8 +151,33 @@ if(in_array(1, getMyGroups($_SESSION['ID'])) OR in_array(43, getMyGroups($_SESSI
 }
 
 
+# Bezoek-registratie
+# 7 = Ouderlingen
+# 9 = Diakenen
+# 34 = Predikanten
+if(in_array(1, $myGroups) OR in_array(7, $myGroups) OR in_array(8, $myGroups) OR in_array(34, $myGroups)) {
+	$BezoekDeel[] = "<b>Bezoekregistratie</b>";
+	
+	# Doorloop alle wijkteams
+	# Als de ingelogde persoon maar in 1 wijkteam zit
+	# Link dan direct door naar die wijk
+	$hit = array();	
+	foreach($wijkArray as $wijk) {
+		$wijkteam = getWijkteamLeden($wijk);		
+		if(array_key_exists($_SESSION['ID'], $wijkteam))	$hit[] = $wijk;
+	}
+	$BezoekLinks['pastoraal/index.php'. ((count($hit) == 1) ? '?wijk='. $hit[0] : '')] = 'Bezoekregistratie bezoeken';
+					
+	foreach($BezoekLinks as $link => $naam) {
+		$BezoekDeel[] = "<a href='$link' target='_blank'>$naam</a>";
+	}
+	
+	$blockArray[] = implode("<br>".NL, $BezoekDeel);
+}
+
+
 # Beroepingscommissie
-if(in_array(1, getMyGroups($_SESSION['ID'])) OR in_array(48, getMyGroups($_SESSION['ID']))) {
+if(in_array(1, $myGroups) OR in_array(48, $myGroups)) {
 	$BeroepingsDeel[] = "<b>Beroepingscommissie</b>";
 	
 	$BeroepingsLinks['beroepingscommissie/verdeling.php'] = 'Tussenstand bekijken';
@@ -162,24 +196,24 @@ if(in_array(1, getMyGroups($_SESSION['ID'])) OR in_array(48, getMyGroups($_SESSI
 # 20 = Preekvoorziening
 # 22 = Diaconie
 # 28 = Cluster Eredienst
-if(in_array(1, getMyGroups($_SESSION['ID'])) OR in_array(20, getMyGroups($_SESSION['ID'])) OR in_array(22, getMyGroups($_SESSION['ID'])) OR in_array(28, getMyGroups($_SESSION['ID']))) {
+if(in_array(1, $myGroups) OR in_array(20, $myGroups) OR in_array(22, $myGroups)) {
 	$wijzigDeel[] = "<b>Diensten wijzigen</b>";
 }
 
-if(in_array(1, getMyGroups($_SESSION['ID'])) OR in_array(20, getMyGroups($_SESSION['ID']))) {
+if(in_array(1, $myGroups) OR in_array(20, $myGroups)) {
 	$wijzigLinks['voorganger/editVoorganger.php'] = 'Gegevens van voorgangers wijzigen';	
 	$wijzigLinks['voorganger/voorgangerRooster.php'] = 'Preekrooster invoeren';	
 }
 
-if(in_array(1, getMyGroups($_SESSION['ID'])) OR in_array(28, getMyGroups($_SESSION['ID']))) {
+if(in_array(1, $myGroups) OR in_array(28, $myGroups)) {
 	$wijzigLinks['editLiturgie.php'] = 'Liturgie invoeren of aanpassen';
 }
 
-if(in_array(1, getMyGroups($_SESSION['ID'])) OR in_array(22, getMyGroups($_SESSION['ID']))) {
+if(in_array(1, $myGroups) OR in_array(22, $myGroups)) {
 	$wijzigLinks['editCollectes.php'] = 'Collecte-doelen invoeren';	
 }
 
-if(in_array(1, getMyGroups($_SESSION['ID'])) OR in_array(28, getMyGroups($_SESSION['ID']))) {
+if(in_array(1, $myGroups) OR in_array(28, $myGroups)) {
 	$wijzigLinks['editDiensten.php'] = 'Kerkdiensten wijzigen';	
 }
 
@@ -191,8 +225,10 @@ if(isset($wijzigLinks) AND is_array($wijzigLinks)) {
 	$blockArray[] = implode("<br>".NL, $wijzigDeel);
 }
 
+
+
 # Admin-deel
-if(in_array(1, getMyGroups($_SESSION['ID']))) {
+if(in_array(1, $myGroups)) {
 	$adminDeel[] = "<b>Admin</b>";
 	
 	$adminLinks['admin/generateUsernames.php'] = 'Gebruikersnamen aanmaken';
@@ -216,12 +252,14 @@ if(in_array(1, getMyGroups($_SESSION['ID']))) {
 	$blockArray[] = implode("<br>".NL, $adminDeel);
 }
 
+
+
 # LaPosta
 $adminDeel = $adminLinks = array();
 $adminDeel[] = "<b>LaPosta</b>";
 
 $adminLinks['laposta/archief.php'] = 'Mail archief';
-if(in_array(1, getMyGroups($_SESSION['ID']))) {
+if(in_array(1, $myGroups)) {
 	$adminLinks['laposta/sync.php'] = 'Synchroniseren LaPosta';
 }
 
@@ -232,12 +270,13 @@ foreach($adminLinks as $link => $naam) {
 $blockArray[] = implode("<br>".NL, $adminDeel);
 
 
+
 # e-boekhouden.nl
 $adminDeel = $adminLinks = array();
 $adminDeel[] = "<b>Declaraties</b>";
 
 $adminLinks['declaratie/'] = 'Dien declaratie in';
-if(in_array(1, getMyGroups($_SESSION['ID']))) {
+if(in_array(1, $myGroups)) {
 	$adminLinks['declaratie/relatieOverview.php'] = 'Toon alle relaties';
 	$adminLinks['declaratie/mutatieOverview.php'] = 'Toon alle mutaties';
 	//$adminLinks['declaratie/syncRelaties.php'] = 'Synchroniseer relaties naar lokale database';
@@ -253,8 +292,9 @@ foreach($adminLinks as $link => $naam) {
 $blockArray[] = implode("<br>".NL, $adminDeel);
 
 
+
 # Koppelingen-deel
-if(in_array(1, getMyGroups($_SESSION['ID']))) {
+if(in_array(1, $myGroups)) {
 	$koppelDeel[] = "<b>Koppelingen</b>";
 	
 	$koppelLinks['extern/makeiCal.php'] = 'Persoonlijke iCals aanmaken';
@@ -270,11 +310,13 @@ if(in_array(1, getMyGroups($_SESSION['ID']))) {
 	$blockArray[] = implode("<br>".NL, $koppelDeel);
 }
 
+
+
 # Gebedskalender
 $gebedsDeel[] = "<b>Gebedskalender</b>";
 $gebedsLinks['gebedskalender/overzicht.php#'. date('d')] = 'Gebedskalender';
 
-if(in_array(1, getMyGroups($_SESSION['ID'])) OR in_array(36, getMyGroups($_SESSION['ID']))) {	
+if(in_array(1, $myGroups) OR in_array(36, $myGroups)) {	
 	$gebedsLinks['gebedskalender/import.php'] = 'Import';
 	$gebedsLinks['gebedskalender/edit.php'] = 'Wijzig';
 	$gebedsLinks['gebedskalender/mailadressenOverzicht.php'] = 'Mailadressen overzicht';
@@ -293,7 +335,7 @@ $trinitasDeel[] = "<b>Trinitas</b>";
 $TrinitasLinks['trinitas/archief.php']	= 'Archief';
 $TrinitasLinks['trinitas/search.php']	= 'Zoeken op woorden';
 
-if(in_array(1, getMyGroups($_SESSION['ID'])) OR in_array(37, getMyGroups($_SESSION['ID']))) {
+if(in_array(1, $myGroups) OR in_array(37, $myGroups)) {
 	$TrinitasLinks['trinitas/exemplaar.php']	= 'Exemplaar toevoegen';
 }
 
@@ -307,7 +349,7 @@ $blockArray[] = implode("<br>".NL, $trinitasDeel);
 # Hyperlinks
 $links[] = "<b>Links</b>";
 
-//if(!in_array(1, getMyGroups($_SESSION['ID'])) AND !in_array(36, getMyGroups($_SESSION['ID']))) {
+//if(!in_array(1, $myGroups) AND !in_array(36, $myGroups)) {
 //	$links[] = "<a href='../gebedskalender/' target='_blank'>Gebedskalender</a>";
 //}
 
@@ -323,7 +365,7 @@ $site[] = "<b>Ingelogd als ". makeName($_SESSION['ID'], 5)."</b>";
 $site[] = "<a href='account.php' target='_blank'>Account</a>";
 $site[] = "<a href='profiel.php' target='_blank'>Profiel</a>";
 $site[] = "<a href='ledenlijst.php' target='_blank'>Ledenlijst</a>";
-if(in_array(1, getMyGroups($_SESSION['ID']))) {
+if(in_array(1, $myGroups)) {
 	$site[] = "<a href='search.php' target='_blank'>Zoeken</a>";
 }
 $site[] = "<a href='auth/objects/logout.php' target='_blank'>Uitloggen</a>";

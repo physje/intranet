@@ -106,7 +106,7 @@ if(isset($_POST['data_opslaan']) AND $unique) {
 
 
 echo $HTMLHeader;
-echo implode("\n", $text);
+echo implode(NL, $text);
 echo $HTMLFooter;
 
 ?>
