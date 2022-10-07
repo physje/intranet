@@ -43,8 +43,8 @@ if($row		= mysqli_fetch_array($result)) {
 		do {
 			$opmerking = '';
 			$startTijd = $row_tijden[$OKRoosterStart];
-			$eindTijd = $startTijd + (60*60);
-			
+			$eindTijd = $row[$OKRoosterEind];
+						
 			$sql_opmerking = "SELECT * FROM $TableOpenKerkOpmerking WHERE $OKOpmerkingTijd = ". $startTijd;
 			$result_opmerking	= mysqli_query($db, $sql_opmerking);
 			if($row_opmerking = mysqli_fetch_array($result_opmerking)) {
