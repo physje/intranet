@@ -101,7 +101,7 @@ foreach($ids as $id) {
 	if($row_2 = mysqli_fetch_array($result_2)) {
 		do {
 			$start = $row_2[$OKRoosterStart];
-			$einde = $start + (60*60);
+			$einde = $row_2[$OKRoosterEind];
 			
 			$ics[] = "BEGIN:VEVENT";	
 			$ics[] = "UID:3GK-". $row_2[$OKRoosterStart] .'.OK.'. substr('00'.$id, -3);
