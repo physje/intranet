@@ -6,48 +6,54 @@ include_once('../include/HTML_HeaderFooter.php');
 
 $db = connect_db();
 
-$opties[1] = 'Ja, ik sta achter het voorstel van de KR om ds Reinier Kramer te beroepen';
-$opties[0] = 'Nee, ik sta niet achter het voorstel van de KR om ds Reinier Kramer te beroepen';
-$opties[2] = 'Blanco';
+$opties[1] = 'Ja, ik sta achter de voorgenomen beroeping van Ds. Reinier Kramer';
+$opties[0] = 'Nee, ik sta niet achter de voorgenomen beroeping van Ds. Reinier Kramer';
+$opties[2] = 'Ik stem blanco';
 
+$sluiting = mktime(18, 0, 0, 10, 12, 2022);
 
-if(isset($_REQUEST['token'])) {
-	if(validVotingCode($_REQUEST['token'])) {
-		if(uniqueVotingCode($_REQUEST['token'])) {
-			if(isset($_POST['save'])) {				
-				$sql_token = "UPDATE `votingcodes` SET `time` = ". time().", `keuze` = '". $_POST['keuze'] ."' WHERE `votingtoken` LIKE '". $_POST['token'] ."'";
+if(time() < $sluiting) {
+    if(isset($_REQUEST['token'])) {
+	    if(validVotingCode($_REQUEST['token'])) {
+		    if(uniqueVotingCode($_REQUEST['token'])) {
+			    if(isset($_POST['save'])) {				
+				    $sql_token = "UPDATE `votingcodes` SET `time` = ". time().", `keuze` = '". $_POST['keuze'] ."' WHERE `votingtoken` LIKE '". $_POST['token'] ."'";
 				
-				if(mysqli_query($db, $sql_token)) {
-					$text[] = 'Dank voor het uitbrengen van uw stem';
-				} else {
-					$text[] = 'Helaas kon uw stem niet worden weggeschreven';
-				}
-			} else {
-				$text[] = "<form action='stemming.php' method='post'>";
-				$text[] = "<input type='hidden' name='token' value='". $_REQUEST['token'] ."'>";
-				$text[] = "Staat u achter het voorstel ds. Reinier Kramer te beroepen?<br>";
-				$text[] = "<br>";
+    				if(mysqli_query($db, $sql_token)) {
+	    				$text[] = 'Dank voor het uitbrengen van uw stem';
+		    		} else {
+			    		$text[] = 'Helaas kon uw stem niet worden weggeschreven';
+    				}
+	    		} else {
+		    		$text[] = "<form action='stemming.php' method='post'>";
+			    	$text[] = "<input type='hidden' name='token' value='". $_REQUEST['token'] ."'>";
+    				$text[] = "Staat u achter het voorstel ds. Reinier Kramer te beroepen?<br>";
+	    			$text[] = "<br>";
 				
-				foreach($opties as $id => $naam) {
-					$text[] = "<input type='radio' name='keuze' value='$id'".($_REQUEST['keuze'] == $id ? ' checked' : '') ."> $naam<br>";
-				}			
+		    		foreach($opties as $id => $naam) {
+			    		#$text[] = "<input type='radio' name='keuze' value='$id'".($preKeuze == $id ? ' checked' : '') ."> $naam<br>";
+				    	$text[] = "<input type='radio' name='keuze' value='$id'> $naam<br>";
+    				}			
 				
-				$text[] = "<br>";
-				$text[] = "<input type='submit' name='save' value='Stem uitbrengen'><br>";
-				$text[] = "</form>";
-			}
-		} else {
-			$text[] = 'Deze stem is al een keer uitgebracht';
-		}		
-	} else {
-		$text[] = 'Er lijkt geknoeid met deze stem';
-	}
+	    			$text[] = "<br>";
+		    		$text[] = "<input type='submit' name='save' value='Stem uitbrengen'><br>";
+			    	$text[] = "</form>";
+    			}
+	    	} else {
+		    	$text[] = 'Deze stem is al een keer uitgebracht';
+    		}		
+	    } else {
+		    $text[] = 'Dit lijkt geen geldige stem';
+	    }
+    } else {
+	    $text[] = 'Volg de link uit de email';
+    }
 } else {
-	$text[] = 'Volg de link uit de email';
+    $text[] = 'De stemming is gesloten sinds '. time2str('%e %B %H:%M', $sluiting);
 }
 
 echo $HTMLHeader;
-echo implode("\n", $text);
+echo implode(NL, $text);
 echo $HTMLFooter;
 
 function validVotingCode($code) {
