@@ -166,7 +166,7 @@ if(in_array(1, $myGroups) OR in_array(7, $myGroups) OR in_array(8, $myGroups) OR
 		$wijkteam = getWijkteamLeden($wijk);		
 		if(array_key_exists($_SESSION['ID'], $wijkteam))	$hit[] = $wijk;
 	}
-	$BezoekLinks['pastoraal/index.php'. ((count($hit) == 1) ? '?wijk='. $hit[0] : '')] = 'Bezoekregistratie bezoeken';
+	$BezoekLinks['pastoraal/index.php'. ((count($hit) == 1) ? '?wijk='. $hit[0] : '')] = 'Registratie bezoeken';
 					
 	foreach($BezoekLinks as $link => $naam) {
 		$BezoekDeel[] = "<a href='$link' target='_blank'>$naam</a>";
