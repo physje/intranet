@@ -4,6 +4,10 @@ include_once('../include/config.php');
 include_once('../include/HTML_TopBottom.php');
 $db = connect_db();
 
+$cfgProgDir = '../auth/';
+include($cfgProgDir. "secure.php");
+
+
 $onderdelen[0] = 'Startdatum';
 $onderdelen[1] = 'Starttijd';
 $onderdelen[2] = 'Einddatum';
@@ -13,7 +17,7 @@ $onderdelen[4] = 'Onderwerp';
 $onderdelen[6] = 'Beschrijving';
 $onderdelen[10] = 'Dummy';
 
-if($_POST['screen'] == '1') {
+if(isset($_POST['screen']) AND $_POST['screen'] == '1') {
 	foreach($onderdelen as $id => $onderdeel) {
 		$k_id = array_search($id, $_POST['kolom']);
 		if(is_numeric($k_id)) {
@@ -31,10 +35,10 @@ if($_POST['screen'] == '1') {
 		$Beschrijving = $rij[$kolommen[6]];
 		
 		if($Startdatum == '') {
-			echo "Kan niet; Startdatum onbekend";
+			$text[] = "Kan niet; Startdatum onbekend";
 			exit;
 		} elseif($Onderwerp == '') {
-			echo "Kan niet; Onderwerp onbekend";
+			$text[] = "Kan niet; Onderwerp onbekend";
 			exit;
 		} else {
 			$sDatumArray = explode($_POST['datum'], $Startdatum);
@@ -60,11 +64,14 @@ if($_POST['screen'] == '1') {
 				$eind = mktime($eTijdArray[0], $eTijdArray[1], 0, $eDatumArray[1], $eDatumArray[0], $eDatumArray[2]);
 			}
 			
-			$query = "INSERT INTO $TableAgenda ($AgendaStart, $AgendaEind, $AgendaTitel, $AgendaDescr) VALUES ('$start', '$eind', '". urlencode($Onderwerp) ."', '". urlencode($Beschrijving) ."')";
-			mysqli_query($db, $query);
+			$query = "INSERT INTO $TableAgenda ($AgendaStart, $AgendaEind, $AgendaTitel, $AgendaDescr, $AgendaOwner) VALUES ('$start', '$eind', '". urlencode($Onderwerp) ."', '". urlencode($Beschrijving) ."', ". $_SESSION['ID'] .")";
+
+			if(mysqli_query($db, $query)) {
+				$text[] = $Onderwerp .' van '. time2str('%e %B %Y', $start) .' is opgeslagen<br>';
+			}
 		}		
 	}
-} elseif($_POST['screen'] == '0') {
+} elseif(isset($_POST['screen']) AND $_POST['screen'] == '0') {
 	$afspraken	= explode("\n", $_POST['afspraken']);
 	foreach($afspraken as $a_id => $afspraak) {
 		$velden = explode(";", $afspraak);
@@ -73,28 +80,30 @@ if($_POST['screen'] == '1') {
 	
 	$max = max($maxVelden);
 
-	echo "<form method='post'>\n";
-	echo "<input type='hidden' name='screen' value='1'>\n";
-	echo "<input type='hidden' name='datum' value='". $_POST['datum'] ."'>\n";
-	echo "<input type='hidden' name='tijd' value='". $_POST['tijd'] ."'>\n";
-	echo "<table border=1>\n";
-	echo "<tr>\n";		
+	$text[] = "Geef bovenaan elke kolom aan welke informatie van de afspraak er in die kolom staat.";
+	$text[] = "<p>";
+	$text[] = "<form method='post'>";
+	$text[] = "<input type='hidden' name='screen' value='1'>";
+	$text[] = "<input type='hidden' name='datum' value='". $_POST['datum'] ."'>";
+	$text[] = "<input type='hidden' name='tijd' value='". $_POST['tijd'] ."'>";
+	$text[] = "<table border=1>";
+	$text[] = "<tr>";		
 	
 	for($k=0 ; $k < $max ; $k++) {
-		echo "<td>\n";
-		echo "	<select name='kolom[$k]'>\n";
+		$text[] = "<td>";
+		$text[] = "	<select name='kolom[$k]'>";
 		
 		foreach($onderdelen as $id => $onderdeel) {
-			echo "		<option value='$id'>$onderdeel</option>\n";
+			$text[] = "		<option value='$id'>$onderdeel</option>";
 		}
 		
-		echo "	</select>\n";
-		echo "	</td>\n";	
+		$text[] = "	</select>";
+		$text[] = "	</td>";	
 	}
-	echo "</tr>\n";
+	$text[] = "</tr>";
 	
 	foreach($afspraken as $a_id => $afspraak) {
-		echo "<tr>\n";
+		$text[] = "<tr>";
 		
 		$velden = explode(";", $afspraak);
 		
@@ -104,52 +113,57 @@ if($_POST['screen'] == '1') {
 			} else {
 				$veld = $velden[$k];
 			}
-			echo "	<td>". (trim($veld) == '' ? '&nbsp;' : trim($veld)) ."</td>";
-			echo "	<input type='hidden' name='veld[$a_id][$k]' value='". trim($veld) ."'>\n";
+			$text[] = "	<td>". (trim($veld) == '' ? '&nbsp;' : trim($veld)) ."</td>";
+			$text[] = "	<input type='hidden' name='veld[$a_id][$k]' value='". trim($veld) ."'>";
 		}
 		
-		echo "</tr>\n";
+		$text[] = "</tr>";
 	}
-	echo "</table>\n";
-	echo "<p>\n";
-	echo "<input type='submit' value='Voeg toe'>\n";
-	echo "</form>\n";
+	$text[] = "</table>";
+	$text[] = "<p>";
+	$text[] = "<input type='submit' value='Voeg toe'>";
+	$text[] = "</form>";
 } else {
-	echo "Geef je afspraken in.<br>\n";
-	echo "Elke afspraak op een rij, en de verschillende onderdelen van de afspraak gescheiden door <b>;</b>\n";
-	echo "<p>\n";
-	echo "<form method='post'>\n";
-	echo "<input type='hidden' name='screen' value='0'>\n";
-	echo "<table border=1>\n";
-	echo "<tr>\n";
-	echo "	<td rowspan='3'>\n";
-	echo "	<textarea name='afspraken' rows='15' cols='75'>Voor je afspraken in....</textarea><br>\n";
-	echo "	</td>\n";
-	echo "	<td>Scheidingsteken datum :</td>";
-	echo "	<td><select name='datum'>\n";
-	echo "	<option value='-'>-</option>\n";
-	echo "	<option value='/'>/</option>\n";
-	echo "	<option value='_'>_</option>\n";
-	echo "	<option value='.'>.</option>\n";
-	echo "	<option value=' '> </option>\n";
-	echo "</select></td>\n";
-	echo "</tr>\n";
-	echo "<tr>\n";
-	echo "	<td>Scheidingsteken tijd :</td>";
-	echo "	<td><select name='tijd'>\n";
-	echo "	<option value=':'>:</option>\n";
-	echo "	<option value='.'>.</option>\n";
-	echo "</select></td>\n";
-	echo "<tr>\n";
-	echo "	<td colspan='2'>&nbsp;</td>\n";
-	echo "</tr>\n";	
-	echo "</tr>\n";
-	echo "<tr>\n";
-	echo "	<td colspan='3'><input type='submit' value='Controleer afspraken'></td>\n";
-	echo "</tr>\n";
-	echo "</table>\n";
-	echo "</form>\n";
+	$text[] = "Geef je afspraken in.<br>";
+	$text[] = "Elke afspraak op een rij, en de verschillende onderdelen van de afspraak (datum, tijd, onderwerp, etc.) gescheiden door <b>;</b>";
+	$text[] = "<p>";
+	$text[] = "<form method='post'>";
+	$text[] = "<input type='hidden' name='screen' value='0'>";
+	$text[] = "<table border=1>";
+	$text[] = "<tr>";
+	$text[] = "	<td rowspan='3'>";
+	$text[] = "	<textarea name='afspraken' rows='15' cols='75'>Voor je afspraken in....</textarea><br>";
+	$text[] = "	</td>";
+	$text[] = "	<td>Scheidingsteken datum :</td>";
+	$text[] = "	<td><select name='datum'>";
+	$text[] = "	<option value='-'>-</option>";
+	$text[] = "	<option value='/'>/</option>";
+	$text[] = "	<option value='_'>_</option>";
+	$text[] = "	<option value='.'>.</option>";
+	$text[] = "	<option value=' '> </option>";
+	$text[] = "</select></td>";
+	$text[] = "</tr>";
+	$text[] = "<tr>";
+	$text[] = "	<td>Scheidingsteken tijd :</td>";
+	$text[] = "	<td><select name='tijd'>";
+	$text[] = "	<option value=':'>:</option>";
+	$text[] = "	<option value='.'>.</option>";
+	$text[] = "</select></td>";
+	$text[] = "<tr>";
+	$text[] = "	<td colspan='2'>&nbsp;</td>";
+	$text[] = "</tr>";	
+	$text[] = "</tr>";
+	$text[] = "<tr>";
+	$text[] = "	<td colspan='3'><input type='submit' value='Controleer afspraken'></td>";
+	$text[] = "</tr>";
+	$text[] = "</table>";
+	$text[] = "</form>";
 }
+
+echo $HTMLHeader;
+echo implode("\n", $text);
+echo $HTMLFooter;
+
 
 function guessDate($string, $scheiding) {	
 	$string = trim($string);

@@ -2,15 +2,9 @@
 include_once('../include/functions.php');
 include_once('../include/config.php');
 include_once('../include/HTML_TopBottom.php');
-include_once('../include/HTML_HeaderFooter.php');
+include_once('shared.php');
 
 $db = connect_db();
-
-$opties[1] = 'Ja, ik sta achter de voorgenomen beroeping van Ds. Reinier Kramer';
-$opties[0] = 'Nee, ik sta niet achter de voorgenomen beroeping van Ds. Reinier Kramer';
-$opties[2] = 'Ik stem blanco';
-
-$sluiting = mktime(18, 0, 0, 10, 12, 2022);
 
 if(time() < $sluiting) {
     if(isset($_REQUEST['token'])) {
@@ -43,10 +37,10 @@ if(time() < $sluiting) {
 		    	$text[] = 'Deze stem is al een keer uitgebracht';
     		}		
 	    } else {
-		    $text[] = 'Dit lijkt geen geldige stem';
+		    $text[] = 'Dit is geen geldige stem-link';
 	    }
     } else {
-	    $text[] = 'Volg de link uit de email';
+	    $text[] = 'Dit is geen stem-link';
     }
 } else {
     $text[] = 'De stemming is gesloten sinds '. time2str('%e %B %H:%M', $sluiting);
@@ -55,31 +49,5 @@ if(time() < $sluiting) {
 echo $HTMLHeader;
 echo implode(NL, $text);
 echo $HTMLFooter;
-
-function validVotingCode($code) {
-	global $db;
-	
-	$sql = "SELECT * FROM `votingcodes` WHERE `votingtoken` LIKE '$code'";
-	$result = mysqli_query($db, $sql);
-	
-	if(mysqli_num_rows($result) == 0) {
-		return false;
-	} else {
-		return true;
-	}
-}
-
-function uniqueVotingCode($code) {
-	global $db;
-	
-	$sql = "SELECT * FROM `votingcodes` WHERE `votingtoken` LIKE '$code' AND `time` > 0";
-	$result = mysqli_query($db, $sql);
-	
-	if(mysqli_num_rows($result) == 0) {
-		return true;
-	} else {
-		return false;
-	}
-}
 
 ?>

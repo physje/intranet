@@ -214,9 +214,11 @@ if(isset($_POST['remove'])) {
 		}
 		
 		$text[] = "<p>";
-		$text[] = "<a href='?new'>Voeg nieuwe afspraak toe</a>";
+		$text[] = "<a href='?new'>Voeg 1 nieuwe afspraak toe</a> | <a href='insert.php'>Voeg meerdere afspraken in 1 keer toe</a>";
 	} else {		
-		$text[] = "Er zijn nog geen recente afspraken door jou ingevoerd. Klik <a href='?new'>hier</a> om (weer) je eerste afspraak toe te voegen. Afspraken die je hier invoert komen automatisch in de Scipio-agenda te staan";
+		$text[] = "Er zijn nog geen recente afspraken door jou ingevoerd. Klik <a href='?new'>hier</a> om (weer) je eerste afspraak toe te voegen.<br>";
+		$text[] = "Wil je in een keer meerdere afspraken inladen, klik dan <a href='insert.php'>hier</a>.<br>";
+		$text[] = "Afspraken die je hier invoert komen automatisch in de Scipio-agenda te staan<br>";
 	}
 }
 
