@@ -192,7 +192,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 			# Andere variabelen
 			if($oldData['huisletter'] != $velden[$UserHuisletter])								toLog('info', '', $element->regnr, 'Wijziging Scipio huisletter: '. $oldData['huisletter'] .' -> '. $velden[$UserHuisletter]);
 			if($oldData['toevoeging'] != $velden[$UserToevoeging])								toLog('info', '', $element->regnr, 'Wijziging Scipio toevoeging: '. $oldData['toevoeging'] .' -> '. $velden[$UserToevoeging]);
-			if($oldData['burgelijk'] != $velden[$UserBurgelijk])									toLog('info', '', $element->regnr, 'Wijziging Scipio burgerlijk: '. $oldData['burgerlijk'] .' -> '. $velden[$UserBurgelijk]);			
+			if($oldData['burgelijk'] != $velden[$UserBurgelijk])									toLog('info', '', $element->regnr, 'Wijziging Scipio burgerlijk: '. $oldData['burgelijk'] .' -> '. $velden[$UserBurgelijk]);			
 			if($oldData['belijdenis'] != $velden[$UserBelijdenis])								toLog('info', '', $element->regnr, 'Wijziging Scipio belijdenis: '. $oldData['belijdenis'] .' -> '. $velden[$UserBelijdenis]);
 			if(addslashes($oldData['achternaam']) != $velden[$UserAchternaam])		toLog('info', '', $element->regnr, 'Wijziging Scipio achternaam: '. $oldData['achternaam'] .' -> '. $velden[$UserAchternaam]);
 			if(addslashes($oldData['meisjesnaam']) != $velden[$UserMeisjesnaam])	toLog('info', '', $element->regnr, 'Wijziging Scipio meisjesnaam: '. $oldData['meisjesnaam'] .' -> '. $velden[$UserMeisjesnaam]);
@@ -267,10 +267,11 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 	# Bijvoorbeeld omdat mensen vanuit AVG niet meer gevonden willen worden
 	$sql_delete = "DELETE FROM $TableUsers WHERE $UsersLastSeen < ". mktime(date('H')-25);
 	$result_delete = mysqli_query($db, $sql_delete);	
-	if(!$result_delete) {
-		toLog('error', '', 'Verwijderen van oudleden : '. $sql_delete);
-	} elseif(mysqli_num_rows($result_delete) > 0) {
+	
+	if(mysqli_num_rows($result_delete) > 0) {
 		toLog('info', '', 'Oudleden verwijderd');		
+	} elseif(!$result_delete) {
+		toLog('error', '', 'Verwijderen van oudleden : '. $sql_delete);
 	}
 		
 	if(count($mailBlockNew) > 0 OR count($mailBlockChange) > 0) {
