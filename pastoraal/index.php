@@ -70,7 +70,7 @@ if(isset($_REQUEST['wijk'])) {
 			$text[] = "</tr>";
 			$text[] = "<tr>";
 			$text[] = "	<td valign='top'>Aantekening</td>";
-			$text[] = "	<td><textarea name='aantekening'></textarea><br><small>Dit is voor het hele wijkteam zichtbaar</small></td>";
+			$text[] = "	<td><textarea name='aantekening'></textarea><br><small>Geen privacygevoelige informatie invullen</small></td>";
 			$text[] = "</tr>";
 			#$text[] = "<tr>";
 			#$text[] = "	<td valign='top'>Zichtbaar voor</td>";
