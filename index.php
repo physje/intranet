@@ -167,6 +167,7 @@ if(in_array(1, $myGroups) OR in_array(7, $myGroups) OR in_array(8, $myGroups) OR
 		if(array_key_exists($_SESSION['ID'], $wijkteam))	$hit[] = $wijk;
 	}
 	$BezoekLinks['pastoraal/index.php'. ((count($hit) == 1) ? '?wijk='. $hit[0] : '')] = 'Registratie bezoeken';
+	$BezoekLinks['../extern/Korte_handleiding_pastoraal_bezoek_systeem.pdf'] = 'Handleiding';
 					
 	foreach($BezoekLinks as $link => $naam) {
 		$BezoekDeel[] = "<a href='$link' target='_blank'>$naam</a>";
@@ -176,6 +177,7 @@ if(in_array(1, $myGroups) OR in_array(7, $myGroups) OR in_array(8, $myGroups) OR
 }
 
 
+/*
 # Beroepingscommissie
 if(in_array(1, $myGroups) OR in_array(48, $myGroups)) {
 	$BeroepingsDeel[] = "<b>Beroepingscommissie</b>";
@@ -188,7 +190,7 @@ if(in_array(1, $myGroups) OR in_array(48, $myGroups)) {
 	
 	$blockArray[] = implode("<br>".NL, $BeroepingsDeel);
 }
-
+*/
 
 
 # Gegevens wijzigen-deel
