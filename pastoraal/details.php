@@ -15,9 +15,21 @@ if(isset($_REQUEST['ID'])) {
 	$wijk			= $data['wijk'];
 	$wijkteam = getWijkteamLeden($wijk);
 	$pastor		= getPastor($_REQUEST['ID']);
+		
+	$inWijkteam = false;	
+	
+	if(array_key_exists($_SESSION['ID'], $wijkteam)) {
+		$rol = $wijkteam[$_SESSION['ID']];
+		$inWijkteam = true;		
+	}
+	
+	if(in_array(49, getMyGroups($_SESSION['ID']))) {	
+		$inWijkteam = true;
+		$rol = 1;
+	}
 	
 	# Zit je in het wijkteam, dan mag je verder
-	if(array_key_exists($_SESSION['ID'], $wijkteam) OR $_SESSION['ID'] == $pastor) {		
+	if(($inWijkteam AND $rol <> 3 AND $rol <> 6) OR $_SESSION['ID'] == $pastor) {		
 		$bezoeken = getPastoraleBezoeken($_REQUEST['ID'], $_SESSION['ID']);
 		
 		if(count($bezoeken) > 0) {

@@ -155,7 +155,8 @@ if(in_array(1, $myGroups) OR in_array(43, $myGroups) OR in_array(44, $myGroups))
 # 7 = Ouderlingen
 # 9 = Diakenen
 # 34 = Predikanten
-if(in_array(1, $myGroups) OR in_array(7, $myGroups) OR in_array(8, $myGroups) OR in_array(34, $myGroups)) {
+# 49 = Pastoraat super-user
+if(in_array(1, $myGroups) OR in_array(7, $myGroups) OR in_array(8, $myGroups) OR in_array(34, $myGroups) OR in_array(49, $myGroups)) {
 	$BezoekDeel[] = "<b>Bezoekregistratie</b>";
 	
 	# Doorloop alle wijkteams
@@ -166,7 +167,12 @@ if(in_array(1, $myGroups) OR in_array(7, $myGroups) OR in_array(8, $myGroups) OR
 		$wijkteam = getWijkteamLeden($wijk);		
 		if(array_key_exists($_SESSION['ID'], $wijkteam))	$hit[] = $wijk;
 	}
-	$BezoekLinks['pastoraal/index.php'. ((count($hit) == 1) ? '?wijk='. $hit[0] : '')] = 'Registratie bezoeken';
+	$BezoekLinks['pastoraal/index.php'. ((count($hit) == 1) ? '?wijk='. $hit[0] : '')] = 'Registratie bezoeken'. ((count($hit) == 1) ? ' Wijk '. $hit[0] : '');
+	
+	if(in_array(49, $myGroups)) {
+		$BezoekLinks['pastoraal/index.php'] = 'Registratie alle wijken';
+	}
+	
 	$BezoekLinks['extern/Korte_handleiding_pastoraal_bezoek_systeem.pdf'] = 'Handleiding';
 					
 	foreach($BezoekLinks as $link => $naam) {
