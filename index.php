@@ -156,7 +156,8 @@ if(in_array(1, $myGroups) OR in_array(43, $myGroups) OR in_array(44, $myGroups))
 # 9 = Diakenen
 # 34 = Predikanten
 # 49 = Pastoraat super-user
-if(in_array(1, $myGroups) OR in_array(7, $myGroups) OR in_array(8, $myGroups) OR in_array(34, $myGroups) OR in_array(49, $myGroups)) {
+# 50 = Pastoraal bezoekers
+if(in_array(1, $myGroups) OR in_array(7, $myGroups) OR in_array(8, $myGroups) OR in_array(34, $myGroups) OR in_array(49, $myGroups) OR in_array(50, $myGroups)) {
 	$BezoekDeel[] = "<b>Bezoekregistratie</b>";
 	
 	# Doorloop alle wijkteams
