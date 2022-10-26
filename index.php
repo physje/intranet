@@ -168,10 +168,10 @@ if(in_array(1, $myGroups) OR in_array(7, $myGroups) OR in_array(8, $myGroups) OR
 		$wijkteam = getWijkteamLeden($wijk);		
 		if(array_key_exists($_SESSION['ID'], $wijkteam))	$hit[] = $wijk;
 	}
-	$BezoekLinks['pastoraal/index.php'. ((count($hit) == 1) ? '?wijk='. $hit[0] : '')] = 'Registratie bezoeken'. ((count($hit) == 1) ? ' Wijk '. $hit[0] : '');
+	$BezoekLinks['pastoraat/index.php'. ((count($hit) == 1) ? '?wijk='. $hit[0] : '')] = 'Registratie bezoeken'. ((count($hit) == 1) ? ' wijk '. $hit[0] : '');
 	
 	if(in_array(49, $myGroups)) {
-		$BezoekLinks['pastoraal/index.php'] = 'Registratie alle wijken';
+		$BezoekLinks['pastoraat/index.php'] = 'Registratie alle wijken';
 	}
 	
 	$BezoekLinks['extern/Korte_handleiding_pastoraal_bezoek_systeem.pdf'] = 'Handleiding';
