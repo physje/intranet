@@ -92,8 +92,10 @@ if(isset($_REQUEST['wijk'])) {
 				$sql = "INSERT INTO $TablePastoraat ($PastoraatIndiener, $PastoraatTijdstip, $PastoraatLid, $PastoraatType, $PastoraatLocatie, $PastoraatZichtOud, $PastoraatZichtPred, $PastoraatZichtPas, $PastoraatNote) VALUES (". $_SESSION['ID'] .", ". mktime(12,12,0,$_POST['maand'],$_POST['dag'],$_POST['jaar']) .", ". $_POST['lid'] .", ". $_POST['type'] .", ". $_POST['locatie'] .", '". (isset($_POST['ouderling']) ? 1 : 0) ."', '". (isset($_POST['predikant']) ? 1 : 0) ."', '". (isset($_POST['bezoeker']) ? 1 : 0) ."', '". urlencode(str_rot13($_POST['aantekening'])) ."')";
 				if(mysqli_query($db, $sql)) {
 					$text[] = "Opgeslagen<br>";
+					toLog('info', $_SESSION['ID'], $_POST['lid'], 'Pastoraal bezoek op '. $_POST['dag'] .'-'. $_POST['maand'] .'-'. $_POST['jaar'] .' toegevoegd');
 				} else {
 					$text[] = "Probelemen met opslaan<br>";
+					toLog('error', $_SESSION['ID'], $_POST['lid'], 'Problemen met opslaan pastoraal bezoek op '. $_POST['dag'] .'-'. $_POST['maand'] .'-'. $_POST['jaar']);
 				}
 			}
 			

@@ -37,6 +37,8 @@ if(isset($_REQUEST['wijk'])) {
 				}
 			}
 			
+			toLog('info', $_SESSION['ID'], '', 'Verdeling ouderlingen/pastoraal bezoekers wijk '. $wijk .' aangepast');
+			
 			$text[] = "<b>Wijzigingen opgeslagen</b><br><br>Je kan dit venster sluiten om terug te gaan naar het wijk-overzicht.<p>&nbsp;</p>";
 		}
 

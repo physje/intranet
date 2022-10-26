@@ -19,16 +19,18 @@ if(isset($_REQUEST['id'])) {
 			$sql .= "$PastoraatTijdstip = ". mktime(12,12,0,$_POST['maand'],$_POST['dag'],$_POST['jaar']) .", ";
 			$sql .= "$PastoraatType = ". $_POST['type'] .", ";
 			$sql .= "$PastoraatLocatie = ". $_POST['locatie'] .", ";
-			$sql .= "$PastoraatZichtOud = '". (isset($_POST['ouderling']) ? 1 : 0) ."', ";
-			$sql .= "$PastoraatZichtPred = '". (isset($_POST['predikant']) ? 1 : 0) ."', ";
-			$sql .= "$PastoraatZichtPas = '". (isset($_POST['bezoeker']) ? 1 : 0) ."', ";
+			#$sql .= "$PastoraatZichtOud = '". (isset($_POST['ouderling']) ? 1 : 0) ."', ";
+			#$sql .= "$PastoraatZichtPred = '". (isset($_POST['predikant']) ? 1 : 0) ."', ";
+			#$sql .= "$PastoraatZichtPas = '". (isset($_POST['bezoeker']) ? 1 : 0) ."', ";
 			$sql .= "$PastoraatNote = '". urlencode(str_rot13($_POST['aantekening'])) ."' ";
 			$sql .= "WHERE $PastoraatID = ". $_POST['id'];
 						
 			if(mysqli_query($db, $sql)) {
 				$text[] = "Opgeslagen<br>";
+				toLog('info', $_SESSION['ID'], $_POST['lid'], 'Pastoraal bezoek ['. $_POST['id'] .'] van '. $_POST['dag'] .'-'. $_POST['maand'] .'-'. $_POST['jaar'] .' gewijzigd');
 			} else {
 				$text[] = "Probelemen met opslaan<br>";
+				toLog('error', $_SESSION['ID'], $_POST['lid'], 'Problemen met wijzigen pastoraal bezoek ['. $_POST['id'] .'] van '. $_POST['dag'] .'-'. $_POST['maand'] .'-'. $_POST['jaar']);
 			}						
 		} else {
 			$dag		= getParam('dag', date("d", $details['datum']));
@@ -38,6 +40,7 @@ if(isset($_REQUEST['id'])) {
 			$text[] = "<h1>". makeName($details['lid'], 5) ."</h1>";
 			$text[] = "<form method='post'>";
 			$text[] = "<input type='hidden' name='id' value='". $_REQUEST['id'] ."'>";
+			$text[] = "<input type='hidden' name='lid' value='". $details['lid'] ."'>";
 			$text[] = "<table>";
 			$text[] = "<tr>";	
 			$text[] = "	<td>Datum bezoek</td>";
@@ -70,13 +73,13 @@ if(isset($_REQUEST['id'])) {
 			$text[] = "	<td valign='top'>Aantekening</td>";
 			$text[] = "	<td><textarea name='aantekening'>". str_rot13(urldecode($details['note'])) ."</textarea></td>";
 			$text[] = "</tr>";
-			$text[] = "<tr>";
-			$text[] = "	<td valign='top'>Zichtbaar voor</td>";
-			$text[] = "	<td>";
-			$text[] = "<input type='checkbox' name='predikant' value='1'". ($details['predikant'] == 1 ? ' checked' : '') ."> Predikant<br>";
-			$text[] = "<input type='checkbox' name='ouderling' value='1'". ($details['ouderling'] == 1 ? ' checked' : '') ."> Ouderling<br>";
-			$text[] = "<input type='checkbox' name='bezoeker' value='1'". ($details['bezoeker'] == 1 ? ' checked' : '') ."> Pastoraal bezoekers</td>";
-			$text[] = "</tr>";	
+			#$text[] = "<tr>";
+			#$text[] = "	<td valign='top'>Zichtbaar voor</td>";
+			#$text[] = "	<td>";
+			#$text[] = "<input type='checkbox' name='predikant' value='1'". ($details['predikant'] == 1 ? ' checked' : '') ."> Predikant<br>";
+			#$text[] = "<input type='checkbox' name='ouderling' value='1'". ($details['ouderling'] == 1 ? ' checked' : '') ."> Ouderling<br>";
+			#$text[] = "<input type='checkbox' name='bezoeker' value='1'". ($details['bezoeker'] == 1 ? ' checked' : '') ."> Pastoraal bezoekers</td>";
+			#$text[] = "</tr>";	
 			$text[] = "<tr>";
 			$text[] = "	<td colspan='2'>&nbsp;</td>";
 			$text[] = "</tr>";
