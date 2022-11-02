@@ -7,7 +7,7 @@ $fileNameAL		= 'adressenlijst.csv';
 $fileNameLPH	= 'laPosta_hoofd.csv';
 $fileNameLPP	= 'laPosta_partner.csv';
 $fileNameSQL	= 'table.sql';
-$fileNameZip	= 'stemming_'. date('Y_m_d') .'.zip';
+$fileNameZip	= 'bestanden_stemming_'. date('Y_m_d') .'.zip';
 
 # Ga op zoek naar alle personen met een mailadres
 # Mailadres is daarbij alles met een @-teken erin

@@ -285,11 +285,15 @@ $adminDeel = $adminLinks = array();
 $adminDeel[] = "<b>Declaraties</b>";
 
 $adminLinks['declaratie/'] = 'Dien declaratie in';
+
+if(in_array(1, $myGroups) OR in_array(38, $myGroups)) {
+	$adminLinks['declaratie/overzichtDeclaraties.php'] = 'Status declaraties';
+}
+
 if(in_array(1, $myGroups)) {
 	$adminLinks['declaratie/relatieOverview.php'] = 'Toon alle relaties';
 	$adminLinks['declaratie/mutatieOverview.php'] = 'Toon alle mutaties';
-	//$adminLinks['declaratie/syncRelaties.php'] = 'Synchroniseer relaties naar lokale database';
-	$adminLinks['declaratie/overzichtDeclaraties.php'] = 'Status declaraties';
+	//$adminLinks['declaratie/syncRelaties.php'] = 'Synchroniseer relaties naar lokale database';	
 	$adminLinks['declaratie/editRelatie.php'] = 'Wijzig relaties';
 	$adminLinks['https://secure.e-boekhouden.nl/handleiding/Documentatie_soap.pdf'] = 'SOAP documenatie PDF';
 }

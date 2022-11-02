@@ -6,7 +6,7 @@ include_once('../include/config_mails.php');
 $db = connect_db();
 
 $cfgProgDir = '../auth/';
-$requiredUserGroups = array(1);
+$requiredUserGroups = array(1, 38);
 include($cfgProgDir. "secure.php");
 
 if(isset($_REQUEST['key'])) {	
