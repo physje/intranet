@@ -777,7 +777,8 @@ function getWoonAdres($id) {
 
 function sendMail_new($parameter) {
 	global $ScriptURL, $ScriptMailAdress, $ScriptTitle, $SubjectPrefix;
-	global $MailHeader, $MailFooter;
+	#global $MailHeader, $MailFooter;
+	global $newMailHeader, $newMailFooter;
 	global $SMTPHost, $SMTPPort, $SMTPSSL, $SMTPUsername, $SMTPPassword;
 	global $db, $TableMail, $MailID, $MailSuccess, $MailTime, $MailMail;
 	
@@ -981,7 +982,8 @@ function sendMail_new($parameter) {
 	}
 		
 	# Bericht opstellen
-	$HTMLMail = $MailHeader.$bericht.$MailFooter;
+	#$HTMLMail = $MailHeader.$bericht.$MailFooter;	
+	$HTMLMail = $newMailHeader.$bericht.$newMailFooter;
 	
 	# Door de variabele testen mee te geven wordt er geen mail verstuurd
 	# maar wordt de mail alleen op het scherm getoond
@@ -1017,8 +1019,8 @@ function sendMail_new($parameter) {
 			return true;
 		}
 	} else {
-		foreach($parameter as $key => $value) echo $key .' -> '. $value .'<br>';
-		# echo $HTMLMail;		
+		#foreach($parameter as $key => $value) echo $key .' -> '. $value .'<br>';
+		echo $HTMLMail;		
 		return true;
 	}	
 }

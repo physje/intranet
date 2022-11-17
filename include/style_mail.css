@@ -1,0 +1,75 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+	background-color:#F2F2F2;
+	font-family: Arial, Helvetica, sans-serif;
+	color:#34383D;
+}
+
+a	{
+	color: #2B153B;
+	text-decoration: underline;
+}
+	
+a:hover	{
+	color: #8C1974;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+.middenstuk {
+	width: 700px;
+	background-color:#ffffff;
+  margin: auto;  
+}
+
+.bredebalk {
+	background-color:#8C1974;
+	height:20px;	
+}
+
+.dunnebalk {
+	background-color: #2B153B;
+	height: 1px;
+	margin-bottom: 20px
+}
+
+.content_kolom {
+	width: 95%;								/* 95% breed en marges automatisch laten verdelen */
+	margin: auto;
+  margin-bottom:20px				/* marge tussen middenstuk met tekst en dunne balk onderaan */
+}
+
+.content {
+	padding: 10px;						/* marge binnen het blok */
+	margin-bottom: 15px;			/* ruimte tussen de blokken */
+}
+
+.top_logo {
+	margin-top: 10px;
+	margin-left: 50px;			/* Inspringen tov de dunne balk */
+	overflow: auto;					/* Pas box automatisch aan, aan formaat logo */
+	height: auto;						/* Pas hoogte automatisch aan, aan formaat logo */
+}
+
+img.logo {
+	float: left;
+  width: 600px;
+  height: auto;
+}
+
+
+/* Bij nog kleinere schermen de witte balken links en rechts verwijderen */	
+/* En het middenstuk 100% breed maken */
+/* En het logo iets kleiner maken*/	
+@media screen and (max-width:700px) {	
+	.middenstuk {
+		width: 100%;
+	}	
+
+	img.logo {
+		width: 400px;
+	}
+}

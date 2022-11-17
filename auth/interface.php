@@ -24,14 +24,6 @@ $_SESSION['logged'] = false;
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <title><?php echo $strLoginInterface; ?></title>
-<?php
-
-//if($_SERVER['HTTPS'] == '') {
-//	echo "<meta http-equiv='refresh' content='0; URL=$ScriptSever".$_SERVER['REQUEST_URI']."'>";
-//}
-
-?>
-
 <SCRIPT LANGUAGE="JavaScript">
 <!--
 //  ------ check form ------
@@ -64,7 +56,7 @@ function checkData() {
 //-->
 </SCRIPT>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title><?php echo $strLoginInterface; ?></title>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
 <style>
 body{font-family:arial;background:#FFFFFF;text-align:center;}
 #error{margin:1em auto;background:#FA4956;color:#FFFFFF;border:8px solid #FA4956;font-weight:bold;width:500px;text-align:center;position:relative;}

@@ -55,4 +55,28 @@ $MailFooter	.= '<br /><br /><br /><br /><br /><br />'.NL;
 $MailFooter	.= '</body>'.NL;
 $MailFooter	.= '</html>'.NL;
 
+
+
+$newMailHeader  = "<html>".NL;
+$newMailHeader .= "<head>".NL;
+$newMailHeader .= "		<link rel='stylesheet' type='text/css' href='". $ScriptURL ."include/style_mail.css?". time()."'>".NL;
+$newMailHeader .= "		<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>".NL;
+$newMailHeader .= "		<meta name='viewport' content='width=device-width, initial-scale=1'>".NL;
+$newMailHeader .= "	</head>".NL;
+$newMailHeader .= "	<body>".NL;
+$newMailHeader .= "	<div class='middenstuk'>".NL;
+$newMailHeader .= "		<div class='bredebalk'>&nbsp;</div>".NL;
+$newMailHeader .= "		<div class='content_kolom'>".NL;
+$newMailHeader .= "			<div class='top_logo'><a href='". $ScriptURL ."'><img class='logo' src='". $ScriptURL ."images/logoKoningsKerk.png'></a></div>".NL;
+$newMailHeader .= "			<div class='dunnebalk'>&nbsp;</div>".NL;
+$newMailHeader .= "			<div class='content'>".NL;
+
+$newMailFooter = "			</div>".NL;
+$newMailFooter .= "		<div class='dunnebalk'>&nbsp;</div>".NL;
+$newMailFooter .= "	</div>".NL;
+$newMailFooter .= "	<div class='bredebalk'>&nbsp;</div>".NL;
+$newMailFooter .= "</body>".NL;
+$newMailFooter .= "</html>".NL;
+
+
 ?>
