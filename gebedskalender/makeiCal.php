@@ -45,10 +45,11 @@ if($row = mysqli_fetch_array($result)) {
 		
 		if(strlen($gebedspunt) > 65) {
 			$ics[] = "SUMMARY:". substr($gebedspunt, 0, 60) .'...';
-			$ics[] = "DESCRIPTION:". $gebedspunt;
 		} else {
 			$ics[] = "SUMMARY:". $gebedspunt;
 		}
+		
+		$ics[] = "DESCRIPTION:". $gebedspunt . '\n\nWe nodigen u uit gebedspunten aan te aandragen!\nGraag voor de 15e van de maand  mailen naar gebedskalender@koningskerkdeventer.nl';
 		$ics[] = "STATUS:CONFIRMED";	
 		$ics[] = "TRANSP:TRANSPARENT";
 		$ics[] = "END:VEVENT";
