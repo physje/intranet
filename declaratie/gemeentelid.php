@@ -152,7 +152,7 @@ if(isset($_POST['correct'])) {
 		$mailCluco[] = "Details zijn zichtbaar in de bijlage of <a href='". $ScriptURL ."declaratie/cluco.php?key=$uniqueKey'>online</a> (inloggen vereist)<br>";
   	
 		$param_cluco['to'][]					= array($ClucoAddress, $ClucoName);
-		$param_cluco['subject'] 			= "Declaratie ". makeName($_SESSION['ID'], 5) ." voor cluster ". $clusters[$cluster];	
+		$param_cluco['subject'] 			= "Declaratie ". makeName($_SESSION['ID'], 5) ." voor ". $clusters[$cluster];	
 		$param_cluco['message'] 			= implode("\n", $mailCluco);
 		
 		foreach($toDatabase['bijlage'] as $key => $bestand) {
@@ -354,7 +354,7 @@ if(isset($_POST['correct'])) {
 		$page[] = "	<option value=''>Maak een keuze</option>";
 		
 		foreach($clusters as $id => $naam) {
-			$page[] = "	<option value='$id'". ($id == $cluster ? ' selected' : '').">Cluster $naam</option>";
+			$page[] = "	<option value='$id'". ($id == $cluster ? ' selected' : '').">$naam</option>";
 			//$page[] = "	<option value='$id'". ($id == $cluster ? ' selected' : '').($id != 5 ? ' disabled' : '').">Cluster $naam</option>";
 		}
 		
