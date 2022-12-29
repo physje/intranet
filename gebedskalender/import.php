@@ -8,7 +8,7 @@ $cfgProgDir = '../auth/';
 $requiredUserGroups = array(1, 36);
 include($cfgProgDir. "secure.php");
 
-if($_POST['text'] != '') {	
+if(isset($_POST['text']) AND $_POST['text'] != '') {	
 	$regels = explode("\n", $_POST['text']);
 	
 	$maand = $_POST['maand'];
@@ -18,8 +18,11 @@ if($_POST['text'] != '') {
 		$delen = explode("|", $regel);
 		
 		if($regel != '') {
+			$sql_delete = "DELETE FROM $TablePunten WHERE $PuntenDatum like '". $jaar.'-'.$maand.'-'.$delen[0] ."'";
+			mysqli_query($db, $sql_delete);
+			
 			$sql = "INSERT INTO $TablePunten ($PuntenDatum, $PuntenPunt) VALUES ('". $jaar.'-'.$maand.'-'.$delen[0] ."', '". urlencode(trim($delen[1])) ."')";
-			mysqli_query($db, $sql);		
+			mysqli_query($db, $sql);
 		}
 	}
 	$blockLinks = "Punten zijn opgeslagen";
@@ -32,7 +35,7 @@ if($_POST['text'] != '') {
 	$blockLinks .= "Voer de gebedspunten in in het volgende formaat : <i>dag|gebedspunt</i><br>". NL;
 	$blockLinks .= "Per gebedspunt een regel, en voer <i>dag</i> in als een getal tussen 1 en 31.<br>". NL;
 	$blockLinks .= "Een gebedspunt voor vandaag zou je dus moeten invoeren als : ".date("j")."|gebedspunt<br>". NL;
-	$blockLinks .= "<textarea name='text' rows=35 cols=135>". $_POST['text'] ."</textarea><br>". NL;
+	$blockLinks .= "<textarea name='text' rows=35 cols=135>". getParam('text', '') ."</textarea><br>". NL;
 	$blockLinks .= "<select name='maand'>".NL;
 	foreach($maandArrayLang as $nr => $naam) {		
 		$blockLinks .= "<option value='$nr'". ($nr == date("n", $volgendeMaand) ? ' selected' : '') .">$naam</option>".NL;
@@ -43,21 +46,15 @@ if($_POST['text'] != '') {
 		$blockLinks .= "<option value='$j'". ($j == date("Y", $volgendeMaand) ? ' selected' : '') .">$j</option>".NL;		
 	}	
 	$blockLinks .= "</select><br>".NL;	
-	$blockLinks .= "<input type='submit' name='save' value='Opslaan'>". NL;
+	$blockLinks .= "<p class='after_table'><input type='submit' name='save' value='Opslaan'></p>". NL;
 	$blockLinks .= "</form>". NL;
 }
 
 # Pagina tonen
-echo $HTMLHeader;
-echo '<table border=0 width=100%>'.NL;
-echo '<tr>'.NL;
-echo '	<td valign="top" width="50">&nbsp;</td>'.NL;
-echo '	<td valign="top">'.NL;
-echo showBlock($blockLinks, 100);
-echo '	</td>'.NL;
-echo '	<td valign="top" width="50">&nbsp;</td>'.NL;
-echo '</tr>'.NL;
-echo '</table>'.NL;
-echo $HTMLFooter;
+echo showCSSHeader();
+echo '<div class="content_vert_kolom_full">'.NL;
+echo "<div class='content_block'>". $blockLinks ."</div>".NL;
+echo '</div> <!-- end \'content_vert_kolom_full\' -->'.NL;
+echo showCSSFooter();
 
 ?>

@@ -54,38 +54,34 @@ if($letter == '' AND $wijk == '') {
 	$letter = $achternaam[0];
 }
 
-echo $HTMLHeader;
-echo "<h1>Ledenlijst</h1>".NL;
-echo '<p>';
-
-echo 'Achternaam | ';
+$text[] = 'Achternaam | ';
 	
 foreach($letterArray as $key => $value) {
 	if($key > 0) {
-		echo ' | ';
+		$text[] = ' | ';
 	}
 	
 	if($value == $letter) {
-		echo $value;
+		$text[] = $value;
 	} else {
-		echo "<a href='?letter=$value'>$value</a>";
+		$text[] = "<a href='?letter=$value'>$value</a>";
 	}
 }
-echo '<br>';
-echo 'Wijk | ';
+$text[] = '<br>';
+$text[] = 'Wijk | ';
 
 foreach($wijkArray as $key => $value) {
 	if($key > 0) {
-		echo ' | ';
+		$text[] = ' | ';
 	}
 	
 	if($value == $wijk) {
-		echo $value;
+		$text[] = $value;
 	} else {
-		echo "<a href='?wijk=$value'>$value</a>";
+		$text[] = "<a href='?wijk=$value'>$value</a>";
 	}
 }
-echo '<p>';
+$text[] = '<p>';
 
 
 /*
@@ -109,10 +105,15 @@ if($letter != '') {
 $result = mysqli_query($db, $sql);
 if($row	= mysqli_fetch_array($result)) {
 	do {
-		echo "<a href='profiel.php?id=". $row[$UserID] ."'>". makeName($row[$UserID], 5)."</a><br>";
+		$text[] = "<a href='profiel.php?id=". $row[$UserID] ."'>". makeName($row[$UserID], 5)."</a><br>";
 	} while($row	= mysqli_fetch_array($result));
 }
 //}
 	
-echo $HTMLFooter;
+echo showCSSHeader();
+echo '<div class="content_vert_kolom_full">'.NL;
+echo '<h1>Ledenlijst</h1>'.NL;
+echo "<div class='content_block'>". implode(NL, $text) ."</div>".NL;
+echo '</div> <!-- end \'content_vert_kolom_full\' -->'.NL;
+echo showCSSFooter();
 ?>

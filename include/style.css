@@ -32,12 +32,12 @@ h2 {
 	font-style: italic;
 }
 
-td a	{
+a	{
 	color: #2B153B;
 	text-decoration: underline;
 }
 	
-td a:hover	{
+a:hover	{
 	color: #8C1974;
 	font-weight: bold;
 	text-decoration: none;
@@ -55,4 +55,124 @@ a.ontrokken {
 	color:red;
 	font-size:14px;
 	font-weight:bold;
+}
+
+/* Nieuwe toevoegingen vanwege responsive */
+
+* {
+  box-sizing: border-box;
+}
+
+/* Create three equal columns that float next to each other */
+.zijbalk {
+	float: left;
+  width: 10%;
+}
+
+.middenstuk {
+	background-color:#ffffff;
+  float: left;
+  width: 80%;
+}
+
+.bredebalk {
+	background-color:#8C1974;
+	height:20px;	
+}
+
+.dunnebalk {
+	background-color:#8C1974;
+	height:1px;
+	margin-bottom:20px
+}
+
+.content {
+	width: 95%;
+	margin: auto;	
+}
+
+.top_logo {
+	margin-top: 10px;
+	margin-left: 50px;			/* Inspringen tov de dunne balk */
+	overflow: auto;					/* Pas box automatisch aan, aan formaat logo */
+	height: auto;						/* Pas hoogte automatisch aan, aan formaat logo */
+}
+
+img.logo {
+	float: left;
+  width: 600px;
+  height: auto;
+}
+
+.content_kolommen {
+	width: 95%;								/* 95% breed en marges automatisch laten verdelen */
+	margin: auto;
+  column-count: 2;
+  column-gap: 1.5%;
+}
+
+.content_kolommen h1 {
+	color:#8C1974;
+	column-span: all;
+}
+
+.content_block {
+	border-color: #D2D2D2;
+	border-style: solid;
+	border-width: 1px;
+	border-radius: 5px;
+	padding: 10px;						/* marge binnen het blok */
+	margin-bottom: 15px;			/* ruimte tussen de blokken */
+	break-inside: avoid;			/* Zorg dat de blokken altijd in tact blijven */
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+#rooster_table {
+	width: 100%;
+	text-align: left;
+	vertical-align: top;
+}
+
+
+/* Bij schermen die iets kleiner zijn als eerste het aantal kolommen naar beneden bijstellen */
+@media screen and (max-width:1400px) {  
+  .content_kolommen {
+  	column-count: 2;
+  }
+}
+
+/* Bij nog kleinere schermen de witte balken links en rechts verwijderen */	
+/* En het middenstuk 100% breed maken */
+/* En het logo iets kleiner maken*/	
+@media screen and (max-width:1050px) {	
+	.zijbalk {
+	  display: none;
+	}
+	
+	.middenstuk {
+		width: 100%;
+	}	
+
+	img.logo {
+		width: 500px;
+	}
+}
+
+
+/* Bij nog kleinere schermen het aantal kolommen verminderen */
+/* En het logo iets kleiner maken*/	
+@media screen and (max-width:700px) {  
+  .content_kolommen {
+  	column-count: 1;
+  }  
+
+  img.logo {
+		width: 400px;
+	}
 }

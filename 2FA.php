@@ -119,8 +119,10 @@ if(get2FACode($_SESSION['ID']) != '') {
 	}
 }
 
-echo $HTMLHeader;
-echo implode(NL, $text);
-echo $HTMLFooter;
+echo showCSSHeader();
+echo '<div class="content_vert_kolom_full">'.NL;
+echo "<div class='content_block'>". implode(NL, $text) ."</div>".NL;
+echo '</div> <!-- end \'content_vert_kolom_full\' -->'.NL;
+echo showCSSFooter();
 
 ?>

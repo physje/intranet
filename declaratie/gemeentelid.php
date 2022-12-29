@@ -3,6 +3,7 @@ include_once('../include/functions.php');
 include_once('../include/EB_functions.php');
 include_once('../include/config.php');
 include_once('../include/config_mails.php');
+include_once('../include/HTML_HeaderFooter.php');
 $db = connect_db();
 
 $kmPrijs = 19; #in centen
@@ -327,12 +328,12 @@ if(isset($_POST['correct'])) {
 		$totaal = 0;
 		
 		$page[] = "<input type='hidden' name='page' value='2'>";
-		$page[] = "<table border=0>";
+		$page[] = "<table>";
 		
 		if($_POST['eigen'] == 'Nee') {
 			$page[] = "<tr>";
 			$page[] = "	<td valign='top' colspan='2'>Naar welk bedrijf of kerkelijke instellingen?</td>";	
-			$page[] = "	<td valign='top'><select name='EB_relatie'>";
+			$page[] = "	<td valign='top' colspan='2'><select name='EB_relatie'>";
 			$page[] = "	<option value=''>Selecteer bedrijf/instelling</option>";
 			
 			$relaties = eb_getRelaties();
@@ -434,7 +435,7 @@ if(isset($_POST['correct'])) {
 		foreach($overige as $key => $string) {
 			if($string != '' OR $first) {
 				$page[] = "	<tr>";
-				$page[] = "		<td colspan='3'><input type='text' name='overig[$key]' value='$string' size='57'></td>";			
+				$page[] = "		<td colspan='3'><input type='text' name='overig[$key]' value='$string'></td>";			
 				$page[] = "		<td colspan='1'>&euro;&nbsp;<input type='text' name='overig_price[$key]' value='". (isset($_POST['overig_price'][$key]) ? price2RightFormat($_POST['overig_price'][$key]) : '') ."' size='4'></td>";
 				$page[] = "	</tr>";
 			}
@@ -556,15 +557,11 @@ $page[] = "</form>";
 # Pagina tonen
 $pageTitle = 'Declaratie';
 include_once('../include/HTML_TopBottom.php');
-include_once('../include/HTML_HeaderFooter.php');
 
-echo $HTMLHeader;
-echo '<table border=0 width=100%>'.NL;
-echo '<tr>'.NL;
-echo '	<td valign="top" width="25%">&nbsp;</td>'.NL;
-echo '	<td valign="top">'. showBlock(implode("\n", $page), 100). '</td>'.NL;
-echo '	<td valign="top" width="25%">&nbsp;</td>'.NL;
-echo '</tr>'.NL;
-echo '</table>'.NL;
-echo $HTMLFooter;
+echo showCSSHeader(array('default', 'table_default'));
+echo '<div class="content_vert_kolom_full">'.NL;
+echo "<div class='content_block'>".NL. implode(NL, $page).NL."</div>".NL;
+echo '</div> <!-- end \'content_vert_kolom_full\' -->'.NL;
+echo showCSSFooter();
 
+?>

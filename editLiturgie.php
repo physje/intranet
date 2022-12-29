@@ -40,7 +40,8 @@ if(isset($_REQUEST['dienstID'])) {
         }
 
         # Sla de nieuwe liturgie op door op de save knop te drukken
-        $text[] = "<br><br><input type='submit' name='save' value='Opslaan'></form>";
+        $text[] = "<p class='after_table'><input type='submit' name='save' value='Opslaan'></p>";
+        $text[] = "</form>";
     }
 
 } else {
@@ -51,13 +52,15 @@ if(isset($_REQUEST['dienstID'])) {
     $text[] = "Klik op de 'edit' link achter de kerdienst waarvan de liturgie moet worden ingevoerd of aangepast.<br><br>";
     $text[] = "<form method='post' action='$_SERVER[PHP_SELF]'>";
     $text[] = "<input type='hidden' name='blokken' value='$aantalMaanden'>";
-    $text[] = "<table cellspacing='10'>";
+    $text[] = "<table>";
+		$text[] = "<thead>";
     $text[] = "<tr>";
-    $text[] = "	<td><b>Datum</b></td>";
-    $text[] = "	<td><b>Start</b></td>";
-    $text[] = "	<td><b>Bijzonderheid</b></td>";
-    $text[] = "	<td><b>Bijwerken</b></td>";
+    $text[] = "	<th>Datum</th>";
+    $text[] = "	<th>Start</th>";
+    $text[] = "	<th>Bijzonderheid</th>";
+    $text[] = "	<th>Bijwerken</th>";
     $text[] = "</tr>";
+    $text[] = "</thead>";
 
     foreach($diensten as $dienst) {
         $data = getKerkdienstDetails($dienst);
@@ -74,7 +77,10 @@ if(isset($_REQUEST['dienstID'])) {
     $text[] = "</form>";
 }
 
-echo $HTMLHeader;
-echo implode(NL, $text);
-echo $HTMLFooter;
+echo showCSSHeader(array('default', 'table_default'));
+echo '<div class="content_vert_kolom_full">'.NL;
+echo '<h1>Kerkdiensten</h1>'.NL;
+echo "<div class='content_block'>".NL. implode(NL, $text).NL."</div>".NL;
+echo '</div> <!-- end \'content_vert_kolom_full\' -->'.NL;
+echo showCSSFooter();
 ?>

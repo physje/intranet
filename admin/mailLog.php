@@ -28,14 +28,16 @@ $result = mysqli_query($db, $sql);
 if($row = mysqli_fetch_array($result)) {
 	$block[] = "<form method='post' action='$_SERVER[PHP_SELF]'>";
 	$block[] = "<input type='hidden' name='start' value='$start'>";
-	$block[] = "<table border=0>";
+	$block[] = "<table>";
+	$block[] = "<thead>";
 	$block[] = "<tr>";
-	$block[] = "	<td><b>Succes</b></td>";
-	$block[] = "	<td><b>Tijdstip</b></td>";
-	$block[] = "	<td><b>Ontvanger</b></td>";
-	$block[] = "	<td><b>Onderwerp</b></td>";
-	$block[] = "	<td>&nbsp;</td>";
+	$block[] = "	<th>Succes</th>";
+	$block[] = "	<th>Tijdstip</th>";
+	$block[] = "	<th>Ontvanger</th>";
+	$block[] = "	<th>Onderwerp</th>";
+	$block[] = "	<th>&nbsp;</th>";
 	$block[] = "</tr>";
+	$block[] = "</thead>";
 	
 	do {		
 		$param = json_decode(urldecode($row[$MailMail]), true);
@@ -114,6 +116,7 @@ if($row = mysqli_fetch_array($result)) {
 		}		
 	} while($row = mysqli_fetch_array($result));
 	
+	/*
 	$block[] = "<tr>";
 	$block[] = "	<td>&nbsp;</td>";
 	
@@ -125,13 +128,17 @@ if($row = mysqli_fetch_array($result)) {
 	
 	$block[] = "	<td>&nbsp;</td>";
 	$block[] = "	<td align='right'><input type='submit' name='volgende' value='Volgende'></td>";
-	$block[] = "</tr>";		
-	$block[] = "</table>";
+	$block[] = "</tr>";
+	*/	
+	$block[] = "</table>";	
+	$block[] = "<p class='after_table'>". ($start > 20 ? "<input type='submit' name='vorige' value='Vorige'>" : ''). "&nbsp;<input type='submit' name='volgende' value='Volgende'></p>";	
 	$block[] = "</form>";
 }
 
-echo $HTMLHeader;
-echo showBlock(implode(NL, $block), 100);
-echo $HTMLFooter;	
+echo showCSSHeader(array('default', 'table_default'));
+echo '<div class="content_vert_kolom_full">'.NL;
+echo "<div class='content_block'>".NL. implode(NL, $block).NL."</div>".NL;
+echo '</div> <!-- end \'content_vert_kolom_full\' -->'.NL;
+echo showCSSFooter();
 
 ?>

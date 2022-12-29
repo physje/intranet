@@ -7,6 +7,8 @@ $requiredUserGroups = array(1);
 $cfgProgDir = '../auth/';
 include($cfgProgDir. "secure.php");
 
+$i=0;
+
 $veld['MutatieNr']						= 'Nr';
 //$veld['Soort']				= 'Soort';
 $veld['Datum']	= 'Datum';
@@ -109,34 +111,42 @@ try {
 
   foreach ($Mutaties->cMutatieList as $Mutatie) {
   	if($Mutatie->Rekening == 2000 OR isset($showAllMutaties)) {
-  		$cel = array();
+  		$data = array();
+  		
+  		$data[] = "<tr>";
   		
   		// Mutatie-details uitpluizen
   		//$MutatieRegels = $Mutatie->MutatieRegels;
   		//$MutatieList = array($MutatieRegels->cMutatieListRegel);
   	
-  		foreach($veld as $key => $dummy) {  			
+  		foreach($veld as $key => $dummy) {
+  			$data[] = "<td>";
   			if($key == 'Datum') {
   				$tijdstip = strtotime($Mutatie->Datum);
-  				$cel[] = time2str('%e %b', $tijdstip);  			
+  				$data[] = time2str('%e %b', $tijdstip);  			
   			} else {
-  				$cel[] = $Mutatie-> $key;
+  				$data[] = $Mutatie-> $key;
   			}
+  			$data[] = "</td>";
   		}
   		  		
   		
   		foreach($subVeld as $key => $dummy) {
   			$string = $Mutatie->MutatieRegels->cMutatieListRegel->$key;
   			
+  			$data[] = "<td>";
   			if(($key=='BedragInvoer') OR ($key=='BedragInclBTW')) {
-  				$cel[] = formatPrice($string*100, true);
+  				$data[] = formatPrice($string*100, true);
   			} else {
-  				$cel[] = $string;
+  				$$data[] = $string;
   			}
+  			$data[] = "</td>";
   		}  		
   		
+  		$data[] = "</tr>";
+  		
   		$id = $tijdstip.$Mutatie->Boekstuk;
-  		$rij[$id] = "<tr>\n<td>". implode("</td>\n<td>", $cel) ."</td>\n</tr>";
+  		$rij[$id] = implode(NL, $data);
   	}
   }
 
@@ -148,35 +158,47 @@ try {
   echo $soapFault;
 }
 
-foreach($veld as $key => $dummy) {	
-	$kop[] = '<b>'.$dummy .'</b>';
-}
-
-foreach($subVeld as $key => $dummy) {
-	$kop[] = '<b>'.$dummy .'</b>';
-}
-
 ksort($rij);
 $reverseRij = array_reverse($rij);
 
 $page[] = '<table>';
-$page[] = "<tr>\n<td>". implode("</td>\n<td>", $kop) ."</td>\n</tr>";
+$page[] = '<thead>';
+$page[] = '<tr>';
+
+foreach($veld as $key => $dummy) {	
+	$page[] = "	<th>".$dummy ."</th>";
+}
+foreach($subVeld as $key => $dummy) {
+	$page[] = "	<th>".$dummy ."</th>";
+}
+$page[] = "</tr>";
+$page[] = '</thead>';
 $page = array_merge($page, $reverseRij);
 $page[] = '</table>';
 
 # Pagina tonen
-echo $HTMLHeader;
-echo '<table border=0 width=100%>'.NL;
-echo '<tr>'.NL;
-echo '	<td valign="top" width="5%">&nbsp;</td>'.NL;
-echo '	<td valign="top">';
-echo showBlock(implode("\n", $zoekScherm), 100);
-echo '<br>';
-echo showBlock(implode("\n", $page), 100);
-echo '</td>'.NL;
-echo '	<td valign="top" width="5%">&nbsp;</td>'.NL;
-echo '</tr>'.NL;
-echo '</table>'.NL;
-echo $HTMLFooter;
+$header[] = '<style>';
+$header[] = '@media only screen and (max-width: 760px), (min-device-width: 768px) and (max-device-width: 1024px)  {';
+foreach($veld as $name) {
+	$i++;
+	$header[] = '	td:nth-of-type('.$i.'):before { content: "'. $name .'"; }';	
+}
+foreach($subVeld as $key => $dummy) {
+	$i++;
+	$header[] = '	td:nth-of-type('.$i.'):before { content: "'. $dummy .'"; }';	
+}
+
+$header[] = "}";
+$header[] = "</style>";	
+
+$tables = array('default', 'table_rot');
+
+echo showCSSHeader($tables, $header);
+echo '<div class="content_vert_kolom_full">'.NL;
+echo "<div class='content_block'>".NL. implode(NL, $zoekScherm).NL."</div>".NL;
+echo "<div class='content_block'>".NL. implode(NL, $page).NL."</div>".NL;
+echo '</div> <!-- end \'content_vert_kolom_full\' -->'.NL;
+echo showCSSFooter();
+?>
 
 ?>

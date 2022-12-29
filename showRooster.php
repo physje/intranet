@@ -40,8 +40,14 @@ if((in_array($_SESSION['ID'], $IDs) OR count(array_intersect($familie, $IDs)) > 
 
 toLog('debug', $_SESSION['ID'], '', 'Rooster '. $RoosterData['naam'] .' bekeken');
 
-$text[] = "<h1>". $RoosterData['naam'] ."</h1>".NL;
-$block_1[] = '<table border=0>'.NL;
+$block_1[] = '<table>';
+$block_1[] = '<thead>';
+$block_1[] = '<tr>';
+$block_1[] = '	<th>Datum</th>';
+$block_1[] = '	<th>Persoon</th>';
+$block_1[] = '</tr>';
+$block_1[] = '</thead>';
+$block_1[] = '<tbody>';
 
 foreach($diensten as $dienst) {
 	$details = getKerkdienstDetails($dienst);
@@ -71,46 +77,30 @@ foreach($diensten as $dienst) {
 		}
 		
 		if(trim($RoosterString) != '') {
-			$block_1[] = "<tr>".NL;
-			$block_1[] = "	<td valign='top'><a href='roosterKomendeWeek.php?id=$dienst'>".time2str("%a %d %b %H:%M", $details['start'])."</a></td>".NL;
-			$block_1[] = "	<td valign='top'>". $RoosterString ."</td>".NL;
-			$block_1[] = "</tr>".NL;
+			$block_1[] = "<tr>";
+			$block_1[] = "	<td><a href='roosterKomendeWeek.php?id=$dienst'>".time2str("%a %d %b %H:%M", $details['start'])."</a></td>";
+			$block_1[] = "	<td>". $RoosterString ."</td>";
+			$block_1[] = "</tr>";
 			$leeg = false;
 		}
 	}
 }
 
 if($leeg) {
-	$block_1[] = "<tr>".NL;
-	$block_1[] = "	<td colspan='2'>Dit rooster is leeg</td>".NL;
-	$block_1[] = "</tr>".NL;
-}
-
-$block_1[] = '</table>'.NL;
-
-$block_2[] = '<table>'.NL;
-$block_2[] = "<tr>".NL;
-$block_2[] = "	<td><a href='showCombineRooster.php?rs=". $_REQUEST['rooster'] ."&pdf'>PDF-versie</a></td>".NL;
-$block_2[] = "</tr>".NL;
-$block_2[] = '</table>'.NL;
-
-echo $HTMLHeader;
-echo '<table border=0 width=100%>'.NL;
-echo '<tr>'.NL;
-
-# Als site bekeken wordt op een mobieltje
-if(isMobile()) {
-	echo "	<td>".NL;
-	echo implode(NL, $block_1);
-	echo "<p>".NL;
-	echo implode(NL, $block_2);
-	echo "</td>".NL;
+	unset($block_1);	
+	$block_1[] = "Dit rooster is leeg";
 } else {
-	echo "	<td width='50%' valign='top'>". showBlock(implode(NL, $block_1), 100)."</td>".NL;
-	echo "	<td width='50%' valign='top'>". showBlock(implode(NL, $block_2), 100)."</td>".NL;
+	$block_1[] = '</table>';
 }
 
-echo "</tr>".NL;
-echo "</table>".NL;
-echo $HTMLFooter;
+$block_2[] = "<a href='showCombineRooster.php?rs=". $_REQUEST['rooster'] ."&pdf'>PDF-versie</a>";
+
+echo showCSSHeader(array('default', 'table_default'));
+echo '<div class="content_vert_kolom">'.NL;
+echo "<h1>". $RoosterData['naam'] ."</h1>".NL;
+echo "<div class='content_block'>".NL. implode(NL, $block_1).NL."</div>".NL;
+echo "<div class='content_block'>".NL. implode(NL, $block_2).NL."</div>".NL;
+echo '</div>'.NL;
+echo showCSSFooter();
+
 ?>

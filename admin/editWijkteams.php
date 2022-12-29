@@ -95,36 +95,14 @@ if(isset($_REQUEST['wijk'])) {
 	$text[] = "	</select></td>";
 	$text[] = "</tr>";
 		
-	/*
-	for($i =0 ; $i <= $aantal ; $i++) {
-		$lidID = key($leden);
-		$lidRol = current($leden);
-				
-		$text[] = "<tr>";
-		$text[] = "	<td><select name='lid[$i]'>";	
-		$text[] = "<option valu=''></option>";
-		foreach($IDs as $id) {
-			$text[] = "<option value='$id'".($lidID == $id ? ' selected' : '').">".makeName($id, 5)."</option>";		
-		}	
-		$text[] = "	</select></td>";
-		$text[] = "	<td><select name='rol[$i]'>";	
-		$text[] = "<option valu=''></option>";
-		foreach($teamRollen as $id => $rol) {
-			$text[] = "<option value='$id'".($lidRol == $id ? ' selected' : '').">$rol</option>";		
-		}	
-		$text[] = "	</select></td>";
-		$text[] = "</tr>";
-		next($leden);
-	}
-	*/
-
-	$text[] = "<tr>";
-	$text[] = "	<td colspan='2'>&nbsp;</td>";
-	$text[] = "</tr>";		
-	$text[] = "<tr>";
-	$text[] = "	<td colspan='2'><input type='submit' name='opslaan' value='Opslaan'></td>";
-	$text[] = "</tr>";	
+	#$text[] = "<tr>";
+	#$text[] = "	<td colspan='2'>&nbsp;</td>";
+	#$text[] = "</tr>";		
+	#$text[] = "<tr>";
+	#$text[] = "	<td colspan='2'><input type='submit' name='opslaan' value='Opslaan'></td>";
+	#$text[] = "</tr>";	
 	$text[] = "</table>";
+	$text[] = "<p class='after_table'><input type='submit' name='opslaan' value='Opslaan'></p>";	
 	$text[] = "</form>";
 } else {
 	$text[] = 'Selecteer de wijk die u wilt aanpassen  :<br>';
@@ -133,9 +111,10 @@ if(isset($_REQUEST['wijk'])) {
 	}
 }
 
-echo $HTMLHeader;
-echo implode("\n", $text);
-echo $HTMLFooter;
-
+echo showCSSHeader();
+echo '<div class="content_vert_kolom">'.NL;
+echo "<div class='content_block'>".NL. implode(NL, $text).NL."</div>".NL;
+echo '</div> <!-- end \'content_vert_kolom\' -->'.NL;
+echo showCSSFooter();
 
 ?>

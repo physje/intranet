@@ -80,8 +80,9 @@ if(isset($_REQUEST['ID'])) {
 }
 
 
-echo $HTMLHeader;
-echo implode("\n", $text);
-echo $HTMLFooter;
-
+echo showCSSHeader();
+echo '<div class="content_vert_kolom_full">'.NL;
+echo "<div class='content_block'>".NL. implode(NL, $text).NL."</div>".NL;
+echo '</div> <!-- end \'content_vert_kolom_full\' -->'.NL;
+echo showCSSFooter();
 ?>

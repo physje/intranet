@@ -8,6 +8,8 @@ $cfgProgDir = '../auth/';
 include($cfgProgDir. "secure.php");
 //$db = connect_db();
 
+$i=0;
+
 //$veld['ID']							= 'ID';
 $veld['Code']						= 'Code';
 $veld['Bedrijf']				= 'Bedrijf';
@@ -26,7 +28,7 @@ $veld['Plaats']					= 'Plaats';
 //$veld['FAX']						= 'FAX';
 $veld['Email']					= 'Email';
 //$veld['Site']						= 'Site';
-$veld['Notitie']				= 'Notitie';
+//$veld['Notitie']				= 'Notitie';
 //$veld['Bankrekening']		= 'Bankrekening';
 //$veld['Girorekening']		= 'Girorekening';
 //$veld['Aanhef']					= 'Aanhef';
@@ -65,13 +67,13 @@ try {
   if(!is_array($Relaties->cRelatie)) $Relaties->cRelatie = array($Relaties->cRelatie);
 
   foreach ($Relaties->cRelatie as $Relatie) {
-  	$cel = array();
-  	
+  	$rij[] = "<tr>";
+  	  	
   	foreach($veld as $key => $dummy) {
-  		$cel[] = $Relatie-> $key;
+  		$rij[] = "	<td>". ($Relatie-> $key != '' ? $Relatie-> $key : '&nbsp;') ."</td>";
   	}
-  	
-    $rij[] = "<tr>\n<td>". implode("</td>\n<td>", $cel) ."</td>\n</tr>";
+  	       
+    $rij[] = "</tr>";
   }
 
 
@@ -84,23 +86,35 @@ try {
 }
 
 foreach($veld as $key => $dummy) {
-	$kop[] = '<b>'.$dummy .'</b>';
+	$kop[] = $dummy;
 }
 
 
 $page[] = '<table>';
-$page[] = "<tr>\n<td>". implode("</td>\n<td>", $kop) ."</td>\n</tr>";
+$page[] = '<thead>';
+$page[] = '<tr>';
+foreach($veld as $key => $dummy) {
+	$page[] = '<th>'. $dummy .'</th>';
+}
+$page[] = '</tr>';
+$page[] = '</thead>';
 $page = array_merge($page, $rij);
 $page[] = '</table>';
 
-# Pagina tonen
-echo $HTMLHeader;
-echo '<table border=0 width=100%>'.NL;
-echo '<tr>'.NL;
-echo '	<td valign="top" width="25%">&nbsp;</td>'.NL;
-echo '	<td valign="top">'. showBlock(implode("\n", $page), 100). '</td>'.NL;
-echo '	<td valign="top" width="25%">&nbsp;</td>'.NL;
-echo '</tr>'.NL;
-echo '</table>'.NL;
-echo $HTMLFooter;
+$header[] = '<style>';
+$header[] = '@media only screen and (max-width: 760px), (min-device-width: 768px) and (max-device-width: 1024px)  {';
+foreach($veld as $name) {
+	$i++;
+	$header[] = '	td:nth-of-type('.$i.'):before { content: "'. $name .'"; }';	
+}
+$header[] = "}";
+$header[] = "</style>";	
+
+$tables = array('default', 'table_rot');
+
+echo showCSSHeader($tables, $header);
+echo '<div class="content_vert_kolom_full">'.NL;
+echo "<div class='content_block'>".NL. implode(NL, $page).NL."</div>".NL;
+echo '</div> <!-- end \'content_vert_kolom_full\' -->'.NL;
+echo showCSSFooter();
 ?>

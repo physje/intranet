@@ -224,12 +224,10 @@ if(isset($_POST['search'])) {
 }
 
 
-echo $HTMLHeader;
-echo "<table width='100%'>";
-echo "<tr>";
-echo "	<td width='50%' valign='top'>". implode(NL, $links) .'</td>';
-echo "	<td width='50%' valign='top'>". implode(NL, $rechts) .'</td>';
-echo "<tr>";
-echo "<table>";
-echo $HTMLFooter;
+echo showCSSHeader();
+echo '<div class="content_vert_kolom">'.NL;
+echo "<div class='content_block'>". implode(NL, $links) ."</div>".NL;
+echo "<div class='content_block'>". implode(NL, $rechts) ."</div>".NL;
+echo '</div> <!-- end \'content_vert_kolom\' -->'.NL;
+echo showCSSFooter();
 ?>

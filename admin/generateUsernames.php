@@ -1,7 +1,7 @@
 <?php
 include_once('../include/functions.php');
 include_once('../include/config.php');
-# include_once('include/HTML_TopBottom.php');
+include_once('../include/HTML_TopBottom.php');
 $db = connect_db();
 
 # Omdat de server deze dagelijks moet draaien wordt toegang niet gedaan op basis
@@ -23,10 +23,9 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 				$username = generateUsername($id);
 				$password = generatePassword(8);
 			
-				#$sql_update = "UPDATE $TableUsers SET $UserUsername = '$username', $UserPassword = '". md5($password) ."', $UserNewPassword = '". password_hash($password, PASSWORD_DEFAULT) ."'  WHERE $UserID = $id";
 				$sql_update = "UPDATE $TableUsers SET $UserUsername = '$username', $UserNewPassword = '". password_hash($password, PASSWORD_DEFAULT) ."'  WHERE $UserID = $id";
 				mysqli_query($db, $sql_update);
-				echo 'Username aangemaakt voor '.  makeName($id, 5) ."($username)<br>\n";
+				$text[] = 'Username aangemaakt voor '.  makeName($id, 5) ."($username)<br>";
 				toLog('info', '', $id, 'account aangemaakt');
 			}
 			
@@ -45,14 +44,21 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 				
 				$sql_update = "UPDATE $TableUsers SET $UserHashShort = '$hashS', $UserHashLong = '$hashL' WHERE $UserID = $id";
 				mysqli_query($db, $sql_update);
-				echo 'Hash aangemaakt voor '.  makeName($id, 5) ."<br>\n";
+				$text[] = 'Hash aangemaakt voor '.  makeName($id, 5) ."<br>";
 				toLog('debug', '', $id, 'hash aangemaakt');
 			}	
 			
 		} while($row = mysqli_fetch_array($result));
 	}
 } else {
-	toLog('error', '', 'Poging handmatige run gebruikersnamen, IP:'.$_SERVER['REMOTE_ADDR']);
+	$text[] = 'Geen toegang vanaf '. $_SERVER['REMOTE_ADDR'];
+	toLog('error', '', '', 'Poging handmatige run gebruikersnamen, IP:'.$_SERVER['REMOTE_ADDR']);
 }
+
+echo showCSSHeader();
+echo '<div class="content_vert_kolom_full">'.NL;
+echo "<div class='content_block'>".NL. implode(NL, $text).NL."</div>".NL;
+echo '</div> <!-- end \'content_vert_kolom_full\' -->'.NL;
+echo showCSSFooter();
 
 ?>

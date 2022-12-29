@@ -434,9 +434,9 @@ function getBeheerder($groep) {
 	$row = mysqli_fetch_array($result);
 	
 	if($row[$GroupBeheer] != 0) {
-		return array($row[$GroupBeheer]);
+		return $row[$GroupBeheer];
 	} else {
-		return array();
+		return false;
 	}	
 }
 
@@ -1906,6 +1906,8 @@ function getGebedspunten($start, $eind) {
 	
 	$sql = "SELECT $PuntenID FROM $TablePunten WHERE $PuntenDatum BETWEEN '$start' AND '$eind' ORDER BY $PuntenDatum";
 	$result = mysqli_query($db, $sql);
+	
+	$data = array();
 
 	if($row = mysqli_fetch_array($result)) {
 		do {

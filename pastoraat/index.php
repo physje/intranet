@@ -36,7 +36,6 @@ if(isset($_REQUEST['wijk'])) {
 			$maand	= getParam('maand', date("m"));
 			$jaar		= getParam('jaar', date("Y"));
 			
-			$text[] = "<h1>". makeName($_REQUEST['addID'], 5) ."</h1>";	
 			$text[] = "<form method='post'>";
 			$text[] = "<input type='hidden' name='lid' value='". $_REQUEST['addID'] ."'>";
 			$text[] = "<input type='hidden' name='wijk' value='". $_REQUEST['wijk'] ."'>";
@@ -72,20 +71,8 @@ if(isset($_REQUEST['wijk'])) {
 			$text[] = "	<td valign='top'>Aantekening</td>";
 			$text[] = "	<td><textarea name='aantekening'></textarea><br><small>Geen privacygevoelige informatie invullen</small></td>";
 			$text[] = "</tr>";
-			#$text[] = "<tr>";
-			#$text[] = "	<td valign='top'>Zichtbaar voor</td>";
-			#$text[] = "	<td>"; #<input type='checkbox' name='prive'> Alleen mijzelf<br>";
-			#$text[] = "<input type='checkbox' name='predikant' value='1' checked> Predikant<br>";
-			#$text[] = "<input type='checkbox' name='ouderling' value='1' checked> Ouderling<br>";
-			#$text[] = "<input type='checkbox' name='bezoeker' value='1' checked> Pastoraal bezoekers</td>";
-			#$text[] = "</tr>";	
-			$text[] = "<tr>";
-			$text[] = "	<td colspan='2'>&nbsp;</td>";
-			$text[] = "</tr>";
-			$text[] = "<tr>";
-			$text[] = "	<td colspan='2'><input type='submit' name='save' value='Opslaan'></td>";
-			$text[] = "</tr>";
 			$text[] = "</table>";
+			$text[] = "<p class='after_table'><input type='submit' name='save' value='Opslaan'></p>";
 			$text[] = "</form>";
 		} else {
 			if(isset($_POST['save'])) {
@@ -105,25 +92,17 @@ if(isset($_REQUEST['wijk'])) {
 			# Alle wijkleden opvragen, zonder zonen en dochters (= false)				
 			$wijkLeden = getWijkledenByAdres($wijk, 0);
 			
-			# Een tabel met 2 kolommen
-			# In de linker kolom de lijst met alle leden
-			# In de rechter kolom de lijst met wijkteam-leden
-			$text[] = "<table border=0 width='100%'>";
+			$text[] = "<table>";
+			$text[] = "<thead>";
 			$text[] = "<tr>";
-			$text[] = "	<td width='60%'>";
-			
-			# Linker kolom
-			$text[] = '<table border=0>';
-			$text[] = '<tr>';
-			$text[] = "	<td colspan='2'><b>Lid</b></td>";
-			$text[] = "	<td>&nbsp;</td>";
-			$text[] = "	<td><b>Ouderling</b></td>";
-			$text[] = "	<td>&nbsp;</td>";
-			$text[] = "	<td><b>Pastoraal bezoeker</b></td>";
-			$text[] = "	<td>&nbsp;</td>";
-			$text[] = "	<td><b>Bezoeken</b></td>";
-			$text[] = "	<td colspan='2'>&nbsp;</td>";			
+			$text[] = "	<th>Lid</th>";
+			$text[] = "	<th>Adres</th>";
+			$text[] = "	<th>Ouderling</th>";
+			$text[] = "	<th>Pastoraal bezoeker</th>";
+			$text[] = "	<th>Bezoeken</th>";
+			$text[] = "	<th>&nbsp;</th>";
 			$text[] = '</tr>';
+			$text[] = "</thead>";
 			
 			foreach($wijkLeden as $adres => $leden) {					
 				$lid = $leden[0];
@@ -139,12 +118,10 @@ if(isset($_REQUEST['wijk'])) {
 					$bezoeken	= getPastoraleBezoeken($lid);
 					
 					$text[] = '<tr>';
-					$text[] = "	<td colspan='2'><b><a href='../profiel.php?id=$lid' target='profiel'>". makeName($lid, 8) ."</a></b></td>";
-					$text[] = "	<td rowspan='2'>&nbsp;</td>";
-					$text[] = "	<td rowspan='2' valign='top'>". ($pastor > 0 ? makeName($pastor, 5) : '&nbsp;') ."</td>";
-					$text[] = "	<td rowspan='2'>&nbsp;</td>";
-					$text[] = "	<td rowspan='2' valign='top'>". ($bezoeker > 0 ? makeName($bezoeker, 5) : '&nbsp;') ."</td>";
-					$text[] = "	<td rowspan='2'>&nbsp;</td>";
+					$text[] = "	<td><a href='../profiel.php?id=$lid' target='profiel'>". makeName($lid, 8) ."</a></b></td>";
+					$text[] = "	<td>$adres</td>";
+					$text[] = "	<td>". ($pastor > 0 ? makeName($pastor, 5) : '&nbsp;') ."</td>";
+					$text[] = "	<td>". ($bezoeker > 0 ? makeName($bezoeker, 5) : '&nbsp;') ."</td>";
 					foreach($bezoeken as $bezoekID) {					
 						$details = getPastoraalbezoekDetails($bezoekID);
 						
@@ -153,58 +130,44 @@ if(isset($_REQUEST['wijk'])) {
 					}
 					
 					if(count($data) > 0) {
-						$text[] = "	<td rowspan='2' valign='top'><a href='details.php?ID=$lid' title='". implode("\n", $data) ."' target='bezoek'>". $datum ."</a></td>";
+						$text[] = "	<td valign='top'><a href='details.php?ID=$lid' title='". implode("\n", $data) ."' target='bezoek'>". $datum ."</a></td>";
 					} else {
-					  $text[] = "	<td rowspan='2'>&nbsp;</td>";
+					  $text[] = "	<td>&nbsp;</td>";
 					}
 						
-					$text[] = "	<td rowspan='2'>&nbsp;</td>";
-					$text[] = "	<td rowspan='2' valign='top'><a href='". $_SERVER['PHP_SELF'] ."?wijk=$wijk&addID=$lid'><img src='../images/add-icon.png' height='16' title='Voeg bezoek aan ". makeName($lid, 1) ." toe'></a></td>";
-					$text[] = "</tr>";
-					$text[] = "<tr>";
-					$text[] = "	<td width='10'>&nbsp;</td>";
-					$text[] = "	<td>$adres</td>";
+					$text[] = "	<td valign='top'><a href='". $_SERVER['PHP_SELF'] ."?wijk=$wijk&addID=$lid'><img src='../images/add-icon.png' height='16' title='Voeg bezoek aan ". makeName($lid, 1) ." toe'></a></td>";
 					$text[] = "</tr>";
 				}
 			}
 			
-			$text[] = "<tr>";
-			$text[] = "	<td colspan='7'>&nbsp;</td>";			
-			$text[] = "</tr>";
 			$text[] = '</table>';
 			
-			# Middelste & rechter kolom
-			$text[] = "</td>";
-			$text[] = "<td width=25>&nbsp;</td>";
-			$text[] = "<td width='38' valign='top'>";
 			
-			$text[] = "<table border=0>";
-			$text[] = "<tr>";
-			$text[] = "	<td colspan='2'><b>Wijkteam wijk $wijk</b></td>";
-			$text[] = "</tr>";
+			$blok[] = "<table>";
+			$blok[] = "<tr>";
+			$blok[] = "	<td colspan='2'><b>Wijkteam wijk $wijk</b></td>";
+			$blok[] = "</tr>";
 			
 			foreach($wijkteam as $lid => $wijkteamRol) {
-				$text[] = "<tr>";
-				$text[] = "	<td>". makeName($lid, 5) ."</td>";
-				$text[] = "	<td>". $teamRollen[$wijkteamRol] ."</td>";
-				$text[] = "</tr>";
+				$blok[] = "<tr>";
+				$blok[] = "	<td>". makeName($lid, 5) ."</td>";
+				$blok[] = "	<td>". $teamRollen[$wijkteamRol] ."</td>";
+				$blok[] = "</tr>";
 			}
-			$text[] = "</table>";
-			$text[] = "<br>";
-			$text[] = "<br>";
-			$text[] = "<a href='". $_SERVER['PHP_SELF'] ."?wijk=$wijk&filter=".($filter ? 'false' : 'true')."'>".($filter ? 'Toon alle leden van wijk '. $wijk : 'Toon alleen leden waar ik aan ben toegewezen')."</a>";
+			$blok[] = "</table>";
+			$blok[] = "<br>";
+			$blok[] = "<br>";
+			$blok[] = "<a href='". $_SERVER['PHP_SELF'] ."?wijk=$wijk&filter=".($filter ? 'false' : 'true')."'>".($filter ? 'Toon alle leden van wijk '. $wijk : 'Toon alleen leden waar ik aan ben toegewezen')."</a>";
 			
 			if($rol == 1) {
-				$text[] = "<br>";
-				$text[] = "<br>";
-				$text[] = "<a href='verdeling.php?wijk=$wijk' target='verdeling'>Wijs ouderling/bezoeker aan wijkleden toe</a>";
+				$blok[] = "<br>";
+				$blok[] = "<br>";
+				$blok[] = "<a href='verdeling.php?wijk=$wijk' target='verdeling'>Wijs ouderling/bezoeker aan wijkleden toe</a>";
 			}
 			
-			$text[] = "</td>";
-			$text[] = "</tr>";
-			$text[] = "</table>";
-			
-			
+			$blok[] = "</td>";
+			$blok[] = "</tr>";
+			$blok[] = "</table>";
 		}
 	} elseif($inWijkteam) {
 		$text[] = "Helaas, als ". strtolower($teamRollen[$rol]) ." van wijk $wijk heb je geen toegang";
@@ -221,8 +184,38 @@ if(isset($_REQUEST['wijk'])) {
 }
 
 
-echo $HTMLHeader;
-echo implode("\n", $text);
-echo $HTMLFooter;
+
+if(isset($_REQUEST['addID'])) {
+	$header = array();
+	$tables = array('default', 'table_default');
+} else {
+	$header[] = '<style>';
+	$header[] = '@media only screen and (max-width: 760px), (min-device-width: 768px) and (max-device-width: 1024px)  {';
+	$header[] = '	td:nth-of-type(1):before { content: "Lid"; }';
+	$header[] = '	td:nth-of-type(2):before { content: "Adres"; }';
+	$header[] = '	td:nth-of-type(3):before { content: "Ouderling"; }';
+	$header[] = '	td:nth-of-type(4):before { content: "Pastoraal bezoeker"; }';
+	$header[] = '	td:nth-of-type(5):before { content: "Bezoeken"; }';
+	$header[] = "}";
+	$header[] = "</style>";	
+	
+	$tables = array('default', 'table_rot');
+}
+
+echo showCSSHeader($tables, $header);
+
+if(isset($blok)) {
+	echo '<div class="content_vert_kolom_full">'.NL;
+	echo "<div class='content_block'>".NL. implode(NL, $text).NL."</div>".NL;
+	echo "<div class='content_block'>".NL. implode(NL, $blok).NL."</div>".NL;
+	echo '</div> <!-- end \'content_vert_kolom_full\' -->'.NL;
+} else {
+	echo '<div class="content_vert_kolom">'.NL;
+	if(isset($_REQUEST['addID'])) echo "<h1>". makeName($_REQUEST['addID'], 5) ."</h1>";	
+	echo "<div class='content_block'>".NL. implode(NL, $text).NL."</div>".NL;
+	echo '</div> <!-- end \'content_vert_kolom\' -->'.NL;
+}
+
+echo showCSSFooter();
 
 ?>

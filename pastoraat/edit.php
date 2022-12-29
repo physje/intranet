@@ -37,7 +37,6 @@ if(isset($_REQUEST['id'])) {
 			$maand	= getParam('maand', date("m", $details['datum']));
 			$jaar		= getParam('jaar', date("Y", $details['datum']));
 				
-			$text[] = "<h1>". makeName($details['lid'], 5) ."</h1>";
 			$text[] = "<form method='post'>";
 			$text[] = "<input type='hidden' name='id' value='". $_REQUEST['id'] ."'>";
 			$text[] = "<input type='hidden' name='lid' value='". $details['lid'] ."'>";
@@ -73,20 +72,8 @@ if(isset($_REQUEST['id'])) {
 			$text[] = "	<td valign='top'>Aantekening</td>";
 			$text[] = "	<td><textarea name='aantekening'>". str_rot13(urldecode($details['note'])) ."</textarea></td>";
 			$text[] = "</tr>";
-			#$text[] = "<tr>";
-			#$text[] = "	<td valign='top'>Zichtbaar voor</td>";
-			#$text[] = "	<td>";
-			#$text[] = "<input type='checkbox' name='predikant' value='1'". ($details['predikant'] == 1 ? ' checked' : '') ."> Predikant<br>";
-			#$text[] = "<input type='checkbox' name='ouderling' value='1'". ($details['ouderling'] == 1 ? ' checked' : '') ."> Ouderling<br>";
-			#$text[] = "<input type='checkbox' name='bezoeker' value='1'". ($details['bezoeker'] == 1 ? ' checked' : '') ."> Pastoraal bezoekers</td>";
-			#$text[] = "</tr>";	
-			$text[] = "<tr>";
-			$text[] = "	<td colspan='2'>&nbsp;</td>";
-			$text[] = "</tr>";
-			$text[] = "<tr>";
-			$text[] = "	<td colspan='2'><input type='submit' name='save' value='Opslaan'></td>";
-			$text[] = "</tr>";
 			$text[] = "</table>";
+			$text[] = "<p class='after_table'><input type='submit' name='save' value='Opslaan'></p>";			
 			$text[] = "</form>";
 		}
 	} else {
@@ -96,9 +83,10 @@ if(isset($_REQUEST['id'])) {
 	$text[] = "Geen bezoek gedefinieerd";
 }
 
-
-echo $HTMLHeader;
-echo implode("\n", $text);
-echo $HTMLFooter;
-
+echo showCSSHeader();
+echo '<div class="content_vert_kolom_full">'.NL;
+echo "<h1>". makeName($details['lid'], 5) ."</h1>";
+echo "<div class='content_block'>".NL. implode(NL, $text).NL."</div>".NL;
+echo '</div> <!-- end \'content_vert_kolom_full\' -->'.NL;
+echo showCSSFooter();
 ?>

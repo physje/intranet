@@ -63,27 +63,27 @@ if(isset($_POST['send_mail'])) {
 	$block[] = "<form method='post' action='$_SERVER[PHP_SELF]'>";
 	$block[] = "<table>";
 	$block[] = "<tr>";
-	$block[] = "	<td valign='top'>Ontvanger</td>";
-	$block[] = "	<td valign='top' colspan='2'><select name='ontvanger'>";
+	$block[] = "	<td>Ontvanger</td>";
+	$block[] = "	<td><select name='ontvanger'>";
 	foreach($leden as $lid)	$block[] = "<option value='$lid'>". makeName($lid, 8) ."</option>";	
 	$block[] = "	</select></td>";
 	$block[] = "</tr>";
 	$block[] = "<tr>";
-	$block[] = "	<td valign='top'>Afzendernaam</td>";
-	$block[] = "	<td valign='top' colspan='2'><input type='text' name='naam_afzender' size=80 value='$ScriptTitle'></td>";
+	$block[] = "	<td>Afzendernaam</td>";
+	$block[] = "	<td><input type='text' name='naam_afzender' size=80 value='$ScriptTitle'></td>";
 	$block[] = "</tr>";
 	$block[] = "<tr>";
-	$block[] = "	<td valign='top'>Afzenderadres</td>";
-	$block[] = "	<td valign='top' colspan='2'><input type='text' name='mail_afzender' size=80 value='$ScriptMailAdress'></td>";
+	$block[] = "	<td>Afzenderadres</td>";
+	$block[] = "	<td><input type='text' name='mail_afzender' size=80 value='$ScriptMailAdress'></td>";
 	$block[] = "</tr>";
 	$block[] = "<tr>";
-	$block[] = "	<td valign='top'>Onderwerp</td>";
-	$block[] = "	<td valign='top' colspan='2'><input type='text' name='onderwerp_mail' size=80 value=''></td>";
+	$block[] = "	<td>Onderwerp</td>";
+	$block[] = "	<td><input type='text' name='onderwerp_mail' size=80 value=''></td>";
 	$block[] = "</tr>";
 	
 	$block[] = "<tr>";
-	$block[] = "	<td valign='top'>Team</td>";
-	$block[] = "	<td valign='top' colspan='2'><select name='groep'>";
+	$block[] = "	<td>Team</td>";
+	$block[] = "	<td><select name='groep'>";
 	$block[] = "	<option value='0'> [ geen groep ] </option>";
 	foreach($groepen as $groep) {
 		$data = getGroupDetails($groep);
@@ -92,33 +92,59 @@ if(isset($_POST['send_mail'])) {
 	$block[] = "	</select></td>";
 	$block[] = "</tr>";
 	$block[] = "<tr>";
-	$block[] = "	<td valign='top'>Rooster</td>";
-	$block[] = "	<td valign='top' colspan='2'><select name='rooster'>";
+	$block[] = "	<td>Rooster</td>";
+	$block[] = "	<td><select name='rooster'>";
 	$block[] = "	<option value='0'> [ geen rooster ] </option>";
 	foreach($roosters as $rooster) {
 		$data = getRoosterDetails($rooster);
 		$block[] = "<option value='$rooster'>".$data['naam']."</option>";	
 	}
 	$block[] = "	</select></td>";
-	$block[] = "</tr>";
-	
+	$block[] = "</tr>";	
 	$block[] = "<tr>";
-	$block[] = "	<td valign='top'>Mailtekst</td>";
-	$block[] = "	<td valign='top'><textarea name='text_mail' rows=20 cols=60></textarea></td>";
-	$block[] = "	<td valign='top'>[[voornaam]] = voornaam van de ontvanger<br>";
-	$block[] = "	[[achternaam]] = achternaam van de ontvanger<br>";
-	$block[] = "	[[hash_kort]] = korte hash<br>";
-	$block[] = "	[[hash_lang]] = lange hash<br>";
-	$block[] = "	[[groep]] = id van de gekozen groep<br>";
-	$block[] = "	[[groep-naam]] = naam van de gekozen groep<br>";
-	$block[] = "	[[rooster]] = id van het gekozen rooster<br>";
-	$block[] = "	[[rooster-naam]] = naam van het gekozen rooster</td>";
+	$block[] = "	<td>Mailtekst</td>";
+	$block[] = "	<td><textarea name='text_mail' rows=20 cols=60></textarea></td>";	
 	$block[] = "</tr>";
 	$block[] = "<tr>";
-	$block[] = "	<td valign='top'>&nbsp;</td><td valign='top' colspan='2'><input type='submit' name='send_mail' value='Mail versturen'></td>";
+	$block[] = "	<td colspan='2'><input type='submit' name='send_mail' value='Mail versturen'></td>";
 	$block[] = "</tr>";
 	$block[] = "</table>";
 	$block[] = "</form>";
+	
+	$uitleg[] = "<table>";
+	$uitleg[] = "<tr>";
+	$uitleg[] = "	<td>[[voornaam]]</td>";
+	$uitleg[] = "	<td>voornaam van de ontvanger</td>";
+	$uitleg[] = "</tr>";
+	$uitleg[] = "<tr>";	
+	$uitleg[] = "	<td>[[achternaam]]</td>";
+	$uitleg[] = "	<td>achternaam van de ontvanger</td>";
+	$uitleg[] = "</tr>";
+	$uitleg[] = "<tr>";
+	$uitleg[] = "	<td>[[hash_kort]]</td>";
+	$uitleg[] = "	<td>korte hash</td>";
+	$uitleg[] = "</tr>";
+	$uitleg[] = "<tr>";
+	$uitleg[] = "	<td>[[hash_lang]]</td>";
+	$uitleg[] = "	<td>lange hash</td>";
+	$uitleg[] = "</tr>";
+	$uitleg[] = "<tr>";
+	$uitleg[] = "	<td>[[groep]]</td>";
+	$uitleg[] = "	<td>id van de gekozen groep</td>";
+	$uitleg[] = "</tr>";
+	$uitleg[] = "<tr>";
+	$uitleg[] = "	<td>[[groep-naam]]</td>";
+	$uitleg[] = "	<td>naam van de gekozen groep</td>";
+	$uitleg[] = "</tr>";
+	$uitleg[] = "<tr>";
+	$uitleg[] = "	<td>[[rooster]]</td>";
+	$uitleg[] = "	<td>id van het gekozen rooster</td>";
+	$uitleg[] = "</tr>";
+	$uitleg[] = "<tr>";
+	$uitleg[] = "	<td>[[rooster-naam]]</td>";
+	$uitleg[] = "	<td>naam van het gekozen rooster</td>";
+	$uitleg[] = "</tr>";
+	$uitleg[] = "</table>";
 		
 	$voorbeeld[] = "Dag [[voornaam]]";
 	$voorbeeld[] = "";
@@ -137,11 +163,12 @@ if(isset($_POST['send_mail'])) {
 	$voorbeeld[] = "Groet,";
 	$voorbeeld[] = "Matthijs";
 	
-	echo $HTMLHeader;
-	echo showBlock(implode(NL, $block), 100);
-	echo '<p>';
-	echo showBlock(implode('<br>'.NL, $voorbeeld), 100);
-	echo $HTMLFooter;	
+	echo showCSSHeader();
+	echo "<div class='content_horz_kolom'>".NL."<div class='content_block'>".NL. implode(NL, $block).NL."</div>".NL."</div>".NL;
+	echo "<div class='content_horz_kolom'>".NL."<div class='content_block'>".NL. implode(NL, $uitleg).NL."</div>".NL."</div>".NL;
+	echo "</div><div class='row'>";
+	echo "<div class='content_horz_kolom_full'>".NL."<div class='content_block'>".NL. implode('<br>'.NL, $voorbeeld).NL."</div>".NL."</div>".NL;
+	echo showCSSFooter();
 }
 
 ?>

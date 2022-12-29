@@ -177,27 +177,43 @@ if(!isset($_REQUEST['delete']) OR (isset($_REQUEST['delete']) AND isset($_REQUES
 		$text[] = "</tr>";
 	}
 	
-	$text[] = "<tr>";
-	$text[] = "<td colspan='5' align='middle'>";
-	$text[] = "<table width='100%'>";
-	$text[] = "<tr>";
-	$text[] = "	<td width='33%' align='left'><input type='submit' name='prev' value='Vorige 3 maanden'></td>";
-	$text[] = "	<td width='33%' align='center'><input type='submit' name='save' value='Diensten opslaan'></td>";
-	$text[] = "	<td width='33%' align='right'><input type='submit' name='next' value='Volgende 3 maanden'></td>";
-	$text[] = "</tr>";
+	#$text[] = "<tr>";
+	#$text[] = "<td colspan='5' align='middle'>";
+	#$text[] = "<table width='100%'>";
+	#$text[] = "<tr>";
+	#$text[] = "	<td width='33%' align='left'><input type='submit' name='prev' value='Vorige 3 maanden'></td>";
+	#$text[] = "	<td width='33%' align='center'><input type='submit' name='save' value='Diensten opslaan'></td>";
+	#$text[] = "	<td width='33%' align='right'><input type='submit' name='next' value='Volgende 3 maanden'></td>";
+	#$text[] = "</tr>";
+	#$text[] = "</table>";
+	#$text[] = "</td>";
+	#$text[] = "</tr>";
 	$text[] = "</table>";
-	$text[] = "</td>";
-	$text[] = "</tr>";
-	$text[] = "</table>";
+	$text[] = "<p class='after_table'><input type='submit' name='prev' value='Vorige 3 maanden'>&nbsp;<input type='submit' name='save' value='Diensten opslaan'>&nbsp;<input type='submit' name='next' value='Volgende 3 maanden'></p>";
 	$text[] = "</form>";
 	
 	if(in_array(1, getMyGroups($_SESSION['ID']))) {
-		$text[] = "<a href='?new'>Extra dienst toevoegen</a>";
+		$new[] = "<a href='?new'>Extra dienst toevoegen</a>";
 	}
 }
 
-echo $HTMLHeader;
-echo implode(NL, $text);
-echo $HTMLFooter;
+$header[] = '<style>';
+$header[] = '@media only screen and (max-width: 760px), (min-device-width: 768px) and (max-device-width: 1024px)  {';
+$header[] = '	td:nth-of-type(1):before { content: "Datum"; }';
+$header[] = '	td:nth-of-type(2):before { content: "Start"; }';
+$header[] = '	td:nth-of-type(3):before { content: "Eind"; }';
+$header[] = '	td:nth-of-type(4):before { content: "Bijzonderheid"; }';
+$header[] = "}";
+$header[] = "</style>";
+
+echo showCSSHeader(array('default', 'table_rot'), $header);
+echo '<div class="content_vert_kolom_full">'.NL;
+echo '<h1>Kerkdiensten</h1>'.NL;
+echo "<div class='content_block'>".NL. implode(NL, $text).NL."</div>".NL;
+echo "<div class='content_block'>".NL. implode(NL, $new).NL."</div>".NL;
+echo '</div> <!-- end \'content_vert_kolom_full\' -->'.NL;
+echo showCSSFooter();
+
+?>
 
 ?>

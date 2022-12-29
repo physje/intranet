@@ -18,7 +18,7 @@ $allGroups = getAllGroups();
 $myGroups = getMyGroups($_SESSION['ID']);
 $myGroepBeheer = getMyGroupsBeheer($_SESSION['ID']);
 
-
+$blocks = array();
 
 # Roosters
 if(count($allRoosters) > 0) {
@@ -32,12 +32,35 @@ if(count($allRoosters) > 0) {
 			$class = "general";
 		}
 		$txtRooster[] = "<a class='$class' href='showRooster.php?rooster=$rooster' target='_blank'>".$data['naam']."</a>";
-	}
-	
+	}	
 	$txtRooster[] = "<a class='$class' href='showCombineRooster.php' target='_blank'>Toon combinatie-rooster</a>";
 	$txtRooster[] = "<a class='$class' href='roosterKomendeWeek.php' target='_blank'>Toon rooster komende week</a>";
-		
-	$blockArray[] = implode("<br>".NL, $txtRooster);
+	$blocks[] = $txtRooster;	
+}
+
+
+
+# Rooster-beheer
+if(count($myRoosterBeheer) > 0) {
+	$txtRoosterBeheer[] = "<b>Roosters die ik kan wijzigen</b>";
+	foreach($myRoosterBeheer as $rooster) {
+		$data = getRoosterDetails($rooster);
+		$txtRoosterBeheer[] = "<a href='makeRooster.php?rooster=$rooster' target='_blank'>".$data['naam']."</a>";
+	}
+	$blocks[] = $txtRoosterBeheer;
+}
+
+
+
+# Admin-rooster
+if(in_array(1, $myGroups)) {
+	$adminRoosters[] = "<b>Beheer roosters</b> (Admin)";
+	
+	foreach($allRoosters as $rooster) {
+		$data = getRoosterDetails($rooster);
+		$adminRoosters[] = "<a href='makeRooster.php?rooster=$rooster' target='_blank'>".$data['naam']."</a>";
+	}
+	$blocks[] = $adminRoosters;
 }
 
 
@@ -72,7 +95,7 @@ if(count($showGroupsClass) > 0) {
 		$data = getGroupDetails($groep);
 		$txtGroepen[] = "<a class='$class' href='group.php?groep=$groep' target='_blank'>".$data['naam']."</a>";
 	}	
-	$blockArray[] = implode("<br>".NL, $txtGroepen);
+	$blocks[] = $txtGroepen;
 }
 
 
@@ -84,23 +107,11 @@ if(count($myGroepBeheer) > 0) {
 		$data = getGroupDetails($groep);
 		$txtGroepBeheer[] = "<a href='editGroup.php?groep=$groep' target='_blank'>".$data['naam']."</a>";
 	}
-	$blockArray[] = implode("<br>".NL, $txtGroepBeheer);
+	$blocks[] = $txtGroepBeheer;
 }
 
 
 
-# Rooster-beheer
-if(count($myRoosterBeheer) > 0) {
-	$txtRoosterBeheer[] = "<b>Roosters die ik kan wijzigen</b>";
-	foreach($myRoosterBeheer as $rooster) {
-		$data = getRoosterDetails($rooster);
-		$txtRoosterBeheer[] = "<a href='makeRooster.php?rooster=$rooster' target='_blank'>".$data['naam']."</a>";
-	}
-	$blockArray[] = implode("<br>".NL, $txtRoosterBeheer);
-}
-
-
-	
 # Admin-groepen
 if(in_array(1, $myGroups)) {	
 	$txtGroepAdmin[] = "<b>Beheer teams</b> (Admin)";
@@ -108,47 +119,9 @@ if(in_array(1, $myGroups)) {
 		$data = getGroupDetails($groep);
 		$txtGroepAdmin[] = "<a href='editGroup.php?groep=$groep' target='_blank'>".$data['naam']."</a>";
 	}
-	$alleGroepen[] = "";
-	$blockArray[] = implode("<br>".NL, $txtGroepAdmin);
+	$blocks[] = $txtGroepAdmin;
 }
 
-
-
-# Admin-rooster
-if(in_array(1, $myGroups)) {
-	$adminRoosters[] = "<b>Beheer roosters</b> (Admin)";
-	
-	foreach($allRoosters as $rooster) {
-		$data = getRoosterDetails($rooster);
-		$adminRoosters[] = "<a href='makeRooster.php?rooster=$rooster' target='_blank'>".$data['naam']."</a>";
-	}
-	
-	$blockArray[] = implode("<br>".NL, $adminRoosters);
-}
-
-
-
-# Open Kerk
-if(in_array(1, $myGroups) OR in_array(43, $myGroups) OR in_array(44, $myGroups)) {
-	$OpenKerkDeel[] = "<b>Open kerk</b>";
-	
-	if(in_array(1, $myGroups) OR in_array(44, $myGroups)) {
-		$OpenKerkLinks['openkerk/template.php'] = 'Template bekijken/aanpassen';
-		$OpenKerkLinks['openkerk/mailen.php'] = 'Rooster mailen';
-	}
-	
-	if(in_array(1, $myGroups) OR in_array(43, $myGroups)) {
-		$OpenKerkLinks['openkerk/editRooster.php'] = 'Rooster wijzigen';
-	}
-		
-	$OpenKerkLinks['openkerk/showRooster.php'] = 'Rooster tonen';
-	
-	foreach($OpenKerkLinks as $link => $naam) {
-		$OpenKerkDeel[] = "<a href='$link' target='_blank'>$naam</a>";
-	}
-	
-	$blockArray[] = implode("<br>".NL, $OpenKerkDeel);
-}
 
 
 # Bezoek-registratie
@@ -180,24 +153,9 @@ if(in_array(1, $myGroups) OR in_array(7, $myGroups) OR in_array(8, $myGroups) OR
 		$BezoekDeel[] = "<a href='$link' target='_blank'>$naam</a>";
 	}
 	
-	$blockArray[] = implode("<br>".NL, $BezoekDeel);
+	$blocks[] = $BezoekDeel;
 }
 
-
-/*
-# Beroepingscommissie
-if(in_array(1, $myGroups) OR in_array(48, $myGroups)) {
-	$BeroepingsDeel[] = "<b>Beroepingscommissie</b>";
-	
-	$BeroepingsLinks['beroepingscommissie/verdeling.php'] = 'Tussenstand bekijken';
-				
-	foreach($BeroepingsLinks as $link => $naam) {
-		$BeroepingsDeel[] = "<a href='$link' target='_blank'>$naam</a>";
-	}
-	
-	$blockArray[] = implode("<br>".NL, $BeroepingsDeel);
-}
-*/
 
 
 # Gegevens wijzigen-deel
@@ -229,10 +187,50 @@ if(in_array(1, $myGroups) OR in_array(28, $myGroups)) {
 if(isset($wijzigLinks) AND is_array($wijzigLinks)) {	
 	foreach($wijzigLinks as $link => $naam) {
 		$wijzigDeel[] = "<a href='$link' target='_blank'>$naam</a>";
+	}	
+	$blocks[] = $wijzigDeel;
+}
+
+
+
+# LaPosta
+$laPostaDeel = $laPostaLinks = array();
+$laPostaDeel[] = "<b>LaPosta</b>";
+
+$laPostaLinks['laposta/archief.php'] = 'Mail archief';
+if(in_array(1, $myGroups)) {
+	$laPostaLinks['laposta/sync.php'] = 'Synchroniseren LaPosta';
+}
+
+foreach($laPostaLinks as $link => $naam) {
+	$laPostaDeel[] = "<a href='$link' target='_blank'>$naam</a>";
+}
+	
+$blocks[] = $laPostaDeel;
+
+
+
+# Open Kerk
+if(in_array(1, $myGroups) OR in_array(43, $myGroups) OR in_array(44, $myGroups)) {
+	$OpenKerkDeel[] = "<b>Open kerk</b>";
+	
+	if(in_array(1, $myGroups) OR in_array(44, $myGroups)) {
+		$OpenKerkLinks['openkerk/template.php'] = 'Template bekijken/aanpassen';
+		$OpenKerkLinks['openkerk/mailen.php'] = 'Rooster mailen';
 	}
 	
-	$blockArray[] = implode("<br>".NL, $wijzigDeel);
+	if(in_array(1, $myGroups) OR in_array(43, $myGroups)) {
+		$OpenKerkLinks['openkerk/editRooster.php'] = 'Rooster wijzigen';
+	}
+		
+	$OpenKerkLinks['openkerk/showRooster.php'] = 'Rooster tonen';
+	
+	foreach($OpenKerkLinks as $link => $naam) {
+		$OpenKerkDeel[] = "<a href='$link' target='_blank'>$naam</a>";
+	}
+	$blocks[] = $OpenKerkDeel;
 }
+
 
 
 
@@ -256,53 +254,34 @@ if(in_array(1, $myGroups)) {
 	
 	foreach($adminLinks as $link => $naam) {
 		$adminDeel[] = "<a href='$link' target='_blank'>$naam</a>";
-	}
-	
-	$blockArray[] = implode("<br>".NL, $adminDeel);
+	}	
+	$blocks[] = $adminDeel;
 }
-
-
-
-# LaPosta
-$adminDeel = $adminLinks = array();
-$adminDeel[] = "<b>LaPosta</b>";
-
-$adminLinks['laposta/archief.php'] = 'Mail archief';
-if(in_array(1, $myGroups)) {
-	$adminLinks['laposta/sync.php'] = 'Synchroniseren LaPosta';
-}
-
-foreach($adminLinks as $link => $naam) {
-	$adminDeel[] = "<a href='$link' target='_blank'>$naam</a>";
-}
-	
-$blockArray[] = implode("<br>".NL, $adminDeel);
 
 
 
 # e-boekhouden.nl
-$adminDeel = $adminLinks = array();
-$adminDeel[] = "<b>Declaraties</b>";
+$EBDeel = $EBLinks = array();
+$EBDeel[] = "<b>Declaraties</b>";
 
-$adminLinks['declaratie/'] = 'Dien declaratie in';
+$EBLinks['declaratie/'] = 'Dien declaratie in';
 
 if(in_array(1, $myGroups) OR in_array(38, $myGroups)) {
-	$adminLinks['declaratie/overzichtDeclaraties.php'] = 'Status declaraties';
+	$EBLinks['declaratie/overzichtDeclaraties.php'] = 'Status declaraties';
 }
 
 if(in_array(1, $myGroups)) {
-	$adminLinks['declaratie/relatieOverview.php'] = 'Toon alle relaties';
-	$adminLinks['declaratie/mutatieOverview.php'] = 'Toon alle mutaties';
-	//$adminLinks['declaratie/syncRelaties.php'] = 'Synchroniseer relaties naar lokale database';	
-	$adminLinks['declaratie/editRelatie.php'] = 'Wijzig relaties';
-	$adminLinks['https://secure.e-boekhouden.nl/handleiding/Documentatie_soap.pdf'] = 'SOAP documenatie PDF';
+	$EBLinks['declaratie/relatieOverview.php'] = 'Toon alle relaties';
+	$EBLinks['declaratie/mutatieOverview.php'] = 'Toon alle mutaties';
+	//$EBLinks['declaratie/syncRelaties.php'] = 'Synchroniseer relaties naar lokale database';	
+	$EBLinks['declaratie/editRelatie.php'] = 'Wijzig relaties';
+	#$EBLinks['https://secure.e-boekhouden.nl/handleiding/Documentatie_soap.pdf'] = 'SOAP documenatie PDF';
 }
 
-foreach($adminLinks as $link => $naam) {
-	$adminDeel[] = "<a href='$link' target='_blank'>$naam</a>";
+foreach($EBLinks as $link => $naam) {
+	$EBDeel[] = "<a href='$link' target='_blank'>$naam</a>";
 }
-
-$blockArray[] = implode("<br>".NL, $adminDeel);
+$blocks[] = $EBDeel;
 
 
 
@@ -318,9 +297,8 @@ if(in_array(1, $myGroups)) {
 	
 	foreach($koppelLinks as $link => $naam) {
 		$koppelDeel[] = "<a href='$link' target='_blank'>$naam</a>";
-	}
-	
-	$blockArray[] = implode("<br>".NL, $koppelDeel);
+	}	
+	$blocks[] = $koppelDeel;
 }
 
 
@@ -339,37 +317,16 @@ foreach($gebedsLinks as $link => $naam) {
 	$gebedsDeel[] = "<a href='$link' target='_blank'>$naam</a>";
 }
 
-$blockArray[] = implode("<br>".NL, $gebedsDeel);
+$blocks[] = $gebedsDeel;
 
 
-/*
-# Trinitas
-$trinitasDeel[] = "<b>Trinitas</b>";
-$TrinitasLinks['trinitas/archief.php']	= 'Archief';
-$TrinitasLinks['trinitas/search.php']	= 'Zoeken op woorden';
-
-if(in_array(1, $myGroups) OR in_array(37, $myGroups)) {
-	$TrinitasLinks['trinitas/exemplaar.php']	= 'Exemplaar toevoegen';
-}
-
-foreach($TrinitasLinks as $url => $titel) {
-	$trinitasDeel[] = "<a href='$url' target='_blank'>$titel</a>";
-}
-
-$blockArray[] = implode("<br>".NL, $trinitasDeel);
-*/
 
 # Hyperlinks
 $links[] = "<b>Links</b>";
-
-//if(!in_array(1, $myGroups) AND !in_array(36, $myGroups)) {
-//	$links[] = "<a href='../gebedskalender/' target='_blank'>Gebedskalender</a>";
-//}
-
 $links[] = "<a href='http://www.koningskerkdeventer.nl/' target='_blank'>koningskerkdeventer.nl</a>";
 $links[] = "<a href='agenda/agenda.php' target='_blank'>Agenda voor Scipio</a>";
 $links[] = "<a href='ical/".$memberData['username'].'-'. $memberData['hash_short'] .".ics' target='_blank'>Persoonlijke digitale agenda</a>";
-$blockArray[] = implode("<br>".NL, $links);
+$blocks[] = $links;
 
 
 
@@ -382,71 +339,17 @@ if(in_array(1, $myGroups)) {
 	$site[] = "<a href='search.php' target='_blank'>Zoeken</a>";
 }
 $site[] = "<a href='auth/objects/logout.php' target='_blank'>Uitloggen</a>";
-$blockArray[] = implode("<br>".NL, $site);
+$blocks[] = $site;
 
-/*
-# Jarigen vandaag
-$jarigen = getJarigen(date("d"), date("m"));
-if(count($jarigen) > 0) {
-	$jarig[] = "<b>Jarigen vandaag</b>";
-	foreach($jarigen as $jarige) {
-		$data = getMemberDetails($jarige);
-		$leeftijd = (date("Y")-$data['jaar']);		
-		$jarig[] = "<a href='profiel.php?id=$jarige' target='_blank'>". makeName($jarige, 5)."</a>".(($data['geslacht'] == 'V' AND $leeftijd > 18) ? '' : " ($leeftijd)");
-	}
-	$blockArray[] = implode("<br>".NL, $jarig);
+
+echo showCSSHeader();
+echo '<div class="content_vert_kolom">'.NL;
+
+foreach($blocks as $block) {
+	echo "<div class='content_block'>". implode("<br>".NL, $block) ."</div>".NL;
 }
 
-
-# Jarigen morgen
-$jarigen = getJarigen(date("d", (time()+(24*60*60))), date("m", (time()+(24*60*60))));
-if(count($jarigen) > 0) {
-	$morgen[] = "<b>Jarigen morgen</b>";
-	foreach($jarigen as $jarige) {
-		$data = getMemberDetails($jarige);
-		$leeftijd = (date("Y")-$data['jaar']);		
-		$morgen[] = "<a href='profiel.php?id=$jarige' target='_blank'>". makeName($jarige, 5)."</a>".(($data['geslacht'] == 'V' AND $leeftijd > 18) ? '' : " ($leeftijd)");		
-	}
-	$blockArray[] = implode("<br>".NL, $morgen);
-}
-*/
-
-# Pagina tonen
-echo $HTMLHeader;
-echo '<table border=0 width=100%>'.NL;
-echo '<tr>'.NL;
-
-# Als site bekeken wordt op een mobieltje
-if(isMobile()) {
-	echo '	<td valign="top">'.NL;
-	foreach($blockArray as $key => $block) {
-		echo showBlock($block, 100);
-		echo '<p>'.NL;
-	}
-	echo '	</td>'.NL;
-
-# Als site niet bekeken wordt op een mobieltje
-} else {
-	echo '	<td valign="top" width="50">&nbsp;</td>'.NL;
-	echo '	<td valign="top">'.NL;
-
-	$scheiding = floor(count($blockArray)/2);
-
-	foreach($blockArray as $key => $block) {
-		if($scheiding == $key) {
-			echo '	</td>'.NL;
-			echo '	<td valign="top" width="50">&nbsp;</td>'.NL;
-			echo '	<td valign="top">'.NL;
-		}
-		echo showBlock($block, 100);
-		echo '<p>'.NL;
-	}
-	echo '	</td>'.NL;
-	echo '	<td valign="top" width="50">&nbsp;</td>'.NL;
-}
-
-echo '</tr>'.NL;
-echo '</table>'.NL;
-echo $HTMLFooter;
+echo '</div> <!-- end \'content_vert_kolom\' -->'.NL;
+echo showCSSFooter();
 
 ?>

@@ -3,6 +3,7 @@ include_once('../include/functions.php');
 include_once('../include/EB_functions.php');
 include_once('../include/config.php');
 include_once('../include/config_mails.php');
+include_once('../include/HTML_HeaderFooter.php');
 $db = connect_db();
 
 $showLogin = true;
@@ -579,12 +580,10 @@ $pageTitle = 'Declaratie';
 include_once('../include/HTML_TopBottom.php');
 include_once('../include/HTML_HeaderFooter.php');
 
-echo $HTMLHeader;
-echo '<table border=0 width=100%>'.NL;
-echo '<tr>'.NL;
-echo '	<td valign="top" width="25%">&nbsp;</td>'.NL;
-echo '	<td valign="top">'. showBlock(implode("\n", $page), 100). '</td>'.NL;
-echo '	<td valign="top" width="25%">&nbsp;</td>'.NL;
-echo '</tr>'.NL;
-echo '</table>'.NL;
-echo $HTMLFooter;
+echo showCSSHeader();
+echo '<div class="content_vert_kolom_full">'.NL;
+echo "<div class='content_block'>".NL. implode(NL, $page).NL."</div>".NL;
+echo '</div> <!-- end \'content_vert_kolom_full\' -->'.NL;
+echo showCSSFooter();
+
+?>

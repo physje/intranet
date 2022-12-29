@@ -19,15 +19,16 @@ if(isset($_REQUEST['new'])) {
 }
 
 if(isset($_REQUEST['voorgangerID'])) {
-	if(isset($_POST['save'])) {
+	# Sla predikant gegevens op
+	if(isset($_POST['save_data'])) {
 		if($_POST['achter'] == '') {
-			$dienstBlocken[] = "Gegevens <b>niet</b> opgeslagen, achternaam is niet ingevuld";
+			$left[] = "Gegevens <b>niet</b> opgeslagen, achternaam is niet ingevuld";
 		} elseif($_POST['init'] == '' AND $_POST['voor'] == '') {
-			$dienstBlocken[] = "Gegevens <b>niet</b> opgeslagen, voornaam of initialen is niet ingevuld";
+			$left[] = "Gegevens <b>niet</b> opgeslagen, voornaam of initialen is niet ingevuld";
 		} elseif($_POST['mail'] == '') {
-			$dienstBlocken[] = "Gegevens <b>niet</b> opgeslagen, mailadres is niet ingevuld";
+			$left[] = "Gegevens <b>niet</b> opgeslagen, mailadres is niet ingevuld";
 		} elseif($_POST['denom'] == '') {
-			$dienstBlocken[] = "Gegevens <b>niet</b> opgeslagen, denominatie is niet ingevuld";
+			$left[] = "Gegevens <b>niet</b> opgeslagen, denominatie is niet ingevuld";
 		} else {				
 			$sql = "UPDATE $TableVoorganger SET ";
 			$sql .= "$VoorgangerTitel = '". $_POST['titel'] ."', ";
@@ -44,288 +45,265 @@ if(isset($_REQUEST['voorgangerID'])) {
 			$sql .= "$VoorgangerDenom = '". $_POST['denom'] ."', ";
 			$sql .= "$VoorgangerOpmerking = '". $_POST['opm'] ."', ";
 			$sql .= "$VoorgangerStijl = '". $_POST['stijl'] ."', ";		
-			//$sql .= "$VoorgangerHonorarium = '". $_POST['honorarium'] ."', ";
-			
-			if(isset($_POST['honorarium_old']))     $sql .= "$VoorgangerHonorariumOld = '". $_POST['honorarium_old'] ."', ";
-			if(isset($_POST['honorarium_new']))     $sql .= "$VoorgangerHonorariumNew = '". $_POST['honorarium_new'] ."', ";
-			if(isset($_POST['honorarium_spec']))    $sql .= "$VoorgangerHonorariumSpecial = '". $_POST['honorarium_spec'] ."', ";
-			if(isset($_POST['km_vergoeding']))      $sql .= "$VoorgangerKM = '". $_POST['km_vergoeding'] ."', ";
-			if(isset($_POST['EB_relatie']))         $sql .= "$VoorgangerEBRelatie = '". $_POST['EB_relatie'] ."', ";		
-			
-			$sql .= "$VoorgangerHonorariumOld = '". $_POST['honorarium_old'] ."', ";
-			$sql .= "$VoorgangerHonorariumNew = '". $_POST['honorarium_new'] ."', ";
-			$sql .= "$VoorgangerHonorariumSpecial = '". $_POST['honorarium_spec'] ."', ";
-			$sql .= "$VoorgangerKM = '". $_POST['km_vergoeding'] ."', ";
-			$sql .= "$VoorgangerEBRelatie = '". $_POST['EB_relatie'] ."', ";		
-			$sql .= "$VoorgangerAandacht = '". ($_POST['aandachtspunten'] == 'ja' ? '1' : '0') ."', ";
-			$sql .= "$VoorgangerDeclaratie = '". ($_POST['declaratie'] == 'ja' ? '1' : '0') ."' ";
+			$sql .= "$VoorgangerAandacht = '". (isset($_POST['aandachtspunten']) AND $_POST['aandachtspunten'] == 'ja' ? '1' : '0') ."', ";
+			$sql .= "$VoorgangerDeclaratie = '". (isset($_POST['declaratie']) AND $_POST['declaratie'] == 'ja' ? '1' : '0') ."' ";
 			$sql .= "WHERE $VoorgangerID = '". $_POST['voorgangerID'] ."'";
 			
 			if(mysqli_query($db, $sql)) {
-				$dienstBlocken[] = "Gegevens opgeslagen";
+				$top_left[] = "Gegevens opgeslagen";
 				toLog('info', $_SESSION['ID'], '', 'Gegevens voorganger ('. $_REQUEST['voorgangerID'] .') bijgewerkt');
 			} else {
-				$dienstBlocken[] = "Ging iets niet goed met gegevens opslaan";
+				$top_left[] = "Ging iets niet goed met gegevens opslaan";
 				toLog('error', $_SESSION['ID'], '', 'Gegevens voorganger ('. $_REQUEST['voorgangerID'] .') konden niet worden opgeslagen');
 			}
 		}
 	}
 	
-	if(isset($_POST['voorgangerID'])) {
-		$voorgangerData['titel'] = $_POST['titel'];
-		$voorgangerData['voor'] = $_POST['voor'];
-		$voorgangerData['init'] = $_POST['init'];
-		$voorgangerData['tussen'] = $_POST['tussen'];
-		$voorgangerData['achter'] = $_POST['achter'];
-		$voorgangerData['tel'] = $_POST['tel'];
-		$voorgangerData['tel2'] = $_POST['tel2'];
-		$voorgangerData['pv_naam'] = $_POST['pvnaam'];
-		$voorgangerData['pv_tel'] = $_POST['pvtel'];
-		$voorgangerData['mail'] = $_POST['mail'];
-		$voorgangerData['plaats'] = $_POST['plaats'];
-		$voorgangerData['denom'] = $_POST['denom'];
-		$voorgangerData['opm'] = $_POST['opm'];
-		$voorgangerData['stijl'] = $_POST['stijl'];
-		$voorgangerData['honorarium_oud'] = $_POST['honorarium_old'];
-		$voorgangerData['honorarium_nieuw'] = $_POST['honorarium_new'];
-		$voorgangerData['honorarium_spec'] = $_POST['honorarium_spec'];		
-		$voorgangerData['km_vergoeding'] = $_POST['km_vergoeding'];
-		$voorgangerData['EB-relatie'] = $_POST['EB_relatie'];
-		$voorgangerData['aandacht'] = ($_POST['aandachtspunten'] == 'ja' ? '1' : '0');
-		$voorgangerData['declaratie'] = ($_POST['declaratie'] == 'ja' ? '1' : '0');
-	} else {		
-		$firstData = getVoorgangerData($_REQUEST['voorgangerID']);
-		$secondData = getDeclaratieData($_REQUEST['voorgangerID'], time());		
-		$voorgangerData = array_merge($firstData, $secondData);
-	}
+	# Sla declaratie-data op
+	if(isset($_POST['save_decl'])) {
+		$sql = "UPDATE $TableVoorganger SET ";
+		$sql .= "$VoorgangerHonorariumOld = '". $_POST['honorarium_old'] ."', ";
+		$sql .= "$VoorgangerHonorariumNew = '". $_POST['honorarium_new'] ."', ";
+		$sql .= "$VoorgangerHonorariumSpecial = '". $_POST['honorarium_spec'] ."', ";
+		$sql .= "$VoorgangerKM = '". $_POST['km_vergoeding'] ."', ";
+		$sql .= "$VoorgangerEBRelatie = '". $_POST['EB_relatie'] ."' ";		
+		$sql .= "WHERE $VoorgangerID = '". $_POST['voorgangerID'] ."'";
 		
-	$text[] = "<form method='post' action='$_SERVER[PHP_SELF]'>";
-	$text[] = "<input type='hidden' name='voorgangerID' value='". $_REQUEST['voorgangerID'] ."'>";
-	$text[] = "<table border=0>";
+		if(mysqli_query($db, $sql)) {
+			$top_right[] = "Gegevens opgeslagen";
+			toLog('info', $_SESSION['ID'], '', 'Gegevens voorganger ('. $_REQUEST['voorgangerID'] .') bijgewerkt');
+		} else {
+			$top_right[] = "Ging iets niet goed met gegevens opslaan";
+			toLog('error', $_SESSION['ID'], '', 'Gegevens voorganger ('. $_REQUEST['voorgangerID'] .') konden niet worden opgeslagen');
+		}		
+	}
+	
+	$firstData = getVoorgangerData($_REQUEST['voorgangerID']);
+	$secondData = getDeclaratieData($_REQUEST['voorgangerID'], time());		
+
+	$voorgangerData['titel']		= getParam('titel', $firstData['titel']);
+	$voorgangerData['voor']			= getParam('voor', $firstData['voor']);
+	$voorgangerData['init']			= getParam('init', $firstData['init']);
+	$voorgangerData['tussen']		= getParam('tussen', $firstData['tussen']);
+	$voorgangerData['achter']		= getParam('achter', $firstData['achter']);
+	$voorgangerData['tel']			= getParam('tel', $firstData['tel']);
+	$voorgangerData['tel2']			= getParam('tel2', $firstData['tel2']);
+	$voorgangerData['pv_naam']	= getParam('pvnaam', $firstData['pv_naam']);
+	$voorgangerData['pv_tel']		= getParam('pvtel', $firstData['pv_tel']);
+	$voorgangerData['mail']			= getParam('mail', $firstData['mail']);
+	$voorgangerData['plaats']		= getParam('plaats', $firstData['plaats']);
+	$voorgangerData['denom']		= getParam('denom', $firstData['denom']);
+	$voorgangerData['opm']			= getParam('opm', $firstData['opm']);
+	$voorgangerData['stijl']		= getParam('stijl', $firstData['stijl']);
+	$voorgangerData['aandacht'] = (isset($_POST['aandachtspunten']) AND $_POST['aandachtspunten'] == 'ja' ? '1' : '0');
+	$voorgangerData['declaratie'] = (isset($_POST['declaratie']) AND $_POST['declaratie'] == 'ja' ? '1' : '0');
+	
+	$voorgangerData['honorarium_oud'] 	= getParam('honorarium_old', $secondData['honorarium_oud']);
+	$voorgangerData['honorarium_nieuw']	= getParam('honorarium_new', $secondData['honorarium_nieuw']);
+	$voorgangerData['honorarium_spec']	= getParam('honorarium_spec', $secondData['honorarium_spec']);
+	$voorgangerData['km_vergoeding']		= getParam('km_vergoeding', $secondData['km_vergoeding']);
+	$voorgangerData['EB-relatie']				= getParam('EB_relatie', $secondData['EB-relatie']);
+				
+	$left[] = "<form method='post' action='$_SERVER[PHP_SELF]'>";
+	$left[] = "<input type='hidden' name='voorgangerID' value='". $_REQUEST['voorgangerID'] ."'>";
+	
 	if($nieuweVoorganger) {
-		$text[] = "<tr>";
-		$text[] = "	<td colspan='2'><b>Deze voorganger verschijnt niet direct<br>in het selectie-lijstje op het rooster.<br>Daarvoor moet het rooster eerst ververst worden.</b></td>";
-		$text[] = "</tr>";
+		$left[] = "<b>Deze voorganger verschijnt niet direct<br>in het selectie-lijstje op het rooster.<br>Daarvoor moet het rooster eerst ververst worden.</b>";
 	}
-	$text[] = "<tr>";
-	$text[] = "	<td width='50%'><h1>Preekvoorziener</h1></td>";
+
+	$left[] = "<table>";
+	$left[] = "<tr>";
+	$left[] = "	<td>Titel</td>";
+	$left[] = "	<td><input type='text' name='titel' value='". $voorgangerData['titel'] ."'></td>";
+	$left[] = "</tr>";
+	$left[] = "<tr>";
+	$left[] = "	<td>Initialen</td>";
+	$left[] = "	<td><input type='text' name='init' value='". $voorgangerData['init'] ."'></td>";
+	$left[] = "</tr>";
+	$left[] = "<tr>";
+	$left[] = "	<td>Voornaam</td>";
+	$left[] = "	<td><input type='text' name='voor' value='". $voorgangerData['voor'] ."'></td>";
+	$left[] = "</tr>";
+	$left[] = "<tr>";
+	$left[] = "	<td>Tussenvoegsel</td>";
+	$left[] = "	<td><input type='text' name='tussen' value='". $voorgangerData['tussen'] ."'></td>";
+	$left[] = "</tr>";
+	$left[] = "<tr>";
+	$left[] = "	<td>Achternaam</td>";
+	$left[] = "	<td><input type='text' name='achter' value='". $voorgangerData['achter'] ."'></td>";
+	$left[] = "</tr>";
+	$left[] = "<tr>";
+	$left[] = "	<td>Telefoonnummer</td>";
+	$left[] = "	<td><input type='text' name='tel' value='". $voorgangerData['tel'] ."'></td>";
+	$left[] = "</tr>";
+	$left[] = "<tr>";
+	$left[] = "	<td>Mailadres</td>";
+	$left[] = "	<td><input type='text' name='mail' value='". $voorgangerData['mail'] ."'></td>";
+	$left[] = "</tr>";
+	$left[] = "<tr>";
+	$left[] = "	<td>Plaats</td>";
+	$left[] = "	<td><input type='text' name='plaats' value='". $voorgangerData['plaats'] ."'></td>";
+	$left[] = "</tr>";
+	$left[] = "<tr>";
+	$left[] = "	<td>Denominatie</td>";
+	$left[] = "	<td><input type='text' name='denom' value='". $voorgangerData['denom'] ."'></td>";
+	$left[] = "</tr>";
+	$left[] = "<tr>";
+	$left[] = "	<td>Mobiel</td>";
+	$left[] = "	<td><input type='text' name='tel2' value='". $voorgangerData['tel2'] ."'></td>";
+	$left[] = "</tr>";
+	$left[] = "<tr>";
+	$left[] = "	<td>Naam preekvoorziener</td>";
+	$left[] = "	<td><input type='text' name='pvnaam' value='". $voorgangerData['pv_naam'] ."'></td>";
+	$left[] = "</tr>";
+	$left[] = "<tr>";
+	$left[] = "	<td>Telefoon preekvoorziener</td>";
+	$left[] = "	<td><input type='text' name='pvtel' value='". $voorgangerData['pv_tel'] ."'></td>";
+	$left[] = "</tr>";		
+	$left[] = "<tr>";
+	$left[] = "	<td valign='top'>Opmerking</td>";
+	$left[] = "	<td><textarea name='opm'>". $voorgangerData['opm'] ."</textarea></td>";
+	$left[] = "</tr>";
+	$left[] = "<tr>";
+	$left[] = "	<td>Aanspreekstijl</td>";
+	$left[] = "	<td><select name='stijl'>";
+	$left[] = "	<option value='0'". ($voorgangerData['stijl'] == 0 ? ' selected' : '') .">Vousvoyeren</option>";
+	$left[] = "	<option value='1'". ($voorgangerData['stijl'] == 1 ? ' selected' : '') .">Tutoyeren</option>";		
+	$left[] = "	</select></td>";
+	$left[] = "</tr>";	
+	$left[] = "<tr>";
+	$left[] = "	<td>&nbsp;</td>";
+	$left[] = "	<td>Als bijlage meesturen :<br>";
+	$left[] = "	<input type='checkbox' name='aandachtspunten' value='ja'". ($voorgangerData['aandacht'] == 1 ? ' checked' : '') ."> Aandachtspunten voor de dienst<br>";
+	$left[] = "	<input type='checkbox' name='declaratie' value='ja'". ($voorgangerData['declaratie'] == 1 ? ' checked' : '') ."> Declaratie-formulier</td>";
+	$left[] = "</tr>";		
+	$left[] = "</table>";
+	$left[] = "<p class='after_table'><input type='submit' name='save_data' value='Gegevens opslaan'></p>";
+	$left[] = "</form>";
+	
+	
 	if(in_array(1, getMyGroups($_SESSION['ID']))) {	
-		$text[] = "	<td width='50%'><h1>Declaratie</h1></td>";
-	} else {
-		$text[] = "	<td width='50%'>&nbsp;</td>";
-	}
-	$text[] = "</tr>";		
-	$text[] = "<tr>";
-	$text[] = "	<td valign='top'>";
-	
-	# Start Preekvoorziener
-	$text[] = "<table border=0>";
-	$text[] = "<tr>";
-	$text[] = "	<td>Titel</td>";
-	$text[] = "	<td><input type='text' name='titel' value='". $voorgangerData['titel'] ."'></td>";
-	$text[] = "</tr>";
-	$text[] = "<tr>";
-	$text[] = "	<td>Initialen</td>";
-	$text[] = "	<td><input type='text' name='init' value='". $voorgangerData['init'] ."'></td>";
-	$text[] = "</tr>";
-	$text[] = "<tr>";
-	$text[] = "	<td>Voornaam</td>";
-	$text[] = "	<td><input type='text' name='voor' value='". $voorgangerData['voor'] ."'></td>";
-	$text[] = "</tr>";
-	$text[] = "<tr>";
-	$text[] = "	<td>Tussenvoegsel</td>";
-	$text[] = "	<td><input type='text' name='tussen' value='". $voorgangerData['tussen'] ."'></td>";
-	$text[] = "</tr>";
-	$text[] = "<tr>";
-	$text[] = "	<td>Achternaam</td>";
-	$text[] = "	<td><input type='text' name='achter' value='". $voorgangerData['achter'] ."'></td>";
-	$text[] = "</tr>";
-	$text[] = "<tr>";
-	$text[] = "	<td>Telefoonnummer</td>";
-	$text[] = "	<td><input type='text' name='tel' value='". $voorgangerData['tel'] ."'></td>";
-	$text[] = "</tr>";
-	$text[] = "<tr>";
-	$text[] = "	<td>Mailadres</td>";
-	$text[] = "	<td><input type='text' name='mail' value='". $voorgangerData['mail'] ."'></td>";
-	$text[] = "</tr>";
-	$text[] = "<tr>";
-	$text[] = "	<td>Plaats</td>";
-	$text[] = "	<td><input type='text' name='plaats' value='". $voorgangerData['plaats'] ."'></td>";
-	$text[] = "</tr>";
-	$text[] = "<tr>";
-	$text[] = "	<td>Denominatie</td>";
-	$text[] = "	<td><input type='text' name='denom' value='". $voorgangerData['denom'] ."'></td>";
-	$text[] = "</tr>";
-	$text[] = "<tr>";
-	$text[] = "	<td>Mobiel</td>";
-	$text[] = "	<td><input type='text' name='tel2' value='". $voorgangerData['tel2'] ."'></td>";
-	$text[] = "</tr>";
-	$text[] = "<tr>";
-	$text[] = "	<td>Naam preekvoorziener</td>";
-	$text[] = "	<td><input type='text' name='pvnaam' value='". $voorgangerData['pv_naam'] ."'></td>";
-	$text[] = "</tr>";
-	$text[] = "<tr>";
-	$text[] = "	<td>Telefoon preekvoorziener</td>";
-	$text[] = "	<td><input type='text' name='pvtel' value='". $voorgangerData['pv_tel'] ."'></td>";
-	$text[] = "</tr>";		
-	$text[] = "<tr>";
-	$text[] = "	<td valign='top'>Opmerking</td>";
-	$text[] = "	<td><textarea name='opm'>". $voorgangerData['opm'] ."</textarea></td>";
-	$text[] = "</tr>";
-	$text[] = "<tr>";
-	$text[] = "	<td>Aanspreekstijl</td>";
-	$text[] = "	<td><select name='stijl'>";
-	$text[] = "	<option value='0'". ($voorgangerData['stijl'] == 0 ? ' selected' : '') .">Vousvoyeren</option>";
-	$text[] = "	<option value='1'". ($voorgangerData['stijl'] == 1 ? ' selected' : '') .">Tutoyeren</option>";		
-	$text[] = "	</select></td>";
-	$text[] = "</tr>";	
-	$text[] = "<tr>";
-	$text[] = "	<td>&nbsp;</td>";
-	$text[] = "	<td>Als bijlage meesturen :<br>";
-	$text[] = "	<input type='checkbox' name='aandachtspunten' value='ja'". ($voorgangerData['aandacht'] == 1 ? ' checked' : '') ."> Aandachtspunten voor de dienst<br>";
-	$text[] = "	<input type='checkbox' name='declaratie' value='ja'". ($voorgangerData['declaratie'] == 1 ? ' checked' : '') ."> Declaratie-formulier</td>";
-	$text[] = "</tr>";		
-	$text[] = "</table>";
-	
-	# Einde Preekvoorziener
-	$text[] = "</td>";
-	$text[] = "	<td valign='top'>";
-	
-	# Start Declaratie
-	if(in_array(1, getMyGroups($_SESSION['ID']))) {	
-		$text[] = "<table border=0>";
-		$text[] = "<tr>";
-		$text[] = "	<td>Honorarium 2019</td>";
-		$text[] = "	<td><input type='text' name='honorarium_old' value='". $voorgangerData['honorarium_oud'] ."'> cent</td>";
-		$text[] = "</tr>";
-		$text[] = "<tr>";
-		$text[] = "	<td>Honorarium 2020</td>";
-		$text[] = "	<td><input type='text' name='honorarium_new' value='". $voorgangerData['honorarium_nieuw'] ."'> cent</td>";
-		$text[] = "</tr>";
-		$text[] = "<tr>";
-		$text[] = "	<td>Honorarium<br><small>speciale gelegenheden</small></td>";
-		$text[] = "	<td><input type='text' name='honorarium_spec' value='". $voorgangerData['honorarium_spec'] ."'> cent</td>";
-		$text[] = "</tr>";
-		$text[] = "<tr>";
-		$text[] = "	<td>KM-vergoeding</td>";
-		$text[] = "	<td><input type='text' name='km_vergoeding' value='". $voorgangerData['km_vergoeding'] ."'> cent</td>";
-		$text[] = "</tr>";
-		$text[] = "<tr>";
-		$text[] = "	<td>eBoekhouden</td>";
-		//$text[] = "	<td><input type='text' name='EB_relatie' value='". $voorgangerData['EB-relatie'] ."'></td>";
-		$text[] = "	<td><select name='EB_relatie'>";
-		$text[] = "	<option value=''>Selecteer relatie</option>";
+		$right[] = "<form method='post' action='$_SERVER[PHP_SELF]'>";
+		$right[] = "<input type='hidden' name='voorgangerID' value='". $_REQUEST['voorgangerID'] ."'>";
+		$right[] = "<table>";
+		$right[] = "<tr>";
+		$right[] = "	<td>Honorarium 2019</td>";
+		$right[] = "	<td><input type='text' name='honorarium_old' value='". $voorgangerData['honorarium_oud'] ."'> cent</td>";
+		$right[] = "</tr>";
+		$right[] = "<tr>";
+		$right[] = "	<td>Honorarium 2020</td>";
+		$right[] = "	<td><input type='text' name='honorarium_new' value='". $voorgangerData['honorarium_nieuw'] ."'> cent</td>";
+		$right[] = "</tr>";
+		$right[] = "<tr>";
+		$right[] = "	<td>Honorarium<br><small>speciale gelegenheden</small></td>";
+		$right[] = "	<td><input type='text' name='honorarium_spec' value='". $voorgangerData['honorarium_spec'] ."'> cent</td>";
+		$right[] = "</tr>";
+		$right[] = "<tr>";
+		$right[] = "	<td>KM-vergoeding</td>";
+		$right[] = "	<td><input type='text' name='km_vergoeding' value='". $voorgangerData['km_vergoeding'] ."'> cent</td>";
+		$right[] = "</tr>";
+		$right[] = "<tr>";
+		$right[] = "	<td>eBoekhouden</td>";		
+		$right[] = "	<td><select name='EB_relatie'>";
+		$right[] = "	<option value=''>Selecteer relatie</option>";
 		
-		$relaties = eb_getRelaties();
-	
+		$relaties = eb_getRelaties();	
 		foreach($relaties as $relatieData) {
-			$text[] = "	<option value='". $relatieData['code'] ."'". ($voorgangerData['EB-relatie'] == $relatieData['code'] ? ' selected' : '') .">". substr($relatieData['naam'], 0, 35) ."</option>";
+			$right[] = "	<option value='". $relatieData['code'] ."'". ($voorgangerData['EB-relatie'] == $relatieData['code'] ? ' selected' : '') .">". substr($relatieData['naam'], 0, 35) ."</option>";
 		}		
 				
-		$text[] = "	</select></td>";
-		$text[] = "</tr>";
-		$text[] = "<tr>";
-		$text[] = "	<td>&nbsp;</td>";
-		$text[] = "	<td>&nbsp;</td>";
-		$text[] = "</tr>";
-		$text[] = "<tr>";
-		$text[] = "	<td>&nbsp;</td>";
-		$text[] = "	<td>";
-		$text[] = "<table border=1>";
-		$text[] = "<tr>";
-		$text[] = "	<td>&nbsp;</td>";
-		$text[] = "	<td width='50' align='center'><b>2019</b></td>";
-		$text[] = "	<td width='50' align='center'><b>2020</b></td>";
-		$text[] = "	<td width='50' align='center'><b>Speciaal</b></td>";
-		$text[] = "</tr>";
-		$text[] = "<tr>";
-		$text[] = "	<td><b>GKV</b></td>";
-		$text[] = "	<td align='center'>&euro; 90</td>";
-		$text[] = "	<td align='center'>&euro; 90</td>";
-		$text[] = "	<td align='center'>&euro; 90</td>";
-		$text[] = "</tr>";
-		$text[] = "<tr>";
-		$text[] = "	<td><b>CGK</b></td>";
-		$text[] = "	<td align='center'>&euro; 90</td>";
-		$text[] = "	<td align='center'>&euro; 90</td>";
-		$text[] = "	<td align='center'>&euro; 180</td>";
-		$text[] = "</tr>";
-		$text[] = "<tr>";
-		$text[] = "	<td><b>NGK</b></td>";
-		$text[] = "	<td align='center'>&euro; 90</td>";
-		$text[] = "	<td align='center'>&euro; 110</td>";
-		$text[] = "	<td align='center'>&euro; 220</td>";
-		$text[] = "</tr>";
-		$text[] = "</table>";
-		
-		$text[] = "	</td>";
-		$text[] = "</tr>";
-		$text[] = "</table>";
+		$right[] = "	</select></td>";
+		$right[] = "</tr>";
+		$right[] = "<tr>";
+		$right[] = "	<td>&nbsp;</td>";
+		$right[] = "	<td>&nbsp;</td>";
+		$right[] = "</tr>";
+		$right[] = "<tr>";
+		$right[] = "	<td>&nbsp;</td>";
+		$right[] = "	<td>";
+		$right[] = "<table border=1>";
+		$right[] = "<tr>";
+		$right[] = "	<td>&nbsp;</td>";
+		$right[] = "	<td width='50' align='center'><b>2019</b></td>";
+		$right[] = "	<td width='50' align='center'><b>2020</b></td>";
+		$right[] = "	<td width='50' align='center'><b>Speciaal</b></td>";
+		$right[] = "</tr>";
+		$right[] = "<tr>";
+		$right[] = "	<td><b>GKV</b></td>";
+		$right[] = "	<td align='center'>&euro; 90</td>";
+		$right[] = "	<td align='center'>&euro; 90</td>";
+		$right[] = "	<td align='center'>&euro; 90</td>";
+		$right[] = "</tr>";
+		$right[] = "<tr>";
+		$right[] = "	<td><b>CGK</b></td>";
+		$right[] = "	<td align='center'>&euro; 90</td>";
+		$right[] = "	<td align='center'>&euro; 90</td>";
+		$right[] = "	<td align='center'>&euro; 180</td>";
+		$right[] = "</tr>";
+		$right[] = "<tr>";
+		$right[] = "	<td><b>NGK</b></td>";
+		$right[] = "	<td align='center'>&euro; 90</td>";
+		$right[] = "	<td align='center'>&euro; 110</td>";
+		$right[] = "	<td align='center'>&euro; 220</td>";
+		$right[] = "</tr>";
+		$right[] = "</table>";
+		$right[] = "	</td>";
+		$right[] = "</tr>";
+		$right[] = "</table>";
+		$right[] = "<p class='after_table'><input type='submit' name='save_decl' value='Declaratie-data opslaan'></p>";
+		$right[] = "</form>";
 	} else {		
-		$text[] = "<table border=0>";
-		$text[] = "<tr>";
-		$text[] = "	<td>Laatste keer voorgegaan</td>";
+		$right[] = "<table>";
+		$right[] = "<tr>";
+		$right[] = "	<td>Laatste keer voorgegaan</td>";
 		//$text[] = "	<td>". strftime('%d %h, %y', $voorgangerData['last_voorgaan']) ."</td>";
 		if($voorgangerData['last_voorgaan'] > 0) {
-			$text[] = "	<td>". date('d-m-Y', $voorgangerData['last_voorgaan']) ."</td>";
+			$right[] = "	<td>". date('d-m-Y', $voorgangerData['last_voorgaan']) ."</td>";
 		} else {
-			$text[] = "	<td>niet</td>";
+			$right[] = "	<td>niet</td>";
 		}
-		$text[] = "</tr>";
-		$text[] = "<tr>";
-		$text[] = "	<td>Laatste keer aandachtspunten ontvangen</td>";
+		$right[] = "</tr>";
+		$right[] = "<tr>";
+		$right[] = "	<td>Laatste keer aandachtspunten ontvangen</td>";
 		//$text[] = "	<td>". strftime('%d %h, %y', $voorgangerData['last_aandacht']) ."</td>";
 		if($voorgangerData['last_aandacht'] > 0) {
-			$text[] = "	<td>". date('d-m-Y', $voorgangerData['last_aandacht']) ."</td>";
+			$right[] = "	<td>". date('d-m-Y', $voorgangerData['last_aandacht']) ."</td>";
 		} else {
-			$text[] = "	<td>niet</td>";
+			$right[] = "	<td>niet</td>";
 		}
 		
-		$text[] = "</tr>";
-		$text[] = "</table>";
-	}		
-	
-	# Einde Declaratie
-	$text[] = "</td>";
-	$text[] = "</tr>";
-	$text[] = "<tr>";
-	$text[] = "	<td colspan='2'>&nbsp;</td>";
-	$text[] = "</tr>";
-	$text[] = "<tr>";
-	$text[] = "	<td>&nbsp;</td>";
-	$text[] = "	<td><input type='submit' name='save' value='Opslaan'></td>";
-	$text[] = "</tr>";
-	$text[] = "</table>";
-	$text[] = "</form>";
-	
-	$dienstBlocken[] = implode("\n", $text);
-	
+		$right[] = "</tr>";
+		$right[] = "</table>";
+	}
 } else {
-	$deel[] = "Selecteer de voorganger waar u de gegevens van wilt wijzigen :";
+	$left[] = "Selecteer de voorganger waar u de gegevens van wilt wijzigen :<br>";
 	$voorgangers = getVoorgangers();
 	foreach($voorgangers as $voorgangerID) {
 		$voorgangerData = getVoorgangerData($voorgangerID);
 		$voor = ($voorgangerData['voor'] == '' ? $voorgangerData['init'] : $voorgangerData['voor']);
 		$naam = $voor.' '.($voorgangerData['tussen'] == '' ? '' : $voorgangerData['tussen']. ' ').$voorgangerData['achter'];
-		$deel[] = "<a href='?voorgangerID=$voorgangerID'>$naam</a>";
+		$left[] = "<a href='?voorgangerID=$voorgangerID'>$naam</a><br>";
 	}
-	
-	//$deel[] = "";
-	$dienstBlocken[] = "<a href='?new=true'>Voeg nieuwe voorganger toe</a>";
-	
-	$dienstBlocken[] = implode("<br>", $deel);
+		
+	$right[] = "<a href='?new=true'>Voeg nieuwe voorganger toe</a>";
 }
 
-echo $HTMLHeader;
-echo "<table width=100% border=0>";
-foreach($dienstBlocken as $block) {
-	echo "<tr>";
-	echo "	<td valign='top'>". showBlock($block, 100)."</td>";
-	echo "</tr>";
-	echo "<tr>";
-	echo "	<td>&nbsp;</td>";
-	echo "</tr>";
+
+echo showCSSHeader();
+echo '<div class="content_vert_kolom">'.NL;
+if(isset($_REQUEST['voorgangerID'])) {
+	$voorgangerData = getVoorgangerData($_REQUEST['voorgangerID']);
+	$voor = ($voorgangerData['voor'] == '' ? $voorgangerData['init'] : $voorgangerData['voor']);	
+
+	echo "<h1>". $voor.' '.($voorgangerData['tussen'] == '' ? '' : $voorgangerData['tussen']. ' ').$voorgangerData['achter'] ."</h1>";
 }
 
-echo "</table>";
-echo $HTMLFooter;
+if(isset($top_left))	echo "<div class='content_block'>".NL. implode(NL, $top_left).NL."</div>".NL;
+echo "<div class='content_block'>".NL. implode(NL, $left).NL."</div>".NL;
+
+if(isset($top_right))	echo "<div class='content_block'>".NL. implode(NL, $top_right).NL."</div>".NL;
+echo "<div class='content_block'>".NL. implode(NL, $right).NL."</div>".NL;
+
+echo '</div> <!-- end \'content_vert_kolom\' -->'.NL;
+echo showCSSFooter();
+?>

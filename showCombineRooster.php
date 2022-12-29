@@ -19,24 +19,25 @@ if(isset($_REQUEST['rs'])) {
 if(count($roosters) > 0) {
 	$diensten = getAllKerkdiensten(true);
 		
-	$text[] = "<table border=1>";
+	$text[] = "<table>";
 	$text[] = "<tr>";
-	$text[] = "<td>&nbsp;</td>";
+	$text[] = "<th>&nbsp;</th>";
+	
 	$header[] = 'Datum';
 	
 	foreach($roosters as $rooster) {		
 		# Voorganger
 		if($rooster == 'v') {
-			$text[] = "<td><b>Voorganger</b></td>";
+			$text[] = "<th>Voorganger</th>";
 			$header[] = 'Voorganger';
 		# Collecte
 		} elseif($rooster == 'c') {
-			$text[] = "<td><b>Collecte</b></td>";
+			$text[] = "<th>Collecte</th>";
 			$header[] = 'Collecte';
 		# de rest
 		} else {
 			$RoosterData = getRoosterDetails($rooster);
-			$text[] = "<td><b>". $RoosterData['naam'] ."</b></td>";
+			$text[] = "<th>". $RoosterData['naam'] ."</th>";
 			$header[] = $RoosterData['naam'];
 		}
 	}
@@ -52,7 +53,7 @@ if(count($roosters) > 0) {
 			# Voorganger
 			if($rooster == 'v') {
 				if($dienstData['voorganger'] != '') {
-					$cel[] = "<td valign='top'>". $dienstData['voorganger'] ."</td>";
+					$cel[] = "<td>". $dienstData['voorganger'] ."</td>";
 					$rij[] = $dienstData['voorganger'];
 					$gevuldeCel = true;
 				} else {
@@ -63,7 +64,7 @@ if(count($roosters) > 0) {
 			# Collecte
 			} elseif($rooster == 'c') {
 				if($dienstData['collecte_1'] != '') {
-					$cel[] = "<td valign='top'>". $dienstData['collecte_1'] .'<br>'. $dienstData['collecte_2'] ."</td>";
+					$cel[] = "<td>". $dienstData['collecte_1'] .'<br>'. $dienstData['collecte_2'] ."</td>";
 					$rij[] = $dienstData['collecte_1'] ."\n". $dienstData['collecte_2'];
 					$gevuldeCel = true;
 				} else {
@@ -81,13 +82,13 @@ if(count($roosters) > 0) {
 					foreach($vulling as $lid) {
 						$team[] = makeName($lid, 5);
 					}
-					$cel[] = "<td valign='top'>". implode("<br>", $team) ."</td>";
+					$cel[] = "<td>". implode("<br>", $team) ."</td>";
 					$rij[] = implode("\n", $team);
 					$gevuldeCel = true;
 					
 				# Als er tekst gevonden is voor het rooster
 				} elseif(is_string($vulling)) {				
-					$cel[] = "<td valign='top'>". $vulling ."</td>";
+					$cel[] = "<td>". $vulling ."</td>";
 					$rij[] = $vulling;
 					$gevuldeCel = true;
 					
@@ -101,7 +102,7 @@ if(count($roosters) > 0) {
 		
 		if($gevuldeCel) {
 			$text[] = "<tr>";
-			$text[] = "<td valign='top'>".time2str("%a %d %b %H:%M", $dienstData['start'])."<br><i>".$dienstData['bijzonderheden'] ."</i></td>";
+			$text[] = "<td>".time2str("%a %d %b %H:%M", $dienstData['start'])."<br><i>".$dienstData['bijzonderheden'] ."</i></td>";
 			$text[] = implode("\n", $cel);
 			$text[] = "</tr>";
 			$rij = array_merge(array(time2str("%a %d %b %H:%M", $dienstData['start'])."\n".$dienstData['bijzonderheden']), $rij);
@@ -111,24 +112,36 @@ if(count($roosters) > 0) {
 	
 	$text[] = "</table>";
 	$text[] = "<p>";
-	$text[] = "<a href='?rs=". implode('|', $roosters)."&pdf'>sla op als PDF</a>";
+	$text[] = "<a href='?rs=". implode('|', $roosters)."&pdf' class='button'>sla op als PDF</a>";
 	
 	toLog('debug', $_SESSION['ID'], '', 'Combi-rooster '. implode('|', $roosters) .' bekeken');
 } else {
 	$roosters = getRoosters(0);
-	$text[] = "<form>";
-	$text[] = "<table>";
+	$first[] = "<form>";
+	$first[] = "<table id='combirooster_table'>";
 	foreach($roosters as $rooster) {
 		$data = getRoosterDetails($rooster);
-		$text[] = "<tr><td><input type='checkbox' name='r[]' value='$rooster'></td><td>". $data['naam']."</td></tr>";
+		$first[] = "<tr><td><input type='checkbox' name='r[]' value='$rooster'></td><td>". $data['naam']."</td></tr>";
 	}
 	
-	$text[] = "<tr><td><input type='checkbox' name='r[]' value='v'></td><td>Voorganger</td></tr>";
-	$text[] = "<tr><td><input type='checkbox' name='r[]' value='c'></td><td>Collecte</td></tr>";	
-	$text[] = "<tr><td colspan='2'>&nbsp;</td></tr>";
-	$text[] = "<tr><td colspan='2' align='center'><input type='submit' name='show' value='Toon gezamenlijk'></td></tr>";
-	$text[] = "</table>";
-	$text[] = "</form>";	
+	$first[] = "<tr>";
+	$first[] = "	<td><input type='checkbox' name='r[]' value='v'></td>";
+	$first[] = "	<td>Voorganger</td>";
+	$first[] = "</tr>";
+	$first[] = "<tr>";
+	$first[] = "	<td><input type='checkbox' name='r[]' value='c'></td>";
+	$first[] = "	<td>Collecte</td>";
+	$first[] = "</tr>";
+	$first[] = "</table>";
+	#$first[] = "<tr>";
+	#$first[] = "	<td colspan='2'>&nbsp;</td>";
+	#$first[] = "</tr>";
+	#$first[] = "<tr>";
+	#$first[] = "	<td colspan='2'><input type='submit' name='show' value='Toon gezamenlijk'></td>";
+	#$first[] = "</tr>";
+	$first[] = "<p>&nbsp;</p>";
+	$first[] = "<input type='submit' name='show' value='Toon gezamenlijk'>";	
+	$first[] = "</form>";	
 }
 
 if(isset($_REQUEST['pdf'])) {
@@ -158,10 +171,15 @@ if(isset($_REQUEST['pdf'])) {
   $pdf->Output('I', $title.'_'.date('Y_m_d').'.pdf');
   toLog('debug', $_SESSION['ID'], '', 'Combi-rooster '. implode('|', $roosters) .' in PDF bekeken');
 } else {
-	echo $HTMLHeader;
-	echo showBlock(implode(NL, $text), 50);
-	//echo implode("\n", $text);
-	echo $HTMLFooter;
+	echo showCSSHeader(array('default', 'table_default'));
+	echo '<div class="content_vert_kolom">'.NL;
+	if(isset($first)) {
+		echo "	<div class='content_block'>".NL. implode(NL, $first).NL."</div>".NL;	
+	} else {
+		echo "	<div class='content_block'>".NL. implode(NL, $text).NL."</div>".NL;		
+	}
+	echo '</div> <!-- end \'content_vert_kolom\' -->'.NL;
+	echo showCSSFooter();
 }
 
 ?>

@@ -75,24 +75,24 @@ if(isset($_REQUEST['relNr'])) {
 			$page[] = "	<td colspan='2'><input type='submit' name='save' value='Opslaan'></td>";
 			$page[] = "</tr>"; 	
 			$page[] = "</table>";
-			$page[] = "</form>";
+			$page[] = "</form>";			
+			$blok[] = $page;
 		}
 	}
 } else {
 	$relaties = eb_getRelaties();
 	
 	foreach($relaties as $relatie) {
-		$page[] = "<a href='?relNr=". $relatie['code'] ."'>". $relatie['naam'] ."</a><br>";
+		$eersteLetter = strtoupper($relatie['naam'][0]);
+		$blok[$eersteLetter][] = "<a href='?relNr=". $relatie['code'] ."'>". $relatie['naam'] ."</a><br>";
 	}	
 }
 
-# Pagina tonen
-echo $HTMLHeader;
-echo '<table border=0 width=100%>'.NL;
-echo '<tr>'.NL;
-echo '	<td valign="top" width="25%">&nbsp;</td>'.NL;
-echo '	<td valign="top">'. showBlock(implode("\n", $page), 100). '</td>'.NL;
-echo '	<td valign="top" width="25%">&nbsp;</td>'.NL;
-echo '</tr>'.NL;
-echo '</table>'.NL;
-echo $HTMLFooter;
+echo showCSSHeader();
+echo '<div class="content_vert_kolom">'.NL;
+
+foreach($blok as $letter => $page) {
+	echo "<div class='content_block'>".NL. implode(NL, $page).NL."</div>".NL;
+}
+echo '</div> <!-- end \'content_vert_kolom\' -->'.NL;
+echo showCSSFooter();

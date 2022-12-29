@@ -1,0 +1,212 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+	background-color:#F2F2F2;
+	font-family: Arial, Helvetica, sans-serif;
+	color:#34383D;
+}
+
+a	{
+	color: #2B153B;
+	text-decoration: underline;
+}
+	
+a:hover	{
+	color: #8C1974;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+/* Dit moet nog worden aangepast.... lelijk
+input[type=submit], input[type=reset] {
+  background-color: #8C1974;
+  border: none;
+  border-radius: 15px;
+  color: #F2F2F2;
+  padding: 16px 32px;
+  text-decoration: none;
+  margin: 4px 2px;
+  cursor: pointer;
+}*/
+
+input[type=submit], input[type=reset] {
+  border-color: #8C1974;
+}
+
+input[type=text] {
+	width: 100%;
+}
+
+textarea {
+  width: 100%;
+  height: 150px;
+  box-sizing: border-box;
+  resize: none;
+}
+
+
+/* Standaard opzet */
+/* middenstuk van 1024 px waar de text in komt, gecentreerd op het scherm */
+/* verder aantal lay-out technische opmaak */
+.middenstuk {
+	width: 1024px;
+	background-color:#ffffff;
+  margin: auto; 
+}
+
+.bredebalk {
+	background-color:#8C1974;
+	height:20px;	
+}
+
+.dunnebalk {
+	background-color: #8C1974;
+	height: 1px;
+	margin-bottom: 20px
+}
+
+.content {
+	width: 95%;
+	margin: auto;
+}
+
+.top_logo {
+	margin-top: 10px;
+	margin-left: 50px;			/* Inspringen tov de dunne balk */
+	overflow: auto;					/* Pas box automatisch aan, aan formaat logo */
+	height: auto;						/* Pas hoogte automatisch aan, aan formaat logo */
+}
+
+img.logo {
+	float: left;
+  width: min(600px, 70%);
+  height: auto;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.alignleft {
+	float: left;
+}
+.alignright {
+	float: right;
+}
+
+
+
+
+/* Om tekst in kolommen op het scherm te tonen */
+/* Waarbij de richting eerst naar beneden is in de linkerkolom */
+/* en pas daarna de rechter kolom*/
+.content_vert_kolom, .content_vert_kolom_full {
+	width: 95%;								/* 95% breed en marges automatisch laten verdelen */
+	margin: auto;
+  column-count: 2;
+  column-gap: 1.5%;
+  margin-bottom:20px				/* marge tussen middenstuk met tekst en dunne balk onderaan */
+}
+
+.content_vert_kolom_full {
+  column-count: 1;
+}
+
+
+/* H1 bij de vertikale kolommen */
+.content_vert_kolom h1, .content_vert_kolom_full h1 {
+	color:#8C1974;
+	column-span: all;
+}
+
+/* H2 bij de vertikale kolommen */
+.content_vert_kolom h2, .content_vert_kolom_full h2 {
+	color:#A3478F;
+}
+
+/* Blok waar de tekst in staat. Met randje er om heen */
+.content_block {
+	border-color: #D2D2D2;
+	border-style: solid;
+	border-width: 2px;
+	/*border-radius: 5px;*/
+	border-bottom-right-radius: 25px;
+	padding: 10px;						/* marge binnen het blok */
+	margin-bottom: 15px;			/* ruimte tussen de blokken */
+	break-inside: avoid;			/* Zorg dat de blokken altijd in tact blijven */
+}
+
+/*
+.content_horz_kolom {
+	width: 95%;								/* 95% breed en marges automatisch laten verdelen
+	margin: auto;
+	margin-bottom:20px				/* marge tussen middenstuk met tekst en dunne balk onderaan
+	border: solid;
+}
+*/
+
+/* Create three equal columns that float next to each other */
+.content_horz_kolom {
+  float: left;
+  width: 50%;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.content_horz_kolom_full {
+  float: left;
+  width: 100%;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+
+
+.after_table {
+	padding-top: 20px;
+	padding-left: 75px;
+}
+
+
+
+/* Specifieke opmaak voor pagina's*/
+.own {
+	font-style: italic;
+}
+
+.small {
+	font-size:10px;
+}
+
+.melding {
+	color:red;
+	font-size:14px;
+	font-weight:bold;
+}
+
+
+/* Bij nog kleinere schermen de witte balken links en rechts verwijderen */	
+/* En het middenstuk 100% breed maken */
+/* En het logo iets kleiner maken*/	
+@media screen and (max-width:1024px) {	
+	.middenstuk {
+		width: 100%;
+	}
+	
+	.content_horz_kolom {
+		width: 100%;
+  }
+}
+
+/* Bij nog kleinere schermen het aantal kolommen verminderen */
+/* En het logo iets kleiner maken*/	
+@media screen and (max-width:700px) {  
+  .content_vert_kolom {
+  	column-count: 1;
+  }  
+}

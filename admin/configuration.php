@@ -58,17 +58,21 @@ if(isset($_POST['save'])) {
 }
 
 $text[] = "<form action='". htmlspecialchars($_SERVER['PHP_SELF']) ."' method='post'>";
-$text[] = "<table border=0>";
-$text[] = "<tr>";
-$text[] = "	<td><b>Verwijder</b></td>";
+$thead[] = "<table>";
+$thead[] = "<thead>";
+$thead[] = "<tr>";
+$thead[] = "	<th>Verwijder</th>";
 if($configMoveGroups) {
-	$text[] = "	<td><b>Groep</b></td>";
+	$thead[] = "	<th>Groep</th>";
 }
-$text[] = "	<td><b>Naam</b></td>";
-$text[] = "	<td><b>Index</b> (bij array)</td>";
-$text[] = "	<td><b>Waarde</b></td>";
-$text[] = "	<td><b>Opmerking</b></td>";
-$text[] = "</tr>";
+$thead[] = "	<th>Naam</th>";
+$thead[] = "	<th>Index</th>";
+$thead[] = "	<th>Waarde</th>";
+$thead[] = "	<th>Opmerking</th>";
+$thead[] = "</tr>";
+$thead[] = "</thead>";
+
+$tfooter[] = "</table>";
 
 $configGroups = array_merge(array(0 => 'Onbekend'), $configGroups);
 
@@ -77,13 +81,7 @@ foreach($configGroups as $groepID => $groepNaam) {
 	$result = mysqli_query($db, $sql);
 		
 	if($row = mysqli_fetch_array($result)) {
-		$text[] = "<tr>";
-		$text[] = "	<td colspan='". ($configMoveGroups ? 6 : 5)."'>&nbsp;</td>";
-		$text[] = "</tr>";
-		$text[] = "<tr>";
-		$text[] = "	<td>&nbsp;</td>";
-		$text[] = "	<td colspan='". ($configMoveGroups ? 5 : 4)."'><h1>$groepNaam</h1></td>";
-		$text[] = "</tr>";				
+		$text = array();
 		
 		do {
 			$name = $row[$ConfigName];
@@ -111,9 +109,11 @@ foreach($configGroups as $groepID => $groepNaam) {
 				}
 				
 				if($first) {
-					$text[] = "	<td". ($aantal == 1 ? '' : " rowspan='$aantal' valign='top'") ."><input type='text' name='name[$id]' value='". urldecode($name) ."'></td>";					
+					#$text[] = "	<td". ($aantal == 1 ? '' : " rowspan='$aantal' valign='top'") ."><input type='text' name='name[$id]' value='". urldecode($name) ."'></td>";
+					$text[] = "	<td><input type='text' name='name[$id]' value='". urldecode($name) ."'></td>";
 					$first = false;	
 				} else {					
+					$text[] = "	<td>&nbsp;</td>";
 					$text[] = "	<input type='hidden' name='name[$id]' value='$name'>";
 				}
 						
@@ -127,13 +127,16 @@ foreach($configGroups as $groepID => $groepNaam) {
 				$text[] = "</tr>";
 			} while($row_name = mysqli_fetch_array($result_name));	
 		} while($row = mysqli_fetch_array($result));
+		
+		$block[$groepID] = array_merge($thead, $text, $tfooter);
 	}
 }
 
-$text[] = "<tr>";
-$text[] = "	<td>&nbsp;</td>";
-$text[] = "	<td colspan='". ($configMoveGroups ? 5 : 4)."'><h2>Nieuwe toevoegen</h2></td>";
-$text[] = "</tr>";		
+$text = array();
+#$text[] = "<tr>";
+#$text[] = "	<td>&nbsp;</td>";
+#$text[] = "	<td colspan='". ($configMoveGroups ? 5 : 4)."'><h2>Nieuwe toevoegen</h2></td>";
+#$text[] = "</tr>";		
 $text[] = "<tr>";
 $text[] = "	<td>&nbsp;</td>";
 if($configMoveGroups) {
@@ -144,18 +147,49 @@ $text[] = "	<td><input type='text' name='key[999]'></td>";
 $text[] = "	<td><input type='text' name='value[999]''></td>";	
 $text[] = "	<td><input type='text' name='comment[999]''></td>";	
 $text[] = "</tr>";
-$text[] = "<tr>";
-$text[] = "	<td colspan='". ($configMoveGroups ? 6 : 5)."'>&nbsp;</td>";
-$text[] = "</tr>";
-$text[] = "<tr>";
-$text[] = "	<td colspan='". ($configMoveGroups ? 6 : 5)."' align='center'><input type='submit' name='save' value='Opslaan'></td>";
-$text[] = "</tr>";
-$text[] = "</table>";
-$text[] = "</form>";
+#$text[] = "<tr>";
+#$text[] = "	<td colspan='". ($configMoveGroups ? 6 : 5)."'>&nbsp;</td>";
+#$text[] = "</tr>";
+#$text[] = "<tr>";
+#$text[] = "	<td colspan='". ($configMoveGroups ? 6 : 5)."' align='center'><input type='submit' name='save' value='Opslaan'></td>";
+#$text[] = "</tr>";
+#$text[] = "</table>";
+#$text[] = "</form>";
 
+$block[($groepID+1)] = array_merge($thead, $text, $tfooter);
+$configGroups[($groepID+1)] = 'Nieuwe toevoegen';
 
-echo $HTMLHeader;
-echo implode("\n", $text);
-echo $HTMLFooter;
+$header[] = '<style>';
+$header[] = '@media only screen and (max-width: 760px), (min-device-width: 768px) and (max-device-width: 1024px)  {';
+$header[] = '	td:nth-of-type(1):before { content: "Verwijder"; }';
+if($configMoveGroups) {
+	$header[] = '	td:nth-of-type(2):before { content: "Groep"; }';
+	$header[] = '	td:nth-of-type(3):before { content: "Naam"; }';
+	$header[] = '	td:nth-of-type(4):before { content: "Index"; }';
+	$header[] = '	td:nth-of-type(5):before { content: "Waarde"; }';
+	$header[] = '	td:nth-of-type(6):before { content: "Opmerking"; }';
+} else {
+	$header[] = '	td:nth-of-type(2):before { content: "Naam"; }';
+	$header[] = '	td:nth-of-type(3):before { content: "Index"; }';
+	$header[] = '	td:nth-of-type(4):before { content: "Waarde"; }';
+	$header[] = '	td:nth-of-type(5):before { content: "Opmerking"; }';
+}
+$header[] = "}";
+$header[] = "</style>";	
+
+$tables = array('default', 'table_rot');
+
+echo showCSSHeader($tables, $header);
+echo '<div class="content_vert_kolom_full">'.NL;
+echo "<form action='". htmlspecialchars($_SERVER['PHP_SELF']) ."' method='post'>";
+foreach($block as $id => $blok) {
+	echo "<h1>". $configGroups[$id] ."</h1>";
+	echo "<div class='content_block'>".NL. implode(NL, $blok).NL."</div>".NL;
+}
+
+echo "<p class='after_table'><input type='submit' name='save' value='Opslaan'></p>";	
+echo '</form>';
+echo '</div> <!-- end \'content_vert_kolom_full\' -->'.NL;
+echo showCSSFooter();
 
 ?>

@@ -77,13 +77,15 @@ if($row = mysqli_fetch_array($result)) {
 $text[] = "<form method='post' action='$_SERVER[PHP_SELF]'>";
 $text[] = "<input type='hidden' name='blokken' value='$blokken'>";
 $text[] = "<table border=0>";
+$text[] = "<thead>";
 $text[] = "<tr>";
-$text[] = "	<td>Datum</td>";
-$text[] = "	<td>Start</td>";
-$text[] = "	<td colspan='2'>Voorganger</td>";
-$text[] = "	<td>Ruiling</td>";
-$text[] = "	<td>Bijzonderheid</td>";
+$text[] = "	<th>Datum</th>";
+$text[] = "	<th>Start</th>";
+$text[] = "	<th>Voorganger</th>";
+$text[] = "	<th>Ruiling</th>";
+$text[] = "	<th>Bijzonderheid</th>";
 $text[] = "</tr>";
+$text[] = "</thead>";
 
 foreach($diensten as $dienst) {
 	$data = getKerkdienstDetails($dienst);
@@ -109,27 +111,42 @@ foreach($diensten as $dienst) {
 		if(!in_array($voorgangerID, $frequent))	$text[] = "	<option value='$voorgangerID'". ($data['voorganger_id'] == $voorgangerID ? ' selected' : '') .">$naam</option>";
 	}
 	$text[] = "</optgroup>";	
-	$text[] = "</select>";
-	$text[] = "	</td>";
+	$text[] = "</select>";	
 	if($data['voorganger_id'] > 0) {
-		$text[] = "	<td>&nbsp;</td>";
+		#$text[] = "	<td>&nbsp;</td>";
 		$voorgangersData = getVoorgangerData($data['voorganger_id']);
 	} else {
-		$text[] = "	<td align='right'><a href='editVoorganger.php?new=ja' target='_blank'><img src='../images/invite.gif' title='Open een nieuw scherm om missende voorganger toe te voegen'></a></td>";
+		#$text[] = "	<td align='right'><a href='editVoorganger.php?new=ja' target='_blank'><img src='../images/invite.gif' title='Open een nieuw scherm om missende voorganger toe te voegen'></a></td>";
+		$text[] = "&nbsp;<a href='editVoorganger.php?new=ja' target='_blank'><img src='../images/invite.gif' title='Open een nieuw scherm om missende voorganger toe te voegen'></a>";
 	}
+	$text[] = "	</td>";
 	$text[] = "	<td><input type='checkbox' name='ruiling[$dienst]' value='1'". ($data['ruiling'] == 1 ? ' checked': '').($voorgangersData['plaats'] == 'Deventer' ? ' disabled' : '') ."></td>";
-	$text[] = "	<td>". $data['bijzonderheden'] ."</td>";
+	$text[] = "	<td>". ($data['bijzonderheden'] != '' ? $data['bijzonderheden'] : '&nbsp;') ."</td>";
 	$text[] = "</tr>";
 }
-
-$text[] = "<tr>";
-$text[] = "	<td colspan='6' align='middle'><input type='submit' name='save' value='Diensten opslaan'>&nbsp;<input type='submit' name='maanden' value='Volgende 3 maanden'></td>";
-$text[] = "</tr>";
 $text[] = "</table>";
+#$text[] = "<tr>";
+#$text[] = "	<td colspan='6' align='middle'><input type='submit' name='save' value='Diensten opslaan'>&nbsp;<input type='submit' name='maanden' value='Volgende 3 maanden'></td>";
+#$text[] = "</tr>";
+$text[] = "<p class='after_table'><input type='submit' name='save' value='Diensten opslaan'>&nbsp;<input type='submit' name='maanden' value='Volgende 3 maanden'></p>";
 $text[] = "</form>";
 
-echo $HTMLHeader;
-echo implode("\n", $text);
-echo $HTMLFooter;
+
+$header[] = '<style>';
+$header[] = '@media only screen and (max-width: 760px), (min-device-width: 768px) and (max-device-width: 1024px)  {';
+$header[] = '	td:nth-of-type(1):before { content: "Datum"; }';
+$header[] = '	td:nth-of-type(2):before { content: "Start"; }';
+$header[] = '	td:nth-of-type(3):before { content: "Voorganger"; }';
+$header[] = '	td:nth-of-type(4):before { content: "Ruiling"; }';
+$header[] = '	td:nth-of-type(5):before { content: "Bijzonderheid"; }';
+$header[] = "}";
+$header[] = "</style>";
+
+echo showCSSHeader(array('default', 'table_rot'), $header);
+echo '<div class="content_vert_kolom_full">'.NL;
+echo '<h1>Preekrooster</h1>'.NL;
+echo "<div class='content_block'>".NL. implode(NL, $text).NL."</div>".NL;
+echo '</div> <!-- end \'content_vert_kolom_full\' -->'.NL;
+echo showCSSFooter();
 
 ?>

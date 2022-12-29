@@ -16,24 +16,26 @@ $extern	= getParam('extern', false);
 
 $myGroups = getMyGroups($_SESSION['ID']);
 $groupData = getGroupDetails($groep);
-echo $HTMLHead;
-echo $HTMLBody;
 
+echo showCSSHeader();
+echo '<div class="content_vert_kolom_full">'.NL;
+echo "<h1>". $groupData['naam'] ."</h1>";
+echo '<div class="content_block">'.NL;
 if(in_array($groep, $myGroups) AND $groupData['html-int'] != "" AND !$extern) {
-	echo "<h1>". $groupData['naam'] ."</h1>";
-	echo '<p>'.NL;
+	#echo '<p>'.NL;
 	echo $groupData['html-int'];
-	echo '<p>'.NL;
-	echo "<a href='?groep=$groep&extern=true'>Bekijk externe pagina</a>".NL;
+	echo '<p>&nbsp;</p>'.NL;
+	echo "<a href='?groep=$groep&extern=true'>Bekijk externe pagina</a>".NL;	
 } elseif($groupData['html-ext'] != "" OR $extern) {
-	echo "<h1>". $groupData['naam'] ."</h1>";
 	echo '<p>'.NL;
 	echo $groupData['html-ext'];
 } else {
 	echo "Deze pagina bestaat niet.";
 }
-	
-echo $HTMLFooter;
+
+echo '</div> <!-- end \'content_block\' -->'.NL;	
+echo '</div> <!-- end \'content_vert_kolom_full\' -->'.NL;
+echo showCSSFooter();
 
 toLog('debug', $_SESSION['ID'], '', 'Groep-pagina '. $groupData['naam'] .' bekeken');
 

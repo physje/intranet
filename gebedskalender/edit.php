@@ -45,21 +45,16 @@ if(isset($_POST['save'])) {
 		$blockLinks .= "</tr>".NL;
 	}	
 	$blockLinks .= "</table>". NL;
-	$blockLinks .= "<input type='submit' name='save' value='Opslaan'>". NL;
+	$blockLinks .= "<p class='after_table'><input type='submit' name='save' value='Opslaan'></p>". NL;
 	$blockLinks .= "</form>". NL;
 }
 
+
 # Pagina tonen
-echo $HTMLHeader;
-echo '<table border=0 width=100%>'.NL;
-echo '<tr>'.NL;
-echo '	<td valign="top" width="50">&nbsp;</td>'.NL;
-echo '	<td valign="top">'.NL;
-echo showBlock($blockLinks, 100);
-echo '	</td>'.NL;
-echo '	<td valign="top" width="50">&nbsp;</td>'.NL;
-echo '</tr>'.NL;
-echo '</table>'.NL;
-echo $HTMLFooter;
+echo showCSSHeader();
+echo '<div class="content_vert_kolom_full">'.NL;
+echo "<div class='content_block'>". $blockLinks ."</div>".NL;
+echo '</div> <!-- end \'content_vert_kolom_full\' -->'.NL;
+echo showCSSFooter();
 
 ?>

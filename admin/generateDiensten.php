@@ -9,9 +9,7 @@ $db = connect_db();
 
 $querys = array();
 
-if(isset($_POST['save'])) {
-	#$startTijd = mktime(0, 0, 1, $_POST['sMaand'], $_POST['sDag'], $_POST['sJaar']);
-	#$eindTijd = mktime(23, 59, 59, $_POST['eMaand'], $_POST['eDag'], $_POST['eJaar']);
+if(isset($_POST['save'])) {	
 	$startTijd = mktime(0, 0, 1, 1, 1, $_POST['jaar']);
 	$eindTijd = mktime(23, 59, 59, 12, 31, $_POST['jaar']);
 	$i = 0;
@@ -65,7 +63,7 @@ if(isset($_POST['save'])) {
 		$querys[] = "INSERT INTO $TableDiensten ($DienstStart, $DienstEind, $DienstOpmerking) VALUES ('$start_biddag', '$eind_biddag', 'Biddag')";
 	}
 		
-	# Goede vrijdag (Goede vrijdag is de vrijdag voor Pasen)
+	# Goede vrijdag (Goede vrijdag is de vrijdag voor Pasen = Eerste Paasdag min 2 dagen)
 	if(isset($_POST['vrijdag']) AND count($DataPasen) > 1) {
 		$start_vrijdag = mktime(19, 30, 0, $DataPasen['maand'], ($DataPasen['dag']-2), $_POST['jaar']);
 		$eind_vrijdag = mktime(21, 00, 0, $DataPasen['maand'], ($DataPasen['dag']-2), $_POST['jaar']);
@@ -96,7 +94,7 @@ if(isset($_POST['save'])) {
 		# $marker = 6 (zaterdag)	=> 5-11
 		# $marker = 7 (zondag)		=> 4-11
 
-		# Als $marker > 4 (lees 1 maart is na woensdag), dan week erbij op
+		# Als $marker > 4 (lees 1 maart is na woensdag), dan week bij $marker erop
 		if($marker > 3)	$offset = 7;
 
 		$start_dankdag = mktime(19, 30, 0, 11, (4-$marker+$offset), $_POST['jaar']);
@@ -139,71 +137,18 @@ if(isset($_POST['save'])) {
 	$offset = 24*60*60;
 	
 	$Jaar	= getParam('Jaar', date("Y", $row[$DienstEind]+$offset));
-	
-	/*
-	$sDag		= getParam('sDag', date("d", $row[$DienstEind]+$offset));
-	$sMaand	= getParam('sMaand', date("m", $row[$DienstEind]+$offset));
-	$sJaar	= getParam('sJaar', date("Y", $row[$DienstEind]+$offset));
-	$eDag		= getParam('eDag', 31);
-	$eMaand	= getParam('eMaand', 12);
-	$eJaar	= getParam('eJaar', date("Y", $row[$DienstEind]+$offset));
-	#$eDag		= getParam('eDag', date("d"));
-	#$eMaand	= getParam('eMaand', date("m"));
-	#$eJaar	= getParam('eJaar', date("Y")+1);
-	*/
-	
-		
+			
 	$text[] = "<form action='". htmlspecialchars($_SERVER['PHP_SELF']) ."' method='post'>";
-	$text[] = "<table border=1>";
+	$text[] = "<table>";
 	$text[] = "<tr>";
 	$text[] = "	<td colspan='2'>Genereer diensten voor <select name='jaar'>";
 	for($j=date("Y"); $j<=(date("Y")+10) ; $j++) {
 		$text[] = "	<option value='$j'". ($j == $Jaar ? ' selected' : '') .">$j</option>";
 	}
 	$text[] = "	</select></td>";
-	$text[] = "	<td rowspan='6'><input type='submit' name='save' value='Genereer'></td>";
+	#$text[] = "	<td rowspan='6'></td>";
 	$text[] = "</tr>";
 	
-	/*
-	$text[] = "<tr>";
-	$text[] = "	<td>Startdatum</td>";
-	$text[] = "	<td><select name='sDag'>";
-	for($d=1 ; $d<32 ; $d++) {
-		$text[] = "	<option value='$d'". ($d == $sDag ? ' selected' : '') .">$d</option>";
-	}
-	$text[] = "	</select> - ";
-	$text[] = "	<select name='sMaand'>";
-	for($m=1 ; $m<13 ; $m++) {
-		$text[] = "	<option value='$m'". ($m == $sMaand ? ' selected' : '') .">". $maandArray[$m] ."</option>";
-	}
-	$text[] = "	</select> - ";
-	$text[] = "	<select name='sJaar'>";
-	for($j=date("Y"); $j<=(date("Y")+10) ; $j++) {
-		$text[] = "	<option value='$j'". ($j == $sJaar ? ' selected' : '') .">$j</option>";
-	}
-	$text[] = "	</select></td>";
-	$text[] = "	<td rowspan='3'>&nbsp;</td>";
-	$text[] = "	<td rowspan='3'><input type='submit' name='save' value='Genereer'></td>";
-	$text[] = "</tr>";
-	$text[] = "<tr>";
-	$text[] = "	<td>Einddatum</td>";
-	$text[] = "	<td><select name='eDag'>";
-	for($d=1 ; $d<32 ; $d++) {
-		$text[] = "	<option value='$d'". ($d == $eDag ? ' selected' : '') .">$d</option>";
-	}
-	$text[] = "	</select> - ";
-	$text[] = "	<select name='eMaand'>";
-	for($m=1 ; $m<13 ; $m++) {
-		$text[] = "	<option value='$m'". ($m == $eMaand ? ' selected' : '') .">". $maandArray[$m] ."</option>";
-	}
-	$text[] = "	</select> - ";
-	$text[] = "	<select name='eJaar'>";
-	for($j=date("Y"); $j<=(date("Y")+10) ; $j++) {
-		$text[] = "	<option value='$j'". ($j == $eJaar ? ' selected' : '') .">$j</option>";
-	}
-	$text[] = "	</select></td>";
-	$text[] = "</tr>";
-	*/
 	
 	$text[] = "<tr>";
 	$text[] = "	<td><input type='checkbox' name='ochtend' value='1' checked> Ochtenddiensten</td>";
@@ -227,6 +172,7 @@ if(isset($_POST['save'])) {
 	$text[] = "	<td>&nbsp;</td>";
 	$text[] = "</tr>";
 	$text[] = "</table>";
+	$text[] = "<p class='after_table'><input type='submit' name='save' value='Genereer'></p>";	
 	$text[] = "</form>";
 	
 	# Pasen en Pinksteren rekenen is een ramp; Die moeten dus even handmatig gecontroleerd worden
@@ -244,7 +190,7 @@ if(count($querys) > 0) {
 }
 
 # Dit kan pas doorlopen worden als hierboven de diensten zijn ingevoerd
-# Vandaar deze wat gekunstelde oplossing
+# Vandaar deze wat gekunstelde oplossing door eerst diensten toe te voegen en pas daarna de omschrijvingen
 if(isset($_POST['omschrijving'])) {
 	$details[] = array(18, 12, 24, 12, '4e Advent');
 	$details[] = array(11, 12, 17, 12, '3e Advent');
@@ -308,9 +254,11 @@ if(isset($_POST['omschrijving'])) {
 	}
 }
 
-echo $HTMLHeader;
-echo implode("\n", $text);
-echo $HTMLFooter;
+echo showCSSHeader();
+echo '<div class="content_vert_kolom">'.NL;
+echo "<div class='content_block'>".NL. implode(NL, $text).NL."</div>".NL;
+echo '</div> <!-- end \'content_vert_kolom\' -->'.NL;
+echo showCSSFooter();
 
 
 ?>

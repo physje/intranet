@@ -133,14 +133,15 @@ if(isset($_POST['save'])) {
 	$text[] = "<option value='4'". ($roosterData['alert'] == 4 ? ' selected' : '') .">4 weken</option>";
 	$text[] = "	</select></td>";
 	$text[] = "</tr>";
-	$text[] = "<tr>";
-	$text[] = "	<td colspan='2'>&nbsp;</td>";
-	$text[] = "</tr>";
-	$text[] = "<tr>";
-	$text[] = "	<td align='left'><input type='submit' name='save' value='Opslaan'></td>";
-	$text[] = "	<td align='right'><input type='submit' name='delete' value='Verwijderen'></td>";
-	$text[] = "</tr>";
+	#$text[] = "<tr>";
+	#$text[] = "	<td colspan='2'>&nbsp;</td>";
+	#$text[] = "</tr>";
+	#$text[] = "<tr>";
+	#$text[] = "	<td align='left'><input type='submit' name='save' value='Opslaan'></td>";
+	#$text[] = "	<td align='right'><input type='submit' name='delete' value='Verwijderen'></td>";
+	#$text[] = "</tr>";
 	$text[] = "</table>";
+	$text[] = "<p class='after_table'><input type='submit' name='save' value='Opslaan'>&nbsp;<input type='submit' name='delete' value='Verwijderen'></p>";	
 	$text[] = "</form>";
 } else {
 	$roosters = getRoosters();
@@ -154,8 +155,10 @@ if(isset($_POST['save'])) {
 	}	
 }
 
-echo $HTMLHeader;
-echo implode("\n", $text);
-echo $HTMLFooter;
+echo showCSSHeader();
+echo '<div class="content_vert_kolom">'.NL;
+echo "<div class='content_block'>".NL. implode(NL, $text).NL."</div>".NL;
+echo '</div> <!-- end \'content_vert_kolom\' -->'.NL;
+echo showCSSFooter();
 
 ?>
