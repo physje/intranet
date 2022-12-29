@@ -54,12 +54,14 @@ if(isset($_REQUEST['wijk'])) {
 								
 		$text[] = "<form method='post'>";		
 		$text[] = "<input type='hidden' name='wijk' value='". $_REQUEST['wijk'] ."'>";
-		$text[] = "<table border=0>";
+		$text[] = "<table>";
+		$text[] = "<thead>";
 		$text[] = '<tr>';		
-		$text[] = "	<td>Lid</td>";						
-		$text[] = "	<td>Ouderling</td>";		
-		$text[] = "	<td>Pastoraal Bezoeker</td>";
+		$text[] = "	<th>Lid</th>";
+		$text[] = "	<th>Ouderling</th>";
+		$text[] = "	<th>Pastoraal Bezoeker</th>";
 		$text[] = '</tr>';
+		$text[] = "</thead>";
 				
 		foreach($wijkLeden as $adres => $leden) {
 			$lid = $leden[0];
@@ -95,14 +97,8 @@ if(isset($_REQUEST['wijk'])) {
 			
 			$text[] = '</tr>';
 		}
-		
-		$text[] = "<tr>";
-		$text[] = "	<td colspan='3'>&nbsp;</td>";
-		$text[] = "</tr>";
-		$text[] = "<tr>";
-		$text[] = "	<td colspan='3'><input type='submit' name='save' value='Opslaan'></td>";
-		$text[] = "</tr>";
 		$text[] = "</table>";
+		$text[] = "<p class='after_table'><input type='submit' name='save' value='Opslaan'></p>";	
 		$text[] = "</form>";
 	} elseif($inWijkteam) {
 		$text[] = "Helaas, als ". strtolower($teamRollen[$rol]) ." van wijk $wijk heb je geen toegang";
@@ -113,9 +109,19 @@ if(isset($_REQUEST['wijk'])) {
 	$text[] = "Geen wijk bekend";
 }
 
+$header[] = '<style>';
+$header[] = '@media only screen and (max-width: 760px), (min-device-width: 768px) and (max-device-width: 1024px)  {';
+$header[] = '	td:nth-of-type(1):before { content: "Lid"; }';
+$header[] = '	td:nth-of-type(2):before { content: "Ouderling"; }';
+$header[] = '	td:nth-of-type(3):before { content: "Pastoraal bezoeker"; }';
+$header[] = "}";
+$header[] = "</style>";
 
-echo $HTMLHeader;
-echo implode("\n", $text);
-echo $HTMLFooter;
+
+echo showCSSHeader(array('default', 'table_rot'), $header);
+echo '<div class="content_vert_kolom_full">'.NL;
+echo "<div class='content_block'>".NL. implode(NL, $text).NL."</div>".NL;
+echo '</div> <!-- end \'content_vert_kolom_full\' -->'.NL;
+echo showCSSFooter();
 
 ?>
