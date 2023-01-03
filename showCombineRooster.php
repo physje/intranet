@@ -171,14 +171,17 @@ if(isset($_REQUEST['pdf'])) {
   $pdf->Output('I', $title.'_'.date('Y_m_d').'.pdf');
   toLog('debug', $_SESSION['ID'], '', 'Combi-rooster '. implode('|', $roosters) .' in PDF bekeken');
 } else {
-	echo showCSSHeader(array('default', 'table_default'));
-	echo '<div class="content_vert_kolom">'.NL;
+	echo showCSSHeader(array('default', 'table_default'));	
 	if(isset($first)) {
+		echo '<div class="content_vert_kolom">'.NL;
 		echo "	<div class='content_block'>".NL. implode(NL, $first).NL."</div>".NL;	
+		echo '</div> <!-- end \'content_vert_kolom\' -->'.NL;
 	} else {
+		echo '<div class="content_vert_kolom_full">'.NL;
 		echo "	<div class='content_block'>".NL. implode(NL, $text).NL."</div>".NL;		
+		echo '</div> <!-- end \'content_vert_kolom_full\' -->'.NL;
 	}
-	echo '</div> <!-- end \'content_vert_kolom\' -->'.NL;
+	
 	echo showCSSFooter();
 }
 

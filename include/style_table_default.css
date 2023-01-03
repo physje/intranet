@@ -4,9 +4,9 @@ table {
 }
 
 /* Zebra striping */
-tr:nth-of-type(odd) {
+/*tr:nth-of-type(odd) {
 	background: #F2F2F2; 
-}
+}*/
 
 td {		
 	text-align: left;

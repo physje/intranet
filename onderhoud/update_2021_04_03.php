@@ -5,7 +5,7 @@ include_once('../include/config.php');
 $db = connect_db();
 $sql = array();	
 
-$sql[] = "CREATE TABLE `$TableOpenKerkRooster` (`$OKRoosterTijd` int(11) NOT NULL, `$OKRoosterPos` int(2) NOT NULL, `$OKRoosterPersoon` text NOT NULL)";
+$sql[] = "CREATE TABLE `$TableOpenKerkRooster` (`$OKRoosterStart` int(11) NOT NULL, `$OKRoosterPos` int(2) NOT NULL, `$OKRoosterPersoon` text NOT NULL)";
 $sql[] = "CREATE TABLE `$TableOpenKerkTemplate` (`$OKTemplateWeek` int(1) NOT NULL, `$OKTemplateDag` int(1) NOT NULL, `$OKTemplateTijd` int(2) NOT NULL, `$OKTemplatePos` int(11) NOT NULL,`$OKTemplatePersoon` text NOT NULL)";
 
 foreach($sql as $query) {

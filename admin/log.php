@@ -131,23 +131,24 @@ if(count($logData) > 0) {
 		$rijen[] = implode(NL, $rij);
 	}
 	
-	$aantal = count($rijen);
+	#$aantal = count($rijen);
 		
-	$blok_1 = array_slice($rijen, 0, round($aantal/2));
+	#$blok_1 = array_slice($rijen, 0, round($aantal/2));
 	
-	if($aantal == 1) {
-		$blok_2[] = '&nbsp;';
-	} else {
-		$blok_2 = array_slice($rijen, round($aantal/2));
-	}	
+	#if($aantal == 1) {
+	#	$blok_2[] = '&nbsp;';
+	#} else {
+	#	$blok_2 = array_slice($rijen, round($aantal/2));
+	#}			
 }
 
 echo showCSSHeader();
 echo "<div class='content_horz_kolom'>".NL."<div class='content_block'>".NL. implode(NL, $zoekScherm_1).NL."</div>".NL."</div>".NL;
 echo "<div class='content_horz_kolom'>".NL."<div class='content_block'>".NL. implode(NL, $zoekScherm_2).NL."</div>".NL."</div>".NL;
 echo "</div><div class='row'>";
-echo "<div class='content_horz_kolom'>".NL."<div class='content_block'><table>".NL. implode(NL, $blok_1).NL."</table></div>".NL."</div>".NL;
-echo "<div class='content_horz_kolom'>".NL."<div class='content_block'><table>".NL. implode(NL, $blok_2).NL."</table></div>".NL."</div>".NL;
+#echo "<div class='content_horz_kolom'>".NL."<div class='content_block'><table>".NL. implode(NL, $blok_1).NL."</table></div>".NL."</div>".NL;
+#echo "<div class='content_horz_kolom'>".NL."<div class='content_block'><table>".NL. implode(NL, $blok_2).NL."</table></div>".NL."</div>".NL;
+echo "<div class='content_horz_kolom_full'>".NL."<div class='content_block'><table>".NL. implode(NL, $rijen).NL."</table></div>".NL."</div>".NL;
 echo showCSSFooter();
 
 ?>
