@@ -87,7 +87,7 @@ if(count($roosters) > 0) {
 					$gevuldeCel = true;
 					
 				# Als er tekst gevonden is voor het rooster
-				} elseif(is_string($vulling)) {				
+				} elseif(is_string($vulling) AND strlen($vulling) > 1) {				
 					$cel[] = "<td>". $vulling ."</td>";
 					$rij[] = $vulling;
 					$gevuldeCel = true;

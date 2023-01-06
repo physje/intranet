@@ -2323,13 +2323,32 @@ function showDeclaratieDetails($input) {
 	return $page;	
 }
 
-# Alles omzetten in JSON-formaat en daarbij newlines
-# vervangen door een spatie
+# Hoewel het idee was dat alles omzetten naar JSON veel problemen verhelpt.
+# Veroorzaakt het ook wel wat problemen. Daarom deze functie.
+# Om te beginnen worden alle " vervangen door '. Dat is omdat anders het HTML-formulier in de war raakt.
+# Vervolgens worden alle velden doorlopen en omgezet in UTF-8, mn van belang voor 'gekke' tekens.
+# Vervolgens wordt alles omzetten in JSON-formaat
+# En dan de newlines vervangen door een spatie
 function encode_clean_JSON($input) {
-	$string = $input;
-	$string = str_replace('"', "'", $string);
-	$string = json_encode($string);
-	$string = str_replace('\r\n', ' ', $string);
+	$array = $input;
+	
+	foreach($array as $key => $value) {
+		if(is_array($value)) {
+			foreach($value as $sub_key => $sub_value) {
+				$sub_value = str_replace('"', "'", $sub_value);
+				$sub_value = iconv('Windows-1252', 'UTF-8', $sub_value);
+				
+				$value[$sub_key] = $sub_value;
+			}			
+		} else {
+			$value = str_replace('"', "'", $value);
+			$value = iconv('Windows-1252', 'UTF-8', $value);
+		}
+		
+		$newArray[$key] = $value;
+	}
+	$JSONString = json_encode($newArray);
+	$string = str_replace('\r\n', ' ', $JSONString);
 		
 	return $string;
 }
