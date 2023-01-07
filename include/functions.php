@@ -1410,7 +1410,7 @@ function getLiturgie($id) {
 }
 
 function getVoorgangerData($id) {
-	global $TableVoorganger, $VoorgangerID, $VoorgangerTitel, $VoorgangerVoor, $VoorgangerInit, $VoorgangerTussen, $VoorgangerAchter, $VoorgangerTel, $VoorgangerTel2, $VoorgangerPVNaam, $VoorgangerPVTel, $VoorgangerMail, $VoorgangerPlaats, $VoorgangerDenom, $VoorgangerOpmerking, $VoorgangerAandacht, $VoorgangerDeclaratie, $VoorgangerLastAandacht, $VoorgangerStijl, $VoorgangerLastSeen, $db;
+	global $TableVoorganger, $VoorgangerID, $VoorgangerTitel, $VoorgangerVoor, $VoorgangerInit, $VoorgangerTussen, $VoorgangerAchter, $VoorgangerTel, $VoorgangerTel2, $VoorgangerPVNaam, $VoorgangerPVTel, $VoorgangerMail, $VoorgangerPlaats, $VoorgangerDenom, $VoorgangerOpmerking, $VoorgangerAandacht, $VoorgangerDeclaratie, $VoorgangerLastAandacht, $VoorgangerReiskosten, $VoorgangerStijl, $VoorgangerLastSeen, $db;
 	
 	$data = array();
 		
@@ -1435,6 +1435,7 @@ function getVoorgangerData($id) {
 		$data['opm'] = $row[$VoorgangerOpmerking];
 		$data['aandacht'] = $row[$VoorgangerAandacht];
 		$data['declaratie'] = $row[$VoorgangerDeclaratie];
+		$data['reiskosten'] = $row[$VoorgangerReiskosten];
 		$data['last_aandacht'] = $row[$VoorgangerLastAandacht];
 		$data['last_voorgaan'] = $row[$VoorgangerLastSeen];
 	}
@@ -1444,20 +1445,28 @@ function getVoorgangerData($id) {
 
 
 function getDeclaratieData($voorganger, $tijdstip) {
-	global $TableVoorganger, $VoorgangerID, $VoorgangerHonorarium, $VoorgangerHonorariumOld, $VoorgangerHonorariumNew, $VoorgangerHonorariumSpecial, $VoorgangerKM, $VoorgangerVertrekpunt, $VoorgangerEBRelatie, $db;
+	global $TableVoorganger, $VoorgangerID, $VoorgangerHonorarium, $VoorgangerHonorariumNew, $VoorgangerHonorarium2023, $VoorgangerHonorariumSpecial, $VoorgangerKM, $VoorgangerVertrekpunt, $VoorgangerEBRelatie, $db;
 	
 	$sql = "SELECT * FROM $TableVoorganger WHERE $VoorgangerID = $voorganger";
 
 	$result = mysqli_query($db, $sql);
 	$row = mysqli_fetch_array($result);
-					
-	$data['honorarium'] = $row[$VoorgangerHonorariumNew];
-	$data['honorarium_oud'] = $row[$VoorgangerHonorariumOld];
+	
+	$grens = mktime(1,1,1,1,1,2023);
+	
+	#$data['honorarium_oud'] = $row[$VoorgangerHonorariumOld];
 	$data['honorarium_nieuw'] = $row[$VoorgangerHonorariumNew];
+	$data['honorarium_2023'] = $row[$VoorgangerHonorarium2023];	
 	$data['honorarium_spec'] = $row[$VoorgangerHonorariumNew];
 	$data['km_vergoeding'] = $row[$VoorgangerKM];
 	$data['reis_van'] = urldecode($row[$VoorgangerVertrekpunt]);
 	$data['EB-relatie'] = $row[$VoorgangerEBRelatie];	
+	
+	if($tijdstip < $grens) {
+		$data['honorarium'] = $row[$VoorgangerHonorariumNew];
+	} else {
+		$data['honorarium'] = $row[$VoorgangerHonorarium2023];
+	}
 	
 	return $data;
 }
@@ -1791,7 +1800,7 @@ function getVoorgangerDeclaratieStatus($dienst) {
 	$descr[8] = 'afgerond';					# Status wordt op 'afgerond' gezet als declaratie is ingediend
 	$descr[9] = 'afgezien';
 	
-	$sql = "SELECT $DienstDeclStatus FROM $TableDiensten $DienstID = $dienst";
+	$sql = "SELECT $DienstDeclStatus FROM $TableDiensten WHERE $DienstID = $dienst";
 	$result = mysqli_query($db, $sql);
 	$row = mysqli_fetch_array($result);
 	

@@ -3,7 +3,7 @@ include_once('../include/functions.php');
 include_once('../include/EB_functions.php');
 include_once('../include/config.php');
 include_once('../include/config_mails.php');
-include_once('../include/HTML_TopBottom.php');/
+include_once('../include/HTML_TopBottom.php');
 include_once('../include/HTML_HeaderFooter.php');
 include_once('genereerDeclaratiePdf.php');
 
@@ -131,16 +131,21 @@ if(isset($_REQUEST['hash'])) {
 			$mailPenningsmeester[] = "		<td>Preekbeurt</td>";
 			$mailPenningsmeester[] = "		<td align='right'>". formatPrice($voorgangerData['honorarium']) ."</td>";
 			$mailPenningsmeester[] = "	</tr>";
-			$mailPenningsmeester[] = "	<tr>";
-			$mailPenningsmeester[] = "		<td colspan='2'>&nbsp;</td>";
-			$mailPenningsmeester[] = "		<td>Reiskosten<br><small>".$_POST['reis_van'] .' -> '. $_POST['reis_naar'] ." v.v.</small></td>";
-			$mailPenningsmeester[] = "		<td align='right' valign='top'>". formatPrice($_POST['reiskosten']) ."</td>";
-			$mailPenningsmeester[] = "	</tr>";
-
-			$totaal = $voorgangerData['honorarium'] + $_POST['reiskosten'];
-			$omschrijving[] = 'preekvergoeding: '. round(formatPrice($voorgangerData['honorarium'], false));
-			$omschrijving[] = 'kilometers: '. round($_POST['km']);
 			
+			$totaal = $voorgangerData['honorarium'];
+			$omschrijving[] = 'preekvergoeding: '. round(formatPrice($voorgangerData['honorarium'], false));
+			
+			if($voorgangerData['reiskosten']) {
+				$mailPenningsmeester[] = "	<tr>";
+				$mailPenningsmeester[] = "		<td colspan='2'>&nbsp;</td>";
+				$mailPenningsmeester[] = "		<td>Reiskosten<br><small>".$_POST['reis_van'] .' -> '. $_POST['reis_naar'] ." v.v.</small></td>";
+				$mailPenningsmeester[] = "		<td align='right' valign='top'>". formatPrice($_POST['reiskosten']) ."</td>";
+				$mailPenningsmeester[] = "	</tr>";
+				
+				$totaal = $totaal + $_POST['reiskosten'];
+				$omschrijving[] = 'kilometers: '. round($_POST['km']);
+			}
+
 			$declaratieDataExtra = array();
 
 			foreach($_POST['overig'] as $key => $string) {
@@ -193,7 +198,7 @@ if(isset($_REQUEST['hash'])) {
 				}
 			} else {
 				$mutatieId = '10101';
-				echo 'factuurnummer : '.'preekvergoeding-'.date('d-m-Y', $dienstData['start']).'-'.$dagdeel ."<br>\n";
+				echo 'factuurnummer : '.'voorgaan-'.date('d-m-Y', $dienstData['start']).'-'.$dagdeel ."<br>\n";
 				echo 'toelichting :'. implode(', ', $omschrijving) ."<br>\n";
 				echo 'boekstukNummer :'. $boekstukNummer ."<br>\n";
 			}
@@ -339,6 +344,8 @@ if(isset($_REQUEST['hash'])) {
 			$page[] = "</form>";
 		} elseif(isset($_POST['check_form'])) {
 			# Formulier waar preekbeurt en reiskostenvergoeding ter controle worden getoond
+			
+			$totaal = $voorgangerData['honorarium'];
 
 			$page[] = "U staat op het punt de volgende declaratie in te dienen :<br>";
 			$page[] = "<br>";
@@ -359,13 +366,16 @@ if(isset($_REQUEST['hash'])) {
 			$page[] = "		<td>Preekbeurt</td>";
 			$page[] = "		<td align='right'>". formatPrice($voorgangerData['honorarium']) ."</td>";
 			$page[] = "	</tr>";
-			$page[] = "	<tr>";
-			$page[] = "		<td colspan='2'>&nbsp;</td>";
-			$page[] = "		<td>Reiskosten<br><small>".$_POST['reis_van'] .' -> '. $_POST['reis_naar'] ." v.v.</small></td>";
-			$page[] = "		<td align='right' valign='top'>". formatPrice($_POST['reiskosten']) ."</td>";
-			$page[] = "	</tr>";
-
-			$totaal = $voorgangerData['honorarium'] + $_POST['reiskosten'];
+			
+			if($voorgangerData['reiskosten']) {
+				$page[] = "	<tr>";
+				$page[] = "		<td colspan='2'>&nbsp;</td>";
+				$page[] = "		<td>Reiskosten<br><small>".$_POST['reis_van'] .' -> '. $_POST['reis_naar'] ." v.v.</small></td>";
+				$page[] = "		<td align='right' valign='top'>". formatPrice($_POST['reiskosten']) ."</td>";
+				$page[] = "	</tr>";
+				
+				$totaal = $totaal + $_POST['reiskosten'];
+			}
 
 			foreach($_POST['overig'] as $key => $string) {
 				if($string != '') {
@@ -416,59 +426,68 @@ if(isset($_REQUEST['hash'])) {
 			$page[] = "	<tr>";
 			$page[] = "		<td colspan='6'>&nbsp;</td>";
 			$page[] = "	</tr>";
-			$page[] = "	<tr>";
-			$page[] = "		<td colspan='6'><b>Reiskostenvergoeding</b></td>";
-			$page[] = "	</tr>";
-			$page[] = "	<tr>";
-			$page[] = "		<td>&nbsp;</td>";
-			$page[] = "		<td>Van</td>";
-			$page[] = "		<td>&nbsp;</td>";
-			$page[] = "		<td>Naar</td>";
-			$page[] = "		<td colspan='2'>&nbsp;</td>";
-			$page[] = "	</tr>";
-			$page[] = "	<tr>";
-			$page[] = "		<td>&nbsp;</td>";
-			$page[] = "		<td><input type='text' name='reis_van' value='". (!isset($_POST['reis_van']) ? $voorgangerData['reis_van'] : $_POST['reis_van']) ."' size='30'></td>";
-			$page[] = "		<td>&nbsp;</td>";
-			$page[] = "		<td><input type='text' name='reis_naar' value='Mari&euml;nburghstraat 4, Deventer' size='30'></td>";
-			$page[] = "		<td colspan='2'>&nbsp;</td>";
-			$page[] = "	</tr>";
+			
+			# Laat alleen zien als er reiskosten gedeclareerd kunnen worden
+			if($voorgangerData['reiskosten']) {
+				$page[] = "	<tr>";
+				$page[] = "		<td colspan='6'><b>Reiskostenvergoeding</b></td>";
+				$page[] = "	</tr>";
+				$page[] = "	<tr>";
+				$page[] = "		<td>&nbsp;</td>";
+				$page[] = "		<td>Van</td>";
+				$page[] = "		<td>&nbsp;</td>";
+				$page[] = "		<td>Naar</td>";
+				$page[] = "		<td colspan='2'>&nbsp;</td>";
+				$page[] = "	</tr>";
+				$page[] = "	<tr>";
+				$page[] = "		<td>&nbsp;</td>";
+				$page[] = "		<td><input type='text' name='reis_van' value='". (!isset($_POST['reis_van']) ? $voorgangerData['reis_van'] : $_POST['reis_van']) ."' size='30'></td>";
+				$page[] = "		<td>&nbsp;</td>";
+				$page[] = "		<td><input type='text' name='reis_naar' value='Mari&euml;nburghstraat 4, Deventer' size='30'></td>";
+				$page[] = "		<td colspan='2'>&nbsp;</td>";
+				$page[] = "	</tr>";
+			}
 
 			# Als reis_van en reis_naar bekend zijn, kan het aantal kilometers worden uitgerekend
 			# en kan het volgende deel van het formulier getoond worden
-			if(isset($_POST['reis_van']) AND isset($_POST['reis_naar'])) {
+			# Óf als er geen reiskosten gedeclareerd kunnen worden
+			if((isset($_POST['reis_van']) AND isset($_POST['reis_naar']) AND $voorgangerData['reiskosten']) OR !$voorgangerData['reiskosten']) {
 				$next = true;
 				$first = true;
-				$kms = determineAddressDistance($_POST['reis_van'], $_POST['reis_naar']);
-				$km = array_sum($kms);
-
-				$reiskosten = $km * $voorgangerData['km_vergoeding'];
-
-				$page[] = "	<tr>";
-				$page[] = "		<td>&nbsp;</td>";
-				$page[] = "		<td><small>". round($km, 1) ." km x ". formatPrice($voorgangerData['km_vergoeding']) ."</small></td>";
-				$page[] = "		<td>&nbsp;</td>";
-				$page[] = "		<td>&nbsp;</td>";
-				$page[] = "		<td>&nbsp;</td>";
-				$page[] = "		<td align='right'>". formatPrice($reiskosten) ."</td>";
-				$page[] = "		<input type='hidden' name='reiskosten' value='$reiskosten'>";
-				$page[] = "		<input type='hidden' name='km' value='$km'>";
-				$page[] = "	</tr>";
-				$page[] = "	<tr>";
-				$page[] = "		<td colspan='6'>&nbsp;</td>";
-				$page[] = "	</tr>";
+				
+				if($voorgangerData['reiskosten']) {
+					$kms = determineAddressDistance($_POST['reis_van'], $_POST['reis_naar']);
+					$km = array_sum($kms);
+					
+					$reiskosten = $km * $voorgangerData['km_vergoeding'];
+					
+					$page[] = "	<tr>";
+					$page[] = "		<td>&nbsp;</td>";
+					$page[] = "		<td><small>". round($km, 1) ." km x ". formatPrice($voorgangerData['km_vergoeding']) ."</small></td>";
+					$page[] = "		<td>&nbsp;</td>";
+					$page[] = "		<td>&nbsp;</td>";
+					$page[] = "		<td>&nbsp;</td>";
+					$page[] = "		<td align='right'>". formatPrice($reiskosten) ."</td>";
+					$page[] = "		<input type='hidden' name='reiskosten' value='$reiskosten'>";
+					$page[] = "		<input type='hidden' name='km' value='$km'>";
+					$page[] = "	</tr>";
+					$page[] = "	<tr>";
+					$page[] = "		<td colspan='6'>&nbsp;</td>";
+					$page[] = "	</tr>";
+				}
+				
 				$page[] = "	<tr>";
 				$page[] = "		<td colspan='6'><b>Overige</b></td>";
 				$page[] = "	</tr>";
-
+      	
 				if(isset($_POST['overig'])) {
 					$overige = $_POST['overig'];
 				} else {
 					$overige = array();
 				}
-
+      	
 				$overige[] = '';
-
+      	
 				# Laat invoervelden voor overige zaken zien
 				foreach($overige as $key => $string) {
 					if($string != '' OR $first) {
@@ -479,7 +498,7 @@ if(isset($_REQUEST['hash'])) {
 						$page[] = "		<td>&euro;&nbsp;<input type='text' name='overig_price[$key]' value='". str_replace(',', '.', $_POST['overig_price'][$key]) ."' size='5'></td>";
 						$page[] = "	</tr>";
 					}
-
+      	
 					# 1 lege regel is voldoende
 					if($string == '' AND $first)	$first = false;
 				}
@@ -516,7 +535,7 @@ if(isset($_REQUEST['hash'])) {
 	$dienstData = getKerkdienstDetails($dienst);
 	$voorganger = $dienstData['voorganger_id'];
 	$voorgangerData = getVoorgangerData($voorganger);
-
+	
 	if($voorgangerData['declaratie'] == 0) {
 		$page[] = 'Voor deze dienst is het niet mogelijk een declaratie in te dienen.<br>';
 		$page[] = 'Mogelijke oorzaken zijn :';

@@ -47,7 +47,7 @@ if(isset($_POST['maanden'])) {
 }
 
 # Haal alle kerkdiensten binnen een tijdsvak op
-$diensten = getKerkdiensten(mktime(0,0,0), mktime(date("H"),date("i"),date("s"),(date("n")+(3*$blokken))));
+$diensten = getKerkdiensten(mktime(0,0,0,(date("n")-1)), mktime(date("H"),date("i"),date("s"),(date("n")+(3*$blokken))));
 
 # Haal alle voorgangers op en maak een namen-array
 $voorgangers = getVoorgangers();

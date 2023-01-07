@@ -45,10 +45,11 @@ if(isset($_REQUEST['voorgangerID'])) {
 			$sql .= "$VoorgangerDenom = '". $_POST['denom'] ."', ";
 			$sql .= "$VoorgangerOpmerking = '". $_POST['opm'] ."', ";
 			$sql .= "$VoorgangerStijl = '". $_POST['stijl'] ."', ";		
-			$sql .= "$VoorgangerAandacht = '". (isset($_POST['aandachtspunten']) AND $_POST['aandachtspunten'] == 'ja' ? '1' : '0') ."', ";
-			$sql .= "$VoorgangerDeclaratie = '". (isset($_POST['declaratie']) AND $_POST['declaratie'] == 'ja' ? '1' : '0') ."' ";
+			$sql .= "$VoorgangerAandacht = '". ((isset($_POST['aandachtspunten']) AND $_POST['aandachtspunten'] == 'ja') ? '1' : '0') ."', ";
+			$sql .= "$VoorgangerDeclaratie = '". ((isset($_POST['declaratie']) AND $_POST['declaratie'] == 'ja') ? '1' : '0') ."', ";
+			$sql .= "$VoorgangerReiskosten = '". ((isset($_POST['reiskosten']) AND $_POST['reiskosten'] == 'ja') ? '1' : '0') ."' ";			
 			$sql .= "WHERE $VoorgangerID = '". $_POST['voorgangerID'] ."'";
-			
+						
 			if(mysqli_query($db, $sql)) {
 				$top_left[] = "Gegevens opgeslagen";
 				toLog('info', $_SESSION['ID'], '', 'Gegevens voorganger ('. $_REQUEST['voorgangerID'] .') bijgewerkt');
@@ -62,8 +63,9 @@ if(isset($_REQUEST['voorgangerID'])) {
 	# Sla declaratie-data op
 	if(isset($_POST['save_decl'])) {
 		$sql = "UPDATE $TableVoorganger SET ";
-		$sql .= "$VoorgangerHonorariumOld = '". $_POST['honorarium_old'] ."', ";
+		#$sql .= "$VoorgangerHonorariumOld = '". $_POST['honorarium_old'] ."', ";
 		$sql .= "$VoorgangerHonorariumNew = '". $_POST['honorarium_new'] ."', ";
+		$sql .= "$VoorgangerHonorarium2023 = '". $_POST['honorarium_2023'] ."', ";
 		$sql .= "$VoorgangerHonorariumSpecial = '". $_POST['honorarium_spec'] ."', ";
 		$sql .= "$VoorgangerKM = '". $_POST['km_vergoeding'] ."', ";
 		$sql .= "$VoorgangerEBRelatie = '". $_POST['EB_relatie'] ."' ";		
@@ -95,11 +97,14 @@ if(isset($_REQUEST['voorgangerID'])) {
 	$voorgangerData['denom']		= getParam('denom', $firstData['denom']);
 	$voorgangerData['opm']			= getParam('opm', $firstData['opm']);
 	$voorgangerData['stijl']		= getParam('stijl', $firstData['stijl']);
-	$voorgangerData['aandacht'] = (isset($_POST['aandachtspunten']) AND $_POST['aandachtspunten'] == 'ja' ? '1' : '0');
-	$voorgangerData['declaratie'] = (isset($_POST['declaratie']) AND $_POST['declaratie'] == 'ja' ? '1' : '0');
+	$voorgangerData['aandacht'] = ((isset($_POST['aandachtspunten']) AND $_POST['aandachtspunten'] == 'ja') ? '1' : $firstData['aandacht']);
+	$voorgangerData['declaratie'] = ((isset($_POST['declaratie']) AND $_POST['declaratie'] == 'ja') ? '1' : $firstData['declaratie']);
+	$voorgangerData['reiskosten'] = ((isset($_POST['reiskosten']) AND $_POST['reiskosten'] == 'ja') ? '1' : $firstData['reiskosten']);
 	
-	$voorgangerData['honorarium_oud'] 	= getParam('honorarium_old', $secondData['honorarium_oud']);
+	
+	#$voorgangerData['honorarium_oud'] 	= getParam('honorarium_old', $secondData['honorarium_oud']);
 	$voorgangerData['honorarium_nieuw']	= getParam('honorarium_new', $secondData['honorarium_nieuw']);
+	$voorgangerData['honorarium_2023']	= getParam('honorarium_2023', $secondData['honorarium_2023']);
 	$voorgangerData['honorarium_spec']	= getParam('honorarium_spec', $secondData['honorarium_spec']);
 	$voorgangerData['km_vergoeding']		= getParam('km_vergoeding', $secondData['km_vergoeding']);
 	$voorgangerData['EB-relatie']				= getParam('EB_relatie', $secondData['EB-relatie']);
@@ -175,7 +180,8 @@ if(isset($_REQUEST['voorgangerID'])) {
 	$left[] = "	<td>&nbsp;</td>";
 	$left[] = "	<td>Als bijlage meesturen :<br>";
 	$left[] = "	<input type='checkbox' name='aandachtspunten' value='ja'". ($voorgangerData['aandacht'] == 1 ? ' checked' : '') ."> Aandachtspunten voor de dienst<br>";
-	$left[] = "	<input type='checkbox' name='declaratie' value='ja'". ($voorgangerData['declaratie'] == 1 ? ' checked' : '') ."> Declaratie-formulier</td>";
+	$left[] = "	<input type='checkbox' name='declaratie' value='ja'". ($voorgangerData['declaratie'] == 1 ? ' checked' : '') ."> Declaratie-formulier<br>";
+	$left[] = "	<input type='checkbox' name='reiskosten' value='ja'". ($voorgangerData['reiskosten'] == 1 ? ' checked' : '') ."> Reiskosten-vergoeding</td>";
 	$left[] = "</tr>";		
 	$left[] = "</table>";
 	$left[] = "<p class='after_table'><input type='submit' name='save_data' value='Gegevens opslaan'></p>";
@@ -187,13 +193,13 @@ if(isset($_REQUEST['voorgangerID'])) {
 		$right[] = "<input type='hidden' name='voorgangerID' value='". $_REQUEST['voorgangerID'] ."'>";
 		$right[] = "<table>";
 		$right[] = "<tr>";
-		$right[] = "	<td>Honorarium 2019</td>";
-		$right[] = "	<td><input type='text' name='honorarium_old' value='". $voorgangerData['honorarium_oud'] ."'> cent</td>";
-		$right[] = "</tr>";
-		$right[] = "<tr>";
-		$right[] = "	<td>Honorarium 2020</td>";
+		$right[] = "	<td>Honorarium t/m 2022</td>";
 		$right[] = "	<td><input type='text' name='honorarium_new' value='". $voorgangerData['honorarium_nieuw'] ."'> cent</td>";
 		$right[] = "</tr>";
+		$right[] = "<tr>";
+		$right[] = "	<td>Honorarium v.a. 2023</td>";
+		$right[] = "	<td><input type='text' name='honorarium_2023' value='". $voorgangerData['honorarium_2023'] ."'> cent</td>";
+		$right[] = "</tr>";		
 		$right[] = "<tr>";
 		$right[] = "	<td>Honorarium<br><small>speciale gelegenheden</small></td>";
 		$right[] = "	<td><input type='text' name='honorarium_spec' value='". $voorgangerData['honorarium_spec'] ."'> cent</td>";
@@ -224,25 +230,29 @@ if(isset($_REQUEST['voorgangerID'])) {
 		$right[] = "<table border=1>";
 		$right[] = "<tr>";
 		$right[] = "	<td>&nbsp;</td>";
-		$right[] = "	<td width='50' align='center'><b>2019</b></td>";
-		$right[] = "	<td width='50' align='center'><b>2020</b></td>";
+		#$right[] = "	<td width='50' align='center'><b>2019</b></td>";
+		$right[] = "	<td width='50' align='center'><b>2022</b></td>";
+		$right[] = "	<td width='50' align='center'><b>2023</b></td>";
 		$right[] = "	<td width='50' align='center'><b>Speciaal</b></td>";
 		$right[] = "</tr>";
 		$right[] = "<tr>";
 		$right[] = "	<td><b>GKV</b></td>";
+		#$right[] = "	<td align='center'>&euro; 90</td>";
 		$right[] = "	<td align='center'>&euro; 90</td>";
-		$right[] = "	<td align='center'>&euro; 90</td>";
-		$right[] = "	<td align='center'>&euro; 90</td>";
+		$right[] = "	<td align='center'>&euro; 110</td>";
+		$right[] = "	<td align='center'>&euro; 220</td>";
 		$right[] = "</tr>";
 		$right[] = "<tr>";
 		$right[] = "	<td><b>CGK</b></td>";
+		#$right[] = "	<td align='center'>&euro; 90</td>";
 		$right[] = "	<td align='center'>&euro; 90</td>";
-		$right[] = "	<td align='center'>&euro; 90</td>";
-		$right[] = "	<td align='center'>&euro; 180</td>";
+		$right[] = "	<td align='center'>&euro; 110</td>";
+		$right[] = "	<td align='center'>&euro; 220</td>";
 		$right[] = "</tr>";
 		$right[] = "<tr>";
 		$right[] = "	<td><b>NGK</b></td>";
-		$right[] = "	<td align='center'>&euro; 90</td>";
+		#$right[] = "	<td align='center'>&euro; 90</td>";
+		$right[] = "	<td align='center'>&euro; 110</td>";
 		$right[] = "	<td align='center'>&euro; 110</td>";
 		$right[] = "	<td align='center'>&euro; 220</td>";
 		$right[] = "</tr>";

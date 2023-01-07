@@ -140,9 +140,11 @@ $VoorgangerStijl							= "stijl";
 $VoorgangerOpmerking					= "opmerking";
 $VoorgangerAandacht						= "aandachtspunten";
 $VoorgangerDeclaratie   			= "declaratie";
+$VoorgangerReiskosten   			= "reiskosten";
 $VoorgangerHonorarium					= "honorarium";
 $VoorgangerHonorariumOld			= "honorarium_2019";
 $VoorgangerHonorariumNew			= "honorarium_2020";
+$VoorgangerHonorarium2023			= "honorarium_2023";
 $VoorgangerHonorariumSpecial	= "honorarium_special";
 $VoorgangerKM									= "km_vergoeding";
 $VoorgangerVertrekpunt				= "vertrekpunt";
@@ -156,7 +158,7 @@ $WijkteamWijk									= "wijk";
 $WijkteamLid									= "lid";
 $WijkteamRol									= "rol";
                     					
-#$TableMC											= "mc_data";
+$TableMC											= "mc_data";
 #$MCID													= "scipio_id";
 #$MCgeslacht										= "geslacht";
 #$MCfname											= "fname";
@@ -174,10 +176,10 @@ $WijkteamRol									= "rol";
 #$MClastChecked								= "last_checked";
                     					
 $TableCommMC									= "mc_comm";
-$CommMCID											= "scipio_id";
-$CommMCGroupID								= "group_id";
-$ComMClastSeen								= "last_seen";
-$ComMClastChecked							= "last_checked";
+#$CommMCID											= "scipio_id";
+#$CommMCGroupID								= "group_id";
+#$ComMClastSeen								= "last_seen";
+#$ComMClastChecked							= "last_checked";
                     					
 $TableLP											= "lp_data";
 $LPID													= "scipio_id";
