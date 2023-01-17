@@ -313,6 +313,42 @@ $maandArrayEng	= array(1 => 'January', 2 => 'February', 3 => 'March', 4 => 'Apri
 $letterArray		= array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z');
 $teamRollen			= array(1 => 'Ouderling', 2 => 'Diaken', 3 => 'Wijkco&ouml;rdinator', 4 => 'Bezoekbroeder', 5 => 'Bezoekzuster', 6 => 'Ge&iuml;ntereseerde', 7 => 'Predikant');
 
+# Het lukt helaas nog niet om 2D-arrays in de config-module op de site te definieren.
+# Vandaar hier
+$declJGPost[0][1] = 'Professionalisering leiding';
+$declJGPost[0][2] = 'Lief en leed';
+
+$declJGPost[1][3] = 'Materialen';
+$declJGPost[1][4] = 'Geschenken bij afscheid BK 5';
+
+$declJGPost[2][5] = 'Lesmateriaal';
+$declJGPost[2][6] = 'Materialen';
+$declJGPost[2][7] = 'Geschenken bij afscheid BC8';
+
+$declJGPost[3][8] = 'Materialen';
+$declJGPost[3][9] = 'Sociale activiteiten';
+$declJGPost[3][10] = 'Eten en drinken';
+$declJGPost[3][11] = 'Kamp';
+$declJGPost[3][12] = 'Schaatsactiviteit';
+$declJGPost[3][13] = 'Ouderbijdrage kamp';
+
+$declJGPost[4][14] = 'Lesmateriaal';
+$declJGPost[4][15] = 'Materialen';
+$declJGPost[4][16] = 'Sociale activiteiten';
+$declJGPost[4][17] = 'Eten en Drinken';
+$declJGPost[4][18] = 'Kamp';
+$declJGPost[4][19] = 'Afscheid F4';
+$declJGPost[4][20] = 'Ouderbijdrage kamp';
+
+$declJGPost[5][21] = 'Diaconale activiteit';
+$declJGPost[5][22] = 'Gezamenlijk eten';
+$declJGPost[5][23] = 'Weekend';
+$declJGPost[5][24] = 'Ouderbijdrage kamp';
+
+$declJGPost[6][25] = 'Geloof en opvoeding toerusting ouders';
+$declJGPost[6][26] = 'Kerstboekjes kinderen tot en met 12 jaar';
+$declJGPost[6][27] = 'Onvoorzien';
+
 $db = connect_db();
 
 # Doorloop de config-tabel en groepeer op naam

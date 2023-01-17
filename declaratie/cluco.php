@@ -93,7 +93,8 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 				$mail[] = "<br>";
 				$mail[] = "Details en mogelijkheid tot goed- of afkeuren zijn zichtbaar <a href='". $ScriptURL ."declaratie/penningmeester.php?key=". $_REQUEST['key'] ."'>online</a> (inloggen vereist)";
 				
-				$parameter['to'][]			= array($declaratieReplyAddress, $declaratieReplyName);				
+				#$parameter['to'][]			= array($penningmeesterJGAddress, $penningmeesterJGNaam);
+				$parameter['to'][]			= array($declaratieReplyAddress, $declaratieReplyName);
 				$parameter['subject']		= 'Door cluco goedgekeurde declaratie';
 				$parameter['message'] 	= implode("\n", $mail);
 				$parameter['from']			= getMailAdres($_SESSION['ID']);
@@ -118,7 +119,7 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 				$page[] = "<input type='hidden' name='accept' value='1'>";
 				$page[] = '<table border=0>';
 				$page[] = "<tr>";
-				$page[] = "		<td align='left'>Geef hieronder optioneel een korte toelichting aan de penningsmeester.<br>Deze toelichting zal <u>niet</u> opgenomen worden in de definitieve declaratie.</td>";
+				$page[] = "		<td align='left'>Geef hieronder optioneel een korte toelichting aan de penningsmeester.<br>Deze toelichting zal <u>niet</u> opgenomen worden in de definitieve declaratie en is dus enkel om eventueel een korte toelichting te geven.</td>";
 				$page[] = "</tr>";	
 				$page[] = "<tr>";
 				$page[] = "		<td>&nbsp;</td>";

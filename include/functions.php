@@ -1457,7 +1457,7 @@ function getDeclaratieData($voorganger, $tijdstip) {
 	#$data['honorarium_oud'] = $row[$VoorgangerHonorariumOld];
 	$data['honorarium_nieuw'] = $row[$VoorgangerHonorariumNew];
 	$data['honorarium_2023'] = $row[$VoorgangerHonorarium2023];	
-	$data['honorarium_spec'] = $row[$VoorgangerHonorariumNew];
+	$data['honorarium_spec'] = $row[$VoorgangerHonorariumSpecial];
 	$data['km_vergoeding'] = $row[$VoorgangerKM];
 	$data['reis_van'] = urldecode($row[$VoorgangerVertrekpunt]);
 	$data['EB-relatie'] = $row[$VoorgangerEBRelatie];	
@@ -2173,7 +2173,7 @@ function calculateTotals($array) {
 }
 
 function showDeclaratieDetails($input) {
-	global $clusters;
+	global $clusters, $declJGPost;
 	
 	# $input['key']
 	# $input['user']
@@ -2229,6 +2229,23 @@ function showDeclaratieDetails($input) {
 		$page[] = "		<td>&nbsp;</td>";
 		$page[] = "		<td colspan='3'>". $clusters[$input['cluster']] ."</td>";
 		$page[] = "</tr>";
+	}
+	
+	if(isset($input['jg_post']) AND $input['jg_post'] != '') {
+		foreach($declJGPost as $subArray) {
+			if(isset($subArray[$input['jg_post']]))	$post = $subArray[$input['jg_post']];
+		}
+		
+		$page[] = "<tr>";
+		$page[] = "		<td colspan='2'>Post:</td>";
+		$page[] = "		<td>&nbsp;</td>";
+		$page[] = "		<td colspan='3'>". $post ."</td>";
+		$page[] = "</tr>";
+		#$page[] = "<tr>";
+		#$page[] = "		<td colspan='2'>Post-omschrijving:</td>";
+		#$page[] = "		<td>&nbsp;</td>";
+		#$page[] = "		<td colspan='3'>Volgt</td>";
+		#$page[] = "</tr>";
 	}
 	
 	if(isset($input['overige']) AND count($input['overige']) > 0) {

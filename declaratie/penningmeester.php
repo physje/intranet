@@ -181,11 +181,18 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 			$EBData					= eb_getRelatieDataByCode($EBCode);		
 			$totaal					= $row[$EBDeclaratieTotaal];
 			
-			if($JSON['overig'] == '') {				
+			# Als het alleen reiskosten zijn (dus geen overige), neem dat dan als omschrijving
+			# Bouw anders de omschrijving op uit de verschillende declaraties
+			if($JSON['overig'] == '') {
 				$toelichting		= 'reiskostenvergoeding';
 			} else {
 				$toelichting		= implode(', ', $JSON['overig']);
-			}		
+			}
+			
+			# Als er een post bekend is, voeg dat dan toe aan de omschrijving
+			if(isset($JSON['post']) AND $JSON['post'] == '') {
+				$toelichting .= ' [post JG'. substr('0'.$JSON['post'], -2) .']';
+			}
 					
 			$errorResult = eb_verstuurDeclaratie ($EBCode, $boekstukNummer, $factuurnummer, $totaal, $_POST['GBR'], $toelichting.' ('.$_REQUEST['key'].')', $mutatieId);
 			if($errorResult) {
@@ -246,8 +253,14 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 			$param_indiener['to'][]			= array($data['user']);
 			$param_indiener['subject']	= 'Uitbetaling declaratie';
 			$param_indiener['message'] 	= implode("\n", $MailIndiener);
-			$param_indiener['from']			= $declaratieReplyAddress;
-			$param_indiener['fromName']	= $declaratieReplyName;
+			
+			if($data['cluster'] == 2) {
+				$param_indiener['from']			= $penningmeesterJGAddress;
+				$param_indiener['fromName']	= $penningmeesterJGNaam;
+			} else {
+				$param_indiener['from']			= $declaratieReplyAddress;
+				$param_indiener['fromName']	= $declaratieReplyName;
+			}
 			
 			if(!sendMail_new($param_indiener)) {
 				toLog('error', $_SESSION['ID'], $indiener, "Problemen met versturen declaratie-goedkeuring [". $_REQUEST['key'] ."] door penningmeester");
@@ -287,12 +300,19 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 				$mail = array_merge($mail, showDeclaratieDetails($data));			
 				$mail[] = "</table>";
 				
-				//$parameter['to'][]		= array($_POST['cluco']);
-				$parameter['to'][]		= array($ClucoAddress, $ClucoName);
+				//$parameter['to'][]		= array($_POST['cluco']);				
 				$parameter['subject']		= 'Terugleggen declaratie';
 				$parameter['message'] 	= implode("\n", $mail);
-				$parameter['from']			= $declaratieReplyAddress;
-				$parameter['fromName']	= $declaratieReplyName;
+				
+				if($data['cluster'] == 2) {
+					$param_indiener['to'][]			= array($data['user']);
+					$param_indiener['from']			= $penningmeesterJGAddress;
+					$param_indiener['fromName']	= $penningmeesterJGNaam;
+				} else {
+					$parameter['to'][]					= array($ClucoAddress, $ClucoName);
+					$param_indiener['from']			= $declaratieReplyAddress;
+					$param_indiener['fromName']	= $declaratieReplyName;
+				}
 				
 				if(!sendMail_new($parameter)) {
 					toLog('error', $_SESSION['ID'], $data['user'], "Problemen met versturen teruglegging [". $_REQUEST['key'] ."]");

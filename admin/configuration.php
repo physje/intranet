@@ -74,7 +74,7 @@ $thead[] = "</thead>";
 
 $tfooter[] = "</table>";
 
-$configGroups = array_merge(array(0 => 'Onbekend'), $configGroups);
+#$configGroups = array_merge(array(0 => 'Onbekend'), $configGroups);
 
 foreach($configGroups as $groepID => $groepNaam) {
 	$sql = "SELECT $ConfigName, COUNT(*) as aantal FROM $TableConfig WHERE $ConfigGroep = $groepID GROUP BY $ConfigName ORDER BY $ConfigName";
@@ -156,8 +156,8 @@ $text[] = "</tr>";
 #$text[] = "</table>";
 #$text[] = "</form>";
 
-$block[($groepID+1)] = array_merge($thead, $text, $tfooter);
-$configGroups[($groepID+1)] = 'Nieuwe toevoegen';
+$block[] = array_merge($thead, $text, $tfooter);
+$configGroups[] = 'Nieuwe toevoegen';
 
 $header[] = '<style>';
 $header[] = '@media only screen and (max-width: 760px), (min-device-width: 768px) and (max-device-width: 1024px)  {';
