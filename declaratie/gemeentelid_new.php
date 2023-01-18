@@ -154,7 +154,7 @@ if(isset($_POST['correct'])) {
 		# J&G heeft geen Cluco die het goedkeurd maar direct naar de penningmeester
 		# Don't ask me why
 		if($cluster == 2) {
-			$mai$mailClucol[] = "Details en mogelijkheid tot goed- of afkeuren zijn zichtbaar <a href='". $ScriptURL ."declaratie/penningmeester.php?key=". $_REQUEST['key'] ."'>online</a> (inloggen vereist)";
+			$mailCluco[] = "Details en mogelijkheid tot goed- of afkeuren zijn zichtbaar <a href='". $ScriptURL ."declaratie/penningmeester.php?key=$uniqueKey'>online</a> (inloggen vereist)";
 		} else {			
 			$mailCluco[] = "<a href='". $ScriptURL ."declaratie/cluco.php?key=$uniqueKey&hash=". $ClucoData['hash_long'] ."&accept'>Goedkeuren</a><br>";
 			$mailCluco[] = "<a href='". $ScriptURL ."declaratie/cluco.php?key=$uniqueKey&reject'>Afkeuren</a> (inloggen vereist)<br>";

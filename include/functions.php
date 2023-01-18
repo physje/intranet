@@ -1833,6 +1833,26 @@ function setDeclaratieStatus($status, $declaratie, $lid) {
 	}	
 }
 
+function getDeclaratieStatus($declaratie, $lid) {
+	global $db, $TableEBDeclaratie, $EBDeclaratieID, $EBDeclaratieStatus;
+	
+	$descr[0] = 'geen';								# nog niet in gebruik
+	$descr[1] = 'opgeslagen'; 				# nog niet in gebruik
+	$descr[2] = 'bij lid'; 						# nog niet in gebruik
+	$descr[3] = 'bij CluCo';					# Door gemeentelid
+	$descr[4] = 'bij penningmeester';	# Door Cluco
+	$descr[5] = 'afgerond';						# Door Penningmeester
+	$descr[6] = 'afgekeurd';					# Door Cluco
+	$descr[7] = 'verwijderd';					# Door Penningmeester
+	$descr[8] = 'investering';				# Door Penningmeester	
+	
+	$sql = "SELECT $EBDeclaratieStatus FROM $TableEBDeclaratie WHERE $EBDeclaratieID = $declaratie";
+	$result = mysqli_query($db, $sql);
+	$row = mysqli_fetch_array($result);
+	
+	return $row[$EBDeclaratieStatus];
+}
+
 function getCoordinates($q) {
 	global $locationIQkey;
 		
@@ -2231,9 +2251,9 @@ function showDeclaratieDetails($input) {
 		$page[] = "</tr>";
 	}
 	
-	if(isset($input['jg_post']) AND $input['jg_post'] != '') {
+	if(isset($input['post']) AND $input['post'] != '') {
 		foreach($declJGPost as $subArray) {
-			if(isset($subArray[$input['jg_post']]))	$post = $subArray[$input['jg_post']];
+			if(isset($subArray[$input['post']]))	$post = $subArray[$input['post']];
 		}
 		
 		$page[] = "<tr>";

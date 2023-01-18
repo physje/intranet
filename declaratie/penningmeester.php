@@ -23,14 +23,15 @@ if(isset($_REQUEST['hash'])) {
 
 if($showLogin) {	
 	$cfgProgDir = '../auth/';
-	$requiredUserGroups = array(1, 38);
+	$requiredUserGroups = array(1, 38, 51);
 	include($cfgProgDir. "secure.php");
 }
 
-$toegestaan = array_merge(getGroupMembers(1), getGroupMembers(38));
+$toegestaan = array_merge(getGroupMembers(1), getGroupMembers(38), getGroupMembers(51));
 
 if(in_array($_SESSION['ID'], $toegestaan)) {	
-	if(isset($_REQUEST['key'])) {	
+	if(isset($_REQUEST['key']) AND (getDeclaratieStatus($row[$EBDeclaratieID], $data['user']) < 5)) {
+		
 		$sql = "SELECT * FROM $TableEBDeclaratie WHERE $EBDeclaratieHash like '". $_REQUEST['key'] ."'";
 		$result = mysqli_query($db, $sql);
 		$row = mysqli_fetch_array($result);
@@ -43,6 +44,7 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 		$data['iban']								= $JSON['iban'];
 		$data['relatie']						= getParam('begunstigde', $JSON['EB_relatie']);
 		$data['cluster']						= $JSON['cluster'];
+		$data['post']								= $JSON['post'];
 		$data['overige']						= $JSON['overig'];
 		$data['overig_price']				= $JSON['overig_price'];
 		$data['reiskosten']					= $JSON['reiskosten'];
@@ -137,7 +139,7 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 						mysqli_query($db, "UPDATE $TableUsers SET $UserEBRelatie = $EBCode WHERE $UserID = $indiener");
 					}				
 				}
-				$factuurnummer	= $boekstukNummer.'-declaratie-'.time2str('%e%b_%H.%M', $row[$EBDeclaratieTijd]);
+				$factuurnummer	= $boekstukNummer.'-declaratie-'.time2str('%e%b-%H.%M', $row[$EBDeclaratieTijd]);
 			}		
 			
 			# EIGEN = NEE
@@ -562,6 +564,9 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 			$page[] = "</table>";
 			$page[] = "</form>";		
 		}
+	} elseif(isset($_REQUEST['key']) AND getDeclaratieStatus($row[$EBDeclaratieID], $data['user']) > 4) {
+		$page[] = "Declaratie staat al gemarkeerd als afgehandeld. Neem contact op met de webmaster mocht dit onjuist zijn.<br>";
+		$page[] = "<br>Ga terug naar <a href='". $_SERVER['PHP_SELF']."'>het overzicht</a>.";		
 	} else {
 		$sql = "SELECT * FROM $TableEBDeclaratie WHERE $EBDeclaratieStatus = 4";
 		$result = mysqli_query($db, $sql);
