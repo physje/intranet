@@ -95,7 +95,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 			if($bandleider > 0) {
 				$mailText[] = "";
 				$mailText[] = "<b>Bandleider</b>";				
-				$mailText[] = "De muzikale begeleiding wordt geco&ouml;rdineerd door ". makeName($bandleider, 5) .". Wanneer ".($voorgangerData['stijl'] == 0 ? 'u' : 'je')." het preekthema en de te lezen bijbelteksten een week van tevoren aanlevert, zal de bandleider geschikte liederen uitzoeken die passen binnen de gemeentezang. Mocht ".($voorgangerData['stijl'] == 0 ? 'u' : 'je')." zelf nog liederen in gedachten hebben, dan ".($voorgangerData['stijl'] == 0 ? 'kunt u' : 'kun je')." deze altijd ter suggestie aandragen bij ". makeName($bandleider, 1) .".";
+				$mailText[] = "De muzikale begeleiding wordt geco&ouml;rdineerd door ". makeName($bandleider, 5) .". Wanneer ".($voorgangerData['stijl'] == 0 ? 'u' : 'je')." het preekthema en de te lezen bijbelteksten een week van tevoren aanlevert, zal de bandleider geschikte liederen uitzoeken die passen binnen de gemeentezang. Mocht ".($voorgangerData['stijl'] == 0 ? 'u' : 'je')." zelf nog liederen in gedachten hebben, dan ".($voorgangerData['stijl'] == 0 ? 'kunt u' : 'kun je')." deze altijd ter suggestie aandragen bij ". makeName($bandleider, 1) .". De bandleider zal de samengestelde liturgie vervolgens met ".($voorgangerData['stijl'] == 0 ? 'u' : 'je')." afstemmen, zodat er samen kan worden toegewerkt naar een mooie dienst.";
 				$mailText[] = ($voorgangerData['stijl'] == 0 ? 'Wilt u' : 'Wil je')." de liturgie een week van te voren doorgeven zodat de band kan oefenen?";
 			}
 			
