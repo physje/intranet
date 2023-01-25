@@ -5,13 +5,13 @@ include_once('../include/config.php');
 $db = connect_db();
 $sql = array();
 
-#$vars[] = array(4, 'declJGKop', 0, 'Algemeen en staf', 'Catagorie in boekhouding Jeugd & Gezin');
-#$vars[] = array(4, 'declJGKop', 1, 'Bijbelklas', 'Catagorie in boekhouding Jeugd & Gezin');
-#$vars[] = array(4, 'declJGKop', 2, 'Basiscatechese', 'Catagorie in boekhouding Jeugd & Gezin');
-#$vars[] = array(4, 'declJGKop', 3, 'Follow light', 'Catagorie in boekhouding Jeugd & Gezin');
-#$vars[] = array(4, 'declJGKop', 4, 'Follow', 'Catagorie in boekhouding Jeugd & Gezin');
-#$vars[] = array(4, 'declJGKop', 5, 'FollowNext', 'Catagorie in boekhouding Jeugd & Gezin');
-#$vars[] = array(4, 'declJGKop', 6, 'Overig', 'Catagorie in boekhouding Jeugd & Gezin');
+$vars[] = array(4, 'declJGKop', 0, 'Algemeen en staf', 'Catagorie in boekhouding Jeugd & Gezin');
+$vars[] = array(4, 'declJGKop', 1, 'Bijbelklas', 'Catagorie in boekhouding Jeugd & Gezin');
+$vars[] = array(4, 'declJGKop', 2, 'Basiscatechese', 'Catagorie in boekhouding Jeugd & Gezin');
+$vars[] = array(4, 'declJGKop', 3, 'Follow light', 'Catagorie in boekhouding Jeugd & Gezin');
+$vars[] = array(4, 'declJGKop', 4, 'Follow', 'Catagorie in boekhouding Jeugd & Gezin');
+$vars[] = array(4, 'declJGKop', 5, 'FollowNext', 'Catagorie in boekhouding Jeugd & Gezin');
+$vars[] = array(4, 'declJGKop', 6, 'Overig', 'Catagorie in boekhouding Jeugd & Gezin');
 
 $vars[] = array(4, 'declJGToelichting', 1, 'Het primaire doel van deze post is om financi&euml;le ruimte bieden voor de professionalisering van de leiding en mentoren van de diverse jeugdgroepen. Deze professionalisering krijgt gestalte door een training, workshop of bijeenkomst georganiseerd door de jeugdwerker. Deze post heeft enkel betrekking op de benodigde (les)materialen, eten, drinken en eventuele huur van een ruimte ten behoeve van de professionalisering.<br><br>Het secundaire doel van deze post is om financi&euml;le ruimte te bieden voor leiding en mentoren van de jeugdgroepen om een cursus te volgen of een bijeenkomst bij te wonen welke relevant is voor hun bijdrage in het jeugdwerk. Daarbij kan per persoon maximaal &eacute;&eacute;n keer hierop aanspraak op worden gemaakt ter waarde van maximaal &euro;25,-. Dit bedrag kan dienen als vergoeding van de reiskosten of de kosten van deelname aan de cursus/bijeenkomst.', 'Toelichting bij post Jeugd & Gezin');
 $vars[] = array(4, 'declJGToelichting', 2, 'Doel van deze post is om de onderlinge verbondenheid - bij goede en slechte dagen - te versterken. Dat geldt zowel voor de jongeren als voor de mentoren. Daarnaast maakt deze post het mogelijk om afzwaaiende mentoren een kleine attentie te geven als dank voor hun inzet.', 'Toelichting bij post Jeugd & Gezin');

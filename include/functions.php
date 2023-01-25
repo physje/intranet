@@ -776,7 +776,7 @@ function getWoonAdres($id) {
 }
 
 function sendMail_new($parameter) {
-	global $ScriptURL, $ScriptMailAdress, $ScriptTitle, $SubjectPrefix;
+	global $ScriptURL, $noReplyAdress, $ScriptTitle, $SubjectPrefix;
 	#global $MailHeader, $MailFooter;
 	global $newMailHeader, $newMailFooter;
 	global $SMTPHost, $SMTPPort, $SMTPSSL, $SMTPUsername, $SMTPPassword;
@@ -853,8 +853,8 @@ function sendMail_new($parameter) {
 		$mail->From = $parameter['from'];
 		toLog('debug', '', '', 'Afzenderadres is gezet op '. $parameter['from']);
 	} else {
-		$mail->From = $ScriptMailAdress;
-		toLog('debug', '', '', 'Afzenderadres is gezet op '. $ScriptMailAdress);
+		$mail->From = $noReplyAdress;
+		toLog('debug', '', '', 'Afzenderadres is gezet op '. $noReplyAdress);
 	}
 	
 	if(isset($parameter['fromName']) AND $parameter['fromName'] != '') {
@@ -2193,7 +2193,7 @@ function calculateTotals($array) {
 }
 
 function showDeclaratieDetails($input) {
-	global $clusters, $declJGPost;
+	global $clusters, $declJGPost, $declJGKop;
 	
 	# $input['key']
 	# $input['user']
@@ -2250,16 +2250,20 @@ function showDeclaratieDetails($input) {
 		$page[] = "		<td colspan='3'>". $clusters[$input['cluster']] ."</td>";
 		$page[] = "</tr>";
 	}
-	
-	if(isset($input['post']) AND $input['post'] != '') {
-		foreach($declJGPost as $subArray) {
-			if(isset($subArray[$input['post']]))	$post = $subArray[$input['post']];
+			
+	/*
+	if(isset($input['post']) AND $input['post'] != '') {		
+		# Doorloop alle posten en zoek de bijbehorende naam erbij
+		foreach($input['post'] as $post) {
+			foreach($declJGPost as $subArray) {
+				if(isset($subArray[$post]))	$aPost[] = $subArray[$post];
+			}
 		}
 		
 		$page[] = "<tr>";
 		$page[] = "		<td colspan='2'>Post:</td>";
 		$page[] = "		<td>&nbsp;</td>";
-		$page[] = "		<td colspan='3'>". $post ."</td>";
+		$page[] = "		<td colspan='3'>". implode(', ', $aPost) ."</td>";
 		$page[] = "</tr>";
 		#$page[] = "<tr>";
 		#$page[] = "		<td colspan='2'>Post-omschrijving:</td>";
@@ -2267,6 +2271,7 @@ function showDeclaratieDetails($input) {
 		#$page[] = "		<td colspan='3'>Volgt</td>";
 		#$page[] = "</tr>";
 	}
+	*/
 	
 	if(isset($input['overige']) AND count($input['overige']) > 0) {
 		$page[] = "<tr>";
@@ -2282,7 +2287,23 @@ function showDeclaratieDetails($input) {
 			if($value != "") {
 				$page[] = "<tr>";
 				$page[] = "		<td>&nbsp;</td>";
-				$page[] = "		<td colspan='3'>$value</td>";
+				
+				if(isset($input['post'][$key])) {
+					$post_nr = $input['post'][$key];
+					foreach($declJGPost as $kop => $subArray) {
+						if(isset($subArray[$post_nr])) {
+							$catagorie = $declJGKop[$kop];
+							$post = $subArray[$post_nr];
+						}
+					}
+									
+					$page[] = "		<td>$value</td>";
+					$page[] = "		<td>&nbsp;</td>";
+					$page[] = "		<td>$catagorie -> $post</td>";
+				} else {
+					$page[] = "		<td colspan='3'>$value</td>";
+				}				
+				
 				$page[] = "		<td>&nbsp;</td>";
 				$page[] = "		<td align='right'>". formatPrice(price2RightFormat($input['overig_price'][$key])*100) ."</td>";
 				$page[] = "</tr>";				

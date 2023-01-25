@@ -8,6 +8,18 @@ $db = connect_db();
 
 $showLogin = true;
 
+if($productieOmgeving) {
+	$write2EB = true;
+	$sendMail = true;
+	$sendTestMail = false;
+} else {
+	$write2EB = false;
+	$sendMail = false;
+	$sendTestMail = false;
+	
+	echo '[ Test-omgeving ]';
+}
+
 if(isset($_REQUEST['hash'])) {
 	$id = isValidHash($_REQUEST['hash']);
 	
@@ -85,7 +97,8 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 			# Als declaratie OK is en alle velden juist zijn ingevoerd	
 			# Voeg declaratie toe en verstuur bevestigingmails
 			if(isset($_POST['accept']) AND $veldenCorrect) {
-				$JSON['GBR'] = $_POST['GBR'];
+				# Mochten de POST-variabele post bekend zijn (lees posten gewijzigd), ken de nieuwe posten dan toe aan JSON['post']
+				if(isset($_POST['post'])) $JSON['post'] = $data['post'] = $_POST['post'];
 				
 				$UserData = getMemberDetails($indiener);
 				$boekstukNummer	= generateBoekstukNr(date('Y'));
@@ -133,14 +146,16 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 						//$page[] = "Plaats: ". $plaats .'<br>';
 						//$page[] = "Mail: ". $mail .'<br>';
 						//$page[] = "IBAN: ". $iban .'<br>';
-										
-						$errorResult = eb_maakNieuweRelatieAan ($naam , $geslacht, $adres, $postcode, $plaats, $mail, $iban, $EBCode, $EB_id);
 						
-						if($errorResult) {
-							toLog('error', $_SESSION['ID'], $indiener, $errorResult);						
-						} else {
-							toLog('debug', $_SESSION['ID'], $indiener, makeName($indiener, 5) .' als relatie toegevoegd in eBoekhouden met als code '. $EBCode);
-							mysqli_query($db, "UPDATE $TableUsers SET $UserEBRelatie = $EBCode WHERE $UserID = $indiener");
+						if($write2EB)	{
+							$errorResult = eb_maakNieuweRelatieAan ($naam , $geslacht, $adres, $postcode, $plaats, $mail, $iban, $EBCode, $EB_id);
+						
+							if($errorResult) {
+								toLog('error', $_SESSION['ID'], $indiener, $errorResult);						
+							} else {
+								toLog('debug', $_SESSION['ID'], $indiener, makeName($indiener, 5) .' als relatie toegevoegd in eBoekhouden met als code '. $EBCode);
+								mysqli_query($db, "UPDATE $TableUsers SET $UserEBRelatie = $EBCode WHERE $UserID = $indiener");
+							}
 						}				
 					}
 					$factuurnummer	= $boekstukNummer.'-declaratie-'.time2str('%e%b-%H.%M', $row[$EBDeclaratieTijd]);
@@ -191,33 +206,34 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 				# Bouw anders de omschrijving op uit de verschillende declaraties
 				if($JSON['overig'] == '') {
 					$toelichting		= 'reiskostenvergoeding';
+				} elseif(isset($JSON['post']) AND $JSON['post'] != '') {
+					# Als er een post bekend is, voeg dat dan toe aan de omschrijving
+					foreach($JSON['post'] as $index => $post) {
+						$regel[] = $JSON['overig'][$index].' [JG'. substr('0'.$post, -2) .']';
+					}
+					$toelichting		= implode(', ', $regel);					
 				} else {
 					$toelichting		= implode(', ', $JSON['overig']);
 				}
-				
-				# Als er een post bekend is, voeg dat dan toe aan de omschrijving
-				if(isset($JSON['post']) AND $JSON['post'] == '') {
-					$toelichting .= ' [post JG'. substr('0'.$JSON['post'], -2) .']';
-				}
-						
-				$errorResult = eb_verstuurDeclaratie ($EBCode, $boekstukNummer, $factuurnummer, $totaal, $_POST['GBR'], $toelichting.' ('.$_REQUEST['key'].')', $mutatieId);
-				if($errorResult) {
-					toLog('error', $_SESSION['ID'], $indiener, $errorResult);
-					$page[] = 'Probleem met toevoegen van declaratie ter waarde van '. formatPrice($totaal) .' aan '. $EBData['naam'] .' ('. $EBCode .')<br>';
+							
+				if($write2EB)	{					
+					$errorResult = eb_verstuurDeclaratie ($EBCode, $boekstukNummer, $factuurnummer, $totaal, $_POST['GBR'], $toelichting.' ('.$_REQUEST['key'].')', $mutatieId);
+					if($errorResult) {
+						toLog('error', $_SESSION['ID'], $indiener, $errorResult);
+						$page[] = 'Probleem met toevoegen van declaratie ter waarde van '. formatPrice($totaal) .' aan '. $EBData['naam'] .' ('. $EBCode .')<br>';
+					} else {
+						toLog('info', $_SESSION['ID'], $indiener, 'Declaratie ['. $_REQUEST['key'] .'] van '. formatPrice($totaal) .' toegevoegd voor '. $EBData['naam'] .' ('. $EBCode .')');
+						$page[] = 'Declaratie van '. formatPrice($totaal) .' ingediend tnv '. $EBData['naam'] .'<br>';
+					}
 				} else {
-					toLog('info', $_SESSION['ID'], $indiener, 'Declaratie ['. $_REQUEST['key'] .'] van '. formatPrice($totaal) .' toegevoegd voor '. $EBData['naam'] .' ('. $EBCode .')');
-					$page[] = 'Declaratie van '. formatPrice($totaal) .' ingediend tnv '. $EBData['naam'] .'<br>';
-				}
-								
-				/*	
-				$page[] = "DECLARATIE<br>";
-				$page[] = "EBCode: ". $EBCode .'<br>';
-				$page[] = "BoekstukNummer: ". $boekstukNummer .'<br>';
-				$page[] = "Factuurnummer: ". $factuurnummer .'<br>';
-				$page[] = "Totaal: ". $totaal .'<br>';
-				$page[] = "GBR: ". $_POST['GBR'] .'<br>';
-				$page[] = "Toelichting: ". $toelichting .'<br>';		
-				*/		
+					$page[] = "DECLARATIE<br>";
+					$page[] = "EBCode: ". $EBCode .'<br>';
+					$page[] = "BoekstukNummer: ". $boekstukNummer .'<br>';
+					$page[] = "Factuurnummer: ". $factuurnummer .'<br>';
+					$page[] = "Totaal: ". $totaal .'<br>';
+					$page[] = "GBR: ". $_POST['GBR'] .'<br>';
+					$page[] = "Toelichting: ". $toelichting .'<br>';		
+				}						
 				
 				$cluster = $JSON['cluster'];
 						
@@ -235,6 +251,8 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 				}
 				
 				$param_finAdmin['message'] 			= implode("\n", $MailFinAdmin);
+				
+				if(!$sendMail)	$param_finAdmin['testen'] = 1;				
 							
 				if(!sendMail_new($param_finAdmin)) {
 					toLog('error', $_SESSION['ID'], $indiener, "Problemen met versturen van mail naar financiële administratie");
@@ -268,6 +286,8 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 					$param_indiener['fromName']	= $declaratieReplyName;
 				}
 				
+				if(!$sendMail)	$param_indiener['testen'] = 1;
+				
 				if(!sendMail_new($param_indiener)) {
 					toLog('error', $_SESSION['ID'], $indiener, "Problemen met versturen declaratie-goedkeuring [". $_REQUEST['key'] ."] door penningmeester");
 					$page[] = "Er zijn problemen met het versturen van de goedkeuringsmail.<br>\n";
@@ -286,13 +306,13 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 			# Als declaratie niet helemaal OK is, stuur hem dan terug naar de CluCo/indiener
 			} elseif(isset($_POST['reject'])) {
 				if(isset($_REQUEST['send_reject'])) {
-					$cluco = $_POST['cluco'];
-					$ClucoAddress = getMailAdres($cluco);
-					$ClucoName		= makeName($cluco, 5);	
+					$terugleggen_bij = $_POST['terugleggen_bij'];
+					$ClucoAddress = getMailAdres($terugleggen_bij);
+					$ClucoName		= makeName($terugleggen_bij, 5);	
 					
-					$mail[] = "Beste ". makeName($cluco, 1) .",<br>";
+					$mail[] = "Beste ". makeName($terugleggen_bij, 1) .",<br>";
 					$mail[] = "<br>";
-					$mail[] = "Onderstaande declaratie is door de penningmeester voorgelegd aan jou als cluster-coordinator.<br>";
+					$mail[] = "Onderstaande declaratie is door de penningmeester teruggelegd bij jou.<br>";
 					$mail[] = "Als reden daarvoor heeft de penningmeester de volgende reden opgegeven :";
 					$mail[] = '<table border=0>';
 					$mail[] = "<tr>";
@@ -313,14 +333,16 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 					$parameter['message'] 	= implode("\n", $mail);
 					
 					if($data['cluster'] == 2) {
-						$param_indiener['to'][]			= array($data['user']);
-						$param_indiener['from']			= $penningmeesterJGAddress;
-						$param_indiener['fromName']	= $penningmeesterJGNaam;
+						$parameter['to'][]			= array($terugleggen_bij);
+						$parameter['from']			= $penningmeesterJGAddress;
+						$parameter['fromName']	= $penningmeesterJGNaam;
 					} else {
-						$parameter['to'][]					= array($ClucoAddress, $ClucoName);
-						$param_indiener['from']			= $declaratieReplyAddress;
-						$param_indiener['fromName']	= $declaratieReplyName;
+						$parameter['to'][]			= array($ClucoAddress, $ClucoName);
+						$parameter['from']			= $declaratieReplyAddress;
+						$parameter['fromName']	= $declaratieReplyName;
 					}
+					
+					if(!$sendMail)	$parameter['testen'] = 1;
 					
 					if(!sendMail_new($parameter)) {
 						toLog('error', $_SESSION['ID'], $data['user'], "Problemen met versturen teruglegging [". $_REQUEST['key'] ."]");
@@ -354,7 +376,7 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 					
 					$page[] = "<form method='post' action='". $_SERVER['PHP_SELF']."'>";
 					$page[] = "<input type='hidden' name='key' value='". $_REQUEST['key'] ."'>";
-					$page[] = "<input type='hidden' name='cluco' value='$cluco'>";
+					$page[] = "<input type='hidden' name='terugleggen_bij' value='$terugleggen_bij'>";
 					$page[] = "<input type='hidden' name='reject' value='1'>";
 					$page[] = '<table border=0>';
 					$page[] = "<tr>";
@@ -401,6 +423,8 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 						$parameter['attachment'][$key]['file'] = $bestand;
 						$parameter['attachment'][$key]['name'] = $JSON['bijlage_naam'][$key];
 					}
+					
+					if(!$sendMail)	$parameter['testen'] = 1;
 									
 					if(!sendMail_new($parameter)) {
 						toLog('error', $_SESSION['ID'], $indiener, "Problemen met declaratie [". $_REQUEST['key'] ."] kenmerken als niet exploitatie");
@@ -437,13 +461,51 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 					$page[] = "</table>";
 					$page[] = "</form>";			
 				}			
+			} elseif(isset($_POST['change_post'])) {
+				$page[] = "<form method='post' action='". $_SERVER['PHP_SELF']."'>";
+				$page[] = "<input type='hidden' name='key' value='". $_REQUEST['key'] ."'>";
+				$page[] = "<input type='hidden' name='user' value='". $data['user'] ."'>";
+				$page[] = "<input type='hidden' name='GBR' value='". $_REQUEST['GBR'] ."'>";
+				$page[] = "<table border=0 width='100%'>";
+								
+				foreach($data['overige'] as $key => $string) {
+					if($string != '' OR $first) {
+						$page[] = "	<tr>";
+						$page[] = "		<td>$string (". formatPrice(100*$data['overig_price'][$key]) .")</td>";
+						$page[] = "		<td><select name='post[$key]'>";
+						
+						$page[] = "	<option value='0'></option>";
+				
+						foreach($declJGKop as $id => $kop) {
+							$page[] = "	<optgroup label='$kop'>";
+							
+							foreach($declJGPost[$id] as $post_nr => $titel) {
+								$page[] = "	<option value='$post_nr'". ($data['post'][$key] == $post_nr ? ' selected' : '') .">$titel</option>";
+							}
+							
+							$page[] = "	</optgroup>";
+						}
+						$page[] = "</select></td>";
+						$page[] = "	</tr>";
+					}
+				}
+				
+				$page[] = "<tr>";
+				$page[] = "		<td colspan='2'>&nbsp;</td>";
+				$page[] = "</tr>";
+				$page[] = "<tr>";				
+				$page[] = "	<td colspan='2'><input type='submit' name='accept' value='Invoeren in e-boekhouden.nl'></td>";			
+				$page[] = "</tr>";		
+				$page[] = "</table>";
+				$page[] = "</form>";
+				
 			#
 			# Als geen van dan alles bekend is, toen dan het overzicht van de declaratie
 			} else {
 				$page[] = "<form method='post' action='". $_SERVER['PHP_SELF']."'>";
 				$page[] = "<input type='hidden' name='key' value='". $_REQUEST['key'] ."'>";
 				$page[] = "<input type='hidden' name='user' value='". $data['user'] ."'>";
-				$page[] = '<table border=0>';
+				$page[] = "<table border=0 width='100%'>";
 							
 				$page = array_merge($page, showDeclaratieDetails($data));
 						
@@ -569,15 +631,28 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 				$page[] = "		<td colspan='6'>&nbsp;</td>";
 				$page[] = "</tr>";
 				$page[] = "<tr>";
-				$page[] = "		<td colspan='6'>";			
-				$page[] = "		<table width='100%'>";
-				$page[] = "		<tr>";			
-				$page[] = "			<td><input type='submit' name='reject' value='Terug naar clustercoordinator'></td>";
-				$page[] = "			<td align='center'><input type='submit' name='reroute' value='Betreft geen declaratie'></td>";
-				$page[] = "			<td align='center'><input type='submit' name='dump' value='Verwijderen'></td>";
-				$page[] = "			<td align='right'><input type='submit' name='accept' value='Invoeren in e-boekhouden.nl'></td>";			
-				$page[] = "		</tr>";
-				$page[] = "		</table>";			
+				$page[] = "		<td colspan='6'>";
+				
+				if($data['cluster'] == 2) {
+					$page[] = "		<table width='100%'>";
+					$page[] = "		<tr>";			
+					$page[] = "			<td><input type='submit' name='change_post' value='Wijzig posten'></td>";
+					#$page[] = "			<td align='center'><input type='submit' name='reroute' value='Betreft geen declaratie'></td>";
+					$page[] = "			<td align='center'><input type='submit' name='dump' value='Verwijderen'></td>";
+					$page[] = "			<td align='right'><input type='submit' name='accept' value='Invoeren in e-boekhouden.nl'></td>";			
+					$page[] = "		</tr>";
+					$page[] = "		</table>";
+				} else {
+					$page[] = "		<table width='100%'>";
+					$page[] = "		<tr>";			
+					$page[] = "			<td><input type='submit' name='reject' value='Terug naar clustercoordinator'></td>";
+					$page[] = "			<td align='center'><input type='submit' name='reroute' value='Betreft geen declaratie'></td>";
+					$page[] = "			<td align='center'><input type='submit' name='dump' value='Verwijderen'></td>";
+					$page[] = "			<td align='right'><input type='submit' name='accept' value='Invoeren in e-boekhouden.nl'></td>";			
+					$page[] = "		</tr>";
+					$page[] = "		</table>";
+				}
+				
 				$page[] = "</td>";
 				$page[] = "</tr>";			
 				$page[] = "</table>";
