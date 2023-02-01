@@ -32,6 +32,9 @@ if($row = mysqli_fetch_array($result)) {
 			$cluco			= $clusterCoordinatoren[$cluster];		
 			$ToAddress	= getMailAdres($cluco);
 			$ToName			= makeName($cluco, 5);
+		} elseif($cluster == 2) {
+			$ToAddress	= $penningmeesterJGAddress;
+			$ToName			= $penningmeesterJGNaam;
 		} else {
 			$ToAddress	= $declaratieReplyAddress;
 			$ToName			= $declaratieReplyName;
