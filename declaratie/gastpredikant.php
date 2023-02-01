@@ -426,12 +426,12 @@ if(isset($_REQUEST['hash'])) {
 			$page[] = "	<tr>";
 			$page[] = "		<td colspan='6'>&nbsp;</td>";
 			$page[] = "	</tr>";
+			$page[] = "	<tr>";
+			$page[] = "		<td colspan='6'><b>Reiskostenvergoeding</b></td>";
+			$page[] = "	</tr>";
 			
 			# Laat alleen zien als er reiskosten gedeclareerd kunnen worden
-			if($voorgangerData['reiskosten']) {
-				$page[] = "	<tr>";
-				$page[] = "		<td colspan='6'><b>Reiskostenvergoeding</b></td>";
-				$page[] = "	</tr>";
+			if($voorgangerData['reiskosten']) {				
 				$page[] = "	<tr>";
 				$page[] = "		<td>&nbsp;</td>";
 				$page[] = "		<td>Van</td>";
@@ -445,6 +445,10 @@ if(isset($_REQUEST['hash'])) {
 				$page[] = "		<td>&nbsp;</td>";
 				$page[] = "		<td><input type='text' name='reis_naar' value='Mari&euml;nburghstraat 4, Deventer' size='30'></td>";
 				$page[] = "		<td colspan='2'>&nbsp;</td>";
+				$page[] = "	</tr>";
+			} else {
+				$page[] = "	<tr>";
+				$page[] = "		<td colspan='6'>Reiskostenvergoeding is reeds opgenomen in het honorarium.</td>";
 				$page[] = "	</tr>";
 			}
 

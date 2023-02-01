@@ -55,9 +55,9 @@ if(isset($_POST['remove'])) {
 		$query = "INSERT INTO $TableAgenda ($AgendaStart, $AgendaEind, $AgendaTitel, $AgendaDescr, $AgendaOwner) VALUES ('$startTijd', '$eindTijd', '". urlencode($_POST['titel']) ."', '". urlencode($_POST['omschrijving']) ."', ". $_SESSION['ID'] .")";
 		
 		if(mysqli_query($db, $query)) {			
-			$UserData = getMemberDetails($_SESSION['ID']);
 			$newID = mysqli_insert_id($db);
-			
+			$UserData = getMemberDetails($_SESSION['ID']);
+						
 			$mail[] = "Beste ". $UserData['voornaam'];
 			$mail[] = "";
 			$mail[] = "Je hebt zojuist een agenda-item aangemaakt.";

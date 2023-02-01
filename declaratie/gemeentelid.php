@@ -21,7 +21,7 @@ if($productieOmgeving) {
 	$sendMail = false;
 	$sendTestMail = false;
 	
-	//echo 'Test-omgeving';
+	echo '[ Test-omgeving ]';
 }
 
 $iban = $opm_cluco = $relatie = '';
@@ -43,18 +43,27 @@ if(isset($_POST['reis_van']) AND $_POST['reis_van'] != '' AND isset($_POST['reis
 	$reiskosten = 0;
 }
 
+# Voeg alle bekende variabelen toe als hidden-variabele in het formulier
 if(isset($_POST['eigen']))				$page[] = "<input type='hidden' name='eigen' value='". trim($_POST['eigen']) ."'>";
 if(isset($_POST['EB_relatie']))		$page[] = "<input type='hidden' name='EB_relatie' value='". trim($_POST['EB_relatie']) ."'>";
 if(isset($_POST['cluster']))			$page[] = "<input type='hidden' name='cluster' value='". trim($_POST['cluster']) ."'>";
 if(isset($_POST['iban']))					$page[] = "<input type='hidden' name='iban' value='". cleanIBAN($_POST['iban']) ."'>";
 if(isset($_POST['opm_cluco']))		$page[] = "<input type='hidden' name='opm_cluco' value='". trim($_POST['opm_cluco']) ."'>";
 
+# Loop ook alle overige-posten door om als hidden-variabele in het formulier op te nemen
 if(isset($_POST['overig']))	{
 	foreach($_POST['overig'] as $key => $string) {
 		if($string != '') {
 			$page[] = "<input type='hidden' name='overig[$key]' value='$string'>";
 			$page[] = "<input type='hidden' name='overig_price[$key]' value='". price2RightFormat($_POST['overig_price'][$key]) ."'>";
 		}
+	}
+}
+
+# Loop ook alle posten door (alleen bij J&G) om als hidden-variabele in het formulier op te nemen
+if(isset($_POST['post'])) {
+	foreach($_POST['post'] as $key => $value) {
+		$page[] = "<input type='hidden' name='post[$key]' value='$value'>";
 	}
 }
 
@@ -75,6 +84,7 @@ if(isset($_FILES['bijlage'])) {
 	}
 }
 
+# Hieronder staan de verschillende schermen van het formulier
 if(isset($_POST['correct'])) {
 	# Alle POST-variabelen, met uitzondering van de pagina en
 	# de knop dat de gegevens correct zijn moeten in de database
@@ -97,10 +107,8 @@ if(isset($_POST['correct'])) {
   	
 		$sql = "INSERT INTO $TableEBDeclaratie ($EBDeclaratieHash, $EBDeclaratieIndiener, $EBDeclaratieCluster, $EBDeclaratieDeclaratie, $EBDeclaratieTotaal, $EBDeclaratieTijd) VALUES ('$uniqueKey', ". $_SESSION['ID'].", ". $toDatabase['cluster'] .", '". $JSONtoDatabase ."', ". $toDatabase['totaal'] .", ". time() .")";	
 		mysqli_query($db, $sql);
-		$id = mysqli_insert_id($db);	
-		setDeclaratieStatus(3, $id, $_SESSION['ID']);
-		setDeclaratieActionDate($uniqueKey);
-  	
+		$declaratieID = mysqli_insert_id($db);		
+		  	
 		# -------
 		# Mail naar de cluco opstellen
 		$cluster = $toDatabase['cluster'];
@@ -147,10 +155,18 @@ if(isset($_POST['correct'])) {
 			$mailCluco[] = "<br>";
 		}
 		
-		$mailCluco[] = "<a href='". $ScriptURL ."declaratie/cluco.php?key=$uniqueKey&hash=". $ClucoData['hash_long'] ."&accept'>Goedkeuren</a><br>";
-		$mailCluco[] = "<a href='". $ScriptURL ."declaratie/cluco.php?key=$uniqueKey&reject'>Afkeuren</a> (inloggen vereist)<br>";
-		$mailCluco[] = "<br>";
-		$mailCluco[] = "Details zijn zichtbaar in de bijlage of <a href='". $ScriptURL ."declaratie/cluco.php?key=$uniqueKey'>online</a> (inloggen vereist)<br>";
+		# J&G heeft geen cluco die het goedkeurd maar direct naar de penningmeester
+		# Don't ask me why
+		if($cluster == 2) {
+			$mailCluco[] = "Details en mogelijkheid tot goed- of afkeuren zijn zichtbaar <a href='". $ScriptURL ."declaratie/penningmeester.php?key=$uniqueKey'>online</a> (inloggen vereist)";
+			$status = 4;
+		} else {			
+			$status = 3;			
+			$mailCluco[] = "<a href='". $ScriptURL ."declaratie/cluco.php?key=$uniqueKey&hash=". $ClucoData['hash_long'] ."&accept'>Goedkeuren</a><br>";
+			$mailCluco[] = "<a href='". $ScriptURL ."declaratie/cluco.php?key=$uniqueKey&reject'>Afkeuren</a> (inloggen vereist)<br>";
+			$mailCluco[] = "<br>";
+			$mailCluco[] = "Details zijn zichtbaar in de bijlage of <a href='". $ScriptURL ."declaratie/cluco.php?key=$uniqueKey'>online</a> (inloggen vereist)<br>";
+		}
   	
 		$param_cluco['to'][]					= array($ClucoAddress, $ClucoName);
 		$param_cluco['subject'] 			= "Declaratie ". makeName($_SESSION['ID'], 5) ." voor ". $clusters[$cluster];	
@@ -160,7 +176,9 @@ if(isset($_POST['correct'])) {
 			$param_cluco['attachment'][$key]['file'] = $bestand;
 			$param_cluco['attachment'][$key]['name'] = $toDatabase['bijlage_naam'][$key];
 		}
-						
+		
+		if(!$sendMail)	$param_cluco['testen'] = 1;
+					
 		if(!sendMail_new($param_cluco)) {
 			toLog('error', $_SESSION['ID'], '', "Problemen met invoeren van declaratie [$uniqueKey] en voorleggen aan cluco (". makeName($cluco, 5).")");
 			$page[] = "Er zijn problemen met het versturen van de notificatie-mail naar de clustercoordinator.";
@@ -168,6 +186,10 @@ if(isset($_POST['correct'])) {
 			toLog('info', $_SESSION['ID'], '', "Declaratie [$uniqueKey] ingevoerd en doorgestuurd naar cluco (". makeName($cluco, 5).")");
 			$page[] = "De declaratie is ter goedkeuring voorgelegd aan ". makeName($cluco, 5) ." als clustercoordinator";
 		}
+		
+		# Stel de declaratie-status in		
+		setDeclaratieStatus($status, $declaratieID, $_SESSION['ID']);
+		setDeclaratieActionDate($uniqueKey);
 		
 		# Alles verwijderen nadat de declaratie is ingeschoten en de mail de deur uit is
 		unset($_POST);		
@@ -205,6 +227,7 @@ if(isset($_POST['correct'])) {
 	$cluster			= getParam('cluster');
 	$overige 			= getParam('overig', array());
 	$overig_price	= getParam('overig_price', array());
+	$post					= getParam('post');
 			
 	# Check op correct ingevulde velden	
 	if(isset($_POST['screen_2'])) {
@@ -288,8 +311,7 @@ if(isset($_POST['correct'])) {
 	} else {
 		$checkFields = false;
 	}
-	
-	
+		
 	if($checkFields) {
 		$input['user']						= $_SESSION['ID'];
 		$input['eigen']						= $_POST['eigen'];
@@ -300,28 +322,78 @@ if(isset($_POST['correct'])) {
 		$input['overig_price']		= $overig_price;
 		$input['reiskosten']			= $reiskosten;
 		$input['opmerking_cluco']	= $opm_cluco;
-		
+		$input['post']						= $post;
+				
 		$totaal = calculateTotals($overig_price) + $reiskosten;
-				
-		$page[] = "<input type='hidden' name='page' value='3'>";
-		$page[] = "<input type='hidden' name='totaal' value='$totaal'>";
 		
-		$page[] = "<table border=0>";
-		$page[] = "<tr>";
-		$page[] = "		<td colspan='6'>U staat op het punt de volgende declaratie in te dienen:</td>";
-		$page[] = "</tr>";
+		# Cluster Jeugd & Gezin moet een tussenscherm hebben
+		if($cluster != 2 OR ($_POST['page'] == 4 AND $post > 0)) {			
+			$page[] = "<input type='hidden' name='page' value='3'>";
+			$page[] = "<input type='hidden' name='totaal' value='$totaal'>";
+			
+			$page[] = "<table border=0>";
+			$page[] = "<tr>";
+			$page[] = "		<td colspan='6'>U staat op het punt de volgende declaratie in te dienen:</td>";
+			$page[] = "</tr>";
+					
+			$page = array_merge($page, showDeclaratieDetails($input));
+			
+			$page[] = "<tr>";
+			$page[] = "		<td colspan='6'>&nbsp;</td>";
+			$page[] = "</tr>";
+			$page[] = "<tr>";
+			$page[] = "		<td colspan='2'><input type='submit' name='incorrect' value='Wijzigen'></td>";
+			$page[] = "		<td colspan='2'>&nbsp;</td>";
+			$page[] = "		<td colspan='2'><input type='submit' name='correct' value='Indienen'></td>";
+			$page[] = "</tr>";	
+			$page[] = "</table>";
+		} else {
+			$page[] = "<input type='hidden' name='page' value='4'>";
+			$page[] = "<input type='hidden' name='totaal' value='$totaal'>";
+			
+			$page[] = "<table border=0>";
+			$page[] = "<tr>";
+			$page[] = "		<td colspan='2'>Cluster Jeugd & Gezin heeft verschillende posten waar een declaratie op geboekt kan worden. Selecteer hieronder de post die het beste past bij jouw declaratie.</td>";
+			$page[] = "</tr>";
+			
+			# Opties genereren zodat dat zometeen hergebruikt kan worden
+			$options[] = "	<option value='0'></option>";
+			
+			foreach($declJGKop as $id => $kop) {
+				$options[] = "	<optgroup label='$kop'>";
 				
-		$page = array_merge($page, showDeclaratieDetails($input));
-		
-		$page[] = "<tr>";
-		$page[] = "		<td colspan='6'>&nbsp;</td>";
-		$page[] = "</tr>";
-		$page[] = "<tr>";
-		$page[] = "		<td colspan='2'><input type='submit' name='incorrect' value='Wijzigen'></td>";
-		$page[] = "		<td colspan='2'>&nbsp;</td>";
-		$page[] = "		<td colspan='2'><input type='submit' name='correct' value='Indienen'></td>";
-		$page[] = "</tr>";	
-		$page[] = "</table>";		
+				foreach($declJGPost[$id] as $post_nr => $titel) {
+					$options[] = "	<option value='$post_nr'>$titel</option>";
+				}
+				
+				$options[] = "	</optgroup>";
+			}
+			
+			foreach($overige as $key => $string) {
+				if($string != '') {
+					$page[] = "	<tr>";
+					$page[] = "		<td>$string (". formatPrice(100*$overig_price[$key]) .")</td>";
+					$page[] = "		<td><select name='post[$key]'>";
+					
+					$page = array_merge($page, $options);
+					
+					$page[] = "</select></td>";
+					$page[] = "	</tr>";
+				}
+			}
+			
+			$page[] = "<tr>";
+			$page[] = "		<td colspan='2'>Weet je niet zeker welke post je moet kiezen? Klik <a href='toelichtingPostenJG.php' target='new'>hier</a> voor een toelichting op de posten</td>";
+			$page[] = "</tr>";						
+			$page[] = "<tr>";
+			$page[] = "		<td colspan='2'>&nbsp;</td>";
+			$page[] = "</tr>";
+			$page[] = "	<tr>";
+			$page[] = "		<td valign='left'><input type='submit' name='screen_0' value='Vorige'></td>";			
+			$page[] = "		<td valign='right'><input type='submit' name='screen_2' value='Volgende'></td>";	
+			$page[] = "	</tr>";
+			$page[] = "</table>";			
+		}
 	} else {
 		# Scherm 1
 		$first = true;
@@ -436,7 +508,7 @@ if(isset($_POST['correct'])) {
 			if($string != '' OR $first) {
 				$page[] = "	<tr>";
 				$page[] = "		<td colspan='3'><input type='text' name='overig[$key]' value='$string'></td>";			
-				$page[] = "		<td colspan='1'>&euro;&nbsp;<input type='text' name='overig_price[$key]' value='". (isset($_POST['overig_price'][$key]) ? price2RightFormat($_POST['overig_price'][$key]) : '') ."' size='4'></td>";
+				$page[] = "		<td colspan='1'>&euro;<input type='text' name='overig_price[$key]' value='". (isset($_POST['overig_price'][$key]) ? price2RightFormat($_POST['overig_price'][$key]) : '') ."' size='2'></td>";
 				$page[] = "	</tr>";
 			}
 						
