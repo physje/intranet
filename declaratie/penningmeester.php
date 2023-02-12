@@ -68,6 +68,9 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 		$data['opmerking_cluco']		= $JSON['opm_cluco'];
 		$data['opmerking_penning']	= $JSON['opm_penning'];		
 		
+		# Mochten de POST-variabele post bekend zijn (lees posten gewijzigd), ken de nieuwe posten dan toe aan JSON['post']
+		if(isset($_POST['post'])) $JSON['post'] = $data['post'] = $_POST['post'];
+				
 		# Als declaratie niet al is afgehandeld (status > 5) mag je doorgaan
 		if(getDeclaratieStatus($row[$EBDeclaratieID], $data['user']) < 5) {
 			$veldenCorrect = true;
@@ -96,11 +99,7 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 				$veldenCorrect = false;
 				$meldingNewBegunstigde = 'Gegevens van begunstigde zijn onvolledig';
 			}
-			
-			# Mochten de POST-variabele post bekend zijn (lees posten gewijzigd), ken de nieuwe posten dan toe aan JSON['post']
-			if(isset($_POST['post'])) $JSON['post'] = $data['post'] = $_POST['post'];
-			
-			
+						
 			# Als declaratie OK is en alle velden juist zijn ingevoerd	
 			# Voeg declaratie toe en verstuur bevestigingmails
 			if(isset($_POST['accept']) AND $veldenCorrect) {				
@@ -475,7 +474,7 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 				$page[] = "<form method='post' action='". $_SERVER['PHP_SELF']."'>";
 				$page[] = "<input type='hidden' name='key' value='". $_REQUEST['key'] ."'>";
 				$page[] = "<input type='hidden' name='user' value='". $data['user'] ."'>";
-				$page[] = "<input type='hidden' name='GBR' value='". $_REQUEST['GBR'] ."'>";				
+				$page[] = "<input type='hidden' name='GBR' value='". $_REQUEST['GBR'] ."'>";		
 				$page[] = "<table border=0 width='100%'>";
 								
 				foreach($data['overige'] as $key => $string) {
@@ -517,7 +516,11 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 				$page[] = "<form method='post' action='". $_SERVER['PHP_SELF']."'>";
 				$page[] = "<input type='hidden' name='key' value='". $_REQUEST['key'] ."'>";
 				$page[] = "<input type='hidden' name='user' value='". $data['user'] ."'>";
-				#$page[] = "<input type='hidden' name='post' value='". $_REQUEST['post'] ."'>";
+				if(isset($_POST['post'])) {
+					foreach($_POST['post'] as $key => $waarde) {
+						$page[] = "<input type='hidden' name='post[$key]' value='$waarde'>";
+					}					
+				}
 				$page[] = "<table border=0 width='100%'>";
 							
 				$page = array_merge($page, showDeclaratieDetails($data));

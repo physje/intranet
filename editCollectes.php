@@ -7,7 +7,7 @@ include_once('include/HTML_HeaderFooter.php');
 
 $db = connect_db();
 $cfgProgDir = 'auth/';
-$requiredUserGroups = array(1, 22);
+$requiredUserGroups = array(1, 22, 52);
 include($cfgProgDir. "secure.php");
 
 # Als er op een knop gedrukt is, het rooster wegschrijven

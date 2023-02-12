@@ -3,6 +3,7 @@ include_once('include/functions.php');
 include_once('include/config.php');
 include_once('include/HTML_TopBottom.php');
 
+$requiredUserGroups = array(1, 52);
 $cfgProgDir = 'auth/';
 include($cfgProgDir. "secure.php");
 $db = connect_db();
@@ -12,9 +13,9 @@ $aantalMaanden = 1;
 if(isset($_REQUEST['dienstID'])) {
 
     if(isset($_REQUEST['save'])) {
-        $sql = "UPDATE $TableDiensten SET ";
-		$sql .= "$DienstLiturgie = '". urlencode($_REQUEST['liturgieTekst']) ."' ";
-		$sql .= "WHERE $DienstID = '". $_REQUEST['dienstID'] ."'";
+    	$sql = "UPDATE $TableDiensten SET ";
+    	$sql .= "$DienstLiturgie = '". urlencode($_REQUEST['liturgieTekst']) ."' ";
+    	$sql .= "WHERE $DienstID = '". $_REQUEST['dienstID'] ."'";
 		
 		if(mysqli_query($db, $sql)) {
 			$text[] = "Liturgie succesvol opgeslagen!";

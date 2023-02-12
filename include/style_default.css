@@ -99,7 +99,13 @@ img.logo {
 	float: right;
 }
 
+a.inactief {
+	color: #D4D0D7;
+}
 
+a.ontrokken {
+	text-decoration:line-through;
+}
 
 
 /* Om tekst in kolommen op het scherm te tonen */
