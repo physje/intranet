@@ -125,12 +125,12 @@ if(in_array(1, $myGroups)) {
 
 
 # Bezoek-registratie
-# 7 = Ouderlingen
+# 8 = Ouderlingen
 # 9 = Diakenen
 # 34 = Predikanten
 # 49 = Pastoraat super-user
 # 50 = Pastoraal bezoekers
-if(in_array(1, $myGroups) OR in_array(7, $myGroups) OR in_array(9, $myGroups) OR in_array(34, $myGroups) OR in_array(49, $myGroups) OR in_array(50, $myGroups)) {
+if(in_array(1, $myGroups) OR in_array(8, $myGroups) OR in_array(9, $myGroups) OR in_array(34, $myGroups) OR in_array(49, $myGroups) OR in_array(50, $myGroups)) {
 	$BezoekDeel[] = "<b>Bezoekregistratie</b>";
 	
 	# Doorloop alle wijkteams
@@ -163,7 +163,8 @@ if(in_array(1, $myGroups) OR in_array(7, $myGroups) OR in_array(9, $myGroups) OR
 # 20 = Preekvoorziening
 # 22 = Diaconie
 # 28 = Cluster Eredienst
-if(in_array(1, $myGroups) OR in_array(20, $myGroups) OR in_array(22, $myGroups)) {
+# 52 = Scipio-beheer
+if(in_array(1, $myGroups) OR in_array(20, $myGroups) OR in_array(22, $myGroups) OR in_array(52, $myGroups)) {
 	$wijzigDeel[] = "<b>Diensten wijzigen</b>";
 }
 
@@ -172,15 +173,15 @@ if(in_array(1, $myGroups) OR in_array(20, $myGroups)) {
 	$wijzigLinks['voorganger/voorgangerRooster.php'] = 'Preekrooster invoeren';	
 }
 
-if(in_array(1, $myGroups) OR in_array(28, $myGroups)) {
+if(in_array(1, $myGroups) OR in_array(28, $myGroups) OR in_array(52, $myGroups)) {
 	$wijzigLinks['editLiturgie.php'] = 'Liturgie invoeren of aanpassen';
 }
 
-if(in_array(1, $myGroups) OR in_array(22, $myGroups)) {
+if(in_array(1, $myGroups) OR in_array(22, $myGroups) OR in_array(52, $myGroups)) {
 	$wijzigLinks['editCollectes.php'] = 'Collecte-doelen invoeren';	
 }
 
-if(in_array(1, $myGroups) OR in_array(28, $myGroups)) {
+if(in_array(1, $myGroups) OR in_array(28, $myGroups) OR in_array(52, $myGroups)) {
 	$wijzigLinks['editDiensten.php'] = 'Kerkdiensten wijzigen';	
 }
 
@@ -286,21 +287,22 @@ $blocks[] = $EBDeel;
 
 
 # Koppelingen-deel
-if(in_array(1, $myGroups)) {
-	$koppelDeel[] = "<b>Koppelingen</b>";
-	
-	$koppelLinks['extern/makeiCal.php'] = 'Persoonlijke iCals aanmaken';
-	$koppelLinks['extern/makeiCalScipio.php'] = 'iCal voor Scipio aanmaken';	
-	$koppelLinks['onderhoud/importOuderlingen.php'] = 'Importeer ambtsdragers';
-	$koppelLinks['scipio/ScipioImport.php'] = 'Scipio-data inladen';
-	$koppelLinks['scipio/exportCollectes.php'] = 'Collectes exporteren voor in Scipio';
+if(in_array(1, $myGroups) OR in_array(52, $myGroups)) {
+	$koppelDeel[] = "<b>Koppelingen</b>";	
+	$koppelLinks['extern/makeiCalScipio.php'] = 'Data klaar zetten voor Scipio';	
+
+	if(in_array(1, $myGroups)) {	
+		$koppelLinks['extern/makeiCal.php'] = 'Persoonlijke iCals aanmaken';	
+		#$koppelLinks['onderhoud/importOuderlingen.php'] = 'Importeer ambtsdragers';
+		$koppelLinks['scipio/ScipioImport.php'] = 'Scipio-data inladen';
+		$koppelLinks['scipio/exportCollectes.php'] = 'Collectes exporteren voor in Scipio';
+	}
 	
 	foreach($koppelLinks as $link => $naam) {
 		$koppelDeel[] = "<a href='$link' target='_blank'>$naam</a>";
 	}	
 	$blocks[] = $koppelDeel;
 }
-
 
 
 # Gebedskalender

@@ -39,6 +39,9 @@ if($showLogin) {
 	include($cfgProgDir. "secure.php");
 }
 
+# 1 = Admin
+# 38 = Penningmeester
+# 51 = Penningmeester Jeugd en Gezin
 $toegestaan = array_merge(getGroupMembers(1), getGroupMembers(38), getGroupMembers(51));
 
 if(in_array($_SESSION['ID'], $toegestaan)) {	
@@ -63,12 +66,12 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 		$data['bijlage']						= $JSON['bijlage'];
 		$data['bijlage_naam']				= $JSON['bijlage_naam'];
 		$data['opmerking_cluco']		= $JSON['opm_cluco'];
-		$data['opmerking_penning']	= $JSON['opm_penning'];
+		$data['opmerking_penning']	= $JSON['opm_penning'];		
 		
 		# Als declaratie niet al is afgehandeld (status > 5) mag je doorgaan
 		if(getDeclaratieStatus($row[$EBDeclaratieID], $data['user']) < 5) {
 			$veldenCorrect = true;
-		
+					
 			if(isset($_POST['GBR']) AND $_POST['GBR'] == '') {
 				$veldenCorrect = false;
 				$meldingGBR = 'Grootboekrekening ontbreekt';
@@ -94,12 +97,13 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 				$meldingNewBegunstigde = 'Gegevens van begunstigde zijn onvolledig';
 			}
 			
+			# Mochten de POST-variabele post bekend zijn (lees posten gewijzigd), ken de nieuwe posten dan toe aan JSON['post']
+			if(isset($_POST['post'])) $JSON['post'] = $data['post'] = $_POST['post'];
+			
+			
 			# Als declaratie OK is en alle velden juist zijn ingevoerd	
 			# Voeg declaratie toe en verstuur bevestigingmails
-			if(isset($_POST['accept']) AND $veldenCorrect) {
-				# Mochten de POST-variabele post bekend zijn (lees posten gewijzigd), ken de nieuwe posten dan toe aan JSON['post']
-				if(isset($_POST['post'])) $JSON['post'] = $data['post'] = $_POST['post'];
-				
+			if(isset($_POST['accept']) AND $veldenCorrect) {				
 				$UserData = getMemberDetails($indiener);
 				$boekstukNummer	= generateBoekstukNr(date('Y'));
 								
@@ -221,9 +225,11 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 					if($errorResult) {
 						toLog('error', $_SESSION['ID'], $indiener, $errorResult);
 						$page[] = 'Probleem met toevoegen van declaratie ter waarde van '. formatPrice($totaal) .' aan '. $EBData['naam'] .' ('. $EBCode .')<br>';
+						$addSucces = false;
 					} else {
 						toLog('info', $_SESSION['ID'], $indiener, 'Declaratie ['. $_REQUEST['key'] .'] van '. formatPrice($totaal) .' toegevoegd voor '. $EBData['naam'] .' ('. $EBCode .')');
 						$page[] = 'Declaratie van '. formatPrice($totaal) .' ingediend tnv '. $EBData['naam'] .'<br>';
+						$addSucces = true;
 					}
 				} else {
 					$page[] = "DECLARATIE<br>";
@@ -233,68 +239,72 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 					$page[] = "Totaal: ". $totaal .'<br>';
 					$page[] = "GBR: ". $_POST['GBR'] .'<br>';
 					$page[] = "Toelichting: ". $toelichting .'<br>';		
+					$addSucces = false;
 				}						
 				
-				$cluster = $JSON['cluster'];
-						
-				$MailFinAdmin = array();
-				$MailFinAdmin[] = makeName($indiener, 5) .' heeft een declaratie ingediend.<br>';
-				$MailFinAdmin[] = "<br>";
-				$MailFinAdmin[] = "Het betreft een declaratie ter waarde van ". formatPrice($totaal)." voor cluster ". $clusters[$cluster] ." tnv ". $EBData['naam'] .' ('. $EBCode .')';
-						
-				$param_finAdmin['to'][]					= array($EBDeclaratieAddress);
-				$param_finAdmin['subject'] 			= "Declaratie ". makeName($indiener, 5) ." voor cluster ". $clusters[$cluster];
+				# Als de declaratie succesvol is ingeschreven in eBoekhouden kunnen er mails verstuurd worden
+				if($addSucces) {
+					$cluster = $JSON['cluster'];
 							
-				foreach($JSON['bijlage'] as $key => $bestand) {
-					$param_finAdmin['attachment'][$key]['file'] = $bestand;
-					$param_finAdmin['attachment'][$key]['name'] = $boekstukNummer.'_'.$JSON['bijlage_naam'][$key];
-				}
-				
-				$param_finAdmin['message'] 			= implode("\n", $MailFinAdmin);
-				
-				if(!$sendMail)	$param_finAdmin['testen'] = 1;				
+					$MailFinAdmin = array();
+					$MailFinAdmin[] = makeName($indiener, 5) .' heeft een declaratie ingediend.<br>';
+					$MailFinAdmin[] = "<br>";
+					$MailFinAdmin[] = "Het betreft een declaratie ter waarde van ". formatPrice($totaal)." voor cluster ". $clusters[$cluster] ." tnv ". $EBData['naam'] .' ('. $EBCode .')';
 							
-				if(!sendMail_new($param_finAdmin)) {
-					toLog('error', $_SESSION['ID'], $indiener, "Problemen met versturen van mail naar financiële administratie");
-					$page[] = "Er zijn problemen met het versturen van mail naar de financiële administratie";
-				} else {
-					toLog('debug', $_SESSION['ID'], $indiener, "Declaratie-notificatie naar financiële administratie");
-					setDeclaratieStatus(5, $row[$EBDeclaratieID], $data['user']);
-					setDeclaratieActionDate($_REQUEST['key']);
+					$param_finAdmin['to'][]					= array($EBDeclaratieAddress);
+					$param_finAdmin['subject'] 			= "Declaratie ". makeName($indiener, 5) ." voor cluster ". $clusters[$cluster];
+								
+					foreach($JSON['bijlage'] as $key => $bestand) {
+						$param_finAdmin['attachment'][$key]['file'] = $bestand;
+						$param_finAdmin['attachment'][$key]['name'] = $boekstukNummer.'_'.$JSON['bijlage_naam'][$key];
+					}
+					
+					$param_finAdmin['message'] 			= implode("\n", $MailFinAdmin);
+					
+					if(!$sendMail)	$param_finAdmin['testen'] = 1;				
+								
+					if(!sendMail_new($param_finAdmin)) {
+						toLog('error', $_SESSION['ID'], $indiener, "Problemen met versturen van mail naar financiële administratie");
+						$page[] = "Er zijn problemen met het versturen van mail naar de financiële administratie";
+					} else {
+						toLog('debug', $_SESSION['ID'], $indiener, "Declaratie-notificatie naar financiële administratie");
+						setDeclaratieStatus(5, $row[$EBDeclaratieID], $data['user']);
+						setDeclaratieActionDate($_REQUEST['key']);
+					}
+								
+					$MailIndiener = array();
+					$MailIndiener[] = "Beste ". makeName($indiener, 1) .",<br>";
+					$MailIndiener[] = "<br>";
+					$MailIndiener[] = "Onderstaande declaratie van ".time2str('%e %B', $row[$EBDeclaratieTijd]) ." is goedgekeurd en zal worden uitbetaald.<br>";
+					$MailIndiener[] = '<table border=0>';
+					$MailIndiener[] = "<tr>";
+					$MailIndiener[] = "		<td colspan='6' height=50><hr></td>";
+					$MailIndiener[] = "</tr>";			
+					$MailIndiener = array_merge($MailIndiener, showDeclaratieDetails($data));			
+					$MailIndiener[] = "</table>";
+					
+					$param_indiener['to'][]			= array($data['user']);
+					$param_indiener['subject']	= 'Uitbetaling declaratie';
+					$param_indiener['message'] 	= implode("\n", $MailIndiener);
+					
+					if($data['cluster'] == 2) {
+						$param_indiener['from']			= $penningmeesterJGAddress;
+						$param_indiener['fromName']	= $penningmeesterJGNaam;
+					} else {
+						$param_indiener['from']			= $declaratieReplyAddress;
+						$param_indiener['fromName']	= $declaratieReplyName;
+					}
+					
+					if(!$sendMail)	$param_indiener['testen'] = 1;
+					
+					if(!sendMail_new($param_indiener)) {
+						toLog('error', $_SESSION['ID'], $indiener, "Problemen met versturen declaratie-goedkeuring [". $_REQUEST['key'] ."] door penningmeester");
+						$page[] = "Er zijn problemen met het versturen van de goedkeuringsmail.<br>\n";
+					} else {
+						toLog('info', $_SESSION['ID'], $indiener, "Declaratie-goedkeuring [". $_REQUEST['key'] ."] door penningmeester");
+						$page[] = "Er is een mail met goedkeuring verstuurd naar ". makeName($indiener, 5) ."<br>\n";
+					}
 				}
-							
-				$MailIndiener = array();
-				$MailIndiener[] = "Beste ". makeName($indiener, 1) .",<br>";
-				$MailIndiener[] = "<br>";
-				$MailIndiener[] = "Onderstaande declaratie van ".time2str('%e %B', $row[$EBDeclaratieTijd]) ." is goedgekeurd en zal worden uitbetaald.<br>";
-				$MailIndiener[] = '<table border=0>';
-				$MailIndiener[] = "<tr>";
-				$MailIndiener[] = "		<td colspan='6' height=50><hr></td>";
-				$MailIndiener[] = "</tr>";			
-				$MailIndiener = array_merge($MailIndiener, showDeclaratieDetails($data));			
-				$MailIndiener[] = "</table>";
-				
-				$param_indiener['to'][]			= array($data['user']);
-				$param_indiener['subject']	= 'Uitbetaling declaratie';
-				$param_indiener['message'] 	= implode("\n", $MailIndiener);
-				
-				if($data['cluster'] == 2) {
-					$param_indiener['from']			= $penningmeesterJGAddress;
-					$param_indiener['fromName']	= $penningmeesterJGNaam;
-				} else {
-					$param_indiener['from']			= $declaratieReplyAddress;
-					$param_indiener['fromName']	= $declaratieReplyName;
-				}
-				
-				if(!$sendMail)	$param_indiener['testen'] = 1;
-				
-				if(!sendMail_new($param_indiener)) {
-					toLog('error', $_SESSION['ID'], $indiener, "Problemen met versturen declaratie-goedkeuring [". $_REQUEST['key'] ."] door penningmeester");
-					$page[] = "Er zijn problemen met het versturen van de goedkeuringsmail.<br>\n";
-				} else {
-					toLog('info', $_SESSION['ID'], $indiener, "Declaratie-goedkeuring [". $_REQUEST['key'] ."] door penningmeester");
-					$page[] = "Er is een mail met goedkeuring verstuurd naar ". makeName($indiener, 5) ."<br>\n";
-				}				
 				
 				# JSON-string terug in database			
 				$JSONtoDatabase = encode_clean_JSON($JSON);
@@ -465,7 +475,7 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 				$page[] = "<form method='post' action='". $_SERVER['PHP_SELF']."'>";
 				$page[] = "<input type='hidden' name='key' value='". $_REQUEST['key'] ."'>";
 				$page[] = "<input type='hidden' name='user' value='". $data['user'] ."'>";
-				$page[] = "<input type='hidden' name='GBR' value='". $_REQUEST['GBR'] ."'>";
+				$page[] = "<input type='hidden' name='GBR' value='". $_REQUEST['GBR'] ."'>";				
 				$page[] = "<table border=0 width='100%'>";
 								
 				foreach($data['overige'] as $key => $string) {
@@ -493,8 +503,10 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 				$page[] = "<tr>";
 				$page[] = "		<td colspan='2'>&nbsp;</td>";
 				$page[] = "</tr>";
-				$page[] = "<tr>";				
-				$page[] = "	<td colspan='2'><input type='submit' name='accept' value='Invoeren in e-boekhouden.nl'></td>";			
+				$page[] = "<tr>";
+				$page[] = "	<td><input type='submit' name='prev' value='Terug naar declaratie'></td>";
+				$page[] = "	<td><input type='submit' name='accept' value='Invoeren in e-boekhouden.nl'></td>";
+				#$page[] = "	<td colspan='2'><input type='submit' name='accept' value='Invoeren in e-boekhouden.nl'></td>";
 				$page[] = "</tr>";		
 				$page[] = "</table>";
 				$page[] = "</form>";
@@ -505,6 +517,7 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 				$page[] = "<form method='post' action='". $_SERVER['PHP_SELF']."'>";
 				$page[] = "<input type='hidden' name='key' value='". $_REQUEST['key'] ."'>";
 				$page[] = "<input type='hidden' name='user' value='". $data['user'] ."'>";
+				#$page[] = "<input type='hidden' name='post' value='". $_REQUEST['post'] ."'>";
 				$page[] = "<table border=0 width='100%'>";
 							
 				$page = array_merge($page, showDeclaratieDetails($data));
@@ -664,7 +677,11 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 			$page[] = "<br>Ga terug naar <a href='". $_SERVER['PHP_SELF']."'>het overzicht</a>.";		
 		}
 	} else {
-		$sql = "SELECT * FROM $TableEBDeclaratie WHERE $EBDeclaratieStatus = 4";
+		if(in_array($_SESSION['ID'], getGroupMembers(51))) {
+			$sql = "SELECT * FROM $TableEBDeclaratie WHERE $EBDeclaratieCluster = 2 AND $EBDeclaratieStatus = 4";
+		} else {
+			$sql = "SELECT * FROM $TableEBDeclaratie WHERE $EBDeclaratieStatus = 4";
+		}
 		$result = mysqli_query($db, $sql);
 			
 		if($row = mysqli_fetch_array($result)) {
