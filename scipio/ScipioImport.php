@@ -103,7 +103,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 		foreach($velden as $key => $value) {
 			$velden[$key] = addslashes($value);
 		}
-		
+				
 		# Komt het lid al voor ?
 		$sql_check = "SELECT $UserID FROM $TableUsers WHERE $UserID like '". $element->regnr ."'";
 		$result = mysqli_query($db, $sql_check);
@@ -133,7 +133,12 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 		} else {
 			$oldData = getMemberDetails($element->regnr);
 			
-			# Variabele voor gewijzigde data verwijderen, als hij zo wel bestaat betekent dat dat er data gewijzigd is
+			# Is het een actief of inactief lid?
+			# Mocht er wat wijzigen in inactieve leden, dan niet mailen
+			$actiefLid = true;
+			if($oldData['status'] != 'actief')	$actiefLid = false;
+			
+			# Variabele voor gewijzigde data verwijderen, als hij verderop wel bestaat betekent dat dat er data gewijzigd is
 			unset($changedData);
 			
 			# Als de status gewijzigd is
@@ -204,7 +209,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 			}
 			
 			# Kijken of er iets gewijzigd is
-			if(isset($changedData)) {
+			if(isset($changedData) AND $actiefLid) {
 				# Als er iets gewijzigd is, het tijdstip toevoegen
 				$update[] = "$UserLastChange = ". time();
 				
@@ -328,13 +333,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 					$param['formeel'] 		= true;
 					$param['ReplyTo']			= 'kerkelijkbureau@koningskerkdeventer.nl';
 					$param['ReplyToName']	= 'Kerkelijk Bureau';
-					
-					# Sommige mails lijken niet aan te komen
-					# Even debuggen
-					if($lid == 984323) {
-						$param['cc'] = 984285;
-					}
-										
+															
 					if(sendMail_new($param)) {
 						toLog('info', '', $lid, "Wijzigingsmail wijkteam wijk $wijk verstuurd");
 						echo "Mail verstuurd naar ". makeName($lid, 1) ." (wijkteam wijk $wijk)<br>\n";
