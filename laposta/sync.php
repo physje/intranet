@@ -15,7 +15,10 @@ $listIDs['koningsmail']		= $LPKoningsmailListID;
 $listIDs['gebed (dag)'] 	= $LPGebedDagListID;
 $listIDs['gebed (week)'] 	= $LPGebedWeekListID;
 $listIDs['gebed (maand)']	= $LPGebedMaandListID;
-$listIDs = $listIDs+$LPWijkListID;	
+$listIDs['70 plus']				= $LP70plusListID;
+$listIDs = $listIDs+$LPWijkListID;
+
+$70plus = mktime(0,0,0, date('m'), date('d'), (date('Y')-70));
 
 # Ga op zoek naar alle personen met een mailadres
 # Mailadres is daarbij alles met een @-teken erin
@@ -40,6 +43,7 @@ do {
 		$custom_fields['tussenvoegsel'] = $data['tussenvoegsel'];
 		$custom_fields['achternaam'] = $data['achternaam'];
 		$custom_fields['geslacht'] = ($data['geslacht'] == 'M'?'Man':'Vrouw');
+		$custom_fields['3gkadres'] = 'Ja';
 		$custom_fields_short = $custom_fields;
 		
 		$custom_fields['wijk'] = $wijk = $data['wijk'];
@@ -105,6 +109,16 @@ do {
 					toLog('error', '', $scipioID, 'wijk '. $wijk .': '. $addMember['error']);
 				}
 				
+				# Toevoegen aan de 70+-lijst (indien nodig)
+				if($data['geb_unix'] < $70plus) {
+					$addMember = lp_addMember($LP70plusListID, $email, $custom_fields_short);
+					if($addMember === true) {
+						toLog('debug', '', $scipioID, 'Toegevoegd aan LaPosta 70+-lijst');
+						echo makeName($scipioID, 6) ." toegevoegd aan LaPosta 70+<br>\n";
+					} else {
+						toLog('error', '', $scipioID, '70+: '. $addMember['error']);
+					}
+				}				
 			} else {			
 				# Updaten in leden-lijst
 				$updateMember = lp_updateMember($LPLedenListID, $email, $custom_fields);
@@ -183,8 +197,20 @@ do {
 					$oldMail = $row_lp[$LPmail];
 					$newMail = $data['mail'];
 					$changedMail = true;
-					$sql_update[] = "$LPmail = '". $data['mail'] ."'";				
+					$sql_update[] = "$LPmail = '". $data['mail'] ."'";
 				}
+				
+				# Toevoegen aan de 70+-lijst (indien nodig)
+				if($row_lp[$LP70plus] == '0' AND ($data['geb_unix'] < $70plus)) {
+					$addMember = lp_addMember($LP70plusListID, $email, $custom_fields_short);
+					if($addMember === true) {
+						toLog('info', '', $scipioID, 'Toegevoegd aan LaPosta 70+-lijst');
+						$sql_update[] = "$LP70plus = '1'";
+					} else {
+						toLog('error', '', $scipioID, '70+: '. $addMember['error']);
+					}					
+				}
+				
 						
 				# Welke mailinglijsten zijn betrokken
 				if($changedMail OR $changed_short) {

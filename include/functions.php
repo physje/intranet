@@ -261,12 +261,12 @@ function getMemberDetails($id) {
 	$data['meisjesnaam']		= $row[$UserMeisjesnaam];
 	$data['username']				= $row[$UserUsername];
 	$data['hash_short']			= $row[$UserHashShort];
-	$data['hash_long']			= $row[$UserHashLong];
-	$data['geboorte']				= $row[$UserGeboorte];		
+	$data['hash_long']			= $row[$UserHashLong];	
 	$data['jaar']						= substr($row[$UserGeboorte], 0, 4);
 	$data['maand']					= substr($row[$UserGeboorte], 5, 2);
-	$data['dag']						= substr($row[$UserGeboorte], 8, 2);	
+	$data['dag']						= substr($row[$UserGeboorte], 8, 2);
 	$data['geb_unix']				= mktime(0,0,0,$data['maand'],$data['dag'],$data['jaar']);
+	$data['geboorte']				= substr($row[$UserGeboorte], 0, 8).'01';
 	$data['straat']					= $row[$UserStraat];
 	$data['huisnummer']			= $row[$UserHuisnummer];
 	$data['huisletter']			= $row[$UserHuisletter];

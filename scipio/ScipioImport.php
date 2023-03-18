@@ -52,8 +52,8 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 		//$velden[] = $element->aanschrijfnaam;
 		$velden[$UserVoornaam] = trim($element->roepnaam);
 		$velden[$UserGeslacht] = trim($element->geslacht);
-		#$velden[$UserGeboorte] = substr($element->gebdatum, 0, 4).'-'.substr($element->gebdatum, 4, 2).'-'.substr($element->gebdatum, 6, 2);
-		$velden[$UserGeboorte] = substr($element->gebdatum, 0, 4).'-'.substr($element->gebdatum, 4, 2).'-01';
+		$velden[$UserGeboorte] = substr($element->gebdatum, 0, 4).'-'.substr($element->gebdatum, 4, 2).'-'.substr($element->gebdatum, 6, 2);
+		#$velden[$UserGeboorte] = substr($element->gebdatum, 0, 4).'-'.substr($element->gebdatum, 4, 2).'-01';
 		$velden[$UserStatus] = trim($element->status);
 		$velden[$UserBurgelijk] = trim($element->burgstaat);
 		$velden[$UserBelijdenis] = trim($element->kerkstaat);

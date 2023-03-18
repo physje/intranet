@@ -193,6 +193,7 @@ $LPmark												= "mark";
 $LPstatus											= "status";
 $LPrelatie										= "relatie";
 $LPdoop												= "doop";
+$LP70plus											= "70_plus";
 $LPlastSeen										= "last_seen";
 $LPlastChecked								= "last_checked";
 
