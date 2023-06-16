@@ -124,7 +124,7 @@ if(isset($_POST['correct'])) {
 		if(isset($cluco) AND $cluco == 0) {
 			$ClucoAddress	= $declaratieReplyAddress;
 			$ClucoName		= $declaratieReplyName;
-			$cluco				= 109401;
+			$cluco				= 984756;			# Penningmeester
 		} else {
 			$ClucoAddress = getMailAdres($cluco);
 			$ClucoName		= makeName($cluco, 5);		

@@ -138,7 +138,7 @@ if($aToon['PC']) {
 if($aToon['tel'] AND $personData['tel'] != '') {
 	$blok[] = "	<tr>";
 	$blok[] = "		<td><b>Telefoon</b></td>";
-	$blok[] = "		<td>". $personData['tel'] ."</td>";
+	$blok[] = "		<td><a href='tel:". str_replace('-', '', $personData['tel']) ."'>". $personData['tel'] ."</a></td>";
 	$blok[] = "	</tr>";
 }
 
