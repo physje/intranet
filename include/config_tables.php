@@ -138,6 +138,7 @@ $VoorgangerPlaats 						= "plaats";
 $VoorgangerDenom							= "kerk";
 $VoorgangerStijl							= "stijl";
 $VoorgangerOpmerking					= "opmerking";
+$VoorgangerHash								= "hash";
 $VoorgangerAandacht						= "aandachtspunten";
 $VoorgangerDeclaratie   			= "declaratie";
 $VoorgangerReiskosten   			= "reiskosten";
@@ -151,6 +152,7 @@ $VoorgangerVertrekpunt				= "vertrekpunt";
 $VoorgangerEBRelatie					= "boekhoudenID";
 $VoorgangerLastSeen     			= "laatst_voorgaan";
 $VoorgangerLastAandacht 			= "laatst_aandacht";
+$VoorgangerLastDataCheck 			= "laatst_gegevens";
 
 $TableWijkteam								= "wijkteams";
 $WijkteamID										= "id";

@@ -1410,7 +1410,7 @@ function getLiturgie($id) {
 }
 
 function getVoorgangerData($id) {
-	global $TableVoorganger, $VoorgangerID, $VoorgangerTitel, $VoorgangerVoor, $VoorgangerInit, $VoorgangerTussen, $VoorgangerAchter, $VoorgangerTel, $VoorgangerTel2, $VoorgangerPVNaam, $VoorgangerPVTel, $VoorgangerMail, $VoorgangerPlaats, $VoorgangerDenom, $VoorgangerOpmerking, $VoorgangerAandacht, $VoorgangerDeclaratie, $VoorgangerLastAandacht, $VoorgangerReiskosten, $VoorgangerStijl, $VoorgangerLastSeen, $db;
+	global $TableVoorganger, $VoorgangerID, $VoorgangerTitel, $VoorgangerVoor, $VoorgangerInit, $VoorgangerTussen, $VoorgangerAchter, $VoorgangerTel, $VoorgangerTel2, $VoorgangerPVNaam, $VoorgangerPVTel, $VoorgangerMail, $VoorgangerPlaats, $VoorgangerDenom, $VoorgangerOpmerking, $VoorgangerAandacht, $VoorgangerDeclaratie, $VoorgangerLastAandacht, $VoorgangerReiskosten, $VoorgangerStijl, $VoorgangerLastSeen, $VoorgangerLastDataCheck, $db;
 	
 	$data = array();
 		
@@ -1438,6 +1438,7 @@ function getVoorgangerData($id) {
 		$data['reiskosten'] = $row[$VoorgangerReiskosten];
 		$data['last_aandacht'] = $row[$VoorgangerLastAandacht];
 		$data['last_voorgaan'] = $row[$VoorgangerLastSeen];
+		$data['last_check'] = $row[$VoorgangerLastDataCheck];
 	}
 		
 	return $data;
