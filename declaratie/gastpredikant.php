@@ -32,7 +32,7 @@ if(isset($_REQUEST['hash'])) {
 	# De hash klopt & de predikant staat ook op het rooster & er is nog niet eerder een declaratie ingediend
 	if(password_verify($dienst.'$'.$randomCodeDeclaratie.'$'.$voorganger,$hash) AND $dienstData['voorganger_id'] == $voorganger AND $declaratieStatus < 8) {		
 		$firstData = getVoorgangerData($voorganger);
-		$secondData = getDeclaratieData($voorganger, $dienstData['start']);		
+		$secondData = getDeclaratieData($voorganger, $dienst);		
 		$voorgangerData = array_merge($firstData, $secondData);
 
 		# Schrijf de variabelen die in het hele proces verzameld worden als hidden parameters weg in het formulier

@@ -32,17 +32,18 @@ if(isset($_POST['save']) OR isset($_POST['maanden'])) {
 		$set[] = $DienstStart .' = '. $startTijd;
 		$set[] = $DienstEind .' = '. $eindTijd;
 		$set[] = $DienstOpmerking .' = \''. urlencode($bijzonderheid) .'\'';
+		$set[] = $DienstSpeciaal ." = '". (isset($_POST['spec'][$dienst]) ? '1' : '0') ."'";
 				
 		$sql = "UPDATE $TableDiensten SET ". implode(', ', $set)." WHERE $DienstID = ". $dienst;
-				
+						
 		mysqli_query($db, $sql);
 	}
 	toLog('info', $_SESSION['ID'], '', 'Diensten bijgewerkt');
 }
 
 if(isset($_REQUEST['new'])) {
-	$start	= mktime(9,0,0,date("n"),date("j"), date("Y"));
-	$eind		= mktime(9,30,0,date("n"),date("j"), date("Y"));		
+	$start	= mktime(9,0,0,date("n"),date("j")+1, date("Y"));
+	$eind		= mktime(9,30,0,date("n"),date("j")+1, date("Y"));		
 	$query	= "INSERT INTO $TableDiensten ($DienstStart, $DienstEind) VALUES ('$start', '$eind')";
 	$result = mysqli_query($db, $query);
 			
@@ -110,6 +111,7 @@ if(!isset($_REQUEST['delete']) OR (isset($_REQUEST['delete']) AND isset($_REQUES
 	$text[] = "	<td>Start</td>";
 	$text[] = "	<td>Eind</td>";
 	$text[] = "	<td>Bijzonderheid</td>";
+	$text[] = "	<td>Trouw/Begrafenis</td>";
 	if(in_array(1, getMyGroups($_SESSION['ID']))) {
 		$text[] = "	<td>&nbsp;</td>";
 	}
@@ -171,6 +173,7 @@ if(!isset($_REQUEST['delete']) OR (isset($_REQUEST['delete']) AND isset($_REQUES
 		}
 		$text[] = "	</select></td>";	
 		$text[] = "	<td><input type='text' name='bijz[$dienst]' value=\"". $data['bijzonderheden'] ."\" size='30'></td>";	
+		$text[] = "	<td><input type='checkbox' name='spec[$dienst]' value='1'". ($data['speciaal'] == 1 ? ' checked' : '') ."></td>";	
 		if(in_array(1, getMyGroups($_SESSION['ID']))) {
 			$text[] = "	<td align='right'><a href='?delete=ja&id=$dienst'><img src='images\delete.png'></a></td>";
 		}
@@ -203,6 +206,7 @@ $header[] = '	td:nth-of-type(1):before { content: "Datum"; }';
 $header[] = '	td:nth-of-type(2):before { content: "Start"; }';
 $header[] = '	td:nth-of-type(3):before { content: "Eind"; }';
 $header[] = '	td:nth-of-type(4):before { content: "Bijzonderheid"; }';
+$header[] = '	td:nth-of-type(5):before { content: "Trouw- of begrafenis"; }';
 $header[] = "}";
 $header[] = "</style>";
 

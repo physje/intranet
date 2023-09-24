@@ -87,6 +87,7 @@ $DienstCollecte_2							= "collecte_2";
 $DienstOpmerking							= "opmerking";
 $DienstRuiling								= "ruiling";
 $DienstLiturgie     					= "liturgie";
+$DienstSpeciaal     					= "speciaal";
 $DienstDeclStatus   					= "declaratie_status";
                     					
 $TablePlanning								= "planning";

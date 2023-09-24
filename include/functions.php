@@ -166,7 +166,7 @@ function getKerkdiensten($startTijd, $eindTijd) {
 
 
 function getKerkdienstDetails($id) {
-	global $TableDiensten, $DienstID, $DienstStart, $DienstEind, $DienstVoorganger, $DienstCollecte_1, $DienstCollecte_2, $DienstOpmerking, $DienstRuiling, $DienstLiturgie, $db;
+	global $TableDiensten, $DienstID, $DienstStart, $DienstEind, $DienstVoorganger, $DienstCollecte_1, $DienstCollecte_2, $DienstOpmerking, $DienstRuiling, $DienstSpeciaal, $DienstLiturgie, $db;
 		
 	$data = $voorgangerData = array();
 	
@@ -194,6 +194,7 @@ function getKerkdienstDetails($id) {
 		}
 				
 		$data['ruiling']				= $row[$DienstRuiling];
+		$data['speciaal']				= $row[$DienstSpeciaal];
 		$data['liturgie']       = urldecode($row[$DienstLiturgie]);
 	}
 	
@@ -1445,16 +1446,15 @@ function getVoorgangerData($id) {
 }
 
 
-function getDeclaratieData($voorganger, $tijdstip) {
+#function getDeclaratieData($voorganger, $tijdstip) {
+function getDeclaratieData($voorganger, $dienst) {
 	global $TableVoorganger, $VoorgangerID, $VoorgangerHonorarium, $VoorgangerHonorariumNew, $VoorgangerHonorarium2023, $VoorgangerHonorariumSpecial, $VoorgangerKM, $VoorgangerVertrekpunt, $VoorgangerEBRelatie, $db;
 	
 	$sql = "SELECT * FROM $TableVoorganger WHERE $VoorgangerID = $voorganger";
 
 	$result = mysqli_query($db, $sql);
 	$row = mysqli_fetch_array($result);
-	
-	$grens = mktime(1,1,1,1,1,2023);
-	
+		
 	#$data['honorarium_oud'] = $row[$VoorgangerHonorariumOld];
 	$data['honorarium_nieuw'] = $row[$VoorgangerHonorariumNew];
 	$data['honorarium_2023'] = $row[$VoorgangerHonorarium2023];	
@@ -1463,7 +1463,13 @@ function getDeclaratieData($voorganger, $tijdstip) {
 	$data['reis_van'] = urldecode($row[$VoorgangerVertrekpunt]);
 	$data['EB-relatie'] = $row[$VoorgangerEBRelatie];	
 	
-	if($tijdstip < $grens) {
+	$dienstData = getKerkdienstDetails($dienst);
+	
+	$grens = mktime(1,1,1,1,1,2023);
+	
+	if($dienstData['speciaal'] == 1) {
+		$data['honorarium'] = $row[$VoorgangerHonorariumSpecial];
+	} elseif($dienstData['start'] < $grens) {
 		$data['honorarium'] = $row[$VoorgangerHonorariumNew];
 	} else {
 		$data['honorarium'] = $row[$VoorgangerHonorarium2023];
