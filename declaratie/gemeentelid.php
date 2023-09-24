@@ -6,7 +6,7 @@ include_once('../include/config_mails.php');
 include_once('../include/HTML_HeaderFooter.php');
 $db = connect_db();
 
-$kmPrijs = 19; #in centen
+$kmPrijs = 35; #in centen
 
 $minUserLevel = 1;
 $cfgProgDir = '../auth/';

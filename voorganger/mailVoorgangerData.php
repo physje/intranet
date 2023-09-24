@@ -49,7 +49,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 		$mailText[] = "Beste ". makeVoorgangerName($id, 5) .",<br>";
 		$mailText[] = "<br>";
 		$mailText[] = ($stijl == 0 ? 'u' : 'jij'). " gaat volgende maand voor in de Koningskerk te Deventer.<br>";
-		$mailText[] = "Om die reden wil ik controleren of alle gegegevens die wij van ". ($stijl == 0 ? 'u' : 'jouw') ." in ons systeem hebben staan nog correct zijn.<br>";
+		$mailText[] = "Om die reden wil ik controleren of alle gegegevens die wij van ". ($stijl == 0 ? 'u' : 'jouw') ." in ons systeem hebben staan (nog) correct zijn.<br>";
 		$mailText[] = "<br>";
 		$mailText[] = "Op dit moment ". ($stijl == 0 ? 'staat u' : 'sta je'). " o.a. met de volgende gegevens in ons systeem:<br>";
 		$mailText[] = "<table>";
@@ -77,7 +77,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 		$param['from']					= $noReplyAdress;
 		$param['fromName']			= "Webmaster Koningskerk";
 		$param['ReplyTo']				= $ScriptMailAdress;
-		$param['testen']				= true;
+		#$param['testen']				= true;
 		
 		sendMail_new($param);
 	}
