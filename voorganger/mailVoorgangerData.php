@@ -6,14 +6,14 @@ include_once('../include/HTML_HeaderFooter.php');
 
 $db = connect_db();
 
-$sendMail = false;
-$sendTestMail = false;
-$test = true;
+$test = false;
 
 # Omdat de server deze dagelijks moet draaien wordt toegang niet gedaan op basis
 # van naam+wachtwoord maar op basis van IP-adres
 
-if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
+#if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
+# Hij runt elke maandag, check of de dag kleiner of gelijk is aan 7 (effectief 1ste maandag van de maand)
+if((in_array($_SERVER['REMOTE_ADDR'], $allowedIP) AND date('j') <= 7) OR $test) {
 	$startTijd	= mktime(0, 0, 0, date("n")+1, 1, date("Y"));
 	$eindTijd		= mktime(23, 59, 59, date("n")+2, 0, date("Y"));
 	$diensten		= getKerkdiensten($startTijd, $eindTijd);
@@ -40,7 +40,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 	}
 	
 	foreach($voorgangers as $id => $stijl) {
-		unset($mailText, $data);
+		unset($mailText, $data, $param);
 		
 		$data = getVoorgangerData($id);
 		
@@ -65,8 +65,8 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 		$mailText[] = "</table>";
 		$mailText[] = "<br>";
 		$mailText[] = "Zijn deze gegevens nog correct?<br>";
-		$mailText[] = "&nbsp;<a href='checkVoorgangerData.php?hash=$hash&correct=true'>Ja</a> (komend jaar ". ($stijl == 0 ? 'krijgt u' : 'krijg je'). " geen mail meer)<br>";
-		$mailText[] = "&nbsp;<a href='checkVoorgangerData.php?hash=$hash&correct=false'>Nee</a> (". ($stijl == 0 ? 'u' : 'je'). " komt op een pagina om de juiste gegevens in te voeren)<br>";
+		$mailText[] = "&nbsp;<a href='". $ScriptURL ."voorganger/checkVoorgangerData.php?hash=$hash&correct=true'>Ja</a> (komend jaar ". ($stijl == 0 ? 'krijgt u' : 'krijg je'). " geen mail meer)<br>";
+		$mailText[] = "&nbsp;<a href='". $ScriptURL ."voorganger/checkVoorgangerData.php?hash=$hash&correct=false'>Nee</a> (". ($stijl == 0 ? 'u' : 'je'). " komt op een pagina om de juiste gegevens in te voeren)<br>";
 		
 		$sql = "UPDATE $TableVoorganger SET $VoorgangerHash = '$hash' WHERE $VoorgangerID = $id";
 		$result = mysqli_query($db, $sql);
