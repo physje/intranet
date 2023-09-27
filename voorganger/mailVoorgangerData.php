@@ -14,6 +14,8 @@ $test = false;
 #if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 # Hij runt elke maandag, check of de dag kleiner of gelijk is aan 7 (effectief 1ste maandag van de maand)
 if((in_array($_SERVER['REMOTE_ADDR'], $allowedIP) AND date('j') <= 7) OR $test) {
+	toLog('info', '', '', 'Controle gegevens voorgangers komende maand');
+	
 	$startTijd	= mktime(0, 0, 0, date("n")+1, 1, date("Y"));
 	$eindTijd		= mktime(23, 59, 59, date("n")+2, 0, date("Y"));
 	$diensten		= getKerkdiensten($startTijd, $eindTijd);
@@ -82,7 +84,7 @@ if((in_array($_SERVER['REMOTE_ADDR'], $allowedIP) AND date('j') <= 7) OR $test) 
 		sendMail_new($param);
 	}
 	
-} else {
+} elseif(!in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 	toLog('error', '', '', 'Poging handmatige run vorgangermail, IP:'.$_SERVER['REMOTE_ADDR']);
 }
 ?>
