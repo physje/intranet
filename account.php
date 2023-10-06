@@ -35,14 +35,14 @@ $personData = getMemberDetails($id);
 $unique = true;
 $melding = '';
 
-if(isset($_POST['username']) AND ($_POST['username'] != $personData['username']) AND !isUniqueUsername($_POST['username'])) {
+if(isset($_POST['username']) AND (trim($_POST['username']) != $personData['username']) AND !isUniqueUsername($_POST['username'])) {
 	$unique = false;
 	$melding = "username wordt al gebruikt";
 }
 
 if(isset($_POST['data_opslaan']) AND $unique) {
 	#$sql = "UPDATE $TableUsers SET `$UserUsername` = '". addslashes($_POST['username']) ."'". ($_POST['wachtwoord'] != '' ? ", `$UserPassword` = '". md5($_POST['wachtwoord']) ."', $UserNewPassword = '". password_hash($_POST['wachtwoord'], PASSWORD_DEFAULT) ."'" : '') ." WHERE `$UserID` = ". $_POST['id'];
-	$sql = "UPDATE $TableUsers SET `$UserUsername` = '". addslashes($_POST['username']) ."'". ($_POST['wachtwoord'] != '' ? ", $UserNewPassword = '". password_hash($_POST['wachtwoord'], PASSWORD_DEFAULT) ."'" : '') ." WHERE `$UserID` = ". $_POST['id'];
+	$sql = "UPDATE $TableUsers SET `$UserUsername` = '". addslashes(trim($_POST['username'])) ."'". ($_POST['wachtwoord'] != '' ? ", $UserNewPassword = '". password_hash($_POST['wachtwoord'], PASSWORD_DEFAULT) ."'" : '') ." WHERE `$UserID` = ". $_POST['id'];
 		
 	if(!mysqli_query($db, $sql) ) {
 		$account[] = "Er is een fout opgetreden.";

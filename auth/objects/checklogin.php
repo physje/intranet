@@ -35,8 +35,8 @@ if (!isset($entered_login) && !isset($entered_password)) {
 		
 	# entered login & password
 	# will be encrypt later on
-	$login = $entered_login;
-	$password = $entered_password;
+	$login = trim($entered_login);
+	$password = trim($entered_password);
 		
 	$_SESSION['login'] = $login;
   $_SESSION['password'] = $password;

@@ -51,7 +51,7 @@ function generateUsername($id) {
 function isUniqueUsername($username) {
 	global $TableUsers, $UserUsername, $db;
 		
-	$sql = "SELECT * FROM $TableUsers WHERE $UserUsername like '$username'";
+	$sql = "SELECT * FROM $TableUsers WHERE $UserUsername like '". trim($username )."'";
 	$result = mysqli_query($db, $sql);
 	if(mysqli_num_rows($result) == 0) {
 		return true;
