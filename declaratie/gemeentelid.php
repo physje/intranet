@@ -299,12 +299,12 @@ if(isset($_POST['correct'])) {
 				$meldingBestand = 'Maximaal 2 bestanden';
 			}			
 			
-			# Alleen PDF's
+			# Alleen PDF's / JPG's
 			foreach($_FILES['bijlage']['name'] as $bestandsnaam) {
 				$path_parts = pathinfo($bestandsnaam);
-				if(isset($path_parts['extension']) AND $path_parts['extension'] != 'pdf') {
+				if(isset($path_parts['extension']) AND $path_parts['extension'] != 'pdf' AND $path_parts['extension'] != 'jpg' AND $path_parts['extension'] != 'jpeg') {
 					$checkFields = false;
-					$meldingBestand = 'Alleen PDF toegestaan';
+					$meldingBestand = 'Alleen PDF of JPG toegestaan';
 				}
 			}
 		}		
@@ -554,7 +554,7 @@ if(isset($_POST['correct'])) {
 			(isset($_POST['reset_files']))
 		) {
 			$page[] = "<tr>";
-			$page[] = "	<td colspan='3'><input type='file' name='bijlage[]' accept='application/pdf' multiple><br><small>Alleen PDF; max. 2 files; max 1 MB/stuk</small></td>";
+			$page[] = "	<td colspan='3'><input type='file' name='bijlage[]' accept='application/pdf, image/jpeg' multiple><br><small>Alleen PDF of JPG; max. 2 files; max 1 MB/stuk</small></td>";
 			$page[] = "	<td>&nbsp;</td>";
 			$page[] = "</tr>";
 			
