@@ -4,18 +4,25 @@ include_once('include/config.php');
 include_once('include/HTML_TopBottom.php');
 
 if(isset($_REQUEST['id'])) {
+	$cfgProgDir = 'auth/';
+	include($cfgProgDir. "secure.php");
+		
 	$details = getKerkdienstDetails($_REQUEST['id']);
 	$start = mktime(0,0,0,date("n", $details['start']), date("j", $details['start']), date("Y", $details['start']));
 	$eind = mktime(23,59,59,date("n", $details['eind']), date("j", $details['eind']), date("Y", $details['eind']));
+	
+	toLog('info', $_SESSION['ID'], '', 'Rooster van dienst '. $_REQUEST['id'] .' bekeken');	
 } else {
 	$start = mktime(0,0,0);
 	//$eind = mktime(23,59,59,date("n"), (date("j")+7+(7-date("N"))));
 	$eind = mktime(23,59,59,date("n"), (date("j")+9));
+	
+	toLog('info', '', '', 'Rooster komende week bekeken');
 }
 $diensten = getKerkdiensten($start, $eind);
 $roosters = getRoosters();
 
-$dienstBlocken = array();;
+$dienstBlocken = array();
 
 foreach($diensten as $dienst) {	
 	$details	= getKerkdienstDetails($dienst);
@@ -95,5 +102,4 @@ foreach($dienstBlocken as $block) {
 echo '</div> <!-- end \'content_vert_kolom\' -->'.NL;
 echo showCSSFooter();
 
-toLog('info', '', '', 'Rooster komende week bekeken');
 ?>
