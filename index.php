@@ -268,13 +268,15 @@ $EBDeel[] = "<b>Declaraties</b>";
 $EBLinks['declaratie/'] = 'Dien declaratie in';
 
 if(in_array(1, $myGroups) OR in_array(38, $myGroups)) {
-	$EBLinks['declaratie/overzichtDeclaraties.php'] = 'Status declaraties';
+	$EBLinks['declaratie/overzichtDeclaraties.php'] = 'Status declaraties';	
+	$EBLinks['declaratie/opschonenOudeBijlages.php'] = 'Verwijder oude bijlages';
 }
 
 if(in_array(1, $myGroups)) {
 	$EBLinks['declaratie/relatieOverview.php'] = 'Toon alle relaties';
-	$EBLinks['declaratie/mutatieOverview.php'] = 'Toon alle mutaties';
-	//$EBLinks['declaratie/syncRelaties.php'] = 'Synchroniseer relaties naar lokale database';	
+	$EBLinks['declaratie/mutatieOverview.php'] = 'Toon alle mutaties';	
+	$EBLinks['declaratie/zoekWeesBijlages.php'] = 'Koppel wees-bijlages';
+	//$EBLinks['declaratie/syncRelaties.php'] = 'Synchroniseer relaties naar lokale database';
 	$EBLinks['declaratie/editRelatie.php'] = 'Wijzig relaties';
 	#$EBLinks['https://secure.e-boekhouden.nl/handleiding/Documentatie_soap.pdf'] = 'SOAP documenatie PDF';
 }
