@@ -161,7 +161,7 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 							}
 						}				
 					}
-					$factuurnummer	= $boekstukNummer.'-declaratie-'.time2str('%e%b-%H.%M', $row[$EBDeclaratieTijd]);
+					$factuurnummer	= $boekstukNummer.'-declaratie-'.time2str('%d%b-%H.%M', $row[$EBDeclaratieTijd]);
 				}		
 				
 				# EIGEN = NEE
