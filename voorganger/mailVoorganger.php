@@ -142,8 +142,8 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 			$mailText[] = "";
 			$mailText[] = "Vriendelijke groeten";
 			$mailText[] = "";
-			$mailText[] = "Jenny van der Vegt-Huzen";
-			$mailText[] = "Tel.: 06-10638291";
+			$mailText[] = "Paula Lieffijn";
+			$mailText[] = "Tel.: 06-29052411";
 			$mailText[] = $voorgangerReplyAddress;		
 			
 			# Onderwerp maken

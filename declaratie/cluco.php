@@ -65,7 +65,11 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 				$parameter['to'][]			= array($data['user']);
 				$parameter['subject']		= 'Declaratie doorgestuurd voor afhandeling';
 				$parameter['message'] 	= implode("\n", $mail);
-				$parameter['from']			= getMailAdres($_SESSION['ID']);
+				
+				# @live.nl heeft zijn mail-records niet op orde (geen SPF ed).
+				# Aantal mailservers weigeren daarom deze mails als met een @live.nl verstuurd.
+				# Daarom voor de zekerheid het formele van de cluco
+				$parameter['from']			= getMailAdres($_SESSION['ID'], true);
 				$parameter['fromName']	= makeName($_SESSION['ID'], 5);
 				
 				if(!sendMail_new($parameter)) {
@@ -97,7 +101,7 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 				$parameter['to'][]			= array($declaratieReplyAddress, $declaratieReplyName);
 				$parameter['subject']		= 'Door cluco goedgekeurde declaratie';
 				$parameter['message'] 	= implode("\n", $mail);
-				$parameter['from']			= getMailAdres($_SESSION['ID']);
+				$parameter['from']			= getMailAdres($_SESSION['ID'], true);
 				$parameter['fromName']	= makeName($_SESSION['ID'], 5);
 				
 				if(!sendMail_new($parameter)) {

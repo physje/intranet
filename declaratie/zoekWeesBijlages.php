@@ -6,7 +6,7 @@ $requiredUserGroups = array(1);
 $cfgProgDir = '../auth/';
 include($cfgProgDir. "secure.php");
 
-$grens = mktime(0,0,0,(date('n')-3));
+$grens = mktime(0,0,0,(date('n')-4));
 $uploadDir = 'uploads';
 
 if(isset($_REQUEST['file'])) {
@@ -20,7 +20,7 @@ if(isset($_REQUEST['file'])) {
 		$JSON = json_decode($row[$EBDeclaratieDeclaratie], true);
 		
 		$JSON['bijlage'][] = $uploadDir.'/'.$_REQUEST['file'];
-		$JSON['bijlage_naam'][] = 'Gevonden weesbestand';
+		$JSON['bijlage_naam'][] = 'Weesbestand '. time2str('%e_%b_%Y_%H_%M');
 		
 		$sql_update = "UPDATE $TableEBDeclaratie SET $EBDeclaratieDeclaratie = '". encode_clean_JSON($JSON) ."' WHERE $EBDeclaratieHash like '". $_REQUEST['key'] ."'";
 		mysqli_query($db, $sql_update);
