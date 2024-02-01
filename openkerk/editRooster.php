@@ -74,6 +74,9 @@ if(isset($_POST['next_week'])) {
 
 $einde = $start + $blokGrootte;
 
+#echo "start : ". date("d-m-Y", $start)."<br>";
+#echo "einde : ". date("d-m-Y", $einde)."<br>";
+
 # Een keer alle namen ophalen en in een array zetten zodat dit later hergebruikt kan worden
 foreach($namen as $key => $value) {
 	if(is_array($value)) {
@@ -87,6 +90,8 @@ $sql		= "SELECT * FROM $TableOpenKerkRooster WHERE $OKRoosterStart BETWEEN ". $s
 $result = mysqli_query($db, $sql);
 $row		= mysqli_fetch_array($result);
 $lastDag	= $row[$OKRoosterStart];
+
+#echo "lastDag : ". date("d-m-Y", $lastDag)."<br>";
 
 $text[] = "<form action='". htmlspecialchars($_SERVER['PHP_SELF']) ."' method='post'>";
 $text[] = "<input type='hidden' name='start' value='$start'>";
@@ -102,14 +107,16 @@ $datum = $start;
 while($datum < $lastDag) {
 	foreach($uren as $slotID => $slot) {
 		
-		$datum		= mktime(0, 0, 0, date('n', $start), (date('j', $start)+$dag));
-		$tijdstip	= mktime($slot[0], $slot[1], 0, date('n', $start), (date('j', $start)+$dag));
-		$eind			= mktime($slot[2], $slot[3], 0, date('n', $start), (date('j', $start)+$dag));
+		$datum		= mktime(0, 0, 0, date('n', $start), (date('j', $start)+$dag), date('Y', $start));
+		$tijdstip	= mktime($slot[0], $slot[1], 0, date('n', $start), (date('j', $start)+$dag), date('Y', $start));
+		$eind			= mktime($slot[2], $slot[3], 0, date('n', $start), (date('j', $start)+$dag), date('Y', $start));
 		$weekdag	= date('w', $tijdstip);
+		
+		#echo "datum : ". date("d-m-Y", $datum)."<br>";
 		
 		if(($minDag <= $weekdag) AND ($weekdag <= $maxDag)) {
 			$text[] = "<tr>";
-			$text[] = "		<td valign='top'>".time2str("%a %d %b %H:%M", $tijdstip)." - ".time2str("%H:%M", $eind)."</td>";
+			$text[] = "		<td valign='top'>".time2str("%a %d %b %Y %H:%M", $tijdstip)." - ".time2str("%H:%M", $eind)."</td>";
 			$text[] = "		<td valign='top'>";
 					
 			for($positie=0; $positie < $aantal ; $positie++) {
@@ -117,6 +124,9 @@ while($datum < $lastDag) {
 				$text[] = "<option value=''></option>";
 				
 				$sql_vulling		= "SELECT * FROM $TableOpenKerkRooster WHERE $OKRoosterStart = ". $tijdstip ." AND $OKRoosterPos = ". $positie;
+				
+				#echo date("d-m-Y", $tijdstip) .' - '. $sql_vulling ."<br>\n";
+				
 				$result_vulling = mysqli_query($db, $sql_vulling);
 				$row_vulling		= mysqli_fetch_array($result_vulling);
 				

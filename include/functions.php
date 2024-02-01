@@ -672,7 +672,11 @@ function convertName($naam) {
 }
 
 function makeName($id, $type) {
-	global $TableUsers, $UserID, $UserVoorletters, $UserVoornaam, $UserTussenvoegsel, $UserAchternaam, $UserMeisjesnaam, $db;
+	global $TableUsers, $UserID, $UserVoorletters, $UserVoornaam, $UserTussenvoegsel, $UserAchternaam, $UserMeisjesnaam;
+	
+	# Als ik de global $db gebruik gaat het niet goed met speciale karakters
+	# daarom initialiseer ik een nieuwe
+	$db = connect_db();
 	
 	$sql = "SELECT * FROM $TableUsers WHERE $UserID = $id";
 	$result = mysqli_query($db, $sql);
