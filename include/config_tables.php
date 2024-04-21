@@ -70,6 +70,8 @@ $RoostersFromAddr							= "mail_afzender";
 $RoostersGelijk								= "gelijke_diensten";
 $RoostersOpmerking						= "opmerking";
 $RoostersTextOnly							= "text_only";
+$RoostersOuderCC							= "ouder";
+$RoostersPartnerTo						= "partner";
 $RoostersAlert								= "alert";
 $RoostersLastChange						= "last_change";
                     					
@@ -147,6 +149,7 @@ $VoorgangerHonorarium					= "honorarium";
 $VoorgangerHonorariumOld			= "honorarium_2019";
 $VoorgangerHonorariumNew			= "honorarium_2020";
 $VoorgangerHonorarium2023			= "honorarium_2023";
+$VoorgangerHonorarium2024			= "honorarium_2024";
 $VoorgangerHonorariumSpecial	= "honorarium_special";
 $VoorgangerKM									= "km_vergoeding";
 $VoorgangerVertrekpunt				= "vertrekpunt";

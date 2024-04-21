@@ -3,7 +3,7 @@ include_once('include/functions.php');
 include_once('include/config.php');
 include_once('include/HTML_TopBottom.php');
 
-$requiredUserGroups = array(1, 52);
+$requiredUserGroups = array(1, 28, 52);
 $cfgProgDir = 'auth/';
 include($cfgProgDir. "secure.php");
 $db = connect_db();
@@ -32,11 +32,11 @@ if(isset($_REQUEST['dienstID'])) {
 
         if(!$liturgie) {
             # Geen liturgie aanwezig voor geselecteerde dienst, nieuwe invoeren
-            $text[] = "Voer hieronder de nieuwe liturgie voor de dienst in van ". date("j F Y", $dienstInfo['start']). ", ". date("H:i", $dienstInfo['start']). ":<br><br>";
+            $text[] = "Voer hieronder de nieuwe liturgie in voor de dienst van ". time2str("%e %B %Y", $dienstInfo['start']). " om ". date("H:i", $dienstInfo['start']). ":<br><br>";
             $text[] = "<textarea rows='30' name='liturgieTekst' cols='50' font: normal 1em Verdana, sans-serif></textarea>";
         } else {
             # Liturgie gevonden voor geselecteerde dienst, bijwerken
-            $text[] = "Pas hieronder de liturgie aan voor de dienst van ". date("j F Y", $dienstInfo['start']). ", ". date("H:i", $dienstInfo['start']). ":<br><br>";
+            $text[] = "Pas hieronder de liturgie aan voor de dienst van ". time2str("%e %B %Y", $dienstInfo['start']). " om ". date("H:i", $dienstInfo['start']). ":<br><br>";
             $text[] = "<textarea rows='30' name='liturgieTekst' cols='50'>". $liturgie. "</textarea>";
         }
 

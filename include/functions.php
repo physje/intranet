@@ -792,6 +792,7 @@ function sendMail_new($parameter) {
 	# $parameter['message'] 			= '';
 	# $parameter['formeel'] 			= '';
 	# $parameter['ouderCC'] 			= '';
+	# $parameter['partnerTo'] 		= '';
 	# $parameter['from']					= '';
 	# $parameter['fromName']			= '';
 	# $parameter['ReplyTo']				= '';
@@ -799,6 +800,7 @@ function sendMail_new($parameter) {
 	# $parameter['cc'][]					= array(adres, naam);
 	# $parameter['bcc'][]					= ''
 	# $parameter['attachment'][]	= array('file' => '', 'name' => '');
+	# $parameter['testen']
 	
 	# Controleer of er wel een ontvanger bekend is
 	if(isset($parameter['to'])) {
@@ -850,9 +852,21 @@ function sendMail_new($parameter) {
 	} else {
 		$ouderCC = $parameter['ouderCC'];
 		toLog('debug', '', '', 'ouders in de CC = '. $ouderCC);
+	}
+
+	# Even checken of de partner in de Aan moeten
+	if(!isset($parameter['partnerTo'])) {
+		$partnerTo = false;
+		toLog('debug', '', '', 'partner niet in de To');
+	} else {
+		$partnerTo = $parameter['partnerTo'];
+		toLog('debug', '', '', 'partner in de To = '. $partnerTo);
 	}	
-	
+		
 	$mail = new PHPMailer\PHPMailer\PHPMailer;
+	
+	# Zet de charset juist voor de 'gekke' tekens als ô en ë
+	$mail->CharSet = 'utf8mb4_unicode_ci';
 			
 	if(isset($parameter['from']) AND $parameter['from'] != '') {
 		$mail->From = $parameter['from'];
@@ -905,6 +919,21 @@ function sendMail_new($parameter) {
 					}
 				}
 			}
+			
+			if($partnerTo AND ($UserData['relatie'] == 'partner' OR $UserData['relatie'] == 'levenspartner' OR $UserData['relatie'] == 'gezinshoofd' OR $UserData['relatie'] == 'echtgenote' OR $UserData['relatie'] == 'echtgenoot')) {
+				# Het zou niet moeten kunnen
+				# maar $partners zou een array van meer dan 1 kunnen worden
+				# als dat zo is staat er een error in de logs
+				# voor de zekerheid neem ik index = 0
+				$partners = getPartner($ontvanger[0]);				
+				$partner = $partners[0];
+				
+				$PartnerData = getMemberDetails($partner);
+				if($PartnerData['mail'] != $UserMail AND $PartnerData['mail'] != '') {
+					$mail->AddAddress($PartnerData['mail'], makeName($partner, 5));
+					toLog('debug', '', $ontvanger[0], makeName($partner, 5) .' ('. $PartnerData['mail'] .') als partner toegevoegd');
+				}				
+			}			
 		} elseif(count($ontvanger) == 2) {
 			$address	= $ontvanger[0];
 			$naam			= $ontvanger[1];			
@@ -1025,7 +1054,8 @@ function sendMail_new($parameter) {
 		}
 	} else {
 		#foreach($parameter as $key => $value) echo $key .' -> '. $value .'<br>';
-		echo $HTMLMail;		
+		#echo $HTMLMail;		
+		var_dump($mail);
 		return true;
 	}	
 }
@@ -1069,6 +1099,33 @@ function getParents($id, $hoofd = false) {
 		}
 	}	
 	return $parents;
+}
+
+function getPartner($id) {	
+	
+	$partner = array();
+	
+	$lidData = getMemberDetails($id);
+	
+	if($lidData['relatie'] != 'zoon' AND $lidData['relatie'] != 'dochter' AND $lidData['relatie'] != 'inw. persoon' AND $lidData['relatie'] != 'zelfstandig') {
+		$familie = getFamilieleden($id);		
+		
+		foreach($familie as $lid) {
+			$data = getMemberDetails($lid);
+			if($data['relatie'] != 'zoon' AND $lidData['relatie'] != 'inw. persoon' AND $data['relatie'] != 'dochter' AND $id != $data['id'] AND ($data['relatie'] == 'echtgenote' OR $data['relatie'] == 'echtgenoot' OR $data['relatie'] == 'gezinshoofd' OR $data['relatie'] == 'levenspartner' OR $data['relatie'] == 'partner')) {
+				$partner[] = $lid;
+			}
+		}
+	}
+	
+	if(count($partner) == 1) {
+		return $partner;
+	} elseif(count($partner) > 1) {
+		toLog('error', '', $lid, "Lijkt meer dan 1 partner te hebben");
+		return $partner;
+	} else {
+		return false;
+	}
 }
 
 function getJarigen($dag, $maand) {

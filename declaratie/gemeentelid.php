@@ -285,11 +285,31 @@ if(isset($_POST['correct'])) {
 		# Check van bestanden
 		if(isset($_FILES['bijlage'])) {
 			
+			/*
+			# Als het JPG's zijn & te groot -> resize
+			foreach($_FILES['bijlage'] as $bijlage) {
+				$bestandsnaam = $bijlage['name'];
+				$bestandsgrootte = $bijlage['size'];							
+				$path_parts = pathinfo($bestandsnaam);
+				
+				if($bestandsgrootte > (1100*1024) AND ($path_parts['extension'] != 'jpg' OR $path_parts['extension'] != 'jpeg')) {
+					$checkFields = false;
+					$resized = true;
+					$meldingBestand = 'De bijlages zijn te groot en daarom automatisch verkleind. Controleer of dit is goed gegaan.';					
+				}
+			}			
+			*/
+			
 			# Bestandsgrootte	
 			foreach($_FILES['bijlage']['size'] as $fileSize) {
-				if($fileSize > (1100*1024)) {
+				if($fileSize > (1100*1024) AND !isset($resized)) {
 					$checkFields = false;
 					$meldingBestand = 'Bestand te groot. Maximaal 1 MB';
+					
+					# Bij plaatjes, voeg link naar online resizen toe
+					if(isset($path_parts['extension']) AND ($path_parts['extension'] == 'jpg' OR $path_parts['extension'] == 'jpeg')) {
+						$meldingBestand .= ". Plaatje kleiner maken kan ook <a href='https://www.reduceimages.com/' target='_blank'>online</a>";				
+					}
 				}
 			}
 			
@@ -304,7 +324,7 @@ if(isset($_POST['correct'])) {
 				$path_parts = pathinfo($bestandsnaam);
 				if(isset($path_parts['extension']) AND $path_parts['extension'] != 'pdf' AND $path_parts['extension'] != 'jpg' AND $path_parts['extension'] != 'jpeg') {
 					$checkFields = false;
-					$meldingBestand = 'Alleen PDF of JPG toegestaan';
+					$meldingBestand = 'Alleen PDF of JPG toegestaan';					
 				}
 			}
 		}		
