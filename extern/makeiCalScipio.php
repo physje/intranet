@@ -128,7 +128,7 @@ if($row_dienst = mysqli_fetch_array($result_dienst)) {
 			}
 
 			if($data_dienst['liturgie'] != '') {
-				$DESCRIPTION .= 'LITURGIE\n'. str_replace("\r\n", '\n', $data_dienst['liturgie']);
+				$DESCRIPTION .= 'LITURGIE\n'. str_replace("\r\n", '\n', $data_dienst['liturgie']).'\n\n';
 			}			
 						
 			if($RoosterString != '') {
