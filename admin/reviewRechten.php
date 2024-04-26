@@ -14,13 +14,15 @@ foreach($groepen as $groep) {
 	$beheerData = getGroupDetails($data['beheer']);
 	
 	$text[] = "<a id='groep_$groep'></a><h2>". $data['naam'] ."</h2>\n";	
-	$text[] = "Beheer: <a href='#groep_". $data['beheer'] ."'>". $beheerData['naam'] ."</a><br>\n";
+	$text[] = "ID: $groep<br>\n";	
+	$text[] = "Beheer: <a href='#groep_". $data['beheer'] ."'>". $beheerData['naam'] ."</a><br>\n";	
+	$text[] = "Leden: <ul>";
 	
 	foreach($leden as $lid) {
-		$text[] = makeName($lid, 5) ."<br>\n";
+		$text[] = "<li>". makeName($lid, 5) ."</li>\n";
 	}
 	
-	$text[] = "<br>\n";
+	$text[] = "</ul>\n";
 	$text[] = "<a href='../editGroup.php?groep=$groep'>Bewerk</a><br>\n";		
 	#$text[] = "<br>\n";
 }

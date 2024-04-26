@@ -3,7 +3,7 @@ include_once('include/functions.php');
 include_once('include/config.php');
 include_once('include/HTML_TopBottom.php');
 
-$requiredUserGroups = array(1, 11, 52);
+$requiredUserGroups = array(1, 11, 28, 52);
 $cfgProgDir = 'auth/';
 include($cfgProgDir. "secure.php");
 $db = connect_db();

@@ -249,6 +249,7 @@ if(in_array(1, $myGroups)) {
 	$adminLinks['admin/log.php'] = 'Bekijk logfiles';
 	$adminLinks['admin/mailLog.php'] = 'Bekijk mail-files';
 	$adminLinks['admin/sendMail.php'] = 'Verstuur mail';
+	$adminLinks['admin/reviewRechten.php'] = 'Bekijk groepen en rechten';
 	$adminLinks['admin/configuration.php'] = 'Configuratie-variabelen';
 	$adminLinks['onderhoud/cleanUpDb.php'] = 'Verwijder oude diensten';
 	$adminLinks['../dumper/'] = 'Dumper';
