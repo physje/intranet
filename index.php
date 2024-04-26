@@ -160,12 +160,12 @@ if(in_array(1, $myGroups) OR in_array(8, $myGroups) OR in_array(9, $myGroups) OR
 
 # Gegevens wijzigen-deel
 # 1 = Admin
+# 11 = Beamteam
 # 20 = Preekvoorziening
 # 22 = Diaconie
-# 28 = Cluster Eredienst
 # 52 = Scipio-beheer
-if(in_array(1, $myGroups) OR in_array(20, $myGroups) OR in_array(22, $myGroups) OR in_array(52, $myGroups)) {
-	$wijzigDeel[] = "<b>Diensten wijzigen</b>";
+if(in_array(1, $myGroups) OR in_array(11, $myGroups) OR in_array(20, $myGroups) OR in_array(22, $myGroups) OR in_array(52, $myGroups)) {
+	$wijzigDeel[] = "<b>Kerkdiensten</b>";
 }
 
 if(in_array(1, $myGroups) OR in_array(20, $myGroups)) {
@@ -173,7 +173,7 @@ if(in_array(1, $myGroups) OR in_array(20, $myGroups)) {
 	$wijzigLinks['voorganger/voorgangerRooster.php'] = 'Preekrooster invoeren';	
 }
 
-if(in_array(1, $myGroups) OR in_array(28, $myGroups) OR in_array(52, $myGroups)) {
+if(in_array(1, $myGroups) OR in_array(11, $myGroups) OR in_array(52, $myGroups)) {
 	$wijzigLinks['editLiturgie.php'] = 'Liturgie invoeren of aanpassen';
 }
 
