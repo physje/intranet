@@ -113,10 +113,6 @@ if(!$_SESSION['logged']) {
 		}
 	}
 		
-	# Noteer de laatste keer dat deze persoon is ingelogd
-	$sql = "UPDATE $TableUsers SET $UserLastVisit = '". time() ."' WHERE $UserID like ". $_SESSION['ID'];
-	mysqli_query($db, $sql);
-	
 	# Long-term store
 	storeLogin($_SESSION['ID'], $_SERVER['REMOTE_ADDR']);
 	

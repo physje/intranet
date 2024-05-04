@@ -2620,9 +2620,16 @@ function get2FACode($user) {
 
 function storeLogin($id, $ip) {
 	global $TableLogins, $LoginLid, $LoginIP, $LoginTijd, $db;
+	global $TableUsers, $UserLastVisit, $UserID;
 	
-	$sql = "INSERT INTO $TableLogins ($LoginLid, $LoginIP, $LoginTijd) VALUES ($id, '$ip', NOW())";
-	return mysqli_query($db, $sql);	
+	$sql_1 = "INSERT INTO $TableLogins ($LoginLid, $LoginIP, $LoginTijd) VALUES ($id, '$ip', NOW())";
+	$sql_2 = "UPDATE $TableUsers SET $UserLastVisit = '". time() ."' WHERE $UserID like ". $_SESSION['ID'];
+	
+	if(mysqli_query($db, $sql_1) AND mysqli_query($db, $sql_2)) {
+		return true;
+	} else {
+		return false;
+	}
 }
 
 function knownLoginFromIP($id, $ip) {
