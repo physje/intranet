@@ -2618,4 +2618,23 @@ function get2FACode($user) {
 	}
 }
 
+function storeLogin($id, $ip) {
+	global $TableLogins, $LoginLid, $LoginIP, $LoginTijd, $db;
+	
+	$sql = "INSERT INTO $TableLogins ($LoginLid, $LoginIP, $LoginTijd) VALUES ($id, '$ip', NOW())";
+	return mysqli_query($db, $sql);	
+}
+
+function knownLoginFromIP($id, $ip) {
+	global $TableLogins, $LoginLid, $LoginIP, $LoginTijd, $twoFactor_lifetime, $db;
+	
+	$sql = "SELECT * FROM $TableLogins WHERE $LoginLid like $id AND $LoginIP like '$ip' AND $LoginTijd > NOW() + ". $twoFactor_lifetime ." ORDER BY $LoginTijd";
+	
+	if($row	= mysqli_fetch_array($result)) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
 ?>

@@ -296,16 +296,22 @@ $PastorVerdelingLid						= "lid";
 $PastorVerdelingPastor				= "pastor";
 $PastorVerdelingBezoeker			= "bezoeker";
 
-$TablePastorConvert						= "pastoraat_convert";
-$PastorConvertFamID						= "fam_id";
-$PastorConvertFamName					= "famname";
-$PastorConvertScipioID				= "scipio";
-$PastorConvertWijk						= "wijk";
+#$TablePastorConvert						= "pastoraat_convert";
+#$PastorConvertFamID						= "fam_id";
+#$PastorConvertFamName					= "famname";
+#$PastorConvertScipioID				= "scipio";
+#$PastorConvertWijk						= "wijk";
 
-$TablePastorConvertPas				= "pastoraat_convert_pastor";
-$PastorConvertPastor					= "pastor";
-$PastorConvertPastorName			= "naam";
-$PastorConvertPastorScipio		= "scipio";
+#$TablePastorConvertPas				= "pastoraat_convert_pastor";
+#$PastorConvertPastor					= "pastor";
+#$PastorConvertPastorName			= "naam";
+#$PastorConvertPastorScipio		= "scipio";
+
+$TableLogins								= "logins";
+$LoginID										= "id";
+$LoginLid										= "lid";
+$LoginIP										= "ip";
+$LoginTijd									= "tijd";
                                                   					
 $ArchiveDir										= 'trinitas';
 

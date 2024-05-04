@@ -71,15 +71,7 @@ if(!password_verify($password, $userArray["$cfgDbPasswordfield"])) {
 }
 
 if(isset($userArray["$cfgDbUserIDfield"]) && !empty($cfgDbUserIDfield)) {
-	$_SESSION['ID'] = stripslashes($userArray["$cfgDbUserIDfield"]);
-	
-	if(!$_SESSION['logged']) {
-		toLog('info', $_SESSION['ID'], '', 'Inlogpoging vanaf '. $_SERVER['REMOTE_ADDR']);
-		
-		# Noteer de laatste keer dat deze persoon is ingelogd
-		$sql = "UPDATE $TableUsers SET $UserLastVisit = '". time() ."' WHERE $UserID like ". $_SESSION['ID'];
-		mysqli_query($db, $sql);		
-	}	
+	$_SESSION['ID'] = stripslashes($userArray["$cfgDbUserIDfield"]);	
 }
 
 if(isset($requiredUserGroups)) {
@@ -95,12 +87,16 @@ if(isset($requiredUserGroups)) {
 	}		
 }
 
+# Als je voor de eerste keer hier komt (lees, nog nooit het einde van dit script gehaald)
+# moet gecheckt worden of je een 2FA moet invoeren
+# en moet de administratie worden bijgewerkt
 if(!$_SESSION['logged']) {
 	$secret_key = get2FACode($_SESSION['ID']);
 	
 	# Alleen als er een secret-key bekend is, en 2FA dus aan staat
 	# de loop van 2FA doorlopen
-	if($secret_key != '') {		
+	if($secret_key != '') {
+	#if($secret_key != '' AND !knownLoginFromIP($_SESSION['ID'], $_SERVER['REMOTE_ADDR'])) {
 		if(isset($_POST['entered_2FA'])) {
 			include_once($cfgProgDir.'../include/google2fa/2FA.php');
   		$google2fa = new \PragmaRX\Google2FA\Google2FA();
@@ -110,14 +106,26 @@ if(!$_SESSION['logged']) {
 				$phpSP_message = 'Onjuiste code';
 				include($cfgProgDir . "2FA.php");
 				exit;
-			}
+			}			
 		} else {
 			include($cfgProgDir . "2FA.php");
 			exit;
 		}
 	}
+		
+	# Noteer de laatste keer dat deze persoon is ingelogd
+	$sql = "UPDATE $TableUsers SET $UserLastVisit = '". time() ."' WHERE $UserID like ". $_SESSION['ID'];
+	mysqli_query($db, $sql);
+	
+	# Long-term store
+	storeLogin($_SESSION['ID'], $_SERVER['REMOTE_ADDR']);
+	
+	# Schrijf inlog in logfiles weg
+	toLog('info', $_SESSION['ID'], '', 'Inlogpoging vanaf '. $_SERVER['REMOTE_ADDR']);
 }
 
+
+# Stel een sessie-variabele in om aan te geven dat iemand ingelogd is.
 $_SESSION['logged'] = true;
 
 ?>

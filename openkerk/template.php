@@ -34,7 +34,7 @@ if(isset($_POST['save'])) {
 		}
 	}
 	$text[] = 'Wijzigingen in het template zijn opgeslagen, deze zijn dus nog niet doorgevoerd in het rooster';
-} elseif(isset($_POST['enroll'])) {
+} elseif(isset($_POST['enroll']) OR isset($_POST['enroll_empty'])) {
 	$template = $_POST['template']; 
 	
 	if(isset($_POST['uitrollen'])) {				
@@ -50,23 +50,31 @@ if(isset($_POST['save'])) {
 			foreach($uren as $slotID => $slot) {
 				$startTijd = mktime($slot[0],$slot[1],0,date('n', $nieuweDag),date('j', $nieuweDag), date('Y', $nieuweDag));
 				$eindTijd = mktime($slot[2],$slot[3],0,date('n', $nieuweDag),date('j', $nieuweDag), date('Y', $nieuweDag));
-												
-				$vulling = getOpenKerkVulling($template, $week, $dag, $slotID);
 				
+				$vulling = getOpenKerkVulling($template, $week, $dag, $slotID);
+								
 				foreach($vulling as $pos => $persoon) {
-					$sql_insert = "INSERT INTO $TableOpenKerkRooster ($OKRoosterStart, $OKRoosterEind, $OKRoosterPos, $OKRoosterPersoon) VALUES ('$startTijd', '$eindTijd', '$pos', '$persoon')";					
+					# Met name voor vakanties -als het rooster op inschrijven gaat- is het handig om
+					# een leeg rooster uit te rollen.
+					# Als $_POST['empty'] bekend is, moet er geen persoon worden ingevuld
+					if(isset($_POST['empty'])) $persoon = 0;
+					
+					$sql_insert = "INSERT INTO $TableOpenKerkRooster ($OKRoosterStart, $OKRoosterEind, $OKRoosterPos, $OKRoosterPersoon) VALUES ('$startTijd', '$eindTijd', '$pos', '$persoon')";
 					#$sql_insert = "INSERT INTO $TableOpenKerkRooster ($OKRoosterStart, $OKRoosterPos, $OKRoosterPersoon) VALUES (".$tijdstip .", $pos, '$persoon')";
 					mysqli_query($db, $sql_insert);
 					
-					#echo time2str("%a %d %b %H:%M", $startTijd) .'-'. time2str("%H:%M", $eindTijd) .'|'. $pos .'|'. makeName($persoon, 5) .'<br>';
-					
+					#echo time2str("%a %d %b %H:%M", $startTijd) .'-'. time2str("%H:%M", $eindTijd) .'|'. $pos .'|'. makeName($persoon, 5) .'<br>';					
 				}
 			}
 						
 			$offset++;
 		} while($nieuweDag < $eind);
 		
-		$text[] = 'Het rooster is op basis van template <i>'. $openKerkTemplateNamen[$template] .'</i> uitgerold van '. strftime('%e %B', $start) .' tot '. strftime('%e %B', $eind) .'.<br>';
+		if(isset($_POST['empty'])) {
+			$text[] = 'Het rooster is op basis van een lege template uitgerold van '. strftime('%e %B', $start) .' tot '. strftime('%e %B', $eind) .'.<br>';
+		} else {
+			$text[] = 'Het rooster is op basis van template <i>'. $openKerkTemplateNamen[$template] .'</i> uitgerold van '. strftime('%e %B', $start) .' tot '. strftime('%e %B', $eind) .'.<br>';
+		}
 		
 	} else {
 		$sql = "SELECT * FROM $TableOpenKerkRooster WHERE $OKRoosterStart > ". time() ." ORDER BY $OKRoosterStart DESC";
@@ -84,6 +92,7 @@ if(isset($_POST['save'])) {
 		$text[] = "<form action='". htmlspecialchars($_SERVER['PHP_SELF']) ."' method='post'>";
 		$text[] = "<input type='hidden' name='uitrollen' value='true'>";
 		$text[] = "<input type='hidden' name='template' value='$template'>";
+		if(isset($_POST['enroll_empty']))	$text[] = "<input type='hidden' name='empty' value='true'>";
 		$text[] = "<table border=0>";
 		$text[] = "	<tr>";
 		$text[] = "		<td colspan='2'>Selecteer hieronder de start- en einddatum<br>waarvoor het rooster gevuld moet worden.<br><br><i>Let wel op dat de startdatum vervroegen<br>tot dubbelingen in het rooster leidt.</i></td>";
@@ -179,16 +188,18 @@ if(isset($_POST['save'])) {
 		$text[] = "	</tr>";	
 	}
 	
-	$helft = floor(0.5*($maxDag-$minDag+2));
-	
+	#$helft = floor(0.5*($maxDag-$minDag+2));
+	$derde = floor(($maxDag-$minDag+2)/3);
+		
 	$text[] = "	<tr>";
-	$text[] = "		<td colspan='$helft' align='center'><input type='submit' name='save' value='Template opslaan'></td>";
+	$text[] = "		<td colspan='$derde' align='center'><input type='submit' name='save' value='Template opslaan'></td>";
 	
-	if((($maxDag-$minDag+2)-(2*$helft)) == 1) {
+	if((($maxDag-$minDag+2)-(3*$derde)) == 1) {
 		$text[] = "		<td>&nbsp;</td>";
 	}
-	
-	$text[] = "		<td colspan='$helft' align='center'><input type='submit' name='enroll' value='Template uitrollen'></td>";
+		
+	$text[] = "		<td colspan='$derde' align='center'><input type='submit' name='enroll' value='Template uitrollen'></td>";
+	$text[] = "		<td colspan='$derde' align='center'><input type='submit' name='enroll_empty' value='Leeg uitrollen'></td>";
 	$text[] = "	</tr>";
 	$text[] = "</table>";
 	$text[] = "</form>";

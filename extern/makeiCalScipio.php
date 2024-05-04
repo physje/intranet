@@ -29,6 +29,9 @@ $header[] = "END:VTIMEZONE";
 
 $footer[] = "END:VCALENDAR";
 
+#################
+# Kerkdiensten	#
+#################
 $sql_dienst = "SELECT $DienstID FROM $TableDiensten WHERE $DienstEind > ". (time()-(31*24*60*60));
 $result_dienst = mysqli_query($db, $sql_dienst);
 if($row_dienst = mysqli_fetch_array($result_dienst)) {		
@@ -147,6 +150,9 @@ if($row_dienst = mysqli_fetch_array($result_dienst)) {
 }
 
 
+#################
+# Agenda		  	#
+#################
 $sql_agenda = "SELECT * FROM $TableAgenda WHERE $AgendaEind > ". (time()-(31*24*60*60));
 $result_agenda = mysqli_query($db, $sql_agenda);
 if($row_agenda = mysqli_fetch_array($result_agenda)) {
@@ -164,7 +170,43 @@ if($row_agenda = mysqli_fetch_array($result_agenda)) {
 		$ics[] = "TRANSP:TRANSPARENT";
 		$ics[] = "END:VEVENT";
 		$vEvent[] = implode("\r\n", $ics);
-	}while($row_agenda = mysqli_fetch_array($result_agenda));
+	} while($row_agenda = mysqli_fetch_array($result_agenda));
+}
+
+
+#################
+# Open Kerk			#
+#################
+$sql_open = "SELECT FROM_UNIXTIME($OKRoosterEind, '%d.%m.%Y') as ndate, $OKRoosterEind FROM $TableOpenKerkRooster WHERE $OKRoosterEind > ". (time()-(24*60*60)) ." GROUP BY ndate";
+$result_open = mysqli_query($db, $sql_open);
+if($row_open = mysqli_fetch_array($result_open)) {
+	do {
+		$maand	= date("m", $row_open[$OKRoosterEind]);
+		$dag		= date("d", $row_open[$OKRoosterEind]);
+		$jaar		= date("Y", $row_open[$OKRoosterEind]);
+		
+		$sql_ok_min = "SELECT MIN($OKRoosterStart) as eerste FROM $TableOpenKerkRooster WHERE $OKRoosterEind BETWEEN ". mktime(0, 0, 0, $maand, $dag, $jaar) ." AND ". mktime(23, 59, 59, $maand, $dag, $jaar);
+		$result_ok_min = mysqli_query($db, $sql_ok_min);
+		$row_ok_min = mysqli_fetch_array($result_ok_min);
+
+		$sql_ok_max = "SELECT MAX($OKRoosterEind) as laatste FROM $TableOpenKerkRooster WHERE $OKRoosterEind BETWEEN ". mktime(0, 0, 0, $maand, $dag, $jaar) ." AND ". mktime(23, 59, 59, $maand, $dag, $jaar);
+		$result_ok_max = mysqli_query($db, $sql_ok_max);
+		$row_ok_max = mysqli_fetch_array($result_ok_max);
+		
+		# Eigenlijke ICS-data
+		$ics = array();
+		$ics[] = "BEGIN:VEVENT";	
+		$ics[] = "UID:OPENKERK-". $row_open['ndate'];
+		$ics[] = "DTSTART;TZID=Europe/Amsterdam:". date("Ymd\THis", $row_ok_min['eerste']);
+		$ics[] = "DTEND;TZID=Europe/Amsterdam:". date("Ymd\THis", $row_ok_max['laatste']);	
+		$ics[] = "LAST-MODIFIED:". date("Ymd\THis", time());
+		$ics[] = "SUMMARY:Open Kerk";
+		#$ics[] = 'DESCRIPTION:'.urldecode($row_agenda[$AgendaDescr]);
+		$ics[] = "STATUS:CONFIRMED";	
+		$ics[] = "TRANSP:TRANSPARENT";
+		$ics[] = "END:VEVENT";
+		$vEvent[] = implode("\r\n", $ics);		
+	} while($row_open = mysqli_fetch_array($result_open));
 }
 
 $file_name = '../ical/scipio.ics';
@@ -182,5 +224,4 @@ echo $ScriptURL.$file_name .'<br>';
 //echo implode("\r\n", $ics);
 
 toLog('debug', '', '', 'Agenda export voor Scipio aangemaakt');
-
 ?>
