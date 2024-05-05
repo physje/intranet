@@ -2618,11 +2618,11 @@ function get2FACode($user) {
 	}
 }
 
-function storeLogin($id, $ip) {
-	global $TableLogins, $LoginLid, $LoginIP, $LoginTijd, $db;
+function storeLogin($id, $ip, $agent) {
+	global $TableLogins, $LoginLid, $LoginIP, $LoginAgent, $LoginTijd, $db;
 	global $TableUsers, $UserLastVisit, $UserID;
 	
-	$sql_1 = "INSERT INTO $TableLogins ($LoginLid, $LoginIP, $LoginTijd) VALUES ($id, '$ip', NOW())";
+	$sql_1 = "INSERT INTO $TableLogins ($LoginLid, $LoginIP, $LoginAgent, $LoginTijd) VALUES ($id, '$ip', '$agent', NOW())";
 	$sql_2 = "UPDATE $TableUsers SET $UserLastVisit = '". time() ."' WHERE $UserID like ". $_SESSION['ID'];
 	
 	if(mysqli_query($db, $sql_1) AND mysqli_query($db, $sql_2)) {

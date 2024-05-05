@@ -114,7 +114,7 @@ if(!$_SESSION['logged']) {
 	}
 		
 	# Long-term store
-	storeLogin($_SESSION['ID'], $_SERVER['REMOTE_ADDR']);
+	storeLogin($_SESSION['ID'], $_SERVER['REMOTE_ADDR'], $_SERVER['HTTP_USER_AGENT']);
 	
 	# Schrijf inlog in logfiles weg
 	toLog('info', $_SESSION['ID'], '', 'Inlogpoging vanaf '. $_SERVER['REMOTE_ADDR']);
