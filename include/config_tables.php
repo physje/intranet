@@ -311,6 +311,7 @@ $TableLogins								= "logins";
 $LoginID										= "id";
 $LoginLid										= "lid";
 $LoginIP										= "ip";
+$LoginAgent									= "agent";
 $LoginTijd									= "tijd";
                                                   					
 $ArchiveDir										= 'trinitas';
