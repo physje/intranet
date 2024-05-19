@@ -16,12 +16,6 @@ $requiredUserGroups = array(1, $beheerder);
 $cfgProgDir = 'auth/';
 include($cfgProgDir. "secure.php");
 
-	
-$leden = getMembers('all');
-foreach($leden as $lid) {
-	$namen[$lid] = makeName($lid, 6);
-}
-
 if(isset($_POST['change_members'])) {
 	removeGroupLeden($_POST['groep']);
 	
@@ -32,7 +26,8 @@ if(isset($_POST['change_members'])) {
 	}
 	
 	if($_POST['nieuw_lid'] != '') {
-		$newLidID = array_search($_POST['nieuw_lid'], $namen);
+		$delen = explode('|', $_POST['nieuw_lid']);
+		$newLidID = $delen[1];
 		addGroupLid($newLidID, $_POST['groep']);
 	}
 	toLog('info', $_SESSION['ID'], '', 'Leden '. $groupData['naam'] .' gewijzigd');
@@ -60,8 +55,9 @@ foreach($GroupMembers as $lid) {
 }
 
 $block_1[] = "<br>";
-$block_1[] = "Voer naam in om persoon toe te voegen.<br>";
-$block_1[] = "<input type='text' name='nieuw_lid' id=\"namen\"><br>";
+$block_1[] = "Selecteer lid om toe te voegen (na selectie wordt nummer toegevoegd).<br>";
+#$block_1[] = "<input type='text' name='nieuw_lid' id=\"namen\"><br>";
+$block_1[] = "<input type='text' id='namen_input' name='nieuw_lid' placeholder='Begin met typen van naam'><br>";
 $block_1[] = "<p class='after_table'><input type='submit' name='change_members' value='Leden wijzigen'></p>";
 $block_1[] = "</form>";
 
@@ -80,19 +76,36 @@ $block_3[] = "Als in dit blok geen tekst staat, zal er geen externe pagina getoo
 $block_3[] = "<p class='after_table'><input type='submit' name='change_site' value='Bewaren'></p>";
 $block_3[] = "</form>";
 
-$header[] = "	<link rel=\"stylesheet\" href=\"//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css\">";
-$header[] = "	<link rel=\"stylesheet\" href=\"/resources/demos/style.css\">";
-$header[] = "	<script src=\"https://code.jquery.com/jquery-1.12.4.js\"></script>";
-$header[] = "	<script src=\"https://code.jquery.com/ui/1.12.1/jquery-ui.js\"></script>";
-$header[] = "		<script>";
-$header[] = "		$(function() {";
-$header[] = '		var availableTags = ["'. implode('", "', $namen) ."\"];\n";
-$header[] = "		$( \"#namen\" ).autocomplete({";
-$header[] = "		source: availableTags";
-$header[] = "		});";
-$header[] = "	});";
-$header[] = "</script>";
+#$header[] = "	<link rel=\"stylesheet\" href=\"//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css\">";
+#$header[] = "	<link rel=\"stylesheet\" href=\"/resources/demos/style.css\">";
+#$header[] = "	<script src=\"https://code.jquery.com/jquery-1.12.4.js\"></script>";
+#$header[] = "	<script src=\"https://code.jquery.com/ui/1.12.1/jquery-ui.js\"></script>";
+#$header[] = "		<script>";
+#$header[] = "		$(function() {";
+#$header[] = '		var availableTags = ["'. implode('", "', $namen) ."\"];\n";
+#$header[] = "		$( \"#namen\" ).autocomplete({";
+#$header[] = "		source: availableTags";
+#$header[] = "		});";
+#$header[] = "	});";
+#$header[] = "</script>";
 
+$header[] = "	<!-- jQuery library -->";
+$header[] = "	<script src='https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js'></script>";
+$header[] = "	<!-- jQuery UI library -->";
+$header[] = "	<link rel='stylesheet' href='https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/themes/smoothness/jquery-ui.css'>";
+$header[] = "	<script src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js'></script>";
+$header[] = "	<script>";
+$header[] = "		$(function() {";
+$header[] = "		    $(\"#namen_input\").autocomplete({";
+$header[] = "		    	minLength: 3,";
+$header[] = "		    	source: \"autocomplete_namen.php\",";
+$header[] = "		    	select: function( event, ui ) {";
+$header[] = "		    		event.preventDefault();";
+$header[] = "		    		$(\"#namen_input\").val(ui.item.selector);";
+$header[] = "		    	}";
+$header[] = "		    });";
+$header[] = "		});";
+$header[] = "		</script>";
 
 echo showCSSHeader(array('default'), $header);
 echo '<div class="content_vert_kolom_full">'.NL;
