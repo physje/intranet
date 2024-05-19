@@ -30,7 +30,7 @@ $ip			= getParam('ip', '');
 
 $where[] = "$LoginTijd BETWEEN '$bJaar-$bMaand-$bDag $bUur:$bMin:00' AND '$eJaar-$eMaand-$eDag $eUur:$eMin:59'";
 if($lid != '') $where[] = "$LoginLid = $lid";
-if($ip != '') $where[] = "$LoginIP like '%$ip%'";
+if($ip != '') $where[] = "($LoginIP like '%$ip%' OR $LoginIP like '$ip%' OR $LoginIP like '%$ip')";
 
 $sql		= "SELECT * FROM $TableLogins WHERE ". implode(' AND ', $where);
 $result	= mysqli_query($db, $sql);
@@ -43,7 +43,7 @@ if($row		= mysqli_fetch_array($result)) {
 		$rij[] = "	<td>&nbsp;</td>";
 		$rij[] = "	<td>". ($row[$LoginLid] != '' ? "<a href='?lid=". $row[$LoginLid] ."'>". makeName($row[$LoginLid], 5) ."</a>" : "&nbsp;") ."</td>";
 		$rij[] = "	<td>&nbsp;</td>";
-		$rij[] = "	<td>". ($row[$LoginIP] != '' ? "<a href='?ip=". $row[$LoginIP] ."'>". $row[$LoginIP] ."</a>" : "&nbsp;") ."</td>";
+		$rij[] = "	<td>". ($row[$LoginIP] != '' ? "<a href='https://who.is/whois-ip/ip-address/". $row[$LoginIP] ."'>". $row[$LoginIP] ."</a>" : "&nbsp;") ."</td>";
 		$rij[] = "	<td>&nbsp;</td>";
 		$rij[] = "	<td>". $row[$LoginAgent] ."</td>";
 		$rij[] = "</tr>";
