@@ -11,6 +11,7 @@ include($cfgProgDir. "secure.php");
 
 $leden = getGroupMembers(43);
 $namen = array_merge($leden, $extern);
+$vakantieDagen = array(3, 5); # 3 = woensdag, 5 = vrijdag
 
 if(isset($_POST['save'])) {
 	$template = $_POST['template']; 
@@ -46,27 +47,47 @@ if(isset($_POST['save'])) {
 			$nieuweDag	= mktime(0,0,0,date('n', $start),(date('j', $start)+$offset));
 			$week				= fmod(strftime('%W', $nieuweDag), 2);
 			$dag				= strftime('%w', $nieuweDag);
-						
-			foreach($uren as $slotID => $slot) {
-				$startTijd = mktime($slot[0],$slot[1],0,date('n', $nieuweDag),date('j', $nieuweDag), date('Y', $nieuweDag));
-				$eindTijd = mktime($slot[2],$slot[3],0,date('n', $nieuweDag),date('j', $nieuweDag), date('Y', $nieuweDag));
-				
-				$vulling = getOpenKerkVulling($template, $week, $dag, $slotID);
-								
-				foreach($vulling as $pos => $persoon) {
+									
+			# Als er een leeg rooster moet worden uitgerold, alleen op vakantie dagen
+			# anders alle dagen van de week
+			if((isset($_POST['empty']) AND in_array($dag, $vakantieDagen)) OR !isset($_POST['empty'])) {											
+				foreach($uren as $slotID => $slot) {
+					$startTijd = mktime($slot[0],$slot[1],0,date('n', $nieuweDag),date('j', $nieuweDag), date('Y', $nieuweDag));
+					$eindTijd = mktime($slot[2],$slot[3],0,date('n', $nieuweDag),date('j', $nieuweDag), date('Y', $nieuweDag));
+														
+					$vulling = getOpenKerkVulling($template, $week, $dag, $slotID);
+					
+					#var_dump($vulling);
+					
 					# Met name voor vakanties -als het rooster op inschrijven gaat- is het handig om
 					# een leeg rooster uit te rollen.
 					# Als $_POST['empty'] bekend is, moet er geen persoon worden ingevuld
-					if(isset($_POST['empty'])) $persoon = 0;
+					if(isset($_POST['empty'])) {
+						if(!array_key_exists(0, $vulling)) {
+							#echo 'bestaat niet';
+							$vulling[0] = 0;
+						}
+						
+						if(!array_key_exists(0, $vulling)) {
+							$vulling[1] = 0;
+							#echo 'bestaat niet';
+						}
+					}
 					
-					$sql_insert = "INSERT INTO $TableOpenKerkRooster ($OKRoosterStart, $OKRoosterEind, $OKRoosterPos, $OKRoosterPersoon) VALUES ('$startTijd', '$eindTijd', '$pos', '$persoon')";
-					#$sql_insert = "INSERT INTO $TableOpenKerkRooster ($OKRoosterStart, $OKRoosterPos, $OKRoosterPersoon) VALUES (".$tijdstip .", $pos, '$persoon')";
-					mysqli_query($db, $sql_insert);
-					
-					#echo time2str("%a %d %b %H:%M", $startTijd) .'-'. time2str("%H:%M", $eindTijd) .'|'. $pos .'|'. makeName($persoon, 5) .'<br>';					
+					#echo $template.'|'.$week.'|'.$dag.'|'.$slotID.'|'.count($vulling) .'<br>';
+														
+					foreach($vulling as $pos => $persoon) {						
+						#if(isset($_POST['empty'])) $persoon = 0;
+						
+						$sql_insert = "INSERT INTO $TableOpenKerkRooster ($OKRoosterStart, $OKRoosterEind, $OKRoosterPos, $OKRoosterPersoon) VALUES ('$startTijd', '$eindTijd', '$pos', '$persoon')";
+						#$sql_insert = "INSERT INTO $TableOpenKerkRooster ($OKRoosterStart, $OKRoosterPos, $OKRoosterPersoon) VALUES (".$tijdstip .", $pos, '$persoon')";
+						mysqli_query($db, $sql_insert);
+						
+						#echo time2str("%a %d %b %H:%M", $startTijd) .'-'. time2str("%H:%M", $eindTijd) .'|'. $pos .'|'. makeName($persoon, 5) .'<br>';					
+					}
 				}
 			}
-						
+			
 			$offset++;
 		} while($nieuweDag < $eind);
 		
@@ -199,7 +220,7 @@ if(isset($_POST['save'])) {
 	}
 		
 	$text[] = "		<td colspan='$derde' align='center'><input type='submit' name='enroll' value='Template uitrollen'></td>";
-	$text[] = "		<td colspan='$derde' align='center'><input type='submit' name='enroll_empty' value='Leeg uitrollen'></td>";
+	$text[] = "		<td colspan='$derde' align='center'><input type='submit' name='enroll_empty' value='Alleen vakantiedag, incl. lege velden'></td>";
 	$text[] = "	</tr>";
 	$text[] = "</table>";
 	$text[] = "</form>";

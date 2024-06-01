@@ -14,14 +14,14 @@ include($cfgProgDir. "secure.php");
 $searchTerm = $_GET['term']; 
  
 // Fetch matched data from the database 
-$query = $db->query("SELECT * FROM $TableUsers WHERE ($UserAchternaam LIKE '".$searchTerm."%' OR $UserMeisjesnaam LIKE '".$searchTerm."%' OR $UserVoornaam LIKE '".$searchTerm."%') AND $UserStatus like 'actief' ORDER BY $UserAchternaam ASC"); 
+$query = $db->query("SELECT * FROM $TableUsers WHERE ($UserAchternaam LIKE '".$searchTerm."%' OR $UserMeisjesnaam LIKE '".$searchTerm."%' OR $UserTussenvoegsel LIKE '".$searchTerm."%' OR $UserVoornaam LIKE '".$searchTerm."%') AND $UserStatus like 'actief' ORDER BY $UserAchternaam ASC"); 
  
 // Generate array with skills data 
 $namenData = array(); 
 if($query->num_rows > 0){ 
     while($row = $query->fetch_assoc()){ 
         #$data['id'] = $row[$UserID];
-        $data['value'] = makeName($row[$UserID], 6);
+        $data['value'] = makeName($row[$UserID], 6).seniorJunior($row[$UserID]);
         $data['selector'] = makeName($row[$UserID], 5) .'|'. $row[$UserID];
         array_push($namenData, $data); 
     } 

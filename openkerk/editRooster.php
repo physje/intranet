@@ -1,4 +1,8 @@
 <?php
+# keuze voor 2 dagen
+# bij wijzigingen niet hele dag weghalen
+# 'back up tuingroep' & 'back up schoonmaak' 
+
 include_once('config.php');
 include_once('../include/functions.php');
 include_once('../include/config.php');
@@ -15,20 +19,20 @@ $blokGrootte = (31*24*60*60);
 
 if(isset($_POST['save'])) {
 	# Doorloop alle tijden
-	# Verwijder de huidige
+	# Verwijder de huidige <- op verzoek van Maarten verwijderd
 	# En voer de nieuwe in
 	# item[$datum][$slotID][$positie]
 	foreach($_POST['item'] as $datum => $sub) {
 		foreach($sub as $slotID => $sub2) {
 			$start	= mktime($uren[$slotID][0], $uren[$slotID][1], 0, date('n', $datum), date('j', $datum), date('Y', $datum));
 			$eind		= mktime($uren[$slotID][2], $uren[$slotID][3], 0, date('n', $datum), date('j', $datum), date('Y', $datum));
-			foreach($sub2 as $pos => $persoon) {							
-				$sql_delete = "DELETE FROM $TableOpenKerkRooster WHERE $OKRoosterStart = $start AND $OKRoosterPos = $pos";
-				if(!mysqli_query($db, $sql_delete)) {
-				    echo $sql_delete .'<br>';
-				}
-				
+			foreach($sub2 as $pos => $persoon) {				
 				if($persoon != '') {					
+					$sql_delete = "DELETE FROM $TableOpenKerkRooster WHERE $OKRoosterStart = $start AND $OKRoosterPos = $pos";
+					if(!mysqli_query($db, $sql_delete)) {
+					    echo $sql_delete .'<br>';
+					}					
+					
 					$sql_insert = "INSERT INTO $TableOpenKerkRooster ($OKRoosterStart, $OKRoosterEind, $OKRoosterPos, $OKRoosterPersoon) VALUES ('$start', '$eind', '$pos', '$persoon')";
 					if(!mysqli_query($db, $sql_insert)) {
 					    echo $sql_insert .'<br>';

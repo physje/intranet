@@ -26,6 +26,20 @@ $extern['extern01'] = array(
 	'naam' => 'Henk Oostra',
 	'voornaam' => 'Henk'
 	);
+	
+$extern['externTG'] = array(
+	'geslacht' => 'M',
+	'mail' => '',
+	'naam' => 'back-up tuingroep',
+	'voornaam' => ''
+	);
 
+
+$extern['externSM'] = array(
+	'geslacht' => 'M',
+	'mail' => '',
+	'naam' => 'back-up schoonmaak',
+	'voornaam' => ''
+	);
 
 ?>

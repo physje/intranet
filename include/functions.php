@@ -265,7 +265,7 @@ function getMemberDetails($id) {
 	$data['hash_long']			= $row[$UserHashLong];	
 	$data['jaar']						= substr($row[$UserGeboorte], 0, 4);
 	$data['maand']					= substr($row[$UserGeboorte], 5, 2);
-	$data['dag']						= substr($row[$UserGeboorte], 8, 2);
+	$data['dag']						= substr($row[$UserGeboorte], 8, 2);		
 	$data['geb_unix']				= mktime(0,0,0,$data['maand'],$data['dag'],$data['jaar']);
 	$data['geboorte']				= substr($row[$UserGeboorte], 0, 8).'01';
 	$data['straat']					= $row[$UserStraat];
@@ -670,6 +670,58 @@ function convertName($naam) {
 
 	return $data;
 }
+
+function seniorJunior($id) {
+	global $TableUsers, $UserID, $UserVoornaam, $UserTussenvoegsel, $UserAchternaam, $UserMeisjesnaam, $UserGeboorte;
+	
+	$hoofdpersoon = getMemberDetails($id);
+	$voor			= $hoofdpersoon['voornaam'];
+	$tussen		= $hoofdpersoon['tussenvoegsel'];
+	$achter		= $hoofdpersoon['achternaam'];
+	$meisje		= $hoofdpersoon['meisjesnaam'];
+				
+	# Als ik de global $db gebruik gaat het niet goed met speciale karakters
+	# daarom initialiseer ik een nieuwe
+	$db = connect_db();
+	
+	$sql = "SELECT * FROM $TableUsers WHERE	$UserID NOT LIKE $id AND $UserVoornaam like '$voor' AND $UserTussenvoegsel like '$tussen' AND $UserAchternaam like '$achter' AND $UserMeisjesnaam like '$meisje'";
+	$result = mysqli_query($db, $sql);
+	
+	if(mysqli_num_rows($result) == 0) {
+		return '';
+	} else {
+		$geboorte = array();
+		$geboorte[$id] = $hoofdpersoon['geb_unix'];
+		
+		$row = mysqli_fetch_array($result);
+		
+		do {
+			$anderID = $row[$UserID];
+			$anderData = getMemberDetails($anderID);
+			$geboorte[$anderID] = $anderData['geb_unix'];			
+		} while($row = mysqli_fetch_array($result));
+		
+		asort($geboorte, SORT_NATURAL);
+		
+		$aantal = count($geboorte);
+		$i = 0;
+				
+		foreach($geboorte as $key => $value) {
+			if($key == $id) $pos = $i;
+			$i++;
+		}
+		
+		if($aantal == 2) {
+			if($pos == 0)	return ' sr.';
+			if($pos == 1)	return ' jr.';
+		} elseif($aantal == 3) {
+			if($pos == 0)	return ' sr.';
+			if($pos == 1)	return ' mr.';
+			if($pos == 2)	return ' jr.';
+		}		
+	}	
+}
+
 
 function makeName($id, $type) {
 	global $TableUsers, $UserID, $UserVoorletters, $UserVoornaam, $UserTussenvoegsel, $UserAchternaam, $UserMeisjesnaam;
@@ -2516,7 +2568,7 @@ function getOpenKerkVulling($template, $week, $dag, $slot) {
 	
 	$data = array();
 	$sql = "SELECT * FROM $TableOpenKerkTemplate WHERE $OKTemplateTemplate = $template AND $OKTemplateWeek = '$week' AND $OKTemplateDag = '$dag' AND $OKTemplateTijd = '$slot'";
-	
+		
 	$result = mysqli_query($db, $sql);
 
 	if($row	= mysqli_fetch_array($result)) {
@@ -2525,6 +2577,9 @@ function getOpenKerkVulling($template, $week, $dag, $slot) {
 			$data[$positie] = $row[$OKTemplatePersoon];
 		} while($row = mysqli_fetch_array($result));
 	}
+	
+	#echo $sql;
+	#var_dump($data);
 	
 	return $data;	
 }
