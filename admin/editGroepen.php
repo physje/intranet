@@ -58,6 +58,15 @@ if(isset($_POST['save'])) {
 		toLog('error', $_SESSION['ID'], '', 'Kon leden van '. $groepData['naam'] .' niet verwijderen');
 	}
 	
+	$sql_rooster = "DELETE FROM $TableRoosters WHERE $RoostersGroep = ". $_POST['id'];
+	if(mysqli_query($db, $sql_rooster)) {
+		$text[] = "Rooster met <i>". $groepData['naam'] ."</i> verwijderd<br>";
+		toLog('debug', $_SESSION['ID'], '', 'rooster met '. $groepData['naam'] .' verwijderd');
+	} else {
+		$text[] = "Probleem met verwijderen rooster met <i>". $groepData['naam'] ."</i><br>";
+		toLog('error', $_SESSION['ID'], '', 'Kon rooster met '. $groepData['naam'] .' niet verwijderen');
+	}
+	
 } elseif(isset($_REQUEST['id']) OR isset($_REQUEST['new'])) {	
 	$text[] = "<form action='". htmlspecialchars($_SERVER['PHP_SELF']) ."' method='post'>";
 	
