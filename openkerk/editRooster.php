@@ -27,15 +27,22 @@ if(isset($_POST['save'])) {
 			$start	= mktime($uren[$slotID][0], $uren[$slotID][1], 0, date('n', $datum), date('j', $datum), date('Y', $datum));
 			$eind		= mktime($uren[$slotID][2], $uren[$slotID][3], 0, date('n', $datum), date('j', $datum), date('Y', $datum));
 			foreach($sub2 as $pos => $persoon) {				
+				# Alleen als er een persoon is geselecteerd moet de data verwijderd worden en een nieuwe ingeschreven
+				# Reden hiervoor is dat in de zomer er een leeg rooster wordt uitgerold wat dan door de leden zelf ingevuld moet worden
+				# de eerste persoon die inschrijft gaat goed, maar zodat die op opslaan klikt, worden alle lege velden verwijderd
+				# daarom alleen verwijderen als er een persoon geselecteerd is.
+				#
+				# Deze werkwijze levert problemen op als er een persoon geselecteerd was, die dan op zijn beurt weer verwijderd moet worden
+				# daarom kan men ook [verwijderen] selecteren (value = 'leeg'), dan wordt dat item verwijderd
 				if($persoon != '') {
 					$sql_delete = "DELETE FROM $TableOpenKerkRooster WHERE $OKRoosterStart = $start AND $OKRoosterPos = $pos";
 					if(!mysqli_query($db, $sql_delete)) {
-					    echo $sql_delete .'<br>';
+					  echo $sql_delete .'<br>';
 					}					
 					
-					$sql_insert = "INSERT INTO $TableOpenKerkRooster ($OKRoosterStart, $OKRoosterEind, $OKRoosterPos, $OKRoosterPersoon) VALUES ('$start', '$eind', '$pos', '$persoon')";
+					$sql_insert = "INSERT INTO $TableOpenKerkRooster ($OKRoosterStart, $OKRoosterEind, $OKRoosterPos, $OKRoosterPersoon) VALUES ('$start', '$eind', '$pos', '". ($persoon == 'leeg' ? '' : $persoon) ."')";
 					if(!mysqli_query($db, $sql_insert)) {
-					    echo $sql_insert .'<br>';
+						echo $sql_insert .'<br>';
 					}
 				}
 			}
@@ -110,6 +117,8 @@ $datum = $start;
 
 while($datum < $lastDag) {
 	foreach($uren as $slotID => $slot) {
+		$row = array();
+		$opnemen = false;
 		
 		$datum		= mktime(0, 0, 0, date('n', $start), (date('j', $start)+$dag), date('Y', $start));
 		$tijdstip	= mktime($slot[0], $slot[1], 0, date('n', $start), (date('j', $start)+$dag), date('Y', $start));
@@ -119,13 +128,14 @@ while($datum < $lastDag) {
 		#echo "datum : ". date("d-m-Y", $datum)."<br>";
 		
 		if(($minDag <= $weekdag) AND ($weekdag <= $maxDag)) {
-			$text[] = "<tr>";
-			$text[] = "		<td valign='top'>".time2str("%a %d %b %Y %H:%M", $tijdstip)." - ".time2str("%H:%M", $eind)."</td>";
-			$text[] = "		<td valign='top'>";
+			$row[] = "<tr>";
+			$row[] = "		<td valign='top'>".time2str("%a %d %b %Y %H:%M", $tijdstip)." - ".time2str("%H:%M", $eind)."</td>";
+			$row[] = "		<td valign='top'>";
 					
 			for($positie=0; $positie < $aantal ; $positie++) {
-				$text[] = "<select name='item[$datum][$slotID][$positie]'>";
-				$text[] = "<option value=''></option>";
+				$row[] = "<select name='item[$datum][$slotID][$positie]'>";
+				$row[] = "<option value=''></option>";
+				$row[] = "<option value='leeg'>[ verwijderen ]</option>";
 				
 				$sql_vulling		= "SELECT * FROM $TableOpenKerkRooster WHERE $OKRoosterStart = ". $tijdstip ." AND $OKRoosterPos = ". $positie;
 				
@@ -134,21 +144,30 @@ while($datum < $lastDag) {
 				$result_vulling = mysqli_query($db, $sql_vulling);
 				$row_vulling		= mysqli_fetch_array($result_vulling);
 				
+				# Als er data in de database staat moet deze rij opgenomen worden
+				# Mocht deze dag niet voorkomen in de database, dan hoeft deze rij ook niet opgenomen te worden
+				if(isset($row_vulling[$OKRoosterPersoon]))	$opnemen = true;
+				
 				foreach($namenArray as $id => $naam) {
-					$text[] = "<option value='$id'". ((isset($row_vulling[$OKRoosterPersoon]) AND $row_vulling[$OKRoosterPersoon] == $id) ? ' selected' : '') .">". $naam ."</option>";												
+					$row[] = "<option value='$id'". ((isset($row_vulling[$OKRoosterPersoon]) AND $row_vulling[$OKRoosterPersoon] == $id) ? ' selected' : '') .">". $naam ."</option>";												
 				}	
 								
-				$text[] = "		</select>&nbsp;";
+				$row[] = "		</select>&nbsp;";
 			}	
 			
 			$sql_opmerking = "SELECT * FROM $TableOpenKerkOpmerking WHERE $OKOpmerkingTijd = $tijdstip";
 			$result_opmerking = mysqli_query($db, $sql_opmerking);
 			$row_opmerking = mysqli_fetch_array($result_opmerking);
 						
-			$text[] = "</td>";
-			$text[] = "<td><input type='text' name='opmerking[$tijdstip]' value='". (isset($row_opmerking[$OKOpmerkingOpmerking]) ? urldecode($row_opmerking[$OKOpmerkingOpmerking]) : '') ."'></td>";
-			$text[] = "</tr>";
-		}				
+			$row[] = "</td>";
+			$row[] = "<td><input type='text' name='opmerking[$tijdstip]' value='". (isset($row_opmerking[$OKOpmerkingOpmerking]) ? urldecode($row_opmerking[$OKOpmerkingOpmerking]) : '') ."'></td>";
+			$row[] = "</tr>";
+		}
+		
+		if($opnemen) {
+			$text = array_merge($text, $row);
+		}
+			
 	}
 	$dag++;
 }
