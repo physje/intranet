@@ -2563,6 +2563,38 @@ function setDeclaratieActionDate($declaratie, $tijd = 0) {
 }
 
 
+function getOpenKerkTemplates() {
+	global $db, $TableOpenKerkTemplateNames, $OpenKerkTemplateNamesID, $OpenKerkTemplateNamesName;
+	
+	$data = array();
+	
+	$sql = "SELECT * FROM $TableOpenKerkTemplateNames ORDER BY $OpenKerkTemplateNamesID";	
+	$result = mysqli_query($db, $sql);
+	if($row	= mysqli_fetch_array($result)) {
+		do {
+			$ID = $row[$OpenKerkTemplateNamesID];
+			$data[$ID] = $row[$OpenKerkTemplateNamesName];
+		} while($row = mysqli_fetch_array($result));
+	}
+		
+	return $data;	
+}
+
+
+function getOpenKerkTemplateName($id) {
+	global $db, $TableOpenKerkTemplateNames, $OpenKerkTemplateNamesID, $OpenKerkTemplateNamesName;
+	
+	$data = array();
+	
+	$sql = "SELECT * FROM $TableOpenKerkTemplateNames WHERE $OpenKerkTemplateNamesID = $id";	
+	$result = mysqli_query($db, $sql);
+	if($row	= mysqli_fetch_array($result)) {
+		return $row[$OpenKerkTemplateNamesName];	
+	}	
+}
+
+
+
 function getOpenKerkVulling($template, $week, $dag, $slot) {
 	global $db, $TableOpenKerkTemplate, $OKTemplateTemplate, $OKTemplateWeek, $OKTemplateDag, $OKTemplateTijd, $OKTemplatePos, $OKTemplatePersoon;
 	
@@ -2582,6 +2614,24 @@ function getOpenKerkVulling($template, $week, $dag, $slot) {
 	#var_dump($data);
 	
 	return $data;	
+}
+
+function getStore($template, $week, $dag, $slot, $pos) {
+	global $db, $TableOpenKerkTemplate, $OKTemplateTemplate, $OKTemplateWeek, $OKTemplateDag, $OKTemplateTijd, $OKTemplatePos, $OKTemplateEnroll;
+	
+	$sql = "SELECT $OKTemplateEnroll FROM $TableOpenKerkTemplate WHERE $OKTemplateTemplate = $template AND $OKTemplateWeek = '$week' AND $OKTemplateDag = '$dag' AND $OKTemplateTijd = '$slot' AND $OKTemplatePos = '$pos'";
+	$result = mysqli_query($db, $sql);
+	
+	if(mysqli_num_rows($result) == 1) {
+		$row = mysqli_fetch_array($result);		
+		if($row[$OKTemplateEnroll] == 1) {
+			return true;
+		} else {
+			return false;
+		}
+	} else {
+		return false;
+	}
 }
 
 

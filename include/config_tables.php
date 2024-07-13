@@ -259,8 +259,13 @@ $GebedKalContactPersoon       = "contactpersoon";
 $GebedKalMailadres            = "mailadres";
 $GebedKalOpmerkingen          = "opmerking";
 
+$TableOpenKerkTemplateNames		= "openkerk_template_namen";
+$OpenKerkTemplateNamesID			= "id";
+$OpenKerkTemplateNamesName		= "naam";
+
 $TableOpenKerkTemplate				= "openkerk_template";
 $OKTemplateTemplate						= "template";
+$OKTemplateEnroll							= "enroll";
 $OKTemplateWeek								= "week";
 $OKTemplateDag								= "dag";
 $OKTemplateTijd								= "tijd";

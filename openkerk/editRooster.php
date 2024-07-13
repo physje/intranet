@@ -10,30 +10,43 @@ include_once('../include/HTML_TopBottom.php');
 
 $db = connect_db();
 $cfgProgDir = '../auth/';
-$requiredUserGroups = array(1, 43);
+$requiredUserGroups = array(1, 43, 44);
 include($cfgProgDir. "secure.php");
+
+$beheerders = getGroupMembers(44);
+$admin = getGroupMembers(1);
 
 $leden = getGroupMembers(43);
 $namen = array_merge($leden, $extern);
 $blokGrootte = (31*24*60*60);
 
+if(isset($_REQUEST['delete'])) {
+	#$text[] = "Verwijderen";
+	#$text[] = date('H:i', $_REQUEST['t']);
+	
+	$sql_delete = "DELETE FROM $TableOpenKerkRooster WHERE $OKRoosterStart = ". $_REQUEST['t'];
+	if(!mysqli_query($db, $sql_delete)) {
+		echo $sql_delete .'<br>';
+	} else {
+		$sql_delete = "DELETE FROM $TableOpenKerkOpmerking WHERE $OKOpmerkingTijd = ". $_REQUEST['t'];
+		if(!mysqli_query($db, $sql_delete)) {
+			echo $sql_delete .'<br>';
+		} else {
+			$text[] = '<i>Moment is van het rooster verwijderd</i>';
+		}
+	}
+}
+
 if(isset($_POST['save'])) {
 	# Doorloop alle tijden
-	# Verwijder de huidige <- op verzoek van Maarten verwijderd
+	# Verwijder het betreffende item als het leeg is
 	# En voer de nieuwe in
 	# item[$datum][$slotID][$positie]
 	foreach($_POST['item'] as $datum => $sub) {
 		foreach($sub as $slotID => $sub2) {
 			$start	= mktime($uren[$slotID][0], $uren[$slotID][1], 0, date('n', $datum), date('j', $datum), date('Y', $datum));
 			$eind		= mktime($uren[$slotID][2], $uren[$slotID][3], 0, date('n', $datum), date('j', $datum), date('Y', $datum));
-			foreach($sub2 as $pos => $persoon) {				
-				# Alleen als er een persoon is geselecteerd moet de data verwijderd worden en een nieuwe ingeschreven
-				# Reden hiervoor is dat in de zomer er een leeg rooster wordt uitgerold wat dan door de leden zelf ingevuld moet worden
-				# de eerste persoon die inschrijft gaat goed, maar zodat die op opslaan klikt, worden alle lege velden verwijderd
-				# daarom alleen verwijderen als er een persoon geselecteerd is.
-				#
-				# Deze werkwijze levert problemen op als er een persoon geselecteerd was, die dan op zijn beurt weer verwijderd moet worden
-				# daarom kan men ook [verwijderen] selecteren (value = 'leeg'), dan wordt dat item verwijderd
+			foreach($sub2 as $pos => $persoon) {							
 				if($persoon != '') {
 					$sql_delete = "DELETE FROM $TableOpenKerkRooster WHERE $OKRoosterStart = $start AND $OKRoosterPos = $pos";
 					if(!mysqli_query($db, $sql_delete)) {
@@ -110,6 +123,11 @@ $text[] = "<table>";
 $text[] = "<tr>";
 $text[] = "		<td colspan='2'>&nbsp;</td>";
 $text[] = "		<td>Opmerkingen</td>";
+
+if(in_array($_SESSION['ID'], $admin) or in_array($_SESSION['ID'], $beheerders)) {
+	$text[] = "		<td>&nbsp;</td>";
+}
+
 $text[] = "</tr>";
 
 $dag = 0;
@@ -161,6 +179,9 @@ while($datum < $lastDag) {
 						
 			$row[] = "</td>";
 			$row[] = "<td><input type='text' name='opmerking[$tijdstip]' value='". (isset($row_opmerking[$OKOpmerkingOpmerking]) ? urldecode($row_opmerking[$OKOpmerkingOpmerking]) : '') ."'></td>";
+			if(in_array($_SESSION['ID'], $admin) or in_array($_SESSION['ID'], $beheerders)) {
+				$row[] = "		<td><a href='?delete=1&t=$tijdstip' title='Verwijder dit moment uit het rooster'><img src='../images/delete.png'></a></td>";
+			}
 			$row[] = "</tr>";
 		}
 		

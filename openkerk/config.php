@@ -20,13 +20,31 @@ $dagNamen[4] = 'Donderdag';
 $dagNamen[5] = 'Vrijdag';
 $dagNamen[6] = 'Zaterdag';
 
+/*
 $extern['extern01'] = array(
 	'geslacht' => 'M',
 	'mail' => 'paheng48@gmail.com',
 	'naam' => 'Henk Oostra',
 	'voornaam' => 'Henk'
 	);
-	
+*/
+
+$extern['extern02'] = array(
+	'geslacht' => 'M',
+	'mail' => 'antonlesley487@proton.me',
+	'naam' => 'Daniel van Hemert',
+	'voornaam' => 'Daniel'
+	);	
+
+/*
+$extern['extern03'] = array(
+	'geslacht' => '',
+	'mail' => '',
+	'naam' => 'Leeg',
+	'voornaam' => ''
+	);	
+*/
+
 $extern['externTG'] = array(
 	'geslacht' => 'M',
 	'mail' => '',

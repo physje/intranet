@@ -11,7 +11,6 @@ include($cfgProgDir. "secure.php");
 
 $leden = getGroupMembers(43);
 $namen = array_merge($leden, $extern);
-$openKerkTemplateNamen = getOpenKerkTemplates();
 
 # De boel opslaan indien op 'opslaan' is geklikt, of als op uitrollen is geklikt
 # maar alleen als het 1ste scherm van uitrollen moet worden getoond
@@ -234,7 +233,7 @@ if(isset($_POST['enroll'])) {
 	$text[] = "	<tr>";
 	$text[] = "		<td><select name='template'>";
 	$text[] = "		<option value=''></option>";
-		
+	
 	foreach($openKerkTemplateNamen as $id => $naam) {
 		$text[] = "<option value='$id'>$naam</option>";
 	}
