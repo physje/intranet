@@ -7,6 +7,7 @@ $requiredUserGroups = array(1, 28, 52);
 $cfgProgDir = 'auth/';
 include($cfgProgDir. "secure.php");
 $db = connect_db();
+$new = array();
 
 # Als er op een knop gedrukt is, het rooster wegschrijven
 if(isset($_POST['save']) OR isset($_POST['maanden'])) {	
@@ -14,7 +15,7 @@ if(isset($_POST['save']) OR isset($_POST['maanden'])) {
 		$details	= getKerkdienstDetails($dienst);
 		
 		# Admin mag dag, maand en jaar wijzigen
-		if(in_array(1, getMyGroups($_SESSION['ID']))) {
+		if(in_array(1, getMyGroups($_SESSION['useID']))) {
 			$dag				= $_POST['sDag'][$dienst];
 			$maand			= $_POST['sMaand'][$dienst];
 			$jaar				= $_POST['sJaar'][$dienst];
@@ -38,7 +39,7 @@ if(isset($_POST['save']) OR isset($_POST['maanden'])) {
 						
 		mysqli_query($db, $sql);
 	}
-	toLog('info', $_SESSION['ID'], '', 'Diensten bijgewerkt');
+	toLog('info', $_SESSION['realID'], '', 'Diensten bijgewerkt');
 }
 
 if(isset($_REQUEST['new'])) {
@@ -47,7 +48,7 @@ if(isset($_REQUEST['new'])) {
 	$query	= "INSERT INTO $TableDiensten ($DienstStart, $DienstEind) VALUES ('$start', '$eind')";
 	$result = mysqli_query($db, $query);
 			
-	toLog('info', $_SESSION['ID'], '', 'Dienst voor '. date("d-m-Y", $start) .' toegevoegd');
+	toLog('info', $_SESSION['realID'], '', 'Dienst voor '. date("d-m-Y", $start) .' toegevoegd');
 }
 
 if(isset($_REQUEST['delete']) AND !isset($_REQUEST['cancel'])) {
@@ -57,7 +58,7 @@ if(isset($_REQUEST['delete']) AND !isset($_REQUEST['cancel'])) {
 		$query	= "DELETE FROM $TableDiensten WHERE $DienstID = ". $_REQUEST['id'];
 		$result = mysqli_query($db, $query);
 			
-		toLog('info', $_SESSION['ID'], '', formatDagdeel($details['start']).' van '. date("d-m-Y", $details['start']) .' ['. $_REQUEST['id'] .'] verwijderd');
+		toLog('info', $_SESSION['realID'], '', formatDagdeel($details['start']).' van '. date("d-m-Y", $details['start']) .' ['. $_REQUEST['id'] .'] verwijderd');
 	} else {
 		$text[] = "<form method='post' action='$_SERVER[PHP_SELF]'>";
 		$text[] = "<input type='hidden' name='delete' value='ja'>";
@@ -112,7 +113,7 @@ if(!isset($_REQUEST['delete']) OR (isset($_REQUEST['delete']) AND isset($_REQUES
 	$text[] = "	<td>Eind</td>";
 	$text[] = "	<td>Bijzonderheid</td>";
 	$text[] = "	<td>Trouw/Begrafenis</td>";
-	if(in_array(1, getMyGroups($_SESSION['ID']))) {
+	if(in_array(1, getMyGroups($_SESSION['useID']))) {
 		$text[] = "	<td>&nbsp;</td>";
 	}
 	$text[] = "</tr>";
@@ -128,7 +129,7 @@ if(!isset($_REQUEST['delete']) OR (isset($_REQUEST['delete']) AND isset($_REQUES
 		
 		$text[] = "<tr>";
 		
-		if(in_array(1, getMyGroups($_SESSION['ID']))) {
+		if(in_array(1, getMyGroups($_SESSION['useID']))) {
 			$sDag			= date("d", $data['start']);
 			$sMaand		= date("m", $data['start']);
 			$sJaar		= date("Y", $data['start']);
@@ -174,7 +175,7 @@ if(!isset($_REQUEST['delete']) OR (isset($_REQUEST['delete']) AND isset($_REQUES
 		$text[] = "	</select></td>";	
 		$text[] = "	<td><input type='text' name='bijz[$dienst]' value=\"". $data['bijzonderheden'] ."\" size='30'></td>";	
 		$text[] = "	<td><input type='checkbox' name='spec[$dienst]' value='1'". ($data['speciaal'] == 1 ? ' checked' : '') ."></td>";	
-		if(in_array(1, getMyGroups($_SESSION['ID']))) {
+		if(in_array(1, getMyGroups($_SESSION['useID']))) {
 			$text[] = "	<td align='right'><a href='?delete=ja&id=$dienst'><img src='images\delete.png'></a></td>";
 		}
 		$text[] = "</tr>";
@@ -195,7 +196,7 @@ if(!isset($_REQUEST['delete']) OR (isset($_REQUEST['delete']) AND isset($_REQUES
 	$text[] = "<p class='after_table'><input type='submit' name='prev' value='Vorige 3 maanden'>&nbsp;<input type='submit' name='save' value='Diensten opslaan'>&nbsp;<input type='submit' name='next' value='Volgende 3 maanden'></p>";
 	$text[] = "</form>";
 	
-	if(in_array(1, getMyGroups($_SESSION['ID']))) {
+	if(in_array(1, getMyGroups($_SESSION['useID']))) {
 		$new[] = "<a href='?new'>Extra dienst toevoegen</a>";
 	}
 }

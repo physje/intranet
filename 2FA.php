@@ -9,26 +9,26 @@ $cfgProgDir = 'auth/';
 include($cfgProgDir. "secure.php");
 include_once($cfgProgDir.'../include/google2fa/2FA.php');
 
-if(get2FACode($_SESSION['ID']) != '') {
+if(get2FACode($_SESSION['useID']) != '') {
 	if(isset($_POST['entered_2FA'])) {
 		$google2fa = new \PragmaRX\Google2FA\Google2FA();
-		$secret_key = get2FACode($_SESSION['ID']);
+		$secret_key = get2FACode($_SESSION['useID']);
   	
 		if(!$google2fa->verifyKey($secret_key, $_POST['entered_2FA'])) {
-			toLog('debug', $_SESSION['ID'], '', 'Foutieve 2FA-code bij verwijderen 2FA');
+			toLog('debug', $_SESSION['realID'], '', 'Foutieve 2FA-code bij verwijderen 2FA');
 			$phpSP_message = 'Onjuiste code';
 			include($cfgProgDir . "2FA.php");
 			exit;
 		} else {
-			$sql_update = "UPDATE $TableUsers SET $User2FA = '' WHERE $UserID = ". $_SESSION['ID'];
+			$sql_update = "UPDATE $TableUsers SET $User2FA = '' WHERE $UserID = ". $_SESSION['useID'];
 			
 			if(mysqli_query($db, $sql_update)) {
 				$text[] = "De 2FA is succesvol verwijderd.<br>";
 				$text[] = "Vanaf nu log je alleen nog maar in met je gebruikersnaam & wachtwoord.";
-				toLog('info', $_SESSION['ID'], '', '2FA verwijderd');
+				toLog('info', $_SESSION['realID'], '', '2FA verwijderd');
 			} else {
 				$text[] = "Er zijn problemen met het verwijderen van 2FA.";
-				toLog('error', $_SESSION['ID'], '', 'Kon 2FA niet verwijderen');
+				toLog('error', $_SESSION['realID'], '', 'Kon 2FA niet verwijderen');
 			}			
 		}
 	} elseif(isset($_POST['next'])) {
@@ -40,7 +40,7 @@ if(get2FACode($_SESSION['ID']) != '') {
 		$text[] = "<tr>";
 		$text[] = "	<td>Je staat op het punt 2FA uit te zetten. Vanuit het oogpunt van veiligheid is dat niet aan te raden.<br>";
 		$text[] = " Mocht je op 'Volgende' klikken, dan zal je voor de laatste keer gevraagd worden een 2FA-code in te voeren.<br>";
-		$text[] = "Dit om zeker te weten dat jij ". makeName($_SESSION['ID'], 5) ." bent";
+		$text[] = "Dit om zeker te weten dat jij ". makeName($_SESSION['useID'], 5) ." bent";
 		$text[] = "	</td>";
 		$text[] = "</tr>";
 		$text[] = "<tr>";
@@ -54,18 +54,19 @@ if(get2FACode($_SESSION['ID']) != '') {
 	}		
 } else {
 	if(isset($_POST['save'])) {
-		$sql_update = "UPDATE $TableUsers SET $User2FA = '". $_POST['secret'] ."' WHERE $UserID = ". $_SESSION['ID'];
+		$sql_update = "UPDATE $TableUsers SET $User2FA = '". $_POST['secret'] ."' WHERE $UserID = ". $_SESSION['useID'];
 			
 		if(mysqli_query($db, $sql_update)) {
 			$text[] = "De 2FA is ingesteld.<br>";
-			$text[] = "Vanaf nu moet je naast je gebruikersnaam & wachtwoord, ook inloggen met de code die je app genereert.";
-			toLog('info', $_SESSION['ID'], '', '2FA ingesteld');
+			$text[] = "Vanaf nu moet je naast je gebruikersnaam & wachtwoord, ook inloggen met de code die je app genereert.<br>";
+			$text[] = "Dit geldt overigens alleen als je inlogd van een onbekende computer. Mocht je eerder van dezelfde computer ingelogd hebben, dan zal de 2FA-code niet gevraagd worden.";
+			toLog('info', $_SESSION['realID'], '', '2FA ingesteld');
 		} else {
 			$text[] = "Er zijn problemen met het instellen van 2FA.";
-			toLog('error', $_SESSION['ID'], '', 'Kon 2FA niet instellen');
+			toLog('error', $_SESSION['realID'], '', 'Kon 2FA niet instellen');
 		}		
 	} elseif(isset($_POST['next'])) {
-		$personData = getMemberDetails($_SESSION['ID']);
+		$personData = getMemberDetails($_SESSION['useID']);
 		
 		$google2fa = new \PragmaRX\Google2FA\Google2FA();
 		$secret_key = $google2fa->generateSecretKey();
@@ -89,7 +90,7 @@ if(get2FACode($_SESSION['ID']) != '') {
 		$text[] = "</table>";
 		$text[] = "</form>";
 		
-		toLog('debug', $_SESSION['ID'], '', '2FA-code gegenereerd en getoond');		
+		toLog('debug', $_SESSION['realID'], '', '2FA-code gegenereerd en getoond');		
 	} else {
 		$text[] = "Om 2 factor authenticatie (2FA) aan te zetten, heb je een app op je telefoon, tablet of computer nodig die een code kan genereren.<br>";
 		$text[] = "&nbsp;<br>";

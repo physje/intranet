@@ -15,7 +15,7 @@ if(isset($_REQUEST['hash'])) {
 		$showLogin = true;
 	} else {
 		$showLogin = false;
-		$_SESSION['ID'] = $dader;
+		$_SESSION['useID'] = $dader;
 		toLog('info', $dader, $_REQUEST['id'], 'profiel mbv hash');
 	}
 }
@@ -32,7 +32,7 @@ if(isset($_POST['save_data'])) {
 
 # Welk profiel wordt opgevraagd
 # Indien dat niet bekend is, dan het eigen profiel
-$id = getParam('id', $_SESSION['ID']);
+$id = getParam('id', $_SESSION['useID']);
 $personData = getMemberDetails($id);
 
 # Wie mag wat zien
@@ -59,7 +59,7 @@ $aToon['familie'] = false;
 
 # Wijkteam mag alleen details van eigen wijk zien
 $wijkteam = getWijkteamLeden($personData['wijk']);
-if(in_array($_SESSION['ID'], $wijkteam)) {
+if(in_array($_SESSION['useID'], $wijkteam)) {
 	$aToon['adres'] = true;
 	$aToon['PC'] = true;
 	$aToon['tel'] = true;
@@ -69,7 +69,7 @@ if(in_array($_SESSION['ID'], $wijkteam)) {
 }
 
 # Van je eigen profiel mag je weer meer zien
-if($_SESSION['ID'] == $id) {
+if($_SESSION['useID'] == $id) {
 	$aToon['adres'] = true;
 	$aToon['PC'] = true;
 	$aToon['tel'] = true;
@@ -80,7 +80,7 @@ if($_SESSION['ID'] == $id) {
 }
 
 # Admin mag alles zien
-if(in_array(1, getMyGroups($_SESSION['ID']))) {
+if(in_array(1, getMyGroups($_SESSION['useID']))) {
 	$aToon['adres'] = true;
 	$aToon['PC'] = true;
 	$aToon['tel'] = true;
@@ -102,13 +102,13 @@ if(in_array(1, getMyGroups($_SESSION['ID']))) {
 }
 
 # Als je als admin bent ingelogd zie je alle leden, anders alleen de actieve
-$familie = getFamilieleden($id, in_array(1, getMyGroups($_SESSION['ID'])));
+$familie = getFamilieleden($id, in_array(1, getMyGroups($_SESSION['useID'])));
 
-toLog('debug', $_SESSION['ID'], $id, 'profiel bekeken');
+toLog('debug', $_SESSION['realID'], $id, 'profiel bekeken');
 
 
 # De admin kan hier zaken wijzigen, dus even een formulier aanmaken
-if(in_array(1, getMyGroups($_SESSION['ID']))) {
+if(in_array(1, getMyGroups($_SESSION['useID']))) {
 	$blok[] = "	<form method='post' action='$_SERVER[PHP_SELF]'>";	
 	$blok[] = "	<input type='hidden' name='id' value='$id'>";	
 }
@@ -120,8 +120,8 @@ if($aToon['adres']) {
 	$blok[] = "	<tr>";
 	$blok[] = "		<td><b>Adres</b></td>";
 	$blok[] = "		<td><a href='https://www.google.nl/maps/place/". urlencode($personData['straat'] .' '. $personData['huisnummer'].$personData['huisletter'] .', '. $personData['PC'] .' '. $personData['plaats']) ."' target='_blank'>". $personData['straat'] .' '. $personData['huisnummer'].$personData['huisletter'].($personData['toevoeging'] != '' ? '-'.$personData['toevoeging'] : '')."</a>";
-	if(!in_array($_SESSION['ID'], $familie)) {
-		$ownData = getMemberDetails($_SESSION['ID']);
+	if(!in_array($_SESSION['useID'], $familie)) {
+		$ownData = getMemberDetails($_SESSION['useID']);
 		$blok[] = " <a href='https://www.google.nl/maps/dir/". urlencode($ownData['straat'] .' '. $ownData['huisnummer'].$ownData['huisletter'] .', '. $ownData['PC'] .' '. $ownData['plaats']) ."/". urlencode($personData['straat'] .' '. $personData['huisnummer'].$personData['huisletter'] .', '. $personData['PC'] .' '. $personData['plaats']) ."' title='klik hier om de route te tonen' target='_blank'><img src='images/GoogleMaps.png'></a>";
 	}
 	$blok[] = "	</td>";
@@ -252,12 +252,12 @@ if($aToon['visit'] AND $personData['visit'] > 0) {
 
 $blok[] = "	</table>".NL;
 
-if(in_array(1, getMyGroups($_SESSION['ID']))) {	
+if(in_array(1, getMyGroups($_SESSION['useID']))) {	
 	$blok[] = "<p class='after_table'><input type='submit' name='save_data' value='Opslaan'></p>";
 }
 
 # De admin kan hier zaken wijzigen, dus even een formulier aangemaakt
-if(in_array(1, getMyGroups($_SESSION['ID'])))	$blok[] = "</form>";
+if(in_array(1, getMyGroups($_SESSION['useID'])))	$blok[] = "</form>";
 
 # Familie alleen tonen indien dat nodig is en er familie is 
 if($aToon['familie'] AND count($familie) > 1) {

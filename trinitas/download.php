@@ -30,7 +30,7 @@ if(isset($_REQUEST['fileID'])) {
 	# hoeft niet gelogd te worden dat hij/zij iets download
 	# dat is hierboven namelijk al gebeurd		
 	if($showLogin) {
-		toLog('info', $_SESSION['ID'], '', 'Download Trinitas '. $data['jaar'] .' - '. $data['nr']);
+		toLog('info', $_SESSION['realID'], '', 'Download Trinitas '. $data['jaar'] .' - '. $data['nr']);
 	}
 	
 	# In de database opnemen dat dit exemplaar een keer gedownload is

@@ -29,10 +29,10 @@ if(isset($_POST['save'])) {
 		
 	if(mysqli_query($db, $sql)) {
 		$text[] = "Rooster opgeslagen";	
-		toLog('info', $_SESSION['ID'], '', 'Rooster '. $_POST['naam'] .' '. ($actie == 'add' ? 'toegevoegd' : 'gewijzigd'));
+		toLog('info', $_SESSION['realID'], '', 'Rooster '. $_POST['naam'] .' '. ($actie == 'add' ? 'toegevoegd' : 'gewijzigd'));
 	} else {
 		$text[] = "Probleem met opslaan rooster";
-		toLog('error', $_SESSION['ID'], '', 'Kon rooster '. $_POST['naam'] .' niet '. ($actie == 'add' ? 'toevoegen' : 'wijzigen'));
+		toLog('error', $_SESSION['realID'], '', 'Kon rooster '. $_POST['naam'] .' niet '. ($actie == 'add' ? 'toevoegen' : 'wijzigen'));
 	}
 } elseif(isset($_POST['delete'])) {
 	$text[] = "<form action='". htmlspecialchars($_SERVER['PHP_SELF']) ."' method='post'>";
@@ -51,10 +51,10 @@ if(isset($_POST['save'])) {
 	$sql = "DELETE FROM $TableRoosters WHERE $RoostersID = ". $_POST['id'];
 	if(mysqli_query($db, $sql)) {
 		$text[] = "Rooster <i>". $roosterData['naam'] ."</i> verwijderd<br>";
-		toLog('info', $_SESSION['ID'], '', 'Rooster '. $roosterData['naam'] .' verwijderd');
+		toLog('info', $_SESSION['realID'], '', 'Rooster '. $roosterData['naam'] .' verwijderd');
 	} else {
 		$text[] = "Probleem met verwijderen rooster <i>". $roosterData['naam'] ."</i><br>";
-		toLog('error', $_SESSION['ID'], '', 'Kon roosterData '. $roosterData['naam'] .' niet verwijderen');
+		toLog('error', $_SESSION['realID'], '', 'Kon roosterData '. $roosterData['naam'] .' niet verwijderen');
 	}	
 } elseif(isset($_REQUEST['id']) OR isset($_REQUEST['new'])) {	
 	$text[] = "<form action='". htmlspecialchars($_SERVER['PHP_SELF']) ."' method='post'>";

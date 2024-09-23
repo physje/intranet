@@ -114,7 +114,7 @@ if(count($roosters) > 0) {
 	$text[] = "<p>";
 	$text[] = "<a href='?rs=". implode('|', $roosters)."&pdf' class='button'>sla op als PDF</a>";
 	
-	toLog('debug', $_SESSION['ID'], '', 'Combi-rooster '. implode('|', $roosters) .' bekeken');
+	toLog('debug', $_SESSION['realID'], '', 'Combi-rooster '. implode('|', $roosters) .' bekeken');
 } else {
 	$roosters = getRoosters(0);
 	$first[] = "<form>";
@@ -169,7 +169,7 @@ if(isset($_REQUEST['pdf'])) {
 	
 	$pdf->makeTable($header, $data);
   $pdf->Output('I', $title.'_'.date('Y_m_d').'.pdf');
-  toLog('debug', $_SESSION['ID'], '', 'Combi-rooster '. implode('|', $roosters) .' in PDF bekeken');
+  toLog('debug', $_SESSION['realID'], '', 'Combi-rooster '. implode('|', $roosters) .' in PDF bekeken');
 } else {
 	echo showCSSHeader(array('default', 'table_default'));	
 	if(isset($first)) {

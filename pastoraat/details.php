@@ -18,19 +18,19 @@ if(isset($_REQUEST['ID'])) {
 		
 	$inWijkteam = false;	
 	
-	if(array_key_exists($_SESSION['ID'], $wijkteam)) {
-		$rol = $wijkteam[$_SESSION['ID']];
+	if(array_key_exists($_SESSION['useID'], $wijkteam)) {
+		$rol = $wijkteam[$_SESSION['useID']];
 		$inWijkteam = true;		
 	}
 	
-	if(in_array(49, getMyGroups($_SESSION['ID']))) {	
+	if(in_array(49, getMyGroups($_SESSION['useID']))) {	
 		$inWijkteam = true;
 		$rol = 1;
 	}
 	
 	# Zit je in het wijkteam, dan mag je verder
-	if(($inWijkteam AND $rol <> 3 AND $rol <> 6) OR $_SESSION['ID'] == $pastor) {		
-		$bezoeken = getPastoraleBezoeken($_REQUEST['ID'], $_SESSION['ID']);
+	if(($inWijkteam AND $rol <> 3 AND $rol <> 6) OR $_SESSION['useID'] == $pastor) {		
+		$bezoeken = getPastoraleBezoeken($_REQUEST['ID'], $_SESSION['useID']);
 		
 		if(count($bezoeken) > 0) {
 			$text[] = "<table>";
@@ -51,7 +51,7 @@ if(isset($_REQUEST['ID'])) {
 				$details = getPastoraalbezoekDetails($bezoek);
 				
 				$text[] = "<tr>";
-				if($details['indiener'] == $_SESSION['ID']) {
+				if($details['indiener'] == $_SESSION['useID']) {
 					$text[] = "	<td><a href='edit.php?id=$bezoek'><img src='../images/wisselen.png' height='16' title='Wijzig dit bezoek'></a></td>";
 				} else {
 					$text[] = "	<td>&nbsp;</td>";

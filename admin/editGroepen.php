@@ -21,10 +21,10 @@ if(isset($_POST['save'])) {
 	
 	if(mysqli_query($db, $sql)) {
 		$text[] = "Groep opgeslagen";	
-		toLog('info', $_SESSION['ID'], '', 'Groep '. $_POST['naam'] .' '. ($actie == 'add' ? 'toegevoegd' : 'gewijzigd'));
+		toLog('info', $_SESSION['realID'], '', 'Groep '. $_POST['naam'] .' '. ($actie == 'add' ? 'toegevoegd' : 'gewijzigd'));
 	} else {
 		$text[] = "Probleem met opslaan groep";
-		toLog('error', $_SESSION['ID'], '', 'Kon groep '. $_POST['naam'] .' niet '. ($actie == 'add' ? 'toevoegen' : 'wijzigen'));
+		toLog('error', $_SESSION['realID'], '', 'Kon groep '. $_POST['naam'] .' niet '. ($actie == 'add' ? 'toevoegen' : 'wijzigen'));
 	}
 } elseif(isset($_POST['delete'])) {
 	$text[] = "<form action='". htmlspecialchars($_SERVER['PHP_SELF']) ."' method='post'>";
@@ -43,28 +43,28 @@ if(isset($_POST['save'])) {
 	$sql_groep = "DELETE FROM $TableGroups WHERE $GroupID = ". $_POST['id'];
 	if(mysqli_query($db, $sql_groep)) {
 		$text[] = "Groep <i>". $groepData['naam'] ."</i> verwijderd<br>";
-		toLog('info', $_SESSION['ID'], '', 'Groep '. $groepData['naam'] .' verwijderd');
+		toLog('info', $_SESSION['realID'], '', 'Groep '. $groepData['naam'] .' verwijderd');
 	} else {
 		$text[] = "Probleem met verwijderen groep <i>". $groepData['naam'] ."</i><br>";
-		toLog('error', $_SESSION['ID'], '', 'Kon groep '. $groepData['naam'] .' niet verwijderen');
+		toLog('error', $_SESSION['realID'], '', 'Kon groep '. $groepData['naam'] .' niet verwijderen');
 	}
 	
 	$sql_leden = "DELETE FROM $TableGrpUsr WHERE $GrpUsrGroup = ". $_POST['id'];
 	if(mysqli_query($db, $sql_leden)) {
 		$text[] = "Leden van <i>". $groepData['naam'] ."</i> verwijderd<br>";
-		toLog('debug', $_SESSION['ID'], '', 'leden van '. $groepData['naam'] .' verwijderd');
+		toLog('debug', $_SESSION['realID'], '', 'leden van '. $groepData['naam'] .' verwijderd');
 	} else {
 		$text[] = "Probleem met verwijderen leden van <i>". $groepData['naam'] ."</i><br>";
-		toLog('error', $_SESSION['ID'], '', 'Kon leden van '. $groepData['naam'] .' niet verwijderen');
+		toLog('error', $_SESSION['realID'], '', 'Kon leden van '. $groepData['naam'] .' niet verwijderen');
 	}
 	
 	$sql_rooster = "DELETE FROM $TableRoosters WHERE $RoostersGroep = ". $_POST['id'];
 	if(mysqli_query($db, $sql_rooster)) {
 		$text[] = "Rooster met <i>". $groepData['naam'] ."</i> verwijderd<br>";
-		toLog('debug', $_SESSION['ID'], '', 'rooster met '. $groepData['naam'] .' verwijderd');
+		toLog('debug', $_SESSION['realID'], '', 'rooster met '. $groepData['naam'] .' verwijderd');
 	} else {
 		$text[] = "Probleem met verwijderen rooster met <i>". $groepData['naam'] ."</i><br>";
-		toLog('error', $_SESSION['ID'], '', 'Kon rooster met '. $groepData['naam'] .' niet verwijderen');
+		toLog('error', $_SESSION['realID'], '', 'Kon rooster met '. $groepData['naam'] .' niet verwijderen');
 	}
 	
 } elseif(isset($_REQUEST['id']) OR isset($_REQUEST['new'])) {	

@@ -6,17 +6,19 @@ $cfgProgDir = 'auth/';
 include($cfgProgDir. "secure.php");
 $db = connect_db();
 
-$memberData = getMemberDetails($_SESSION['ID']);
+$memberData = getMemberDetails($_SESSION['useID']);
 
 # Data over gebruiker icm roosters opvragen
 $allRoosters = getRoosters(0);
-$myRoosters = getRoosters($_SESSION['ID']);
-$myRoosterBeheer = getMyRoostersBeheer($_SESSION['ID']);
+$myRoosters = getRoosters($_SESSION['useID']);
+$myRoosterBeheer = getMyRoostersBeheer($_SESSION['useID']);
 
 # Data over gebruiker icm groepen opvragen
 $allGroups = getAllGroups();	
-$myGroups = getMyGroups($_SESSION['ID']);
-$myGroepBeheer = getMyGroupsBeheer($_SESSION['ID']);
+$myGroups = getMyGroups($_SESSION['useID']);
+$myGroepBeheer = getMyGroupsBeheer($_SESSION['useID']);
+
+#$myRealGroups = getMyGroups($_SESSION['realID']);
 
 $blocks = array();
 
@@ -139,7 +141,7 @@ if(in_array(1, $myGroups) OR in_array(8, $myGroups) OR in_array(9, $myGroups) OR
 	$hit = array();	
 	foreach($wijkArray as $wijk) {
 		$wijkteam = getWijkteamLeden($wijk);		
-		if(array_key_exists($_SESSION['ID'], $wijkteam))	$hit[] = $wijk;
+		if(array_key_exists($_SESSION['useID'], $wijkteam))	$hit[] = $wijk;
 	}
 	$BezoekLinks['pastoraat/index.php'. ((count($hit) == 1) ? '?wijk='. $hit[0] : '')] = 'Registratie bezoeken'. ((count($hit) == 1) ? ' wijk '. $hit[0] : '');
 	
@@ -252,6 +254,7 @@ if(in_array(1, $myGroups)) {
 	$adminLinks['admin/logins.php'] = 'Zoek binnen logins';
 	$adminLinks['admin/reviewRechten.php'] = 'Bekijk groepen en rechten';
 	$adminLinks['admin/configuration.php'] = 'Configuratie-variabelen';
+	$adminLinks['admin/vermommen.php'] = 'Vermommen';
 	$adminLinks['onderhoud/cleanUpDb.php'] = 'Verwijder oude diensten';
 	$adminLinks['../dumper/'] = 'Dumper';
 	
@@ -337,7 +340,11 @@ $blocks[] = $links;
 
 
 # Site
-$site[] = "<b>Ingelogd als ". makeName($_SESSION['ID'], 5)."</b>";
+if(isset($_SESSION['fakeID'])) {
+	$site[] = "<b>Ingelogd als ". makeName($_SESSION['fakeID'], 5)."</b> (werkelijk ". makeName($_SESSION['realID'], 5) .")";
+} else {
+	$site[] = "<b>Ingelogd als ". makeName($_SESSION['useID'], 5)."</b>";
+}
 $site[] = "<a href='account.php' target='_blank'>Account</a>";
 $site[] = "<a href='profiel.php' target='_blank'>Profiel</a>";
 $site[] = "<a href='ledenlijst.php' target='_blank'>Ledenlijst</a>";

@@ -16,8 +16,8 @@ if(isset($_REQUEST['wijk'])) {
 	
 	$inWijkteam = false;
 	
-	if(array_key_exists($_SESSION['ID'], $wijkteam)) {
-		$rol = $wijkteam[$_SESSION['ID']];
+	if(array_key_exists($_SESSION['useID'], $wijkteam)) {
+		$rol = $wijkteam[$_SESSION['useID']];
 		$inWijkteam = true;		
 	}
 	
@@ -37,7 +37,7 @@ if(isset($_REQUEST['wijk'])) {
 				}
 			}
 			
-			toLog('info', $_SESSION['ID'], '', 'Verdeling ouderlingen/pastoraal bezoekers wijk '. $wijk .' aangepast');
+			toLog('info', $_SESSION['realID'], '', 'Verdeling ouderlingen/pastoraal bezoekers wijk '. $wijk .' aangepast');
 			
 			$text[] = "<b>Wijzigingen opgeslagen</b><br><br>Je kan dit venster sluiten om terug te gaan naar het wijk-overzicht.<p>&nbsp;</p>";
 		}

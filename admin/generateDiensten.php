@@ -186,7 +186,7 @@ if(count($querys) > 0) {
 	}
 	
 	$text[] = "Diensten toegevoegd<br>";
-	toLog('info', $_SESSION['ID'], '', 'nieuwe diensten aangemaakt');
+	toLog('info', $_SESSION['realID'], '', 'nieuwe diensten aangemaakt');
 }
 
 # Dit kan pas doorlopen worden als hierboven de diensten zijn ingevoerd

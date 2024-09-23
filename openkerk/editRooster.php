@@ -124,7 +124,7 @@ $text[] = "<tr>";
 $text[] = "		<td colspan='2'>&nbsp;</td>";
 $text[] = "		<td>Opmerkingen</td>";
 
-if(in_array($_SESSION['ID'], $admin) or in_array($_SESSION['ID'], $beheerders)) {
+if(in_array($_SESSION['useID'], $admin) or in_array($_SESSION['useID'], $beheerders)) {
 	$text[] = "		<td>&nbsp;</td>";
 }
 
@@ -179,7 +179,7 @@ while($datum < $lastDag) {
 						
 			$row[] = "</td>";
 			$row[] = "<td><input type='text' name='opmerking[$tijdstip]' value='". (isset($row_opmerking[$OKOpmerkingOpmerking]) ? urldecode($row_opmerking[$OKOpmerkingOpmerking]) : '') ."'></td>";
-			if(in_array($_SESSION['ID'], $admin) or in_array($_SESSION['ID'], $beheerders)) {
+			if(in_array($_SESSION['useID'], $admin) or in_array($_SESSION['useID'], $beheerders)) {
 				$row[] = "		<td><a href='?delete=1&t=$tijdstip' title='Verwijder dit moment uit het rooster'><img src='../images/delete.png'></a></td>";
 			}
 			$row[] = "</tr>";

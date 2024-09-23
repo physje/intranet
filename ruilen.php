@@ -74,10 +74,10 @@ if(isset($_REQUEST['dader']) AND isset($_REQUEST['slachtoffer'])) {
 	toLog('info', $dader, $slachtoffer, "geruild voor '". $roosterData['naam'] ."'");
 } elseif($slachtoffer != '' OR $dader != '') {
 	$diensten = getAllKerkdiensten(true);
-	$familie			= getFamilieleden($_SESSION['ID']);
+	$familie			= getFamilieleden($_SESSION['useID']);
 	
 	if(isset($_REQUEST['dader'])) {
-		$text[] = "Met wie wil ". ($_REQUEST['dader'] == $_SESSION['ID'] ? 'je' : makeName($_REQUEST['dader'], 1)) ." ruilen ?<br>";
+		$text[] = "Met wie wil ". ($_REQUEST['dader'] == $_SESSION['useID'] ? 'je' : makeName($_REQUEST['dader'], 1)) ." ruilen ?<br>";
 	} else {
 		$text[] = "Welke dienst neemt ". makeName($slachtoffer, 5) ." over?<br>";	
 	}

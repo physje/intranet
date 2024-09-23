@@ -71,38 +71,46 @@ if(!password_verify($password, $userArray["$cfgDbPasswordfield"])) {
 }
 
 if(isset($userArray["$cfgDbUserIDfield"]) && !empty($cfgDbUserIDfield)) {
-	$_SESSION['ID'] = stripslashes($userArray["$cfgDbUserIDfield"]);	
+	$_SESSION['realID'] = stripslashes($userArray["$cfgDbUserIDfield"]);	
+}
+
+# Om te kunnen vermommen als een ander lid
+if(isset($_SESSION['fakeID'])) {
+	$_SESSION['useID'] = $_SESSION['fakeID'];
+} else {
+	$_SESSION['useID'] = $_SESSION['realID'];
 }
 
 if(isset($requiredUserGroups)) {
-	$authorisatieArray = getMyGroups($userArray["$cfgDbUserIDfield"]);
+	$authorisatieArray = getMyGroups($_SESSION['useID']);
 	$overlap = array_intersect ($requiredUserGroups, $authorisatieArray);
 	
 	if(count($overlap) == 0) {
 		# this user does not have the required user level
-		toLog('info', $_SESSION['ID'], '', 'Ingelogd maar onvoldoende rechten voor '. $_SERVER['PHP_SELF']);		
+		toLog('info', $_SESSION['useID'], '', 'Ingelogd maar onvoldoende rechten voor '. $_SERVER['PHP_SELF']);		
 		$phpSP_message = $strUserNotAllowed;
 		include($cfgProgDir . "interface.php");
 		exit;
 	}		
 }
 
+
+
 # Als je voor de eerste keer hier komt (lees, nog nooit het einde van dit script gehaald)
 # moet gecheckt worden of je een 2FA moet invoeren
 # en moet de administratie worden bijgewerkt
 if(!$_SESSION['logged']) {
-	$secret_key = get2FACode($_SESSION['ID']);
+	$secret_key = get2FACode($_SESSION['realID']);
 	
 	# Alleen als er een secret-key bekend is, en 2FA dus aan staat
 	# de loop van 2FA doorlopen
 	if($secret_key != '') {
-	#if($secret_key != '' AND !knownLoginFromIP($_SESSION['ID'], $_SERVER['REMOTE_ADDR'])) {
 		if(isset($_POST['entered_2FA'])) {
 			include_once($cfgProgDir.'../include/google2fa/2FA.php');
   		$google2fa = new \PragmaRX\Google2FA\Google2FA();
   		
 			if(!$google2fa->verifyKey($secret_key, $_POST['entered_2FA'])) {			
-				toLog('debug', $_SESSION['ID'], '', 'Foutieve 2FA-code');
+				toLog('debug', $_SESSION['realID'], '', 'Foutieve 2FA-code');
 				$phpSP_message = 'Onjuiste code';
 				include($cfgProgDir . "2FA.php");
 				exit;
@@ -114,10 +122,10 @@ if(!$_SESSION['logged']) {
 	}
 		
 	# Long-term store
-	storeLogin($_SESSION['ID'], $_SERVER['REMOTE_ADDR'], $_SERVER['HTTP_USER_AGENT']);
+	storeLogin($_SESSION['realID'], $_SERVER['REMOTE_ADDR'], $_SERVER['HTTP_USER_AGENT']);
 	
 	# Schrijf inlog in logfiles weg
-	toLog('info', $_SESSION['ID'], '', 'Inlogpoging vanaf '. $_SERVER['REMOTE_ADDR']);
+	toLog('info', $_SESSION['realID'], '', 'Inlogpoging vanaf '. $_SERVER['REMOTE_ADDR']);
 }
 
 

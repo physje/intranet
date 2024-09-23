@@ -26,7 +26,7 @@ if($productieOmgeving) {
 
 $iban = $opm_cluco = $relatie = '';
 
-$gebruikersData = getMemberDetails($_SESSION['ID']);
+$gebruikersData = getMemberDetails($_SESSION['useID']);
 $page[] = "<form method='post' action='". $_SERVER['PHP_SELF']."' enctype='multipart/form-data'>";
 
 # Mocht er een van en naar adres bekend zijn, reken dam de reiskosten uit
@@ -98,14 +98,14 @@ if(isset($_POST['correct'])) {
 	
 	# Controleer of de laatste 5 minuten niet eenzelfde declaratie is ingediend.
 	# Indien wel, dan is dat waarschijnlijk een misverstand	
-	$sql_check = "SELECT * FROM $TableEBDeclaratie WHERE $EBDeclaratieIndiener = ".$_SESSION['ID'] ." AND $EBDeclaratieCluster = ". $toDatabase['cluster'] ." AND $EBDeclaratieDeclaratie = '". $JSONtoDatabase ."' AND $EBDeclaratieTotaal = ". $toDatabase['totaal'] ." AND $EBDeclaratieTijd > ". (time()-300);
+	$sql_check = "SELECT * FROM $TableEBDeclaratie WHERE $EBDeclaratieIndiener = ".$_SESSION['useID'] ." AND $EBDeclaratieCluster = ". $toDatabase['cluster'] ." AND $EBDeclaratieDeclaratie = '". $JSONtoDatabase ."' AND $EBDeclaratieTotaal = ". $toDatabase['totaal'] ." AND $EBDeclaratieTijd > ". (time()-300);
 	$result_check = mysqli_query($db, $sql_check);
 	
 	# Komt niet eerder voor
 	if(mysqli_num_rows($result_check) == 0) {		
 		$uniqueKey = generateID();
   	
-		$sql = "INSERT INTO $TableEBDeclaratie ($EBDeclaratieHash, $EBDeclaratieIndiener, $EBDeclaratieCluster, $EBDeclaratieDeclaratie, $EBDeclaratieTotaal, $EBDeclaratieTijd) VALUES ('$uniqueKey', ". $_SESSION['ID'].", ". $toDatabase['cluster'] .", '". $JSONtoDatabase ."', ". $toDatabase['totaal'] .", ". time() .")";	
+		$sql = "INSERT INTO $TableEBDeclaratie ($EBDeclaratieHash, $EBDeclaratieIndiener, $EBDeclaratieCluster, $EBDeclaratieDeclaratie, $EBDeclaratieTotaal, $EBDeclaratieTijd) VALUES ('$uniqueKey', ". $_SESSION['useID'].", ". $toDatabase['cluster'] .", '". $JSONtoDatabase ."', ". $toDatabase['totaal'] .", ". time() .")";	
 		mysqli_query($db, $sql);
 		$declaratieID = mysqli_insert_id($db);		
 		  	
@@ -113,7 +113,7 @@ if(isset($_POST['correct'])) {
 		# Mail naar de cluco opstellen
 		$cluster = $toDatabase['cluster'];
 		
-		if(isset($clusterCoordinatoren[$cluster]) AND $clusterCoordinatoren[$cluster] <> $_SESSION['ID']) {
+		if(isset($clusterCoordinatoren[$cluster]) AND $clusterCoordinatoren[$cluster] <> $_SESSION['useID']) {
 			$cluco = $clusterCoordinatoren[$cluster];
 		} else {
 			$cluco = 0;
@@ -144,7 +144,7 @@ if(isset($_POST['correct'])) {
 		$mailCluco = array();
 		$mailCluco[] = "Beste ". makeName($cluco, 1).",<br>";
 		$mailCluco[] = "<br>";
-		$mailCluco[] = makeName($_SESSION['ID'], 5) .' heeft een declaratie ingediend.<br>';
+		$mailCluco[] = makeName($_SESSION['useID'], 5) .' heeft een declaratie ingediend.<br>';
 		$mailCluco[] = "<br>";
 		$mailCluco[] = "Het betreft een declaratie van <i>". makeOpsomming($onderwerpen, '</i>, <i>', '</i> en <i>') ."</i> ter waarde van ". formatPrice($toDatabase['totaal'])."<br>";
 		$mailCluco[] = "<br>";
@@ -169,7 +169,7 @@ if(isset($_POST['correct'])) {
 		}
   	
 		$param_cluco['to'][]					= array($ClucoAddress, $ClucoName);
-		$param_cluco['subject'] 			= "Declaratie ". makeName($_SESSION['ID'], 5) ." voor ". $clusters[$cluster];	
+		$param_cluco['subject'] 			= "Declaratie ". makeName($_SESSION['useID'], 5) ." voor ". $clusters[$cluster];	
 		$param_cluco['message'] 			= implode("\n", $mailCluco);
 		
 		foreach($toDatabase['bijlage'] as $key => $bestand) {
@@ -180,21 +180,21 @@ if(isset($_POST['correct'])) {
 		if(!$sendMail)	$param_cluco['testen'] = 1;
 					
 		if(!sendMail_new($param_cluco)) {
-			toLog('error', $_SESSION['ID'], '', "Problemen met invoeren van declaratie [$uniqueKey] en voorleggen aan cluco (". makeName($cluco, 5).")");
+			toLog('error', $_SESSION['realID'], '', "Problemen met invoeren van declaratie [$uniqueKey] en voorleggen aan cluco (". makeName($cluco, 5).")");
 			$page[] = "Er zijn problemen met het versturen van de notificatie-mail naar de clustercoordinator.";
 		} else {
-			toLog('info', $_SESSION['ID'], '', "Declaratie [$uniqueKey] ingevoerd en doorgestuurd naar cluco (". makeName($cluco, 5).")");
+			toLog('info', $_SESSION['realID'], '', "Declaratie [$uniqueKey] ingevoerd en doorgestuurd naar cluco (". makeName($cluco, 5).")");
 			$page[] = "De declaratie is ter goedkeuring voorgelegd aan ". makeName($cluco, 5) ." als clustercoordinator";
 		}
 		
 		# Stel de declaratie-status in		
-		setDeclaratieStatus($status, $declaratieID, $_SESSION['ID']);
+		setDeclaratieStatus($status, $declaratieID, $_SESSION['useID']);
 		setDeclaratieActionDate($uniqueKey);
 		
 		# Alles verwijderen nadat de declaratie is ingeschoten en de mail de deur uit is
 		unset($_POST);		
 	} else {
-		toLog('info', $_SESSION['ID'], '', "Mogelijk dubbele declaratie, geblokkeerd.");
+		toLog('info', $_SESSION['realID'], '', "Mogelijk dubbele declaratie, geblokkeerd.");
 		$page[] = "U heeft recent al een dergelijke declaratie ingediend. Opnieuw indienen is helaas niet mogelijk.";
 	}
 	$page[] = "<br>";
@@ -333,7 +333,7 @@ if(isset($_POST['correct'])) {
 	}
 		
 	if($checkFields) {
-		$input['user']						= $_SESSION['ID'];
+		$input['user']						= $_SESSION['useID'];
 		$input['eigen']						= $_POST['eigen'];
 		$input['iban']						= $iban;
 		$input['relatie']					= $relatie;

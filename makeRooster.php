@@ -19,7 +19,7 @@ if(isset($_REQUEST['hash'])) {
 		$showLogin = true;
 	} else {
 		$showLogin = false;
-		$_SESSION['ID'] = $id;
+		$_SESSION['useID'] = $id;
 		toLog('info', $id, '', 'rooster mbv hash');
 	}
 }
@@ -71,7 +71,7 @@ if(isset($_POST['save']) OR isset($_POST['maanden'])) {
 		}
 	}
 	
-	toLog('info', $_SESSION['ID'], '', 'Rooster '. $RoosterData['naam'] .' aangepast');
+	toLog('info', $_SESSION['realID'], '', 'Rooster '. $RoosterData['naam'] .' aangepast');
 }
 
 # Als er op de knop van 3 maanden extra geklikt is, 3 maanden bij de eindtijd toevoegen

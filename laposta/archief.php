@@ -11,7 +11,7 @@ include($cfgProgDir. "secure.php");
 
 $lijst = getParam('lijst', '');
 
-$email = getMailAdres($_SESSION['ID']);
+$email = getMailAdres($_SESSION['useID']);
 
 if(isset($lijst) AND $lijst != '') {
 	if(lp_onList($lijst, $email)) {

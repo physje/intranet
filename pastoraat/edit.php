@@ -13,7 +13,7 @@ include($cfgProgDir. "secure.php");
 if(isset($_REQUEST['id'])) {
 	$details = getPastoraalbezoekDetails($_REQUEST['id']);
 	
-	if($details['indiener'] == $_SESSION['ID']) {
+	if($details['indiener'] == $_SESSION['useID']) {
 		if(isset($_POST['save'])) {
 			$sql = "UPDATE $TablePastoraat SET ";
 			$sql .= "$PastoraatTijdstip = ". mktime(12,12,0,$_POST['maand'],$_POST['dag'],$_POST['jaar']) .", ";
@@ -27,10 +27,10 @@ if(isset($_REQUEST['id'])) {
 						
 			if(mysqli_query($db, $sql)) {
 				$text[] = "Opgeslagen<br>";
-				toLog('info', $_SESSION['ID'], $_POST['lid'], 'Pastoraal bezoek ['. $_POST['id'] .'] van '. $_POST['dag'] .'-'. $_POST['maand'] .'-'. $_POST['jaar'] .' gewijzigd');
+				toLog('info', $_SESSION['realID'], $_POST['lid'], 'Pastoraal bezoek ['. $_POST['id'] .'] van '. $_POST['dag'] .'-'. $_POST['maand'] .'-'. $_POST['jaar'] .' gewijzigd');
 			} else {
 				$text[] = "Probelemen met opslaan<br>";
-				toLog('error', $_SESSION['ID'], $_POST['lid'], 'Problemen met wijzigen pastoraal bezoek ['. $_POST['id'] .'] van '. $_POST['dag'] .'-'. $_POST['maand'] .'-'. $_POST['jaar']);
+				toLog('error', $_SESSION['realID'], $_POST['lid'], 'Problemen met wijzigen pastoraal bezoek ['. $_POST['id'] .'] van '. $_POST['dag'] .'-'. $_POST['maand'] .'-'. $_POST['jaar']);
 			}						
 		} else {
 			$dag		= getParam('dag', date("d", $details['datum']));

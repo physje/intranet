@@ -11,11 +11,11 @@ if(isset($_REQUEST['showLogin'])) {
 	$db = connect_db();
 }
 
-if(!isset($_SESSION['ID'])) {
+if(!isset($_SESSION['useID'])) {
 	session_start(['cookie_lifetime' => $cookie_lifetime]);
 	$ingelogd = false;
 } else {
-	$memberData = getMemberDetails($_SESSION['ID']);
+	$memberData = getMemberDetails($_SESSION['useID']);
 	$ingelogd = true;
 }
 
@@ -65,7 +65,7 @@ $text[] = "<a id='ruilen'></a><h3>Ruilen</h3>";
 $text[] = "Het kan zijn dat je voor een rooster bent ingedeeld op een moment dat <br>";
 $text[] = "<br>";
 
-$myRoosterBeheer = getMyRoostersBeheer($_SESSION['ID']);
+$myRoosterBeheer = getMyRoostersBeheer($_SESSION['useID']);
 if($ingelogd AND count($myRoosterBeheer) > 0) {
 	$text[] = "<a id='rooster_beheer'></a><h3>Roosters beheren</h3>";
 	$text[] = "<br>";
@@ -73,7 +73,7 @@ if($ingelogd AND count($myRoosterBeheer) > 0) {
 
 $text[] = "<a id='groepen'></a><h2>Groepen</h2>";
 
-$myGroepBeheer = getMyGroupsBeheer($_SESSION['ID']);
+$myGroepBeheer = getMyGroupsBeheer($_SESSION['useID']);
 if($ingelogd AND count($myGroepBeheer) > 0) {
 	$text[] = "<a id='groepen_beheer'></a><h3>Groepen beheren</h3>";
 	$text[] = "<br>";
@@ -104,7 +104,7 @@ $text[] = "Profiel<br>";
 $text[] = "Ledenlijst<br>";
 $text[] = "<br>";
 
-if(in_array(1, getMyGroups($_SESSION['ID'])) OR in_array(20, getMyGroups($_SESSION['ID'])) OR in_array(22, getMyGroups($_SESSION['ID'])) OR in_array(28, getMyGroups($_SESSION['ID']))) {
+if(in_array(1, getMyGroups($_SESSION['useID'])) OR in_array(20, getMyGroups($_SESSION['useID'])) OR in_array(22, getMyGroups($_SESSION['useID'])) OR in_array(28, getMyGroups($_SESSION['useID']))) {
 	$text[] = "<a id='preek'></a><h2>Preekvoorziening</h2>";
 	$text[] = "<br>";
 }

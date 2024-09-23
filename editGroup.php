@@ -30,7 +30,7 @@ if(isset($_POST['change_members'])) {
 		$newLidID = $delen[1];
 		addGroupLid($newLidID, $_POST['groep']);
 	}
-	toLog('info', $_SESSION['ID'], '', 'Leden '. $groupData['naam'] .' gewijzigd');
+	toLog('info', $_SESSION['realID'], '', 'Leden '. $groupData['naam'] .' gewijzigd');
 }
 
 if(isset($_POST['change_site'])) {	
@@ -40,7 +40,7 @@ if(isset($_POST['change_site'])) {
 	$sql = "UPDATE $TableGroups SET ". implode(", ", $set) ." WHERE $GroupID = ". $_REQUEST['groep'];
 	mysqli_query($db, $sql);
 		
-	toLog('info', $_SESSION['ID'], '', 'Tekst voor groeppagina '. $groupData['naam'] .' gewijzigd');
+	toLog('info', $_SESSION['realID'], '', 'Tekst voor groeppagina '. $groupData['naam'] .' gewijzigd');
 }
 
 $GroupMembers = getGroupMembers($_REQUEST['groep']);
@@ -56,7 +56,6 @@ foreach($GroupMembers as $lid) {
 
 $block_1[] = "<br>";
 $block_1[] = "Selecteer lid om toe te voegen (na selectie wordt nummer toegevoegd).<br>";
-#$block_1[] = "<input type='text' name='nieuw_lid' id=\"namen\"><br>";
 $block_1[] = "<input type='text' id='namen_input' name='nieuw_lid' placeholder='Begin met typen van naam'><br>";
 $block_1[] = "<p class='after_table'><input type='submit' name='change_members' value='Leden wijzigen'></p>";
 $block_1[] = "</form>";

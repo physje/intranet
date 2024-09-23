@@ -64,7 +64,7 @@ if(isset($_POST['screen']) AND $_POST['screen'] == '1') {
 				$eind = mktime($eTijdArray[0], $eTijdArray[1], 0, $eDatumArray[1], $eDatumArray[0], $eDatumArray[2]);
 			}
 			
-			$query = "INSERT INTO $TableAgenda ($AgendaStart, $AgendaEind, $AgendaTitel, $AgendaDescr, $AgendaOwner) VALUES ('$start', '$eind', '". urlencode($Onderwerp) ."', '". urlencode($Beschrijving) ."', ". $_SESSION['ID'] .")";
+			$query = "INSERT INTO $TableAgenda ($AgendaStart, $AgendaEind, $AgendaTitel, $AgendaDescr, $AgendaOwner) VALUES ('$start', '$eind', '". urlencode($Onderwerp) ."', '". urlencode($Beschrijving) ."', ". $_SESSION['useID'] .")";
 
 			if(mysqli_query($db, $query)) {
 				$text[] = $Onderwerp .' van '. time2str('%e %B %Y', $start) .' is opgeslagen<br>';

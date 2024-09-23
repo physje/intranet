@@ -22,16 +22,16 @@ if(isset($_POST['save']) OR isset($_POST['maanden'])) {
 			
 		if(!mysqli_query($db, $sql)) {
 			$text[] = "Ging iets niet goed met geegevens opslaan";
-			toLog('error', $_SESSION['ID'], '', 'Gegevens voorganger ('. $_REQUEST['voorgangerID'] .") konden niet worden gekoppeld aan dienst $dienst");
+			toLog('error', $_SESSION['realID'], '', 'Gegevens voorganger ('. $_REQUEST['voorgangerID'] .") konden niet worden gekoppeld aan dienst $dienst");
 		}
 		
 		# Mocht een voorganger wijzigen, zet dat dan ook even in de logfiles
 		if($oldData['voorganger_id'] != '' AND $oldData['voorganger_id'] != $voorgangerID) {
 			$dienstData = getKerkdienstDetails($dienst);
-			toLog('info', $_SESSION['ID'], '', "Voorganger van ". date("d-m-y", $dienstData['start']) ." gewijzigd van ". makeVoorgangerName($oldData['voorganger_id'], 1) ." naar ". makeVoorgangerName($voorgangerID, 1));
+			toLog('info', $_SESSION['realID'], '', "Voorganger van ". date("d-m-y", $dienstData['start']) ." gewijzigd van ". makeVoorgangerName($oldData['voorganger_id'], 1) ." naar ". makeVoorgangerName($voorgangerID, 1));
 		}
 	}
-	toLog('info', $_SESSION['ID'], '', 'Diensten bijgewerkt');
+	toLog('info', $_SESSION['realID'], '', 'Diensten bijgewerkt');
 }
 
 # Als er op de knop van 3 maanden extra geklikt is, 3 maanden bij de eindtijd toevoegen

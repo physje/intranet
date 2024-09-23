@@ -15,7 +15,7 @@ if(isset($_REQUEST['hash'])) {
 		$showLogin = true;
 	} else {
 		$showLogin = false;
-		$_SESSION['ID'] = $id;
+		$_SESSION['useID'] = $id;
 		toLog('info', $id, '', 'agenda mbv hash');
 	}
 }
@@ -30,10 +30,10 @@ if(isset($_POST['remove'])) {
 	
 	if(mysqli_query($db, $query)) {
 		$text[] = "De afspraak '". $_POST['titel'] ."' is verwijderd";
-		toLog('info', $_SESSION['ID'], '', "Agenda-item '". $_POST['titel'] ."' [". $_POST['id'] ."] verwijderd");
+		toLog('info', $_SESSION['realID'], '', "Agenda-item '". $_POST['titel'] ."' [". $_POST['id'] ."] verwijderd");
 	} else {
 		$text[] = "Het verwijderen van '". $_POST['titel'] ."' is niet gelukt.";
-		toLog('error', $_SESSION['ID'], '', "Kan agenda-item '". $_POST['titel'] ."' [". $_POST['id'] ."] niet verwijderen");
+		toLog('error', $_SESSION['realID'], '', "Kan agenda-item '". $_POST['titel'] ."' [". $_POST['id'] ."] niet verwijderen");
 	}
 } elseif(isset($_POST['save'])) {
 	$startTijd = mktime($_POST['sUur'], $_POST['sMin'], 0, $_POST['Maand'], $_POST['Dag'], $_POST['Jaar']);
@@ -44,19 +44,19 @@ if(isset($_POST['remove'])) {
 				
 		if(mysqli_query($db, $query)) {
 			$text[] = "De afspraak '". $_POST['titel'] ."' [". $_POST['id'] ."] is opgeslagen";
-			toLog('info', $_SESSION['ID'], '', "Agenda-item '". $_POST['titel'] ."' gewijzigd");
+			toLog('info', $_SESSION['realID'], '', "Agenda-item '". $_POST['titel'] ."' gewijzigd");
 		} else {
 			$text[] = "Het opslaan van de afspraak is niet gelukt.";
-			toLog('error', $_SESSION['ID'], '', "Kan agenda-item '". $_POST['titel'] ."' [". $_POST['id'] ."] niet wijzigen");
+			toLog('error', $_SESSION['realID'], '', "Kan agenda-item '". $_POST['titel'] ."' [". $_POST['id'] ."] niet wijzigen");
 		}
 		$text[] = "<p>";
 		$text[] = "<a href='". $_SERVER['PHP_SELF'] ."'>Terug naar het overzicht</a>.";
 	} else {
-		$query = "INSERT INTO $TableAgenda ($AgendaStart, $AgendaEind, $AgendaTitel, $AgendaDescr, $AgendaOwner) VALUES ('$startTijd', '$eindTijd', '". urlencode($_POST['titel']) ."', '". urlencode($_POST['omschrijving']) ."', ". $_SESSION['ID'] .")";
+		$query = "INSERT INTO $TableAgenda ($AgendaStart, $AgendaEind, $AgendaTitel, $AgendaDescr, $AgendaOwner) VALUES ('$startTijd', '$eindTijd', '". urlencode($_POST['titel']) ."', '". urlencode($_POST['omschrijving']) ."', ". $_SESSION['useID'] .")";
 		
 		if(mysqli_query($db, $query)) {			
 			$newID = mysqli_insert_id($db);
-			$UserData = getMemberDetails($_SESSION['ID']);
+			$UserData = getMemberDetails($_SESSION['useID']);
 						
 			$mail[] = "Beste ". $UserData['voornaam'];
 			$mail[] = "";
@@ -71,22 +71,22 @@ if(isset($_POST['remove'])) {
 			$mail[] = "Om deze afspraak te beheren kan je <a href='". $ScriptURL ."agenda/agenda.php?id=". $newID ."&hash=". $UserData['hash_long'] ."'>deze link</a> gebruiken, daarmee kom je direct weer bij deze afspraak terecht";
 			
 			$text[] = "De afspraak '". $_POST['titel'] ."' is toegevoegd.<br>";
-			toLog('info', $_SESSION['ID'], '', "Agenda-item '". $_POST['titel'] ."' toegevoegd");
+			toLog('info', $_SESSION['realID'], '', "Agenda-item '". $_POST['titel'] ."' toegevoegd");
 						
-			$param['to'][]			= array($_SESSION['ID']);
+			$param['to'][]			= array($_SESSION['useID']);
 			$param['message']		= implode("<br>\n", $mail);
 			$param['subject']		= "De afspraak '". $_POST['titel'] ."'";			
 						
 			if(sendMail_new($param)) {
 				$text[] = "Je hebt een bevestigingsmail ontvangen.";
-				toLog('debug', $_SESSION['ID'], '', "Bevestigingsmail voor '". $_POST['titel'] ."' [$newID] verstuurd");
+				toLog('debug', $_SESSION['realID'], '', "Bevestigingsmail voor '". $_POST['titel'] ."' [$newID] verstuurd");
 			} else {
 				$text[] = "Het versturen van een bevestigingsmail is helaas mislukt.<br>";
-				toLog('error', $_SESSION['ID'], '', "Kan geen bevestigingsmail voor '". $_POST['titel'] ."' [$newID] versturen");
+				toLog('error', $_SESSION['realID'], '', "Kan geen bevestigingsmail voor '". $_POST['titel'] ."' [$newID] versturen");
 			}			
 		} else {
 			$text[] = "Het opslaan van de afspraak is niet gelukt.";
-			toLog('error', $_SESSION['ID'], '', "Kan agenda-item '". $_POST['titel'] ."' niet opslaan");
+			toLog('error', $_SESSION['realID'], '', "Kan agenda-item '". $_POST['titel'] ."' niet opslaan");
 		}
 	}	
 } elseif(isset($_REQUEST['id']) OR isset($_REQUEST['new'])) {
@@ -118,12 +118,12 @@ if(isset($_POST['remove'])) {
 		$titel = $descr = '';
 	}
 	
-	if(!in_array(1, getMyGroups($_SESSION['ID'])) AND isset($details['eigenaar']) AND $details['eigenaar'] != $_SESSION['ID'] AND !isset($_REQUEST['new'])) {
+	if(!in_array(1, getMyGroups($_SESSION['useID'])) AND isset($details['eigenaar']) AND $details['eigenaar'] != $_SESSION['useID'] AND !isset($_REQUEST['new'])) {
 		$text = array('Toestemmingsprobleem, dit id hoort niet bij een afspraak van jou');
 	} else {	
 		$text[] = "<table>";
 		
-		if(!in_array(1, getMyGroups($_SESSION['ID'])) AND isset($_REQUEST['id'])) {
+		if(!in_array(1, getMyGroups($_SESSION['useID'])) AND isset($_REQUEST['id'])) {
 			$text[] = "<input type='hidden' name='eigenaar' value='". $details['eigenaar'] ."'>";
 		} elseif(isset($_REQUEST['id'])) {
 			//$leden =
@@ -198,8 +198,8 @@ if(isset($_POST['remove'])) {
 	}
 } else {
 	# Als je niet voorkomt in de Admin-groep dan ga je naar je eigen gegevens
-	if(!in_array(1, getMyGroups($_SESSION['ID']))) {	
-		$userID = $_SESSION['ID'];
+	if(!in_array(1, getMyGroups($_SESSION['useID']))) {	
+		$userID = $_SESSION['useID'];
 	} else {
 		$userID = 'all';
 	}
@@ -210,7 +210,7 @@ if(isset($_POST['remove'])) {
 	if(count($agendaIDS) > 0) {		
 		foreach($agendaIDS as $agendaID) {
 			$details = getAgendaDetails($agendaID);
-			$text[] = date("d-m-Y", $details['start']). " <a href='". $ScriptURL ."agenda/agenda.php?id=$agendaID'>". $details['titel'] ."</a>". (in_array(1, getMyGroups($_SESSION['ID'])) ? ' ('. makeName($details['eigenaar'], 5) .')' : '')."<br>";
+			$text[] = date("d-m-Y", $details['start']). " <a href='". $ScriptURL ."agenda/agenda.php?id=$agendaID'>". $details['titel'] ."</a>". (in_array(1, getMyGroups($_SESSION['useID'])) ? ' ('. makeName($details['eigenaar'], 5) .')' : '')."<br>";
 		}
 		
 		$text[] = "<p>";

@@ -13,7 +13,7 @@ if(isset($_REQUEST['hash'])) {
 		$showLogin = true;
 	} else {
 		$showLogin = false;
-		$_SESSION['ID'] = $id;
+		$_SESSION['useID'] = $id;
 		toLog('info', $id, '', 'account mbv hash');
 	}
 }
@@ -24,11 +24,11 @@ if($showLogin) {
 	$db = connect_db();
 }
 
-$id = getParam('id', $_SESSION['ID']);
+$id = getParam('id', $_SESSION['useID']);
 
 # Als je niet voorkomt in de Admin-groep dan ga je naar je eigen gegevens
-if(!in_array(1, getMyGroups($_SESSION['ID']))) {	
-	$id = $_SESSION['ID'];
+if(!in_array(1, getMyGroups($_SESSION['useID']))) {	
+	$id = $_SESSION['useID'];
 }
 
 $personData = getMemberDetails($id);	
@@ -47,10 +47,10 @@ if(isset($_POST['data_opslaan']) AND $unique) {
 	if(!mysqli_query($db, $sql) ) {
 		$account[] = "Er is een fout opgetreden.";
 		$account[] = $sql;
-		toLog('error', $_SESSION['ID'], $_POST['id'], 'Fout met wijzigen accountgegevens');
+		toLog('error', $_SESSION['realID'], $_POST['id'], 'Fout met wijzigen accountgegevens');
 	} else {
 		$account[] = "Account succesvol gewijzigd.";
-		toLog('info', $_SESSION['ID'], $_POST['id'], 'Accountgegevens gewijzigd');
+		toLog('info', $_SESSION['realID'], $_POST['id'], 'Accountgegevens gewijzigd');
 	}			
 } else {
 	$account[] = "<form action='". htmlspecialchars($_SERVER['PHP_SELF']) ."' method='post'>";
@@ -137,7 +137,7 @@ if(isset($_POST['data_opslaan']) AND $unique) {
 	$twoFactor[] = "	<td colspan='2'>Het is mogelijk uw account beter te beveiligen door naast een gebruikersnaam & wachtwoord-combinatie, ook gebruik te maken van een code die uw telefoon genereert als u wilt inloggen. Dat heeft 2-factor authenticatie. Op die manier moet u inloggen met iets dat u weet (gebruikersnaam & wachtwoord) en iets dat u heeft (telefoon), dubbel zo veilig dus.<br>";
 	$twoFactor[] = "	Via onderstaande link krijgt u meer informatie over 2-factor authenticatie en hoe dat in te stellen.<br>";
 	$twoFactor[] = "<br>";
-	$twoFactor[] = "<a href='2FA.php'>".(get2FACode($_SESSION['ID']) != '' ? 'Zet 2FA uit' : 'Zet 2FA aan')."</a>.</td>";
+	$twoFactor[] = "<a href='2FA.php'>".(get2FACode($_SESSION['useID']) != '' ? 'Zet 2FA uit' : 'Zet 2FA aan')."</a>.</td>";
 	
 	$twoFactor[] = "</tr>";
 	$twoFactor[] = "</table>";

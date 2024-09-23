@@ -14,7 +14,7 @@ if(!isset($_REQUEST['groep'])) {
 $groep	= getParam('groep', '');
 $extern	= getParam('extern', false);
 
-$myGroups = getMyGroups($_SESSION['ID']);
+$myGroups = getMyGroups($_SESSION['useID']);
 $groupData = getGroupDetails($groep);
 
 echo showCSSHeader();
@@ -37,6 +37,6 @@ echo '</div> <!-- end \'content_block\' -->'.NL;
 echo '</div> <!-- end \'content_vert_kolom_full\' -->'.NL;
 echo showCSSFooter();
 
-toLog('debug', $_SESSION['ID'], '', 'Groep-pagina '. $groupData['naam'] .' bekeken');
+toLog('debug', $_SESSION['realID'], '', 'Groep-pagina '. $groupData['naam'] .' bekeken');
 
 ?>

@@ -17,7 +17,7 @@ if(isset($_REQUEST['hash'])) {
 		$showLogin = true;
 	} else {
 		$showLogin = false;
-		$_SESSION['ID'] = $id;
+		$_SESSION['useID'] = $id;
 		toLog('info', $id, '', 'declaratie mbv hash');
 	}
 }
@@ -30,7 +30,7 @@ if($showLogin) {
 
 $toegestaan = array_merge($clusterCoordinatoren, getGroupMembers(1), getGroupMembers(38));
 
-if(in_array($_SESSION['ID'], $toegestaan)) {	
+if(in_array($_SESSION['useID'], $toegestaan)) {	
 	if(isset($_REQUEST['key'])) {
 		$sql = "SELECT * FROM $TableEBDeclaratie WHERE $EBDeclaratieHash like '". $_REQUEST['key'] ."'";
 		$result = mysqli_query($db, $sql);
@@ -53,7 +53,7 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 				# Mail naar gemeentelid
 				$mail[] = "Beste ". makeName($data['user'], 1) .",<br>";
 				$mail[] = "<br>";
-				$mail[] = "Onderstaande declaratie van ".time2str('%e %B', $row[$EBDeclaratieTijd]) ." is door ". makeName($_SESSION['ID'], 5) ." als cluster-coordinator goedgekeurd en doorgestuurd naar de penningmeester voor verdere afhandeling.<br>";
+				$mail[] = "Onderstaande declaratie van ".time2str('%e %B', $row[$EBDeclaratieTijd]) ." is door ". makeName($_SESSION['useID'], 5) ." als cluster-coordinator goedgekeurd en doorgestuurd naar de penningmeester voor verdere afhandeling.<br>";
 				$mail[] = "Mocht deze laatste nog vragen hebben dan neemt hij contact met je op.<br>";
 				$mail[] = '<table border=0>';
 				$mail[] = "<tr>";
@@ -69,14 +69,14 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 				# @live.nl heeft zijn mail-records niet op orde (geen SPF ed).
 				# Aantal mailservers weigeren daarom deze mails als met een @live.nl verstuurd.
 				# Daarom voor de zekerheid het formele van de cluco
-				$parameter['from']			= getMailAdres($_SESSION['ID'], true);
-				$parameter['fromName']	= makeName($_SESSION['ID'], 5);
+				$parameter['from']			= getMailAdres($_SESSION['useID'], true);
+				$parameter['fromName']	= makeName($_SESSION['useID'], 5);
 				
 				if(!sendMail_new($parameter)) {
-					toLog('error', $_SESSION['ID'], $data['user'], "Problemen met versturen declaratie-goedkeuring [". $_REQUEST['key'] ."] door cluco");
+					toLog('error', $_SESSION['realID'], $data['user'], "Problemen met versturen declaratie-goedkeuring [". $_REQUEST['key'] ."] door cluco");
 					$page[] = "Er zijn problemen met het versturen van de goedkeuringsmail.<br>\n";
 				} else {
-					toLog('info', $_SESSION['ID'], $data['user'], "Declaratie-goedkeuring [". $_REQUEST['key'] ."] door cluco");
+					toLog('info', $_SESSION['realID'], $data['user'], "Declaratie-goedkeuring [". $_REQUEST['key'] ."] door cluco");
 					$page[] = "Er is een mail met status-update verstuurd naar ". makeName($data['user'], 5) ."<br>\n";
 					setDeclaratieStatus(4, $row[$EBDeclaratieID], $data['user']);
 					setDeclaratieActionDate($_REQUEST['key']);
@@ -87,7 +87,7 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 				
 				$mail[] = "Beste Penningmeester,<br>";
 				$mail[] = "<br>";
-				$mail[] = "Onderstaande declaratie van ". makeName($data['user'], 5) ." is door ". makeName($_SESSION['ID'], 5) ." als cluster-coordinator goedgekeurd.<br>";
+				$mail[] = "Onderstaande declaratie van ". makeName($data['user'], 5) ." is door ". makeName($_SESSION['useID'], 5) ." als cluster-coordinator goedgekeurd.<br>";
 				$mail[] = '<table border=0>';
 				$mail[] = "<tr>";
 				$mail[] = "		<td colspan='6' height=50><hr></td>";
@@ -101,14 +101,14 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 				$parameter['to'][]			= array($declaratieReplyAddress, $declaratieReplyName);
 				$parameter['subject']		= 'Door cluco goedgekeurde declaratie';
 				$parameter['message'] 	= implode("\n", $mail);
-				$parameter['from']			= getMailAdres($_SESSION['ID'], true);
-				$parameter['fromName']	= makeName($_SESSION['ID'], 5);
+				$parameter['from']			= getMailAdres($_SESSION['useID'], true);
+				$parameter['fromName']	= makeName($_SESSION['useID'], 5);
 				
 				if(!sendMail_new($parameter)) {
-					toLog('error', $_SESSION['ID'], $data['user'], "Problemen met versturen declaratie-goedkeuring naar penningmeester [". $_REQUEST['key'] ."]");
+					toLog('error', $_SESSION['realID'], $data['user'], "Problemen met versturen declaratie-goedkeuring naar penningmeester [". $_REQUEST['key'] ."]");
 					$page[] = "Er zijn problemen met het versturen van de goedgekeurde declaratie naar de penningsmeester.";
 				} else {
-					toLog('info', $_SESSION['ID'], $data['user'], "Declaratie-goedkeuring [". $_REQUEST['key'] ."] naar penningmeester");
+					toLog('info', $_SESSION['realID'], $data['user'], "Declaratie-goedkeuring [". $_REQUEST['key'] ."] naar penningmeester");
 					$page[] = "De goedgekeurde declaratie is doorgestuurd naar de penningsmeester.";
 				}
 				
@@ -163,14 +163,14 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 				$parameter['to'][]			= array($data['user']);
 				$parameter['subject']		= 'Afwijzing declaratie';
 				$parameter['message'] 	= implode("\n", $mail);
-				$parameter['from']			= getMailAdres($_SESSION['ID']);
-				$parameter['fromName']	= makeName($_SESSION['ID'], 5);
+				$parameter['from']			= getMailAdres($_SESSION['useID']);
+				$parameter['fromName']	= makeName($_SESSION['useID'], 5);
 				
 				if(!sendMail_new($parameter)) {
-					toLog('error', $_SESSION['ID'], $data['user'], "Problemen met versturen declaratie-afwijzing [". $_REQUEST['key'] ."]");
+					toLog('error', $_SESSION['realID'], $data['user'], "Problemen met versturen declaratie-afwijzing [". $_REQUEST['key'] ."]");
 					$page[] = "Er zijn problemen met het versturen van de afwijzingsmail.";
 				} else {
-					toLog('info', $_SESSION['ID'], $data['user'], "Declaratie-afwijzing [". $_REQUEST['key'] ."] naar gemeentelid");
+					toLog('info', $_SESSION['realID'], $data['user'], "Declaratie-afwijzing [". $_REQUEST['key'] ."] naar gemeentelid");
 					$page[] = "Er is een mail met onderbouwing voor de afwijzing verstuurd naar ". makeName($data['user'], 5);
 					setDeclaratieStatus(6, $row[$EBDeclaratieID], $data['user']);
 					setDeclaratieActionDate($_REQUEST['key']);
@@ -230,9 +230,9 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 	} else {		
 		$sql = "SELECT * FROM $TableEBDeclaratie WHERE $EBDeclaratieStatus = 3";
 		
-		if(in_array($_SESSION['ID'], $clusterCoordinatoren)) {
-			$cluster = array_search($_SESSION['ID'], $clusterCoordinatoren);
-			$sql .= " AND $EBDeclaratieCluster = $cluster AND $EBDeclaratieIndiener NOT like '". $_SESSION['ID'] ."'";
+		if(in_array($_SESSION['useID'], $clusterCoordinatoren)) {
+			$cluster = array_search($_SESSION['useID'], $clusterCoordinatoren);
+			$sql .= " AND $EBDeclaratieCluster = $cluster AND $EBDeclaratieIndiener NOT like '". $_SESSION['useID'] ."'";
 		}
 		
 		$result = mysqli_query($db, $sql);

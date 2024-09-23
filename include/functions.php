@@ -2728,7 +2728,7 @@ function storeLogin($id, $ip, $agent) {
 	global $TableUsers, $UserLastVisit, $UserID;
 	
 	$sql_1 = "INSERT INTO $TableLogins ($LoginLid, $LoginIP, $LoginAgent, $LoginTijd) VALUES ($id, '$ip', '$agent', NOW())";
-	$sql_2 = "UPDATE $TableUsers SET $UserLastVisit = '". time() ."' WHERE $UserID like ". $_SESSION['ID'];
+	$sql_2 = "UPDATE $TableUsers SET $UserLastVisit = '". time() ."' WHERE $UserID like ". $_SESSION['useID'];
 	
 	if(mysqli_query($db, $sql_1) AND mysqli_query($db, $sql_2)) {
 		return true;

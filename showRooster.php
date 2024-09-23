@@ -12,7 +12,7 @@ if(isset($_REQUEST['hash'])) {
 		$showLogin = true;
 	} else {
 		$showLogin = false;
-		$_SESSION['ID'] = $id;
+		$_SESSION['useID'] = $id;
 		toLog('info', $id, '', 'account mbv hash');
 	}
 }
@@ -26,7 +26,7 @@ if($showLogin) {
 $RoosterData	= getRoosterDetails($_REQUEST['rooster']);
 $diensten			= getAllKerkdiensten(true);
 $IDs					= getGroupMembers($RoosterData['groep']);
-$familie			= getFamilieleden($_SESSION['ID']);
+$familie			= getFamilieleden($_SESSION['useID']);
 $leeg					= true;
 $showRuilen		= false;
 
@@ -34,11 +34,11 @@ $showRuilen		= false;
 #		1a) Je zit in de groep waar dit rooster voor geldt
 #		1b)	Een van je familie-leden zit in de groep die op het rooster staat
 #		2)	Het is een rooster wat niet geimporteerd wordt 
-if((in_array($_SESSION['ID'], $IDs) OR count(array_intersect($familie, $IDs)) > 0) AND !in_array($_REQUEST['rooster'], $importRoosters)) {
+if((in_array($_SESSION['useID'], $IDs) OR count(array_intersect($familie, $IDs)) > 0) AND !in_array($_REQUEST['rooster'], $importRoosters)) {
 	$showRuilen = true;
 }
 
-toLog('debug', $_SESSION['ID'], '', 'Rooster '. $RoosterData['naam'] .' bekeken');
+toLog('debug', $_SESSION['realID'], '', 'Rooster '. $RoosterData['naam'] .' bekeken');
 
 $block_1[] = '<table>';
 $block_1[] = '<thead>';

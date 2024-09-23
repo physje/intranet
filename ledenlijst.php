@@ -49,7 +49,7 @@ $letter = getParam('letter', '');
 $wijk = getParam('wijk', '');
 
 if($letter == '' AND $wijk == '') {
-	$data = getMemberDetails($_SESSION['ID']);
+	$data = getMemberDetails($_SESSION['useID']);
 	$achternaam = $data['achternaam'];
 	$letter = $achternaam[0];
 }
@@ -96,10 +96,10 @@ if(!isset($_REQUEST['letter'])) {
 */
 if($letter != '') {
 	$sql = "SELECT $UserID FROM $TableUsers WHERE $UserStatus = 'actief' AND $UserAchternaam like '$letter%' ORDER BY $UserAchternaam";
-	toLog('debug', $_SESSION['ID'], '', "Ledenlijst letter $letter");
+	toLog('debug', $_SESSION['realID'], '', "Ledenlijst letter $letter");
 } elseif($wijk != '') {
 	$sql = "SELECT $UserID FROM $TableUsers WHERE $UserStatus = 'actief' AND $UserWijk like '$wijk' ORDER BY $UserAchternaam";
-	toLog('debug', $_SESSION['ID'], '', "Ledenlijst wijk $wijk");
+	toLog('debug', $_SESSION['realID'], '', "Ledenlijst wijk $wijk");
 }
 
 $result = mysqli_query($db, $sql);

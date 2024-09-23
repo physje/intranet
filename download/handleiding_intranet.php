@@ -7,7 +7,7 @@ $db = connect_db();
 $cfgProgDir = '../auth/';
 include($cfgProgDir. "secure.php");
 
-$memberData = getMemberDetails($_SESSION['ID']);	
+$memberData = getMemberDetails($_SESSION['useID']);	
 
 $text[] = "Het doel van het intranet is om te zorgen dat iedereen altijd bij de meest up-to-date informatie kan. Inmiddels maken zoveel gemeenteleden gebruik van het intranet, en staat er zoveel informatie op, dat sommigen door de bomen het bos niet meer zien.<br>";
 $text[] = "Vandaar deze handleiding.<br>";
@@ -29,7 +29,7 @@ $text[] = "Ook hier is het mogelijk om onderaan op 'sla op als PDF' te klikken o
 $blocks[] = implode(NL, $text);
 $text = array();
 
-$myRoosterBeheer = getMyRoostersBeheer($_SESSION['ID']);
+$myRoosterBeheer = getMyRoostersBeheer($_SESSION['useID']);
 if(count($myRoosterBeheer) > 0) {
 	$text[] = "<h3>Roosters die ik kan wijzigen</h3>";
 	$text[] = "Hier komt wat te staan<br>";
@@ -44,7 +44,7 @@ $text[] = "Hier komt wat te staan<br>";
 $blocks[] = implode(NL, $text);
 $text = array();
 
-$myGroepBeheer = getMyGroupsBeheer($_SESSION['ID']);
+$myGroepBeheer = getMyGroupsBeheer($_SESSION['useID']);
 if(count($myGroepBeheer) > 0) {
 	$text[] = "<h3>Teams die ik beheer</h3>";
 	$text[] = "Als je beheerder van een rooster bent, heb je het kopje 'Teams die ik beheer' op de pagina staan.<br>";
@@ -54,7 +54,7 @@ if(count($myGroepBeheer) > 0) {
 }
 
 
-if(in_array(1, getMyGroups($_SESSION['ID'])) OR in_array(43, getMyGroups($_SESSION['ID'])) OR in_array(44, getMyGroups($_SESSION['ID']))) {
+if(in_array(1, getMyGroups($_SESSION['useID'])) OR in_array(43, getMyGroups($_SESSION['useID'])) OR in_array(44, getMyGroups($_SESSION['useID']))) {
 	$text[] = "<h3>Open kerk</h3>";
 	$text[] = "Hier komt wat te staan<br>";
 	
@@ -62,7 +62,7 @@ if(in_array(1, getMyGroups($_SESSION['ID'])) OR in_array(43, getMyGroups($_SESSI
 	$text = array();
 }
 
-if(in_array(1, getMyGroups($_SESSION['ID'])) OR in_array(20, getMyGroups($_SESSION['ID'])) OR in_array(22, getMyGroups($_SESSION['ID'])) OR in_array(28, getMyGroups($_SESSION['ID']))) {
+if(in_array(1, getMyGroups($_SESSION['useID'])) OR in_array(20, getMyGroups($_SESSION['useID'])) OR in_array(22, getMyGroups($_SESSION['useID'])) OR in_array(28, getMyGroups($_SESSION['useID']))) {
 	$text[] = "<h3>Diensten wijzigen</h3>";
 	$text[] = "Hier komt wat te staan<br>";
 	
@@ -94,7 +94,7 @@ $text[] = "Hier komt wat te staan<br>";
 $blocks[] = implode(NL, $text);
 $text = array();
 
-$text[] = "<h3>Ingelogd als ". makeName($_SESSION['ID'], 5) ."</h3>";
+$text[] = "<h3>Ingelogd als ". makeName($_SESSION['useID'], 5) ."</h3>";
 $text[] = "Hier komt wat te staan<br>";
 $blocks[] = implode(NL, $text);
 $text = array();

@@ -44,7 +44,7 @@ if(isset($_POST['save']) OR isset($_POST['maanden'])) {
 				}
 			}
 		} else {
-			toLog('error', $_SESSION['ID'], '', 'Collectes van '. date('d-m-y', $oldData['start']) .' konden niet worden opgeslagen');
+			toLog('error', $_SESSION['realID'], '', 'Collectes van '. date('d-m-y', $oldData['start']) .' konden niet worden opgeslagen');
 		}
 	}
 	
@@ -54,12 +54,12 @@ if(isset($_POST['save']) OR isset($_POST['maanden'])) {
 		$param['message'] = implode('<br>', $bericht);
 				
 		if(!sendMail_new($param)) {
-			toLog('error', $_SESSION['ID'], '', 'Kon geen mail sturen naar Scipio-beheer voor gewijzigde collectes');
+			toLog('error', $_SESSION['realID'], '', 'Kon geen mail sturen naar Scipio-beheer voor gewijzigde collectes');
 		} else {
-			toLog('debug', $_SESSION['ID'], '', 'Mail gestuurd naar Scipio-beheer voor gewijzigde collectes');
+			toLog('debug', $_SESSION['realID'], '', 'Mail gestuurd naar Scipio-beheer voor gewijzigde collectes');
 		}		
 	}	
-	toLog('info', $_SESSION['ID'], '', 'Collectes bijgewerkt');
+	toLog('info', $_SESSION['realID'], '', 'Collectes bijgewerkt');
 }
 
 # Als er op de knop van 3 maanden extra geklikt is, 3 maanden bij de eindtijd toevoegen

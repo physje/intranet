@@ -19,10 +19,10 @@ if(isset($_REQUEST['dienstID'])) {
 		
 		if(mysqli_query($db, $sql)) {
 			$text[] = "Liturgie succesvol opgeslagen!";
-			toLog('info', $_SESSION['ID'], '', 'Litugie ('. $_REQUEST['dienstID'] .') bijgewerkt');
+			toLog('info', $_SESSION['realID'], '', 'Litugie ('. $_REQUEST['dienstID'] .') bijgewerkt');
 		} else {
 			$text[] = "Helaas, er ging iets niet goed met het opslaan van de liturgie";
-			toLog('error', $_SESSION['ID'], '', 'Liturgie ('. $_REQUEST['dienstID'] .') konden niet worden opgeslagen');
+			toLog('error', $_SESSION['realID'], '', 'Liturgie ('. $_REQUEST['dienstID'] .') konden niet worden opgeslagen');
 		}
     } else {
         $liturgie = getLiturgie($_REQUEST['dienstID']);

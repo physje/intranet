@@ -11,14 +11,14 @@ if(isset($_REQUEST['showLogin'])) {
 	$db = connect_db();
 }
 
-if(!isset($_SESSION['ID'])) {
+if(!isset($_SESSION['useID'])) {
 	session_start(['cookie_lifetime' => $cookie_lifetime]);
 }
 
 if(isset($_SESSION['ID'])) {
-	$memberData = getMemberDetails($_SESSION['ID']);
+	$memberData = getMemberDetails($_SESSION['useID']);
 	$agendaURL = $ScriptURL ."ical/".$memberData['username'].'-'. $memberData['hash_short'] .".ics";
-	$agendaNaam = "3GK (". makeName($_SESSION['ID'], 1) .")";
+	$agendaNaam = "3GK (". makeName($_SESSION['useID'], 1) .")";
 } else {
 	$agendaURL = '';
 	$agendaNaam = '';

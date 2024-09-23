@@ -28,7 +28,7 @@ if(isset($_REQUEST['hash'])) {
 		$showLogin = true;
 	} else {
 		$showLogin = false;
-		$_SESSION['ID'] = $id;
+		$_SESSION['useID'] = $id;
 		toLog('info', $id, '', 'declaratie mbv hash');
 	}
 }
@@ -44,7 +44,7 @@ if($showLogin) {
 # 51 = Penningmeester Jeugd en Gezin
 $toegestaan = array_merge(getGroupMembers(1), getGroupMembers(38), getGroupMembers(51));
 
-if(in_array($_SESSION['ID'], $toegestaan)) {	
+if(in_array($_SESSION['useID'], $toegestaan)) {	
 	if(isset($_REQUEST['key'])) {
 		
 		$sql = "SELECT * FROM $TableEBDeclaratie WHERE $EBDeclaratieHash like '". $_REQUEST['key'] ."'";
@@ -125,9 +125,9 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 							//$page[] = "In de declaratie is als IBAN ingevuld: ". $JSON['iban'] .'<br>';
 							
 							if($errorResult) {
-								toLog('error', $_SESSION['ID'], $indiener, $errorResult);						
+								toLog('error', $_SESSION['realID'], $indiener, $errorResult);						
 							} else {
-								toLog('debug', $_SESSION['ID'], $indiener, 'IBAN van relatie '. $EBCode .' aangepast van '. cleanIBAN($EBIBAN) .' naar '. cleanIBAN($JSON['iban']));
+								toLog('debug', $_SESSION['realID'], $indiener, 'IBAN van relatie '. $EBCode .' aangepast van '. cleanIBAN($EBIBAN) .' naar '. cleanIBAN($JSON['iban']));
 							}					
 						}		
 					
@@ -154,9 +154,9 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 							$errorResult = eb_maakNieuweRelatieAan ($naam , $geslacht, $adres, $postcode, $plaats, $mail, $iban, $EBCode, $EB_id);
 						
 							if($errorResult) {
-								toLog('error', $_SESSION['ID'], $indiener, $errorResult);						
+								toLog('error', $_SESSION['realID'], $indiener, $errorResult);						
 							} else {
-								toLog('debug', $_SESSION['ID'], $indiener, makeName($indiener, 5) .' als relatie toegevoegd in eBoekhouden met als code '. $EBCode);
+								toLog('debug', $_SESSION['realID'], $indiener, makeName($indiener, 5) .' als relatie toegevoegd in eBoekhouden met als code '. $EBCode);
 								mysqli_query($db, "UPDATE $TableUsers SET $UserEBRelatie = $EBCode WHERE $UserID = $indiener");
 							}
 						}				
@@ -187,9 +187,9 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 						$errorResult = eb_maakNieuweRelatieAan ($naam , $geslacht, $adres, $postcode, $plaats, $mail, $iban, $EBCode, $EB_id);
 						
 						if($errorResult) {
-							toLog('error', $_SESSION['ID'], $indiener, $errorResult);						
+							toLog('error', $_SESSION['realID'], $indiener, $errorResult);						
 						} else {
-							toLog('debug', $_SESSION['ID'], $indiener, $naam .' als nieuwe relatie aangemaakt met als code '. $EBCode);
+							toLog('debug', $_SESSION['realID'], $indiener, $naam .' als nieuwe relatie aangemaakt met als code '. $EBCode);
 						}
 					} else {
 						$EBCode = $_POST['begunstigde'];
@@ -222,11 +222,11 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 				if($write2EB)	{					
 					$errorResult = eb_verstuurDeclaratie ($EBCode, $boekstukNummer, $factuurnummer, $totaal, $_POST['GBR'], $toelichting.' ('.$_REQUEST['key'].')', $mutatieId);
 					if($errorResult) {
-						toLog('error', $_SESSION['ID'], $indiener, $errorResult);
+						toLog('error', $_SESSION['realID'], $indiener, $errorResult);
 						$page[] = 'Probleem met toevoegen van declaratie ter waarde van '. formatPrice($totaal) .' aan '. $EBData['naam'] .' ('. $EBCode .')<br>';
 						$addSucces = false;
 					} else {
-						toLog('info', $_SESSION['ID'], $indiener, 'Declaratie ['. $_REQUEST['key'] .'] van '. formatPrice($totaal) .' toegevoegd voor '. $EBData['naam'] .' ('. $EBCode .')');
+						toLog('info', $_SESSION['realID'], $indiener, 'Declaratie ['. $_REQUEST['key'] .'] van '. formatPrice($totaal) .' toegevoegd voor '. $EBData['naam'] .' ('. $EBCode .')');
 						$page[] = 'Declaratie van '. formatPrice($totaal) .' ingediend tnv '. $EBData['naam'] .'<br>';
 						$addSucces = true;
 					}
@@ -263,10 +263,10 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 					if(!$sendMail)	$param_finAdmin['testen'] = 1;				
 								
 					if(!sendMail_new($param_finAdmin)) {
-						toLog('error', $_SESSION['ID'], $indiener, "Problemen met versturen van mail naar financiële administratie");
+						toLog('error', $_SESSION['realID'], $indiener, "Problemen met versturen van mail naar financiële administratie");
 						$page[] = "Er zijn problemen met het versturen van mail naar de financiële administratie";
 					} else {
-						toLog('debug', $_SESSION['ID'], $indiener, "Declaratie-notificatie naar financiële administratie");
+						toLog('debug', $_SESSION['realID'], $indiener, "Declaratie-notificatie naar financiële administratie");
 						setDeclaratieStatus(5, $row[$EBDeclaratieID], $data['user']);
 						setDeclaratieActionDate($_REQUEST['key']);
 					}
@@ -297,10 +297,10 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 					if(!$sendMail)	$param_indiener['testen'] = 1;
 					
 					if(!sendMail_new($param_indiener)) {
-						toLog('error', $_SESSION['ID'], $indiener, "Problemen met versturen declaratie-goedkeuring [". $_REQUEST['key'] ."] door penningmeester");
+						toLog('error', $_SESSION['realID'], $indiener, "Problemen met versturen declaratie-goedkeuring [". $_REQUEST['key'] ."] door penningmeester");
 						$page[] = "Er zijn problemen met het versturen van de goedkeuringsmail.<br>\n";
 					} else {
-						toLog('info', $_SESSION['ID'], $indiener, "Declaratie-goedkeuring [". $_REQUEST['key'] ."] door penningmeester");
+						toLog('info', $_SESSION['realID'], $indiener, "Declaratie-goedkeuring [". $_REQUEST['key'] ."] door penningmeester");
 						$page[] = "Er is een mail met goedkeuring verstuurd naar ". makeName($indiener, 5) ."<br>\n";
 					}
 				}
@@ -354,10 +354,10 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 					if(!$sendMail)	$parameter['testen'] = 1;
 					
 					if(!sendMail_new($parameter)) {
-						toLog('error', $_SESSION['ID'], $data['user'], "Problemen met versturen teruglegging [". $_REQUEST['key'] ."]");
+						toLog('error', $_SESSION['realID'], $data['user'], "Problemen met versturen teruglegging [". $_REQUEST['key'] ."]");
 						$page[] = "Er zijn problemen met het versturen van de mail.";
 					} else {
-						toLog('info', $_SESSION['ID'], $data['user'], "Declaratie-afwijzing [". $_REQUEST['key'] ."] naar gemeentelid");
+						toLog('info', $_SESSION['realID'], $data['user'], "Declaratie-afwijzing [". $_REQUEST['key'] ."] naar gemeentelid");
 						$page[] = "Er is een mail met toelichting  verstuurd naar ". makeName($cluco, 5);
 						setDeclaratieStatus(3, $row[$EBDeclaratieID], $data['user']);
 						setDeclaratieActionDate($_REQUEST['key']);
@@ -412,7 +412,7 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 				setDeclaratieStatus(7, $row[$EBDeclaratieID], $data['user']);
 				setDeclaratieActionDate($_REQUEST['key']);
 				
-				toLog('info', $_SESSION['ID'], $data['user'], "Declaratie afgekeurd [". $_REQUEST['key'] ."]");
+				toLog('info', $_SESSION['realID'], $data['user'], "Declaratie afgekeurd [". $_REQUEST['key'] ."]");
 				
 				$page[] = "Declaratie is gemarkeerd als verwijderd. Neem contact op met de webmaster mocht dit onjuist zijn.<br>";
 				$page[] = "<br>Ga terug naar <a href='". $_SERVER['PHP_SELF']."'>het overzicht</a>.";			
@@ -436,10 +436,10 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 					if(!$sendMail)	$parameter['testen'] = 1;
 									
 					if(!sendMail_new($parameter)) {
-						toLog('error', $_SESSION['ID'], $indiener, "Problemen met declaratie [". $_REQUEST['key'] ."] kenmerken als niet exploitatie");
+						toLog('error', $_SESSION['realID'], $indiener, "Problemen met declaratie [". $_REQUEST['key'] ."] kenmerken als niet exploitatie");
 						$page[] = "Er zijn problemen met het doorsturen naar de financiele administratie voor afhandeling.<br>";
 					} else {
-						toLog('info', $_SESSION['ID'], $indiener, "Declaratie [". $_REQUEST['key'] ."] betreft geen exploitatie");
+						toLog('info', $_SESSION['realID'], $indiener, "Declaratie [". $_REQUEST['key'] ."] betreft geen exploitatie");
 						$page[] = "Declaratie is doorgestuurd naar de financiele administratie voor verdere afhandeling als zijnde geen declaratie. Neem contact op met de webmaster mocht dit onjuist zijn.<br>";
 						
 						setDeclaratieStatus(8, $row[$EBDeclaratieID], $data['user']);
@@ -680,7 +680,7 @@ if(in_array($_SESSION['ID'], $toegestaan)) {
 			$page[] = "<br>Ga terug naar <a href='". $_SERVER['PHP_SELF']."'>het overzicht</a>.";		
 		}
 	} else {
-		if(in_array($_SESSION['ID'], getGroupMembers(51))) {
+		if(in_array($_SESSION['useID'], getGroupMembers(51))) {
 			$sql = "SELECT * FROM $TableEBDeclaratie WHERE $EBDeclaratieCluster = 2 AND $EBDeclaratieStatus = 4";
 		} else {
 			$sql = "SELECT * FROM $TableEBDeclaratie WHERE $EBDeclaratieStatus = 4";
