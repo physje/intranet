@@ -79,10 +79,10 @@ if(isset($_REQUEST['wijk'])) {
 				$sql = "INSERT INTO $TablePastoraat ($PastoraatIndiener, $PastoraatTijdstip, $PastoraatLid, $PastoraatType, $PastoraatLocatie, $PastoraatZichtOud, $PastoraatZichtPred, $PastoraatZichtPas, $PastoraatNote) VALUES (". $_SESSION['useID'] .", ". mktime(12,12,0,$_POST['maand'],$_POST['dag'],$_POST['jaar']) .", ". $_POST['lid'] .", ". $_POST['type'] .", ". $_POST['locatie'] .", '". (isset($_POST['ouderling']) ? 1 : 0) ."', '". (isset($_POST['predikant']) ? 1 : 0) ."', '". (isset($_POST['bezoeker']) ? 1 : 0) ."', '". urlencode(str_rot13($_POST['aantekening'])) ."')";
 				if(mysqli_query($db, $sql)) {
 					$text[] = "Opgeslagen<br>";
-					toLog('info', $_SESSION['realID'], $_POST['lid'], 'Pastoraal bezoek op '. $_POST['dag'] .'-'. $_POST['maand'] .'-'. $_POST['jaar'] .' toegevoegd');
+					toLog('info', $_POST['lid'], 'Pastoraal bezoek op '. $_POST['dag'] .'-'. $_POST['maand'] .'-'. $_POST['jaar'] .' toegevoegd');
 				} else {
 					$text[] = "Probelemen met opslaan<br>";
-					toLog('error', $_SESSION['realID'], $_POST['lid'], 'Problemen met opslaan pastoraal bezoek op '. $_POST['dag'] .'-'. $_POST['maand'] .'-'. $_POST['jaar']);
+					toLog('error', $_POST['lid'], 'Problemen met opslaan pastoraal bezoek op '. $_POST['dag'] .'-'. $_POST['maand'] .'-'. $_POST['jaar']);
 				}
 			}
 			
@@ -170,9 +170,9 @@ if(isset($_REQUEST['wijk'])) {
 			$blok[] = "</table>";
 		}
 	} elseif($inWijkteam) {
-		$text[] = "Helaas, als ". strtolower($teamRollen[$rol]) ." van wijk $wijk heb je geen toegang";
+		$text[] = "Helaas ". makeName($_SESSION['useID'], 1) .", als ". strtolower($teamRollen[$rol]) ." van wijk $wijk heb je geen toegang";
 	} else {		
-		$text[] = "Je bent niet bekend als lid van het wijkteam van wijk $wijk";
+		$text[] = "Helaas ". makeName($_SESSION['useID'], 1) .", je bent niet bekend als lid van het wijkteam van wijk $wijk";
 	}
 } else {
 	$text[] = "Welke wijk wil je bekijken";
@@ -210,7 +210,7 @@ if(isset($blok)) {
 	echo "<div class='content_block'>".NL. implode(NL, $blok).NL."</div>".NL;
 	echo '</div> <!-- end \'content_vert_kolom_full\' -->'.NL;
 } else {
-	echo '<div class="content_vert_kolom">'.NL;
+	echo '<div class="content_vert_kolom_full">'.NL;
 	if(isset($_REQUEST['addID'])) echo "<h1>". makeName($_REQUEST['addID'], 5) ."</h1>";	
 	echo "<div class='content_block'>".NL. implode(NL, $text).NL."</div>".NL;
 	echo '</div> <!-- end \'content_vert_kolom\' -->'.NL;

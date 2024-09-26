@@ -10,10 +10,10 @@ include($cfgProgDir. "secure.php");
 $left = $right = array();
 $myGroups = getMyGroups($_SESSION['realID']);
 
-if(in_array(1, $myGroups)) {
-	
+if(in_array(1, $myGroups)) {	
 	if(isset($_POST['unmask'])) {
-		unset($_SESSION['fakeID']);
+		toLog('info', $_SESSION['fakeID'], 'Vermomming afgedaan');
+		unset($_SESSION['fakeID']);		
 	}
 	
 	if(isset($_POST['fake_lid']) AND $_POST['fake_lid'] != '') {
@@ -21,8 +21,9 @@ if(in_array(1, $myGroups)) {
 		$fake_lid = $delen[1];
 		
 		$_SESSION['fakeID'] = $fake_lid;
+		toLog('info', $_SESSION['fakeID'], 'Vermomd aangetrokken');
 		
-		$right[] = "Vermommt als ". makeName($fake_lid, 5) .".<br>";	
+		$right[] = "Vermomd als ". makeName($fake_lid, 5) .".<br>";	
 		$right[] = "<form method='post' action='$_SERVER[PHP_SELF]'>";
 		$right[] = "<p class='after_table'><input type='submit' name='unmask' value='Vermomming afdoen'></p>";
 		$right[] = "</form>";

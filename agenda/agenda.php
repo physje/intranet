@@ -30,10 +30,10 @@ if(isset($_POST['remove'])) {
 	
 	if(mysqli_query($db, $query)) {
 		$text[] = "De afspraak '". $_POST['titel'] ."' is verwijderd";
-		toLog('info', $_SESSION['realID'], '', "Agenda-item '". $_POST['titel'] ."' [". $_POST['id'] ."] verwijderd");
+		toLog('info', '', "Agenda-item '". $_POST['titel'] ."' [". $_POST['id'] ."] verwijderd");
 	} else {
 		$text[] = "Het verwijderen van '". $_POST['titel'] ."' is niet gelukt.";
-		toLog('error', $_SESSION['realID'], '', "Kan agenda-item '". $_POST['titel'] ."' [". $_POST['id'] ."] niet verwijderen");
+		toLog('error', '', "Kan agenda-item '". $_POST['titel'] ."' [". $_POST['id'] ."] niet verwijderen");
 	}
 } elseif(isset($_POST['save'])) {
 	$startTijd = mktime($_POST['sUur'], $_POST['sMin'], 0, $_POST['Maand'], $_POST['Dag'], $_POST['Jaar']);
@@ -44,10 +44,10 @@ if(isset($_POST['remove'])) {
 				
 		if(mysqli_query($db, $query)) {
 			$text[] = "De afspraak '". $_POST['titel'] ."' [". $_POST['id'] ."] is opgeslagen";
-			toLog('info', $_SESSION['realID'], '', "Agenda-item '". $_POST['titel'] ."' gewijzigd");
+			toLog('info', '', "Agenda-item '". $_POST['titel'] ."' gewijzigd");
 		} else {
 			$text[] = "Het opslaan van de afspraak is niet gelukt.";
-			toLog('error', $_SESSION['realID'], '', "Kan agenda-item '". $_POST['titel'] ."' [". $_POST['id'] ."] niet wijzigen");
+			toLog('error', '', "Kan agenda-item '". $_POST['titel'] ."' [". $_POST['id'] ."] niet wijzigen");
 		}
 		$text[] = "<p>";
 		$text[] = "<a href='". $_SERVER['PHP_SELF'] ."'>Terug naar het overzicht</a>.";
@@ -71,7 +71,7 @@ if(isset($_POST['remove'])) {
 			$mail[] = "Om deze afspraak te beheren kan je <a href='". $ScriptURL ."agenda/agenda.php?id=". $newID ."&hash=". $UserData['hash_long'] ."'>deze link</a> gebruiken, daarmee kom je direct weer bij deze afspraak terecht";
 			
 			$text[] = "De afspraak '". $_POST['titel'] ."' is toegevoegd.<br>";
-			toLog('info', $_SESSION['realID'], '', "Agenda-item '". $_POST['titel'] ."' toegevoegd");
+			toLog('info', '', "Agenda-item '". $_POST['titel'] ."' toegevoegd");
 						
 			$param['to'][]			= array($_SESSION['useID']);
 			$param['message']		= implode("<br>\n", $mail);
@@ -79,14 +79,14 @@ if(isset($_POST['remove'])) {
 						
 			if(sendMail_new($param)) {
 				$text[] = "Je hebt een bevestigingsmail ontvangen.";
-				toLog('debug', $_SESSION['realID'], '', "Bevestigingsmail voor '". $_POST['titel'] ."' [$newID] verstuurd");
+				toLog('debug', '', "Bevestigingsmail voor '". $_POST['titel'] ."' [$newID] verstuurd");
 			} else {
 				$text[] = "Het versturen van een bevestigingsmail is helaas mislukt.<br>";
-				toLog('error', $_SESSION['realID'], '', "Kan geen bevestigingsmail voor '". $_POST['titel'] ."' [$newID] versturen");
+				toLog('error', '', "Kan geen bevestigingsmail voor '". $_POST['titel'] ."' [$newID] versturen");
 			}			
 		} else {
 			$text[] = "Het opslaan van de afspraak is niet gelukt.";
-			toLog('error', $_SESSION['realID'], '', "Kan agenda-item '". $_POST['titel'] ."' niet opslaan");
+			toLog('error', '', "Kan agenda-item '". $_POST['titel'] ."' niet opslaan");
 		}
 	}	
 } elseif(isset($_REQUEST['id']) OR isset($_REQUEST['new'])) {

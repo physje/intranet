@@ -1195,11 +1195,23 @@ function getJarigen($dag, $maand) {
 	return $data;	
 }
 
+/*
 function toLog($type, $dader, $slachtoffer, $message) {
 	global $db,$TableLog, $LogID, $LogTime, $LogType, $LogUser, $LogSubject, $LogMessage, $db;
  	
 	$tijd = time();	
 	$sql = "INSERT INTO $TableLog ($LogTime, $LogType, $LogUser, $LogSubject, $LogMessage) VALUES ($tijd, '$type', '$dader', '$slachtoffer', '". addslashes($message) ."')";
+	if(!mysqli_query($db, $sql)) {
+		echo "log-error : ". $sql;
+	}
+}
+*/
+
+function toLog($type, $slachtoffer, $message) {
+	global $db,$TableLog, $LogID, $LogTime, $LogType, $LogUser, $LogDisguised, $LogSubject, $LogMessage, $db;
+ 	
+	$tijd = time();	
+	$sql = "INSERT INTO $TableLog ($LogTime, $LogType, $LogUser, $LogDisguised, $LogSubject, $LogMessage) VALUES ($tijd, '$type', '". $_SESSION['realID'] ."', '". (isset($_SESSION['fakeID']) ? $_SESSION['fakeID'] : '') ."', '$slachtoffer', '". addslashes($message) ."')";
 	if(!mysqli_query($db, $sql)) {
 		echo "log-error : ". $sql;
 	}
@@ -1230,7 +1242,7 @@ function getString($start, $end, $string, $offset) {
 }
 
 function getLogData($start, $end, $types, $dader, $subject, $message, $aantal) {
-	global $db, $TableLog, $LogID, $LogTime, $LogType, $LogUser, $LogSubject, $LogMessage;
+	global $db, $TableLog, $LogID, $LogTime, $LogType, $LogUser, $LogDisguised, $LogSubject, $LogMessage;
 		
 	if($dader != '') {
 		$where[] = "$LogUser = $dader";
@@ -1263,6 +1275,7 @@ function getLogData($start, $end, $types, $dader, $subject, $message, $aantal) {
 			$Data['type']					= $row[$LogType];
 			$Data['dader']				= $row[$LogUser];
 			$Data['slachtoffer']	= $row[$LogSubject];
+			$Data['vermomming']		= $row[$LogDisguised];
 			$Data['melding']			= $row[$LogMessage];
 			
 			$LogData[] = $Data;

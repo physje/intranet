@@ -96,10 +96,10 @@ if(!isset($_REQUEST['letter'])) {
 */
 if($letter != '') {
 	$sql = "SELECT $UserID FROM $TableUsers WHERE $UserStatus = 'actief' AND $UserAchternaam like '$letter%' ORDER BY $UserAchternaam";
-	toLog('debug', $_SESSION['realID'], '', "Ledenlijst letter $letter");
+	toLog('debug', '', "Ledenlijst letter $letter");
 } elseif($wijk != '') {
 	$sql = "SELECT $UserID FROM $TableUsers WHERE $UserStatus = 'actief' AND $UserWijk like '$wijk' ORDER BY $UserAchternaam";
-	toLog('debug', $_SESSION['realID'], '', "Ledenlijst wijk $wijk");
+	toLog('debug', '', "Ledenlijst wijk $wijk");
 }
 
 $result = mysqli_query($db, $sql);

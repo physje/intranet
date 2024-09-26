@@ -38,7 +38,7 @@ if((in_array($_SESSION['useID'], $IDs) OR count(array_intersect($familie, $IDs))
 	$showRuilen = true;
 }
 
-toLog('debug', $_SESSION['realID'], '', 'Rooster '. $RoosterData['naam'] .' bekeken');
+toLog('debug', '', 'Rooster '. $RoosterData['naam'] .' bekeken');
 
 $block_1[] = '<table>';
 $block_1[] = '<thead>';

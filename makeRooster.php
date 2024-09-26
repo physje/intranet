@@ -71,7 +71,7 @@ if(isset($_POST['save']) OR isset($_POST['maanden'])) {
 		}
 	}
 	
-	toLog('info', $_SESSION['realID'], '', 'Rooster '. $RoosterData['naam'] .' aangepast');
+	toLog('info', '', 'Rooster '. $RoosterData['naam'] .' aangepast');
 }
 
 # Als er op de knop van 3 maanden extra geklikt is, 3 maanden bij de eindtijd toevoegen

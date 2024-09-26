@@ -18,8 +18,6 @@ $allGroups = getAllGroups();
 $myGroups = getMyGroups($_SESSION['useID']);
 $myGroepBeheer = getMyGroupsBeheer($_SESSION['useID']);
 
-#$myRealGroups = getMyGroups($_SESSION['realID']);
-
 $blocks = array();
 
 # Roosters
@@ -166,7 +164,7 @@ if(in_array(1, $myGroups) OR in_array(8, $myGroups) OR in_array(9, $myGroups) OR
 # 20 = Preekvoorziening
 # 22 = Diaconie
 # 52 = Scipio-beheer
-if(in_array(1, $myGroups) OR in_array(11, $myGroups) OR in_array(20, $myGroups) OR in_array(22, $myGroups) OR in_array(52, $myGroups)) {
+if(in_array(1, $myGroups) OR in_array(11, $myGroups) OR in_array(20, $myGroups) OR in_array(22, $myGroups) OR in_array(28, $myGroups) OR in_array(52, $myGroups)) {
 	$wijzigDeel[] = "<b>Kerkdiensten</b>";
 }
 
@@ -341,7 +339,7 @@ $blocks[] = $links;
 
 # Site
 if(isset($_SESSION['fakeID'])) {
-	$site[] = "<b>Ingelogd als ". makeName($_SESSION['fakeID'], 5)."</b> (werkelijk ". makeName($_SESSION['realID'], 5) .")";
+	$site[] = "<b>Ingelogd als ". makeName($_SESSION['realID'], 5)."</b> (vermomd als ". makeName($_SESSION['fakeID'], 5) .")";
 } else {
 	$site[] = "<b>Ingelogd als ". makeName($_SESSION['useID'], 5)."</b>";
 }

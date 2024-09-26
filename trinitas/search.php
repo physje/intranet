@@ -17,7 +17,7 @@ $zoekScherm[] = "</tr>";
 $zoekScherm[] = "</table>";
 
 if($_POST['searchString'] != '') {
-	toLog('debug', $_SESSION['realID'], '', 'zoeken op '. $_POST['searchString']);
+	toLog('debug', '', 'zoeken op '. $_POST['searchString']);
 	
 	$zoekString = $_POST['searchString'];
 	$zoekString = str_replace(' ', '+', $zoekString);

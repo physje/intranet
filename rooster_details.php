@@ -30,7 +30,7 @@ if(isset($_POST['save_details'])) {
 if(isset($_POST['save_mail'])) {
 	$sql = "UPDATE $TableRoosters SET $RoostersMail = '". urlencode($_POST['text_mail']) ."', $RoostersSubject = '". urlencode($_POST['onderwerp_mail']) ."', $RoostersFrom = '". urlencode($_POST['naam_afzender']) ."',	$RoostersFromAddr = '". urlencode($_POST['mail_afzender']) ."' WHERE $RoostersID = ". $_POST['rooster'];
 	mysqli_query($db, $sql);
-	toLog('info', $_SESSION['ID'], '', 'Mail voor '. $RoosterData['naam'] .' aangepast');
+	toLog('info', '', 'Mail voor '. $RoosterData['naam'] .' aangepast');
 }
 
 # Data kan hierboven gewijzigd zijn, voor de zekerheid opnieuw ophalen
@@ -55,6 +55,15 @@ $rooster_details[] = "</tr>";
 $rooster_details[] = "<tr>";
 $rooster_details[] = "	<td><input type='checkbox' name='interneOpmerking' value='1'". ($RoosterData['opmerking'] == 1 ? ' checked' : '') ."></td>";
 $rooster_details[] = "	<td>Mogelijkheid om interne opmerkingen bij het rooster te plaatsen<br><small>(huidige opmerkingen worden verwijderd bij uitvinken)</small></td>";
+$rooster_details[] = "</tr>";
+$rooster_details[] = "<tr>";
+$rooster_details[] = "	<td><input type='checkbox' name='ouderMail' value='1'". ($RoosterData['ouderMail'] == 1 ? ' checked' : '') ."></td>";
+$rooster_details[] = "	<td>Mocht er een tiener op het rooster staan, stuur zijn/haar ouders dan een CC van de remindermail</td>";
+$rooster_details[] = "</tr>";
+
+$rooster_details[] = "<tr>";
+$rooster_details[] = "	<td><input type='checkbox' name='partnerMail' value='1'". ($RoosterData['partnerMail'] == 1 ? ' checked' : '') ."></td>";
+$rooster_details[] = "	<td>Stuur niet alleen de persoon op het rooster een remindermail, maar ook zijn/haar partner</td>";
 $rooster_details[] = "</tr>";
 $rooster_details[] = "</table>";
 $rooster_details[] = "<p class='after_table'><input type='submit' name='save_details' value='Details opslaan'></p>";

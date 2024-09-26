@@ -180,10 +180,10 @@ if(isset($_POST['correct'])) {
 		if(!$sendMail)	$param_cluco['testen'] = 1;
 					
 		if(!sendMail_new($param_cluco)) {
-			toLog('error', $_SESSION['realID'], '', "Problemen met invoeren van declaratie [$uniqueKey] en voorleggen aan cluco (". makeName($cluco, 5).")");
+			toLog('error', '', "Problemen met invoeren van declaratie [$uniqueKey] en voorleggen aan cluco (". makeName($cluco, 5).")");
 			$page[] = "Er zijn problemen met het versturen van de notificatie-mail naar de clustercoordinator.";
 		} else {
-			toLog('info', $_SESSION['realID'], '', "Declaratie [$uniqueKey] ingevoerd en doorgestuurd naar cluco (". makeName($cluco, 5).")");
+			toLog('info', '', "Declaratie [$uniqueKey] ingevoerd en doorgestuurd naar cluco (". makeName($cluco, 5).")");
 			$page[] = "De declaratie is ter goedkeuring voorgelegd aan ". makeName($cluco, 5) ." als clustercoordinator";
 		}
 		
@@ -194,7 +194,7 @@ if(isset($_POST['correct'])) {
 		# Alles verwijderen nadat de declaratie is ingeschoten en de mail de deur uit is
 		unset($_POST);		
 	} else {
-		toLog('info', $_SESSION['realID'], '', "Mogelijk dubbele declaratie, geblokkeerd.");
+		toLog('info', '', "Mogelijk dubbele declaratie, geblokkeerd.");
 		$page[] = "U heeft recent al een dergelijke declaratie ingediend. Opnieuw indienen is helaas niet mogelijk.";
 	}
 	$page[] = "<br>";

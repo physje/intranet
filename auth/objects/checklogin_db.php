@@ -110,7 +110,7 @@ if(!$_SESSION['logged']) {
   		$google2fa = new \PragmaRX\Google2FA\Google2FA();
   		
 			if(!$google2fa->verifyKey($secret_key, $_POST['entered_2FA'])) {			
-				toLog('debug', $_SESSION['realID'], '', 'Foutieve 2FA-code');
+				toLog('debug', '', 'Foutieve 2FA-code');
 				$phpSP_message = 'Onjuiste code';
 				include($cfgProgDir . "2FA.php");
 				exit;
@@ -125,7 +125,7 @@ if(!$_SESSION['logged']) {
 	storeLogin($_SESSION['realID'], $_SERVER['REMOTE_ADDR'], $_SERVER['HTTP_USER_AGENT']);
 	
 	# Schrijf inlog in logfiles weg
-	toLog('info', $_SESSION['realID'], '', 'Inlogpoging vanaf '. $_SERVER['REMOTE_ADDR']);
+	toLog('info', '', 'Inlogpoging vanaf '. $_SERVER['REMOTE_ADDR']);
 }
 
 

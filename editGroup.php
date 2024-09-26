@@ -30,7 +30,7 @@ if(isset($_POST['change_members'])) {
 		$newLidID = $delen[1];
 		addGroupLid($newLidID, $_POST['groep']);
 	}
-	toLog('info', $_SESSION['realID'], '', 'Leden '. $groupData['naam'] .' gewijzigd');
+	toLog('info', '', 'Leden '. $groupData['naam'] .' gewijzigd');
 }
 
 if(isset($_POST['change_site'])) {	
@@ -40,7 +40,7 @@ if(isset($_POST['change_site'])) {
 	$sql = "UPDATE $TableGroups SET ". implode(", ", $set) ." WHERE $GroupID = ". $_REQUEST['groep'];
 	mysqli_query($db, $sql);
 		
-	toLog('info', $_SESSION['realID'], '', 'Tekst voor groeppagina '. $groupData['naam'] .' gewijzigd');
+	toLog('info', '', 'Tekst voor groeppagina '. $groupData['naam'] .' gewijzigd');
 }
 
 $GroupMembers = getGroupMembers($_REQUEST['groep']);

@@ -26,10 +26,10 @@ if(isset($_POST['toevoegen'])) {
 	$sql			= "INSERT INTO $TableArchief ($ArchiefID, $ArchiefJaar, $ArchiefNr, $ArchiefName, $ArchiefHash, $ArchiefPubDate) VALUES ('". generateID() ."', '". $_POST['jaargang'] ."', '". $_POST['nummer'] ."', '$uniqeFilename', '$hash', $pubDate)";
 	if(mysqli_query($db, $sql)) {
 		$HTML[] = "Gelukt, <a href='main.php'>startpagina</a>";
-		toLog('info', $_SESSION['realID'], '', $_POST['jaargang'] .' - '. $_POST['nummer'] .' toegevoegd');
+		toLog('info', '', $_POST['jaargang'] .' - '. $_POST['nummer'] .' toegevoegd');
 	} else {
 		$HTML[] = "Daar ging iets verkeerd";
-		toLog('error', $_SESSION['realID'], '', 'Problemen met toevoegen '.$_POST['jaargang'] .' - '. $_POST['nummer'] .' toegevoegd');
+		toLog('error', '', 'Problemen met toevoegen '.$_POST['jaargang'] .' - '. $_POST['nummer'] .' toegevoegd');
 	}
 } else {
 	$sql = "SELECT MAX($ArchiefJaar) as max FROM $TableArchief";

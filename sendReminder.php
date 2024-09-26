@@ -50,10 +50,6 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 					$positie					= 0;
 					$HTMLMail					= $roosterData['text_mail'];
 					$onderwerp				= $roosterData['onderwerp_mail'];
-					$var['ReplyToName']	= $roosterData['naam_afzender'];
-					$var['ReplyTo']			= $roosterData['mail_afzender'];
-					# Stuur bij 'tieners' een CC naar de ouders
-					$var['ouderCC']		= 1;
 																	
 					foreach($vulling as $lid => $naam) {
 						$team = excludeID($vulling, $lid);
@@ -131,6 +127,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 						$param['subject']			= $FinalSubject;
 						$param['ReplyToName']	= $roosterData['naam_afzender'];
 						$param['ReplyTo']			= $roosterData['mail_afzender'];						
+						# Stuur bij 'tieners' een CC naar de ouders
 						$param['ouderCC']			= true;
 									
 						if(sendMail_new($param)) {

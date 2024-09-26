@@ -21,9 +21,9 @@ if(isset($_POST['save'])) {
 		
 			if(!mysqli_query($db, $sql)) {
 				$blockLinks .= "Er ging iets mis met het opslaan van het gebedspunt voor $id<br>";
-				toLog('error', $_SESSION['realID'], '', 'Gebedspunt van '. $data[$id] .' kon niet worden gewijzigd');
+				toLog('error', '', 'Gebedspunt van '. $data[$id] .' kon niet worden gewijzigd');
 			} else {
-				toLog('info', $_SESSION['realID'], '', 'Gebedspunt van '. $data[$id] .' gewijzigd');
+				toLog('info', '', 'Gebedspunt van '. $data[$id] .' gewijzigd');
 			}
 		}
 	}

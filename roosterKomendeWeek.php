@@ -11,7 +11,7 @@ if(isset($_REQUEST['id'])) {
 	$start = mktime(0,0,0,date("n", $details['start']), date("j", $details['start']), date("Y", $details['start']));
 	$eind = mktime(23,59,59,date("n", $details['eind']), date("j", $details['eind']), date("Y", $details['eind']));
 	
-	toLog('info', $_SESSION['realID'], '', 'Rooster van dienst '. $_REQUEST['id'] .' bekeken');	
+	toLog('info', '', 'Rooster van dienst '. $_REQUEST['id'] .' bekeken');	
 } else {
 	$start = mktime(0,0,0);
 	//$eind = mktime(23,59,59,date("n"), (date("j")+7+(7-date("N"))));

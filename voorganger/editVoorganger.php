@@ -52,10 +52,10 @@ if(isset($_REQUEST['voorgangerID'])) {
 						
 			if(mysqli_query($db, $sql)) {
 				$top_left[] = "Gegevens opgeslagen";
-				toLog('info', $_SESSION['ID'], '', 'Gegevens voorganger ('. $_REQUEST['voorgangerID'] .') bijgewerkt');
+				toLog('info', '', 'Gegevens voorganger ('. $_REQUEST['voorgangerID'] .') bijgewerkt');
 			} else {
 				$top_left[] = "Ging iets niet goed met gegevens opslaan";
-				toLog('error', $_SESSION['ID'], '', 'Gegevens voorganger ('. $_REQUEST['voorgangerID'] .') konden niet worden opgeslagen');
+				toLog('error', '', 'Gegevens voorganger ('. $_REQUEST['voorgangerID'] .') konden niet worden opgeslagen');
 			}
 		}
 	}
@@ -63,9 +63,9 @@ if(isset($_REQUEST['voorgangerID'])) {
 	# Sla declaratie-data op
 	if(isset($_POST['save_decl'])) {
 		$sql = "UPDATE $TableVoorganger SET ";
-		#$sql .= "$VoorgangerHonorariumOld = '". $_POST['honorarium_old'] ."', ";
 		$sql .= "$VoorgangerHonorariumNew = '". $_POST['honorarium_new'] ."', ";
 		$sql .= "$VoorgangerHonorarium2023 = '". $_POST['honorarium_2023'] ."', ";
+		#$sql .= "$VoorgangerHonorarium2024 = '". $_POST['honorarium_2024'] ."', ";
 		$sql .= "$VoorgangerHonorariumSpecial = '". $_POST['honorarium_spec'] ."', ";
 		$sql .= "$VoorgangerKM = '". $_POST['km_vergoeding'] ."', ";
 		$sql .= "$VoorgangerEBRelatie = '". $_POST['EB_relatie'] ."' ";		
@@ -73,10 +73,10 @@ if(isset($_REQUEST['voorgangerID'])) {
 		
 		if(mysqli_query($db, $sql)) {
 			$top_right[] = "Gegevens opgeslagen";
-			toLog('info', $_SESSION['ID'], '', 'Gegevens voorganger ('. $_REQUEST['voorgangerID'] .') bijgewerkt');
+			toLog('info', '', 'Gegevens voorganger ('. $_REQUEST['voorgangerID'] .') bijgewerkt');
 		} else {
 			$top_right[] = "Ging iets niet goed met gegevens opslaan";
-			toLog('error', $_SESSION['ID'], '', 'Gegevens voorganger ('. $_REQUEST['voorgangerID'] .') konden niet worden opgeslagen');
+			toLog('error', '', 'Gegevens voorganger ('. $_REQUEST['voorgangerID'] .') konden niet worden opgeslagen');
 		}		
 	}
 	
@@ -101,10 +101,10 @@ if(isset($_REQUEST['voorgangerID'])) {
 	$voorgangerData['declaratie'] = ((isset($_POST['declaratie']) AND $_POST['declaratie'] == 'ja') ? '1' : $firstData['declaratie']);
 	$voorgangerData['reiskosten'] = ((isset($_POST['reiskosten']) AND $_POST['reiskosten'] == 'ja') ? '1' : $firstData['reiskosten']);
 	
-	
-	#$voorgangerData['honorarium_oud'] 	= getParam('honorarium_old', $secondData['honorarium_oud']);
+		
 	$voorgangerData['honorarium_nieuw']	= getParam('honorarium_new', $secondData['honorarium_nieuw']);
 	$voorgangerData['honorarium_2023']	= getParam('honorarium_2023', $secondData['honorarium_2023']);
+	#$voorgangerData['honorarium_2024']	= getParam('honorarium_2023', $secondData['honorarium_2024']);
 	$voorgangerData['honorarium_spec']	= getParam('honorarium_spec', $secondData['honorarium_spec']);
 	$voorgangerData['km_vergoeding']		= getParam('km_vergoeding', $secondData['km_vergoeding']);
 	$voorgangerData['EB-relatie']				= getParam('EB_relatie', $secondData['EB-relatie']);
@@ -188,7 +188,7 @@ if(isset($_REQUEST['voorgangerID'])) {
 	$left[] = "</form>";
 	
 	
-	if(in_array(1, getMyGroups($_SESSION['ID']))) {	
+	if(in_array(1, getMyGroups($_SESSION['useID']))) {	
 		$right[] = "<form method='post' action='$_SERVER[PHP_SELF]'>";
 		$right[] = "<input type='hidden' name='voorgangerID' value='". $_REQUEST['voorgangerID'] ."'>";
 		$right[] = "<table>";
@@ -199,7 +199,11 @@ if(isset($_REQUEST['voorgangerID'])) {
 		$right[] = "<tr>";
 		$right[] = "	<td>Honorarium v.a. 2023</td>";
 		$right[] = "	<td><input type='text' name='honorarium_2023' value='". $voorgangerData['honorarium_2023'] ."'> cent</td>";
-		$right[] = "</tr>";		
+		$right[] = "</tr>";
+		#$right[] = "<tr>";
+		#$right[] = "	<td>Honorarium v.a. 2024</td>";
+		#$right[] = "	<td><input type='text' name='honorarium_2024' value='". $voorgangerData['honorarium_2024'] ."'> cent</td>";
+		#$right[] = "</tr>";
 		$right[] = "<tr>";
 		$right[] = "	<td>Honorarium<br><small>speciale gelegenheden</small></td>";
 		$right[] = "	<td><input type='text' name='honorarium_spec' value='". $voorgangerData['honorarium_spec'] ."'> cent</td>";

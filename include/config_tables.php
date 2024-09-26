@@ -116,6 +116,7 @@ $LogID												= "id";
 $LogTime											= "tijd";
 $LogType											= "type";
 $LogUser											= "dader";
+$LogDisguised									= "vermomd";
 $LogSubject										= "slachtoffer";
 $LogMessage										= "message";
                     					

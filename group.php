@@ -37,6 +37,6 @@ echo '</div> <!-- end \'content_block\' -->'.NL;
 echo '</div> <!-- end \'content_vert_kolom_full\' -->'.NL;
 echo showCSSFooter();
 
-toLog('debug', $_SESSION['realID'], '', 'Groep-pagina '. $groupData['naam'] .' bekeken');
+toLog('debug', '', 'Groep-pagina '. $groupData['naam'] .' bekeken');
 
 ?>

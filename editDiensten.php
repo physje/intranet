@@ -9,6 +9,8 @@ include($cfgProgDir. "secure.php");
 $db = connect_db();
 $new = array();
 
+$myGroups = getMyGroups($_SESSION['useID']);
+
 # Als er op een knop gedrukt is, het rooster wegschrijven
 if(isset($_POST['save']) OR isset($_POST['maanden'])) {	
 	foreach($_POST['bijz'] as $dienst => $bijzonderheid) {
@@ -39,7 +41,7 @@ if(isset($_POST['save']) OR isset($_POST['maanden'])) {
 						
 		mysqli_query($db, $sql);
 	}
-	toLog('info', $_SESSION['realID'], '', 'Diensten bijgewerkt');
+	toLog('info', '', 'Diensten bijgewerkt');
 }
 
 if(isset($_REQUEST['new'])) {
@@ -48,7 +50,7 @@ if(isset($_REQUEST['new'])) {
 	$query	= "INSERT INTO $TableDiensten ($DienstStart, $DienstEind) VALUES ('$start', '$eind')";
 	$result = mysqli_query($db, $query);
 			
-	toLog('info', $_SESSION['realID'], '', 'Dienst voor '. date("d-m-Y", $start) .' toegevoegd');
+	toLog('info', '', 'Dienst voor '. date("d-m-Y", $start) .' toegevoegd');
 }
 
 if(isset($_REQUEST['delete']) AND !isset($_REQUEST['cancel'])) {
@@ -58,7 +60,7 @@ if(isset($_REQUEST['delete']) AND !isset($_REQUEST['cancel'])) {
 		$query	= "DELETE FROM $TableDiensten WHERE $DienstID = ". $_REQUEST['id'];
 		$result = mysqli_query($db, $query);
 			
-		toLog('info', $_SESSION['realID'], '', formatDagdeel($details['start']).' van '. date("d-m-Y", $details['start']) .' ['. $_REQUEST['id'] .'] verwijderd');
+		toLog('info', '', formatDagdeel($details['start']).' van '. date("d-m-Y", $details['start']) .' ['. $_REQUEST['id'] .'] verwijderd');
 	} else {
 		$text[] = "<form method='post' action='$_SERVER[PHP_SELF]'>";
 		$text[] = "<input type='hidden' name='delete' value='ja'>";
@@ -113,7 +115,7 @@ if(!isset($_REQUEST['delete']) OR (isset($_REQUEST['delete']) AND isset($_REQUES
 	$text[] = "	<td>Eind</td>";
 	$text[] = "	<td>Bijzonderheid</td>";
 	$text[] = "	<td>Trouw/Begrafenis</td>";
-	if(in_array(1, getMyGroups($_SESSION['useID']))) {
+	if(in_array(1, $myGroups) OR in_array(28, $myGroups)) {
 		$text[] = "	<td>&nbsp;</td>";
 	}
 	$text[] = "</tr>";
@@ -152,7 +154,7 @@ if(!isset($_REQUEST['delete']) OR (isset($_REQUEST['delete']) AND isset($_REQUES
 		} else {
 			$text[] = "	<td align='right'>". time2str("%a %e %b", $data['start']) ."</td>";
 		}
-		//$text[] = "	<td align='right'>". date("d m Y", $data['start']) ."</td>";
+		
 		$text[] = "	<td><select name='sUur[$dienst]'>";
 		for($u=0; $u<24 ; $u++) {
 			$text[] = "	<option value='$u'". ($u == $sUur ? ' selected' : '') .">$u</option>";
@@ -175,28 +177,17 @@ if(!isset($_REQUEST['delete']) OR (isset($_REQUEST['delete']) AND isset($_REQUES
 		$text[] = "	</select></td>";	
 		$text[] = "	<td><input type='text' name='bijz[$dienst]' value=\"". $data['bijzonderheden'] ."\" size='30'></td>";	
 		$text[] = "	<td><input type='checkbox' name='spec[$dienst]' value='1'". ($data['speciaal'] == 1 ? ' checked' : '') ."></td>";	
-		if(in_array(1, getMyGroups($_SESSION['useID']))) {
+		if(in_array(1, $myGroups) OR in_array(28, $myGroups)) {
 			$text[] = "	<td align='right'><a href='?delete=ja&id=$dienst'><img src='images\delete.png'></a></td>";
 		}
 		$text[] = "</tr>";
 	}
 	
-	#$text[] = "<tr>";
-	#$text[] = "<td colspan='5' align='middle'>";
-	#$text[] = "<table width='100%'>";
-	#$text[] = "<tr>";
-	#$text[] = "	<td width='33%' align='left'><input type='submit' name='prev' value='Vorige 3 maanden'></td>";
-	#$text[] = "	<td width='33%' align='center'><input type='submit' name='save' value='Diensten opslaan'></td>";
-	#$text[] = "	<td width='33%' align='right'><input type='submit' name='next' value='Volgende 3 maanden'></td>";
-	#$text[] = "</tr>";
-	#$text[] = "</table>";
-	#$text[] = "</td>";
-	#$text[] = "</tr>";
 	$text[] = "</table>";
 	$text[] = "<p class='after_table'><input type='submit' name='prev' value='Vorige 3 maanden'>&nbsp;<input type='submit' name='save' value='Diensten opslaan'>&nbsp;<input type='submit' name='next' value='Volgende 3 maanden'></p>";
 	$text[] = "</form>";
 	
-	if(in_array(1, getMyGroups($_SESSION['useID']))) {
+	if(in_array(1, $myGroups) OR in_array(28, $myGroups)) {
 		$new[] = "<a href='?new'>Extra dienst toevoegen</a>";
 	}
 }
@@ -215,7 +206,7 @@ echo showCSSHeader(array('default', 'table_rot'), $header);
 echo '<div class="content_vert_kolom_full">'.NL;
 echo '<h1>Kerkdiensten</h1>'.NL;
 echo "<div class='content_block'>".NL. implode(NL, $text).NL."</div>".NL;
-echo "<div class='content_block'>".NL. implode(NL, $new).NL."</div>".NL;
+if(count($new) > 0)	echo "<div class='content_block'>".NL. implode(NL, $new).NL."</div>".NL;
 echo '</div> <!-- end \'content_vert_kolom_full\' -->'.NL;
 echo showCSSFooter();
 

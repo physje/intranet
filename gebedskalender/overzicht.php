@@ -10,7 +10,7 @@ include($cfgProgDir. "secure.php");
 $maand = getParam('maand', date('n'));
 $punten = getGebedspunten(date("Y-m-d", mktime(0,0,1,$maand,1,date("Y"))), date("Y-m-d", mktime(0,0,1,($maand+1),0,date("Y"))));
 
-toLog('debug', $_SESSION['realID'], '', 'Gebedskalender '. time2str("%h %y", mktime(0,0,1,$maand,1,date("Y"))) .' bekeken');
+toLog('debug', '', 'Gebedskalender '. time2str("%h %y", mktime(0,0,1,$maand,1,date("Y"))) .' bekeken');
 	
 #$blockLinks = "<table>". NL;
 #$blockLinks .= "<tr>". NL;

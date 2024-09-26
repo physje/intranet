@@ -15,7 +15,7 @@ if(get2FACode($_SESSION['useID']) != '') {
 		$secret_key = get2FACode($_SESSION['useID']);
   	
 		if(!$google2fa->verifyKey($secret_key, $_POST['entered_2FA'])) {
-			toLog('debug', $_SESSION['realID'], '', 'Foutieve 2FA-code bij verwijderen 2FA');
+			toLog('debug', '', 'Foutieve 2FA-code bij verwijderen 2FA');
 			$phpSP_message = 'Onjuiste code';
 			include($cfgProgDir . "2FA.php");
 			exit;
@@ -25,10 +25,10 @@ if(get2FACode($_SESSION['useID']) != '') {
 			if(mysqli_query($db, $sql_update)) {
 				$text[] = "De 2FA is succesvol verwijderd.<br>";
 				$text[] = "Vanaf nu log je alleen nog maar in met je gebruikersnaam & wachtwoord.";
-				toLog('info', $_SESSION['realID'], '', '2FA verwijderd');
+				toLog('info', '', '2FA verwijderd');
 			} else {
 				$text[] = "Er zijn problemen met het verwijderen van 2FA.";
-				toLog('error', $_SESSION['realID'], '', 'Kon 2FA niet verwijderen');
+				toLog('error', '', 'Kon 2FA niet verwijderen');
 			}			
 		}
 	} elseif(isset($_POST['next'])) {
@@ -60,10 +60,10 @@ if(get2FACode($_SESSION['useID']) != '') {
 			$text[] = "De 2FA is ingesteld.<br>";
 			$text[] = "Vanaf nu moet je naast je gebruikersnaam & wachtwoord, ook inloggen met de code die je app genereert.<br>";
 			$text[] = "Dit geldt overigens alleen als je inlogd van een onbekende computer. Mocht je eerder van dezelfde computer ingelogd hebben, dan zal de 2FA-code niet gevraagd worden.";
-			toLog('info', $_SESSION['realID'], '', '2FA ingesteld');
+			toLog('info', '', '2FA ingesteld');
 		} else {
 			$text[] = "Er zijn problemen met het instellen van 2FA.";
-			toLog('error', $_SESSION['realID'], '', 'Kon 2FA niet instellen');
+			toLog('error', '', 'Kon 2FA niet instellen');
 		}		
 	} elseif(isset($_POST['next'])) {
 		$personData = getMemberDetails($_SESSION['useID']);
@@ -90,7 +90,7 @@ if(get2FACode($_SESSION['useID']) != '') {
 		$text[] = "</table>";
 		$text[] = "</form>";
 		
-		toLog('debug', $_SESSION['realID'], '', '2FA-code gegenereerd en getoond');		
+		toLog('debug', '', '2FA-code gegenereerd en getoond');		
 	} else {
 		$text[] = "Om 2 factor authenticatie (2FA) aan te zetten, heb je een app op je telefoon, tablet of computer nodig die een code kan genereren.<br>";
 		$text[] = "&nbsp;<br>";

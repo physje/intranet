@@ -104,7 +104,7 @@ if(in_array(1, getMyGroups($_SESSION['useID']))) {
 # Als je als admin bent ingelogd zie je alle leden, anders alleen de actieve
 $familie = getFamilieleden($id, in_array(1, getMyGroups($_SESSION['useID'])));
 
-toLog('debug', $_SESSION['realID'], $id, 'profiel bekeken');
+toLog('debug', $id, 'profiel bekeken');
 
 
 # De admin kan hier zaken wijzigen, dus even een formulier aanmaken

@@ -125,21 +125,11 @@ if(count($logData) > 0) {
 		$rij[] = "	<td>&nbsp;</td>";
 		$rij[] = "	<td>". ($data_array['slachtoffer'] != '' ? "<a href='../profiel.php?id=". $data_array['slachtoffer'] ."'>". makeName($data_array['slachtoffer'], 5) ."</a>" : "&nbsp;") ."</td>";
 		$rij[] = "	<td>&nbsp;</td>";
-		$rij[] = "	<td>". $pre . $data_array['melding'] . $post ."</td>";
+		$rij[] = "	<td>". $pre . $data_array['melding']. ($data_array['vermomming'] != '' ? ' (vermomd als '. makeName($data_array['vermomming'], 5) .')' : '') . $post ."</td>";
 		$rij[] = "</tr>";
 		
 		$rijen[] = implode(NL, $rij);
-	}
-	
-	#$aantal = count($rijen);
-		
-	#$blok_1 = array_slice($rijen, 0, round($aantal/2));
-	
-	#if($aantal == 1) {
-	#	$blok_2[] = '&nbsp;';
-	#} else {
-	#	$blok_2 = array_slice($rijen, round($aantal/2));
-	#}			
+	}	
 }
 
 echo showCSSHeader();

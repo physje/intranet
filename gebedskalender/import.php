@@ -27,7 +27,7 @@ if(isset($_POST['text']) AND $_POST['text'] != '') {
 	}
 	$blockLinks = "Punten zijn opgeslagen";
 	
-	toLog('info', $_SESSION['realID'], '', "Gebedspunten van ". $maandArray[$maand] ." $jaar geimporteerd");	
+	toLog('info', '', "Gebedspunten van ". $maandArray[$maand] ." $jaar geimporteerd");	
 } else {
 	$volgendeMaand = mktime (1, 1, 1, (date("n")+1), 1);
 	
