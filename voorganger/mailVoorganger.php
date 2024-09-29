@@ -8,6 +8,7 @@ $db = connect_db();
 
 $sendMail = true;
 $sendTestMail = false;
+#$test = true;
 
 # Omdat de server deze dagelijks moet draaien wordt toegang niet gedaan op basis
 # van naam+wachtwoord maar op basis van IP-adres
@@ -30,10 +31,6 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 		$aSchriftlezer	= getRoosterVulling(12, $dienst);
 		$schriftlezer		= $aSchriftlezer[0];
 		$adresSchrift		= getMailAdres($schriftlezer);
-		
-		$aJeudmoment	= getRoosterVulling(25, $dienst);
-		$jeugdmoment		= $aJeudmoment[0];
-		$adresJeugd		= getMailAdres($jeugdmoment, true);			
 		
 		$aRegisseur			= getRoosterVulling(26, $dienst);
 		$regisseur			= $aRegisseur[0];
@@ -63,7 +60,6 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 				$param['to'][] = array($voorgangerData['mail'], $mailNaam);
 				$param['cc'][] = array($adresBand, makeName($bandleider, 6));
 				$param['cc'][] = array($adresSchrift, makeName($schriftlezer, 6));
-				$param['cc'][] = array($adresJeugd, makeName($jeugdmoment, 6));
 				$param['cc'][] = array($adresRegisseur, makeName($regisseur, 6));
 								
 				# CC toevoegen
@@ -83,47 +79,57 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 			$mailText = $bijlageText = array();			
 			$mailText[] = "Beste $aanspeekNaam en anderen met een taak in de eredienst,";
 			$mailText[] = "";
-			$mailText[] = "Jullie staan op het rooster voor de $dagdeel van ". time2str ('%A %e %B', $dienstData['start'])." om ". date('H:i', $dienstData['start'])." uur in de Koningskerk te Deventer. Ik geef jullie de nodige informatie door.";
+			$mailText[] = "Jullie staan op het rooster voor de $dagdeel van ". time2str ('%A %e %B', $dienstData['start'])." om ". date('H:i', $dienstData['start'])." uur in de Koningskerk te Deventer.";
 			
 			if($regisseur > 0) {
 				$mailText[] = "";
-				$mailText[] = "<b>Regisseur</b>";
-				$mailText[] = "In deze dienst is ". makeName($regisseur, 5) ." de regisseur. ". ($voorgangerData['stijl'] == 0 ? 'Heeft u' : 'Heb je')."  vragen of ".($voorgangerData['stijl'] == 0 ? 'wilt u' : 'wil je')." overleggen over de inhoud van de dienst? Neem dan contact op met ". makeName($regisseur, 1) .".";				
+				$mailText[] = "<i>Regisseur</i>";
+				$mailText[] = "In deze dienst is ". makeName($regisseur, 5) ." de regisseur. De regisseur zal met ". ($voorgangerData['stijl'] == 0 ? 'u' : 'je')." bespreken of er bijzonderheden zijn in de dienst. Als het een speciale Eredienst betreft waarin bijvoorbeeld gedoopt wordt of het Heilig Avondmaal gevierd wordt zal de regisseur tijdig het eerste initiatief nemen.";
+				$mailText[] = ($voorgangerData['stijl'] == 0 ? 'Heeft u' : 'Heb je')." vragen of wil ". ($voorgangerData['stijl'] == 0 ? 'u' : 'je')." overleggen over bijzonderheden van de dienst? Neem dan contact op met ". makeName($regisseur, 1) .".";
 			}
 			
 			if($bandleider > 0) {
 				$mailText[] = "";
-				$mailText[] = "<b>Bandleider</b>";				
-				$mailText[] = "De muzikale begeleiding wordt geco&ouml;rdineerd door ". makeName($bandleider, 5) .". Wanneer ".($voorgangerData['stijl'] == 0 ? 'u' : 'je')." het preekthema en de te lezen bijbelteksten een week van tevoren aanlevert, zal de bandleider geschikte liederen uitzoeken die passen binnen de gemeentezang. Mocht ".($voorgangerData['stijl'] == 0 ? 'u' : 'je')." zelf nog liederen in gedachten hebben, dan ".($voorgangerData['stijl'] == 0 ? 'kunt u' : 'kun je')." deze altijd ter suggestie aandragen bij ". makeName($bandleider, 1) .". ". ($bandData['geslacht'] == 'M' ? 'Hij' : 'Zij') ." zal de samengestelde liturgie vervolgens met ".($voorgangerData['stijl'] == 0 ? 'u' : 'je')." afstemmen, zodat er samen kan worden toegewerkt naar een mooie dienst.";
-				$mailText[] = ($voorgangerData['stijl'] == 0 ? 'Wilt u' : 'Wil je')." de liturgie een week van te voren doorgeven zodat de band kan oefenen?";
-			}
-			
-			if($jeugdmoment > 0) {
-				$mailText[] = "";
-				$mailText[] = "<b>Jeugdmoment</b>";
-				$mailText[] = makeName($jeugdmoment, 5) ." zal contact met ".($voorgangerData['stijl'] == 0 ? 'u' : 'je')." opnemen om het thema van het jeugdmoment af te stemmen op ".($voorgangerData['stijl'] == 0 ? 'uw' : 'jouw')." keuze voor het thema van de preek en dienst. Aan ". makeName($jeugdmoment, 1) ." de vraag om hier ongeveer 5 minuten voor te nemen.";
+				$mailText[] = "<i>Bandleider</i>";				
+				$mailText[] = "De muzikale begeleiding wordt geco&ouml;rdineerd door ". makeName($bandleider, 5) ." ($adresBand). Wij waarderen het als predikant en bandleider de interactie zoeken over de liturgie. Wil ".($voorgangerData['stijl'] == 0 ? 'u' : 'jij').", ". $aanspeekNaam ." als voorganger in de week voorafgaand ".($voorgangerData['stijl'] == 0 ? 'uw' : 'jouw')." voorstel voor liturgie met liederen, preekthema en bijbelteksten met ". makeName($bandleider, 5) ." delen? ". ($bandData['geslacht'] == 'M' ? 'Hij' : 'Zij') ." kan eventueel suggesties aandragen en helpen inschatten of liederen goed uit te voeren zijn (dit ivm niveau muzikanten, bekendheid van het lied in de gemeente of dat een lied zeer recent al vaker is gezongen). Als er Engelse liederen worden gebruikt willen we graag dat de vertaling in het Nederlands erbij staat. Uiterlijk op woensdagavond moet de liturgie bekend en gedeeld zijn.";
 			}
 			
 			$mailText[] = "";
-			$mailText[] = "<b>Andere taken</b>";
-			$mailText[] = ($schriftlezer > 0 ? "De schriftlezing wordt gedaan door ". makeName($schriftlezer, 5) : "Het is nog niet bekend wie de schriftlezing doet").".";
-			$mailText[] = ($beameraar > 0 ? "De beamer wordt bediend door ". makeName($beameraar, 5) : "Het is nog niet bekend wie de beamer bediend").".";
-			$mailText[] = "Het gebed bij de collecte wordt gedaan door de diaken van dienst.";
-									
+						
+			$opsomming = array();
+			$opsomming[] = "<i>Andere taken</i>";
+			$opsomming[] = "<ul>";
+			$opsomming[] = "<li>De ouderling van dienst verzorgt de mededelingen voorafgaand aan de dienst.</li>";
+			$opsomming[] = "<li>".($schriftlezer > 0 ? "De schriftlezing wordt gedaan door ". makeName($schriftlezer, 5) : "Het is nog niet bekend wie de schriftlezing doet").". Wij gebruiken de vertaling NBV21.</li>";
+			$opsomming[] = "<li>".($beameraar > 0 ? "De beamer wordt bediend door ". makeName($beameraar, 5) : "Het is nog niet bekend wie de beamer bediend").".</li>";
+			$opsomming[] = "<li>Aankondiging/toelichting op de collecte en het collectegebed, wordt gedaan door de diaken van dienst.</li>";
+			$opsomming[] = "<li>De ouderling van dienst verzorgt het dankgebed en de voorbeden (meestal aansluitend aan het collectegebed)</li>";
+			$opsomming[] = "<li>De dienst wordt live vertaald door het vertaalteam voor gemeenteleden die de Nederlandse taal nog niet machtig zijn. Het helpt het vertaalteam als bij het verzenden van de liturgie ook de preek of een preekschets wordt toegevoegd zodat men zich kan voorbereiden.</li>";
+			$opsomming[] = "</ul>";
+			$opsomming[] = "Voorafgaand aan de schriftlezing gaat een gedeelte van de basisschoolkinderen naar de bijbelklas of basiscatechese. Wij zijn gewend dat er in de Eredienst vaak een moment speciaal aandacht is voor kinderen of jeugd. Dit kan een kindermoment zijn voor de schriftlezing en voordat een deel van de kinderen naar bijbelklas of basiscatechese gaan. Dit kan ook in de vorm van een jeugdmoment zijn.";
+			
+			$mailText[] = implode("\n", $opsomming);
+			#$mailText[] = "";			
+			$mailText[] = "Indien gewenst kan hiervoor een gemeentelid ingeschakeld worden. Bespreek dit dan graag met de regisseur.";			
+			$mailText[] = "";
+			$mailText[] = "<i>Communicatie</i>";
+			$mailText[] = "De regisseur is het eerste aanspreekpunt bij vragen of opmerkingen. Neem dus gerust contact op met ". makeName($regisseur, 1) .".";
+			$mailText[] = "Als je deze mail beantwoordt aan \"allen\" dan zijn ook alle andere betrokkenen op tijd op de hoogte:";
+ 			$mailText[] = "";
+			$mailText[] = "(Het gaat in ieder geval om de volgende mailadressen die aangeschreven moeten worden:";
+			$mailText[] = "preekvoorziening@koningskerkdeventer.nl";
+			$mailText[] = "mededelingen@koningskerkdeventer.nl";
+			$mailText[] = "beamteam@koningskerkdeventer.nl)";
+			$mailText[] = "";
+			$mailText[] = "Daarnaast is het goed om te vermelden dat de kerkdienst online te volgen en terug te kijken is. Hiervoor maken wij gebruiken van de diensten van Kerkdienstgemist en YouTube.";
+												
 			if($voorgangerData['declaratie'] == 1 AND $dienstData['ruiling'] == 0) {
 				$mailText[] = "";
-				$mailText[] = "<b>Declaratie</b>";
+				$mailText[] = "<i>Declaratie</i>";
 				$mailText[] = "Op ". time2str ('%A %e %B', $dienstData['start']).' '.($voorgangerData['stijl'] == 0 ? 'ontvangt u' : 'ontvang je') ." in de ochtend een link naar ". ($voorgangerData['stijl'] == 0 ? 'uw' : 'jouw') ." persoonlijke digitale declaratie-omgeving voor het declareren van ".($voorgangerData['stijl'] == 0 ? 'uw' : 'jouw')." onkosten.";
 				setVoorgangerDeclaratieStatus(1, $dienst);
 			}
-			
-			$mailText[] = "";
-			$mailText[] = "<b>Communicatie</b>";
-			if($regisseur > 0) {
-				$mailText[] = "De regisseur is het eerste aanspreekpunt bij vragen of opmerkingen. Neem dus gerust contact op met ". makeName($regisseur, 1) .".";
-			}
-			$mailText[] = "Als ".($voorgangerData['stijl'] == 0 ? 'u' : 'je')." deze mail beantwoordt aan \"allen\" dan zijn ook alle andere betrokkenen op tijd op de hoogte.";
-			
+		
 			# Elke keer de aandachtspunten mailen is wat overdreven. Eens in de 6 weken lijkt mij mooi
 			$aandachtPeriode = mktime(23,59,59,date("n")-(6*7));
 			$lastUpdate = mktime(23,59,59,11,05,2021);
@@ -147,7 +153,8 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 			$mailText[] = $voorgangerReplyAddress;		
 			
 			# Onderwerp maken
-			$Subject = "Voorgaan $dagdeel ". date('j-n-Y', $dienstData['start']);
+			#$Subject = "Voorgaan $dagdeel ". date('j-n-Y', $dienstData['start']);
+			$Subject = "Introductie en toelichting voor komende Eredienst in de Koningskerk Deventer";
 			
 			if($sendMail) {		
 				$param['subject'] = trim($Subject);
@@ -164,7 +171,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 				echo 'Afzender : Preekvoorziening Koningskerk Deventer |'.$ScriptMailAdress .'<br>';
 				echo 'Ontvanger :'. $mailNaam .'|'.$voorgangerData['mail'] .'<br>';
 				echo 'Onderwerp :'. trim($Subject) .'<br>';
-				echo $HTMLMail;
+				echo implode("<br>\n", $mailText);
 			}
 		
 			setVoorgangerLastSeen($dienstData['voorganger_id'], $dienstData['start']);
