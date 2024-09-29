@@ -47,7 +47,7 @@ sleep($rust);
 if(lp_populateMail($campaignDag, $bericht)) {
 	sleep($rust);
 	lp_scheduleMail($campaignDag, $verzendtijd);
-	toLog('debug', '', '', 'Dagelijkse gebedskalender verstuurd');
+	toLog('debug', '', 'Dagelijkse gebedskalender verstuurd');
 }
 
 
@@ -89,7 +89,7 @@ if(date('w') == 0) {
 	if(lp_populateMail($campaignWeek, $bericht)) {
 		sleep($rust);
 		lp_scheduleMail($campaignWeek, $verzendtijd);
-		toLog('debug', '', '', 'Wekelijkse gebedskalender verstuurd');
+		toLog('debug', '', 'Wekelijkse gebedskalender verstuurd');
 	}
 }
 
@@ -134,7 +134,7 @@ if(date('j') == 1) {
 	if(lp_populateMail($campaignMaand, $bericht)) {
 		sleep($rust);
 		lp_scheduleMail($campaignMaand, $verzendtijd);
-		toLog('debug', '', '', 'Maandelijkse gebedskalender verstuurd');
+		toLog('debug', '', 'Maandelijkse gebedskalender verstuurd');
 	}
 }
 

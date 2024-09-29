@@ -9,7 +9,7 @@ if(isset($_REQUEST['hash'])) {
 	$id = isValidHash($_REQUEST['hash']);
 	
 	if(!is_numeric($id)) {
-		toLog('error', '', '', 'ongeldige hash (account)');
+		toLog('error', '', 'ongeldige hash (account)');
 		$showLogin = true;
 	} else {
 		$showLogin = false;

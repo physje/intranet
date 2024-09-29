@@ -182,6 +182,6 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 		}
 	}
 } else {
-	toLog('error', '', '', 'Poging handmatige run vorgangermail, IP:'.$_SERVER['REMOTE_ADDR']);
+	toLog('error', '', 'Poging handmatige run vorgangermail, IP:'.$_SERVER['REMOTE_ADDR']);
 }
 ?>

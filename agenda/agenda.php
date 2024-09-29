@@ -11,7 +11,7 @@ if(isset($_REQUEST['hash'])) {
 	$id = isValidHash($_REQUEST['hash']);
 	
 	if(!is_numeric($id)) {
-		toLog('error', '', '', 'ongeldige hash (agenda)');
+		toLog('error', '', 'ongeldige hash (agenda)');
 		$showLogin = true;
 	} else {
 		$showLogin = false;

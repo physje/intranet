@@ -19,6 +19,6 @@ if($row_wijkteam = mysqli_fetch_array($result_wijkteam)) {
 	} while($row_wijkteam = mysqli_fetch_array($result_wijkteam));
 }
 
-toLog('info', '', '', 'Pastoraal bezoekers gevuld');
+toLog('info', '', 'Pastoraal bezoekers gevuld');
 
 ?>

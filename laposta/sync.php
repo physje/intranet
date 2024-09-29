@@ -319,7 +319,7 @@ do {
 	}	
 } while($row = mysqli_fetch_array($result));
 
-toLog('info', '', '', 'Synchronisatie naar LaPosta uitgevoerd');
+toLog('info', '', 'Synchronisatie naar LaPosta uitgevoerd');
 
 
 #
@@ -355,6 +355,6 @@ if($row_unsub = mysqli_fetch_array($result_unsub)) {
 		}
 	} while($row_unsub = mysqli_fetch_array($result_unsub));
 	
-	//toLog('debug', '', '', 'Leden uitgeschreven uit LaPosta');
+	//toLog('debug', '', 'Leden uitgeschreven uit LaPosta');
 }
 ?>

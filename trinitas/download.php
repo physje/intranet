@@ -9,11 +9,11 @@ if(isset($_REQUEST['fileID'])) {
 
 	if(isset($_REQUEST['key'])) {				
 		if($_REQUEST['key'] != $data['hash']) {			
-			toLog('error', '', '', 'Ongeldige Trinitas file-hash-combinatie');
+			toLog('error', '', 'Ongeldige Trinitas file-hash-combinatie');
 			$showLogin = true;
 		} else {
 			$showLogin = false;			
-			toLog('info', '', '', 'Download Trinitas '. $data['jaar'] .' - '. $data['nr'] .' mbv hash');
+			toLog('info', '', 'Download Trinitas '. $data['jaar'] .' - '. $data['nr'] .' mbv hash');
 		}
 	}
 	

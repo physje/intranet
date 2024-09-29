@@ -5,7 +5,7 @@ include_once('../include/LP_functions.php');
 setlocale(LC_TIME, 'nl_NL');
 $db = connect_db();
 
-toLog('debug', '', '', 'checken voor mail versturen');
+toLog('debug', '', 'checken voor mail versturen');
 
 $sql = "SELECT * FROM $TableArchief WHERE $ArchiefSend like '0'";
 $result = mysqli_query($db, $sql);

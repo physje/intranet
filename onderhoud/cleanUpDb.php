@@ -22,6 +22,6 @@ if($row_diensten = mysqli_fetch_array($result_diensten)) {
 	} while($row_diensten = mysqli_fetch_array($result_diensten));
 }
 
-toLog('info', '', '', 'Diensten van voor '. date('d-m-y', $grens).' verwijderd');
+toLog('info', '', 'Diensten van voor '. date('d-m-y', $grens).' verwijderd');
 
 ?>

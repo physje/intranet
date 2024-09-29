@@ -11,7 +11,7 @@ if(isset($_REQUEST['hash'])) {
 	$dader = isValidHash($_REQUEST['hash']);
 	
 	if(!is_numeric($dader)) {
-		toLog('error', '', '', 'ongeldige hash (profiel)');
+		toLog('error', '', 'ongeldige hash (profiel)');
 		$showLogin = true;
 	} else {
 		$showLogin = false;

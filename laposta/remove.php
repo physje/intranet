@@ -72,5 +72,5 @@ do {
 	}
 } while($row = mysqli_fetch_array($result));
 
-toLog('info', '', '', 'Synchronisatie naar LaPosta uitgevoerd');
+toLog('info', '', 'Synchronisatie naar LaPosta uitgevoerd');
 ?>

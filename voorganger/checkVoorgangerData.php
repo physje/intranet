@@ -28,7 +28,7 @@ if(isset($_REQUEST['hash'])) {
 				$correct[] = 'Helaas kon de bevestiging niet worden opgeslagen.';
 				$correct[] = 'Er is een bericht gestuurd naar de webmaster. Deze zal uitzoeken wat er aan de hand is.';
 				
-				toLog('error', '', '', 'Bevestiging data door '. makeVoorgangerName($voorgangerID, 4) .' ['. $voorgangerID .'] mislukt');
+				toLog('error', '', 'Bevestiging data door '. makeVoorgangerName($voorgangerID, 4) .' ['. $voorgangerID .'] mislukt');
 			}
 			 
 			$blocks[] = $correct;
@@ -107,11 +107,11 @@ if(isset($_REQUEST['hash'])) {
 					$inCorrect[] = '<p>';
 					$inCorrect[] = 'Niet eerder dan over een jaar zullen wij weer controleren of de gegevens juist zijn. Mocht er in de tussentijd iets wijzigen, dan kan '. ($voorgangerData['stijl'] == 0 ? 'u' : 'je'). " dat via <a href='checkVoorgangerData.php?hash=$hash&correct=false'>deze link</a> alsnog wijzigen.";
 				
-					toLog('info', '', '', 'Gegevens voorganger ('. $voorgangerID .') bijgewerkt door '. makeVoorgangerName($voorgangerID, 4));
+					toLog('info', '', 'Gegevens voorganger ('. $voorgangerID .') bijgewerkt door '. makeVoorgangerName($voorgangerID, 4));
 				} else {
 					$correct[] = 'Helaas kon de gegevens niet worden opgeslagen.';
 					$correct[] = 'Er is een bericht gestuurd naar de webmaster. Deze zal uitzoeken wat er aan de hand is.';				
-					toLog('error', '', '', 'Gegevens voorganger ('. $voorgangerID .') konden niet worden opgeslagen door '. makeVoorgangerName($voorgangerID, 4));
+					toLog('error', '', 'Gegevens voorganger ('. $voorgangerID .') konden niet worden opgeslagen door '. makeVoorgangerName($voorgangerID, 4));
 				}
 			} else {
 				# Als er meldingen zijn (lees, check van gegevens is niet succesvol)
@@ -198,10 +198,10 @@ if(isset($_REQUEST['hash'])) {
 		
 		
 	} else {
-		toLog('error', '', '', 'Poging check vorgangersdata met ongeldige hash');
+		toLog('error', '', 'Poging check vorgangersdata met ongeldige hash');
 	}	
 } else {
-	toLog('error', '', '', 'Poging check vorgangersdata zonder hash');
+	toLog('error', '', 'Poging check vorgangersdata zonder hash');
 }
 
 echo showCSSHeader();

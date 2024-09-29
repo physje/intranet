@@ -15,7 +15,7 @@ if(isset($_REQUEST['hash'])) {
 	$id = isValidHash($_REQUEST['hash']);
 	
 	if(!is_numeric($id)) {
-		toLog('error', '', '', 'ongeldige hash (rooster)');
+		toLog('error', '', 'ongeldige hash (rooster)');
 		$showLogin = true;
 	} else {
 		$showLogin = false;

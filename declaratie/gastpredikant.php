@@ -77,7 +77,7 @@ if(isset($_REQUEST['hash'])) {
 						toLog('error', '', '', $errorResult);
 						$IBANChangeSucces = false;						
 					} else {
-						toLog('debug', '', '', 'IBAN van relatie '. $voorgangerData['EB-relatie'] .' aangepast van '. $_POST['oorspronkelijke_IBAN'] .' naar '. $_POST['IBAN']);
+						toLog('debug', '', 'IBAN van relatie '. $voorgangerData['EB-relatie'] .' aangepast van '. $_POST['oorspronkelijke_IBAN'] .' naar '. $_POST['IBAN']);
 					}
 				}			
 			} else {
@@ -87,7 +87,7 @@ if(isset($_REQUEST['hash'])) {
 					toLog('error', '', '', $errorResult);
 					$IBANSearchSucces = false;
 				} else {
-					toLog('debug', '', '', 'IBAN '. $_POST['IBAN'] .' hoort bij relatie '. $EB_code);
+					toLog('debug', '', 'IBAN '. $_POST['IBAN'] .' hoort bij relatie '. $EB_code);
 				}
 								
 				if(!is_numeric($EB_code)) {
@@ -97,16 +97,16 @@ if(isset($_REQUEST['hash'])) {
 							toLog('error', '', '', $errorResult);
 							$addRelatieSucces = false;
 						} else {
-							toLog('debug', '', '', 'Nieuwe relatie aangemaakt in e-boekhouden voor '.makeVoorgangerName($voorganger, 6) .' -> '. $EB_code);
+							toLog('debug', '', 'Nieuwe relatie aangemaakt in e-boekhouden voor '.makeVoorgangerName($voorganger, 6) .' -> '. $EB_code);
 						}
 						
 						if($addRelatieSucces) {
 							$sql = "UPDATE $TableVoorganger SET $VoorgangerEBRelatie = '$EB_code' WHERE $VoorgangerID = $voorganger";
 							if(mysqli_query($db, $sql)) {
 								$voorgangerData['EB-relatie'] = $EB_code;
-								toLog('debug', '', '', 'In lokale database EBcode '. $EB_code .' aan voorganger '. $voorganger .' gekoppeld');
+								toLog('debug', '', 'In lokale database EBcode '. $EB_code .' aan voorganger '. $voorganger .' gekoppeld');
 							} else {
-								toLog('error', '', '', 'Koppelen van EBcode '. $EB_code .' aan voorganger '. $voorganger .' is mislukt');
+								toLog('error', '', 'Koppelen van EBcode '. $EB_code .' aan voorganger '. $voorganger .' is mislukt');
 							}
 						}
 					} else {

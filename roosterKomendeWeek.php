@@ -17,7 +17,7 @@ if(isset($_REQUEST['id'])) {
 	//$eind = mktime(23,59,59,date("n"), (date("j")+7+(7-date("N"))));
 	$eind = mktime(23,59,59,date("n"), (date("j")+9));
 	
-	toLog('info', '', '', 'Rooster komende week bekeken');
+	toLog('info', '', 'Rooster komende week bekeken');
 }
 $diensten = getKerkdiensten($start, $eind);
 $roosters = getRoosters();

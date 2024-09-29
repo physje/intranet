@@ -863,27 +863,27 @@ function sendMail_new($parameter) {
 		}				
 	} else {
 		echo 'Geen ontvangers bekend';
-		toLog('error', '', '', 'Geen ontvangers bekend');
+		toLog('error', '', 'Geen ontvangers bekend');
 		return false;
 	}
 	
 	# Controleer of er wel een bericht bekend is
 	if(isset($parameter['message'])) {
 		$bericht = $parameter['message'];
-		toLog('debug', '', '', 'bericht toegevoegd (lengte '. strlen($bericht) .')');
+		toLog('debug', '', 'bericht toegevoegd (lengte '. strlen($bericht) .')');
 	} else {
 		echo 'Geen bericht bekend';
-		toLog('error', '', '', 'Geen bericht bekend');
+		toLog('error', '', 'Geen bericht bekend');
 		return false;
 	}	
 	
 	# Controleer of er wel een onderwerp bekend is
 	if(isset($parameter['subject'])) {
 		$subject = $parameter['subject'];
-		toLog('debug', '', '', 'onderwerp toegevoegd (lengte '. strlen($subject) .')');
+		toLog('debug', '', 'onderwerp toegevoegd (lengte '. strlen($subject) .')');
 	} else {
 		echo 'Geen onderwerp bekend';
-		toLog('error', '', '', 'Geen onderwerp bekend');
+		toLog('error', '', 'Geen onderwerp bekend');
 		return false;
 	}	
 	
@@ -891,28 +891,28 @@ function sendMail_new($parameter) {
 	# Met de variabele formeel kan worden aangegeven of deze gebruikt moet worden
 	if(isset($parameter['formeel'])) {
 		$formeel = $parameter['formeel'];
-		toLog('debug', '', '', 'formeel = '. $formeel);
+		toLog('debug', '', 'formeel = '. $formeel);
 	} else {
 		$formeel = false;
-		toLog('debug', '', '', 'geen formeel adres');
+		toLog('debug', '', 'geen formeel adres');
 	}
 	
 	# Even checken of ouders in de CC moeten
 	if(!isset($parameter['ouderCC'])) {
 		$ouderCC = false;
-		toLog('debug', '', '', 'ouders niet in de CC');
+		toLog('debug', '', 'ouders niet in de CC');
 	} else {
 		$ouderCC = $parameter['ouderCC'];
-		toLog('debug', '', '', 'ouders in de CC = '. $ouderCC);
+		toLog('debug', '', 'ouders in de CC = '. $ouderCC);
 	}
 
 	# Even checken of de partner in de Aan moeten
 	if(!isset($parameter['partnerTo'])) {
 		$partnerTo = false;
-		toLog('debug', '', '', 'partner niet in de To');
+		toLog('debug', '', 'partner niet in de To');
 	} else {
 		$partnerTo = $parameter['partnerTo'];
-		toLog('debug', '', '', 'partner in de To = '. $partnerTo);
+		toLog('debug', '', 'partner in de To = '. $partnerTo);
 	}	
 		
 	$mail = new PHPMailer\PHPMailer\PHPMailer;
@@ -922,28 +922,28 @@ function sendMail_new($parameter) {
 			
 	if(isset($parameter['from']) AND $parameter['from'] != '') {
 		$mail->From = $parameter['from'];
-		toLog('debug', '', '', 'Afzenderadres is gezet op '. $parameter['from']);
+		toLog('debug', '', 'Afzenderadres is gezet op '. $parameter['from']);
 	} else {
 		$mail->From = $noReplyAdress;
-		toLog('debug', '', '', 'Afzenderadres is gezet op '. $noReplyAdress);
+		toLog('debug', '', 'Afzenderadres is gezet op '. $noReplyAdress);
 	}
 	
 	if(isset($parameter['fromName']) AND $parameter['fromName'] != '') {
 		$mail->FromName = $parameter['fromName'];
-		toLog('debug', '', '', 'Afzendernaam is gezet op '. $parameter['fromName']);
+		toLog('debug', '', 'Afzendernaam is gezet op '. $parameter['fromName']);
 	} else {
 		$mail->FromName = $ScriptTitle;
-		toLog('debug', '', '', 'Afzendernaam is gezet op '. $ScriptTitle);
+		toLog('debug', '', 'Afzendernaam is gezet op '. $ScriptTitle);
 	}
 	
 	# Als er een reply-adres ingesteld moet worden		
 	if(isset($parameter['ReplyTo']) AND $parameter['ReplyTo'] != '') {
 		if(isset($parameter['ReplyToName']) AND $parameter['ReplyToName'] != '') {
 			$mail->AddReplyTo($parameter['ReplyTo'], $parameter['ReplyToName']);
-			toLog('debug', '', '', 'Reply-adres is gezet op '. $parameter['ReplyToName'] .' ('. $parameter['ReplyTo'] .')');
+			toLog('debug', '', 'Reply-adres is gezet op '. $parameter['ReplyToName'] .' ('. $parameter['ReplyTo'] .')');
 		} else {
 			$mail->AddReplyTo($parameter['ReplyTo']);
-			toLog('debug', '', '', 'Reply-adres is gezet op '. $parameter['ReplyTo']);
+			toLog('debug', '', 'Reply-adres is gezet op '. $parameter['ReplyTo']);
 		}
 	}
 	
@@ -1094,10 +1094,10 @@ function sendMail_new($parameter) {
 		$sql = "INSERT INTO $TableMail ($MailTime, $MailMail) VALUES (". time() .", '". urlencode(json_encode($parameter))."')";
 		
 		if(!mysqli_query($db, $sql)) {
-			toLog('debug', '', '', 'Problemen met wegschrijven mail');
+			toLog('debug', '', 'Problemen met wegschrijven mail');
 			return false;
 		} elseif(!$mail->Send()) {
-			toLog('error', '', '', 'Problemen met verzenden mail');
+			toLog('error', '', 'Problemen met verzenden mail');
 			return false;		
 		} else {
 			$sql = "UPDATE $TableMail SET $MailSuccess = '1' WHERE $MailID = ". mysqli_insert_id($db);
@@ -1208,12 +1208,16 @@ function toLog($type, $dader, $slachtoffer, $message) {
 */
 
 function toLog($type, $slachtoffer, $message) {
-	global $db,$TableLog, $LogID, $LogTime, $LogType, $LogUser, $LogDisguised, $LogSubject, $LogMessage, $db;
+	global $db,$TableLog, $LogID, $LogTime, $LogType, $LogUser, $LogDisguised, $LogSubject, $LogMessage, $cookie_lifetime, $db;
  	
-	$tijd = time();	
-	$sql = "INSERT INTO $TableLog ($LogTime, $LogType, $LogUser, $LogDisguised, $LogSubject, $LogMessage) VALUES ($tijd, '$type', '". $_SESSION['realID'] ."', '". (isset($_SESSION['fakeID']) ? $_SESSION['fakeID'] : '') ."', '$slachtoffer', '". addslashes($message) ."')";
-	if(!mysqli_query($db, $sql)) {
-		echo "log-error : ". $sql;
+ 	if($message != '') {
+ 		session_start(['cookie_lifetime' => $cookie_lifetime]);
+ 		
+		$tijd = time();
+		$sql = "INSERT INTO $TableLog ($LogTime, $LogType, $LogUser, $LogDisguised, $LogSubject, $LogMessage) VALUES ($tijd, '$type', '". $_SESSION['realID'] ."', '". (isset($_SESSION['fakeID']) ? $_SESSION['fakeID'] : '') ."', '$slachtoffer', '". addslashes($message) ."')";
+		if(!mysqli_query($db, $sql)) {
+			echo "log-error : ". $sql;
+		}
 	}
 }
 

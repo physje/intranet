@@ -64,6 +64,6 @@ fwrite($file, "\r\n");
 fwrite($file, implode("\r\n", $footer));
 fclose ($file);
 
-toLog('debug', '', '', 'Gebedskalender voor Scipio aangemaakt');
+toLog('debug', '', 'Gebedskalender voor Scipio aangemaakt');
 
 ?>

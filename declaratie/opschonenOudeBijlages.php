@@ -22,10 +22,10 @@ if($row = mysqli_fetch_array($result)) {
 			foreach($bijlages as $id => $bijlage) {						
 				if(file_exists($bijlage)) {
 					unlink($bijlage);
-					toLog('debug', '', '', 'Bijlage '. ($id+1) .' van declaratie ['. $row[$EBDeclaratieHash] .'] van '. makeName($row[$EBDeclaratieIndiener], 6) .' van '. time2str('%A %e %B %Y', $row[$EBDeclaratieTijd]) .' verwijderd');
+					toLog('debug', '', 'Bijlage '. ($id+1) .' van declaratie ['. $row[$EBDeclaratieHash] .'] van '. makeName($row[$EBDeclaratieIndiener], 6) .' van '. time2str('%A %e %B %Y', $row[$EBDeclaratieTijd]) .' verwijderd');
 					$JSON['bijlage_verwijderd'] = true;
 				} else {
-					toLog('info', '', '', 'Bijlage '. ($id+1) .' van declaratie ['. $row[$EBDeclaratieHash] .'] lijkt vermist');
+					toLog('info', '', 'Bijlage '. ($id+1) .' van declaratie ['. $row[$EBDeclaratieHash] .'] lijkt vermist');
 					$JSON['bijlage_vermist'] = true;
 				}
 			}

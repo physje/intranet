@@ -41,14 +41,14 @@ if(mysqli_num_rows($userQuery) != 0) {
 	$userArray = mysqli_fetch_array($userQuery);
 	
 	if ($login != $userArray[$cfgDbLoginfield]) {
-		toLog('debug', '', '', 'Inlogpoging vanaf '. $_SERVER['REMOTE_ADDR'] .', verkeerd getypte username |'. $login .'|');
+		toLog('debug', '', 'Inlogpoging vanaf '. $_SERVER['REMOTE_ADDR'] .', verkeerd getypte username |'. $login .'|');
 		# Case sensative user not present in database
 		$phpSP_message = $strUserNotExist;
     		include($cfgProgDir . "interface.php");
     		exit;
 	}
 } else {
-	toLog('debug', '', '', 'Inlogpoging vanaf '. $_SERVER['REMOTE_ADDR'] .', onbekende username |'. $login .'|');
+	toLog('debug', '', 'Inlogpoging vanaf '. $_SERVER['REMOTE_ADDR'] .', onbekende username |'. $login .'|');
 	# user not present in database
 	$phpSP_message = $strUserNotExist;
   include($cfgProgDir . "interface.php");
@@ -63,7 +63,7 @@ if(!$userArray[$cfgDbPasswordfield]) {
 }
 
 if(!password_verify($password, $userArray["$cfgDbPasswordfield"])) {
-	toLog('debug', '', '', 'Inlogpoging vanaf '. $_SERVER['REMOTE_ADDR'] .', verkeerd wachtwoord |'. $password .'|, username |'. $login .'|');
+	toLog('debug', '', 'Inlogpoging vanaf '. $_SERVER['REMOTE_ADDR'] .', verkeerd wachtwoord |'. $password .'|, username |'. $login .'|');
 	# password is wrong
 	$phpSP_message = $strPwFalse;
 	include($cfgProgDir . "interface.php");

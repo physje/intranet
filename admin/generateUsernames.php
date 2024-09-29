@@ -52,7 +52,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 	}
 } else {
 	$text[] = 'Geen toegang vanaf '. $_SERVER['REMOTE_ADDR'];
-	toLog('error', '', '', 'Poging handmatige run gebruikersnamen, IP:'.$_SERVER['REMOTE_ADDR']);
+	toLog('error', '', 'Poging handmatige run gebruikersnamen, IP:'.$_SERVER['REMOTE_ADDR']);
 }
 
 echo showCSSHeader();
