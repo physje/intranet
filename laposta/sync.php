@@ -67,76 +67,76 @@ do {
 				# Toevoegen aan de leden-lijst
 				$addMember = lp_addMember($LPLedenListID, $email, $custom_fields);
 				if($addMember === true) {
-					toLog('info', '', $scipioID, 'Toegevoegd aan LaPosta ledenlijst');
+					toLog('info', $scipioID, 'Toegevoegd aan LaPosta ledenlijst');
 					echo makeName($scipioID, 6) ." toegevoegd aan de LaPosta ledenlijst<br>\n";
 				} else {
-					toLog('error', '', $scipioID, 'ledenlijst: '. $addMember['error']);
+					toLog('error', $scipioID, 'ledenlijst: '. $addMember['error']);
 				}
 				
 				# Toevoegen aan de Trinitas-lijst
 				$addMember = lp_addMember($LPTrinitasListID, $email, $custom_fields_short);
 				if($addMember === true) {
-					toLog('debug', '', $scipioID, 'Toegevoegd aan LaPosta Trinitaslijst');
+					toLog('debug', $scipioID, 'Toegevoegd aan LaPosta Trinitaslijst');
 					echo makeName($scipioID, 6) ." toegevoegd aan de LaPosta Trinitaslijst<br>\n";
 				} else {
-					toLog('error', '', $scipioID, 'trinitas: '. $addMember['error']);
+					toLog('error', $scipioID, 'trinitas: '. $addMember['error']);
 				}
 				
 				# Toevoegen aan de wekelijkse Trinitas-lijst
 				$addMember = lp_addMember($LPWeekTrinitasListID, $email, $custom_fields_short);
 				if($addMember === true) {
-					toLog('debug', '', $scipioID, 'Toegevoegd aan LaPosta wekelijkse Trinitaslijst');
+					toLog('debug', $scipioID, 'Toegevoegd aan LaPosta wekelijkse Trinitaslijst');
 					echo makeName($scipioID, 6) ." toegevoegd aan LaPosta wekelijkse Trinitaslijst<br>\n";
 				} else {
-					toLog('error', '', $scipioID, 'wekelijkse trinitas: '. $addMember['error']);
+					toLog('error', $scipioID, 'wekelijkse trinitas: '. $addMember['error']);
 				}
 				
 				# Toevoegen aan de Koningsmail-lijst
 				$addMember = lp_addMember($LPKoningsmailListID, $email, $custom_fields_short);
 				if($addMember === true) {
-					toLog('debug', '', $scipioID, 'Toegevoegd aan LaPosta Koningsmaillijst');
+					toLog('debug', $scipioID, 'Toegevoegd aan LaPosta Koningsmaillijst');
 					echo makeName($scipioID, 6) ." toegevoegd aan LaPosta Koningsmaillijst<br>\n";
 				} else {
-					toLog('error', '', $scipioID, 'koningsmail: '. $addMember['error']);
+					toLog('error', $scipioID, 'koningsmail: '. $addMember['error']);
 				}
 				
 				# Toevoegen aan de juiste wijkmail-lijst			
 				$addMember = lp_addMember($LPWijkListID[$wijk], $email, $custom_fields_short);
 				if($addMember === true) {			
-					toLog('debug', '', $scipioID, 'Toegevoegd aan LaPosta wijklijst wijk '. $wijk);
+					toLog('debug', $scipioID, 'Toegevoegd aan LaPosta wijklijst wijk '. $wijk);
 					echo makeName($scipioID, 6) ." toegevoegd aan LaPosta wijklijst wijk $wijk<br>\n";
 				} else {
-					toLog('error', '', $scipioID, 'wijk '. $wijk .': '. $addMember['error']);
+					toLog('error', $scipioID, 'wijk '. $wijk .': '. $addMember['error']);
 				}
 				
 				# Toevoegen aan de 70+-lijst (indien nodig)
 				if($data['geb_unix'] < $70plus) {
 					$addMember = lp_addMember($LP70plusListID, $email, $custom_fields_short);
 					if($addMember === true) {
-						toLog('debug', '', $scipioID, 'Toegevoegd aan LaPosta 70+-lijst');
+						toLog('debug', $scipioID, 'Toegevoegd aan LaPosta 70+-lijst');
 						echo makeName($scipioID, 6) ." toegevoegd aan LaPosta 70+<br>\n";
 					} else {
-						toLog('error', '', $scipioID, '70+: '. $addMember['error']);
+						toLog('error', $scipioID, '70+: '. $addMember['error']);
 					}
 				}				
 			} else {			
 				# Updaten in leden-lijst
 				$updateMember = lp_updateMember($LPLedenListID, $email, $custom_fields);
 				if($updateMember === true) {
-					toLog('info', '', $scipioID, 'Bestond nog niet lokaal maar wel in LP');
+					toLog('info', $scipioID, 'Bestond nog niet lokaal maar wel in LP');
 					echo makeName($scipioID, 6) ." toegevoegd en geupdate<br>\n";
 				} else {
-					toLog('error', '', $scipioID, 'nieuw update: '. $updateMember['error']);
+					toLog('error', $scipioID, 'nieuw update: '. $updateMember['error']);
 				}			
 			}		
 					
 			# De wijzigingen aan de LP kant moeten ook verwerkt worden in mijn lokale laposta-database
 			$sql_lp_insert = "INSERT INTO $TableLP ($LPID, $LPgeslacht, $LPmail, $LPVoornaam, $LPTussenvoegsel, $LPAchternaam, $LPwijk, $LPstatus, $LPrelatie, $LPdoop, $LPlastChecked, $LPlastSeen) VALUES ($scipioID, '". $data['geslacht'] ."', '". $data['mail'] ."', '". $data['voornaam'] ."', '". urlencode($data['tussenvoegsel']) ."', '". $data['achternaam'] ."', '". $data['wijk'] ."', 'actief', '". $data['relatie'] ."', '". $data['belijdenis'] ."', ". time() .", ". time() .")";
 			if(mysqli_query($db, $sql_lp_insert)) {
-				toLog('debug', '', $scipioID, 'LaPosta-data na sync toegevoegd in lokale LP-tabel');
+				toLog('debug', $scipioID, 'LaPosta-data na sync toegevoegd in lokale LP-tabel');
 			} else {
 				echo $sql_lp_insert;
-				toLog('error', '', $scipioID, 'Kon na sync niets toevoegen in lokale LP-tabel');
+				toLog('error', $scipioID, 'Kon na sync niets toevoegen in lokale LP-tabel');
 			}				
 			
 		# Komt hij wel voor dan check ik even of een aantal velden gewijzigd zijn :
@@ -160,10 +160,10 @@ do {
 				if($row_lp[$LPstatus] == 'uitgeschreven') {
 					$resubscribe = lp_resubscribeMember($LPLedenListID, $email);
 					if($resubscribe === true) {
-						toLog('info', '', $scipioID, 'Opnieuw ingeschreven in de LaPosta ledenlijst');
+						toLog('info', $scipioID, 'Opnieuw ingeschreven in de LaPosta ledenlijst');
 						$sql_update[] = "$LPstatus = 'actief'";
 					} else {
-						toLog('error', '', $scipioID, 'resubscribe: '. $resubscribe['error']);
+						toLog('error', $scipioID, 'resubscribe: '. $resubscribe['error']);
 					}				
 				}
 				
@@ -175,7 +175,7 @@ do {
 					$changed_field['achternaam']		= $data['achternaam'];
 					$changed_short = true;
 					$changed_part[] = 'naam';
-					toLog('info', '', $scipioID, "Naam gewijzigd in LaPosta");
+					toLog('info', $scipioID, "Naam gewijzigd in LaPosta");
 					
 					$sql_update[] = "$LPVoornaam = '". urlencode($data['voornaam']) ."'";
 					$sql_update[] = "$LPTussenvoegsel = '". urlencode($data['tussenvoegsel']) ."'";
@@ -188,7 +188,7 @@ do {
 					$changed_field['geslacht'] = ($data['geslacht'] == 'M'?'Man':'Vrouw');					
 					$changed_short = true;
 					$changed_part[] = 'geslacht';
-					toLog('info', '', $scipioID, "Geslacht gewijzigd in LaPosta");
+					toLog('info', $scipioID, "Geslacht gewijzigd in LaPosta");
 					$sql_update[] = "$LPgeslacht = '". $data['geslacht'] ."'";
 				}
 							
@@ -204,10 +204,10 @@ do {
 				if($row_lp[$LP70plus] == '0' AND ($data['geb_unix'] < $70plus)) {
 					$addMember = lp_addMember($LP70plusListID, $email, $custom_fields_short);
 					if($addMember === true) {
-						toLog('info', '', $scipioID, 'Toegevoegd aan LaPosta 70+-lijst');
+						toLog('info', $scipioID, 'Toegevoegd aan LaPosta 70+-lijst');
 						$sql_update[] = "$LP70plus = '1'";
 					} else {
-						toLog('error', '', $scipioID, '70+: '. $addMember['error']);
+						toLog('error', $scipioID, '70+: '. $addMember['error']);
 					}					
 				}
 				
@@ -228,10 +228,10 @@ do {
 					foreach($affectedLists as $naam => $list) {
 						$changeMailAddress = lp_changeMailAddress($list, $oldMail, $newMail);
 						if($changeMailAddress === true) {
-							toLog('info', '', $scipioID, "Mailadres gewijzigd in LaPosta lijst '". $naam ."'");
+							toLog('info', $scipioID, "Mailadres gewijzigd in LaPosta lijst '". $naam ."'");
 						} else {
-							//toLog('error', '', $scipioID, "Mailadres lokaal gewijzigd, maar niet gewijzigd in LaPosta '". $naam ."'");
-							toLog('error', '', $scipioID, "wijzig mail voor '". $naam ."': ". $changeMailAddress['error']);
+							//toLog('error', $scipioID, "Mailadres lokaal gewijzigd, maar niet gewijzigd in LaPosta '". $naam ."'");
+							toLog('error', $scipioID, "wijzig mail voor '". $naam ."': ". $changeMailAddress['error']);
 						}
 					}
 				}			
@@ -242,9 +242,9 @@ do {
 					foreach($affectedLists as $naam => $list) {
 						$updateMember = lp_updateMember($list, $email, $custom_fields_short);
 						if($updateMember === true) {							
-							toLog('info', '', $scipioID, implode(' en ', $changed_part) ." gewijzigd in LaPosta lijst '". $naam ."'");
+							toLog('info', $scipioID, implode(' en ', $changed_part) ." gewijzigd in LaPosta lijst '". $naam ."'");
 						} else {
-							toLog('error', '', $scipioID, 'Wijzigen '. implode(' en ', $changed_part) ." in LaPosta lijst '". $naam ."' mislukt: ". $updateMember['error']);
+							toLog('error', $scipioID, 'Wijzigen '. implode(' en ', $changed_part) ." in LaPosta lijst '". $naam ."' mislukt: ". $updateMember['error']);
 						}
 					}
 				}
@@ -263,14 +263,14 @@ do {
 						$unsubscribeMember = lp_unsubscribeMember($LPWijkListID[$oudeWijk], $email);
 						
 						if($addmember === true AND $unsubscribeMember === true) {
-							toLog('info', '', $scipioID, "Wijk gewijzigd ($oudeWijk -> $wijk), verplaatst naar nieuwe LaPosta lijst");
+							toLog('info', $scipioID, "Wijk gewijzigd ($oudeWijk -> $wijk), verplaatst naar nieuwe LaPosta lijst");
 							$sql_update[] = "$LPwijk = '$wijk'";
 						} else {
-							toLog('error', '', $scipioID, "-> $wijk: ". $addmember['error']);
-							toLog('error', '', $scipioID, "$oudeWijk ->: ". $unsubscribeMember['error']);
+							toLog('error', $scipioID, "-> $wijk: ". $addmember['error']);
+							toLog('error', $scipioID, "$oudeWijk ->: ". $unsubscribeMember['error']);
 						}
 					} else {
-						toLog('info', '', $scipioID, "Wijk gewijzigd ($oudeWijk -> $wijk) maar was onbekend in $oudeWijk");
+						toLog('info', $scipioID, "Wijk gewijzigd ($oudeWijk -> $wijk) maar was onbekend in $oudeWijk");
 						$sql_update[] = "$LPwijk = '$wijk'";
 					}
 				}
@@ -281,7 +281,7 @@ do {
 					$oudeStatus = $row_lp[$LPdoop];				
 					$changed_field['status'] = $data['belijdenis'];
 					$sql_update[] = "$LPdoop = '". $data['belijdenis'] ."'";
-					toLog('info', '', $scipioID, "Kerkelijke status gewijzigd ($oudeStatus -> $status) dus gewijzigd in LaPosta");
+					toLog('info', $scipioID, "Kerkelijke status gewijzigd ($oudeStatus -> $status) dus gewijzigd in LaPosta");
 				}
 			
 			
@@ -290,7 +290,7 @@ do {
 					$oudeRelatie = $row_lp[$LPrelatie];				
 					$changed_field['relatie'] = $data['relatie'];				
 					$sql_update[] = "$LPrelatie = '". $data['relatie'] ."'";
-					toLog('info', '', $scipioID, "Kerkelijke relatie gewijzigd (". $row_lp[$LPrelatie] ." -> ". $data['relatie'] .") dus gewijzigd in LaPosta");
+					toLog('info', $scipioID, "Kerkelijke relatie gewijzigd (". $row_lp[$LPrelatie] ." -> ". $data['relatie'] .") dus gewijzigd in LaPosta");
 				}			
 				
 				
@@ -302,10 +302,10 @@ do {
 					
 					$updateMember = lp_updateMember($LPLedenListID, $email, $custom_fields);				
 					if($updateMember === true) {
-						toLog('info', '', $scipioID, "Gegevens aangepast in LaPosta ledenlijst");					
+						toLog('info', $scipioID, "Gegevens aangepast in LaPosta ledenlijst");					
 					} else {					
-						toLog('error', '', $scipioID, "update ledenlijst: ". $updateMember['error']);
-						toLog('debug', '', $scipioID, $LPLedenListID.'|'.$email.'|'.json_encode($custom_fields));
+						toLog('error', $scipioID, "update ledenlijst: ". $updateMember['error']);
+						toLog('debug', $scipioID, $LPLedenListID.'|'.$email.'|'.json_encode($custom_fields));
 					}				
 				}			
 			}
@@ -315,7 +315,7 @@ do {
 			mysqli_query($db, $sql_lp_update);
 		}
 	} else {
-		toLog('error', '', $scipioID, 'Ongeldig mailadres');
+		toLog('error', $scipioID, 'Ongeldig mailadres');
 	}	
 } while($row = mysqli_fetch_array($result));
 
@@ -341,17 +341,17 @@ if($row_unsub = mysqli_fetch_array($result_unsub)) {
 				if(lp_onList($listID, $email)) {					
 					$unsubscribeMember = lp_unsubscribeMember($listID, $email);
 					if($unsubscribeMember === true) {
-						toLog('debug', '', $row_unsub[$LPID], 'Uitgeschreven voor '. $naam);
+						toLog('debug', $row_unsub[$LPID], 'Uitgeschreven voor '. $naam);
 					} else {
-						toLog('error', '', $row_unsub[$LPID], "Uitschrijven voor '". $naam ."': ". $unsubscribeMember['error']);
+						toLog('error', $row_unsub[$LPID], "Uitschrijven voor '". $naam ."': ". $unsubscribeMember['error']);
 					}
 				}
 			}	
 		
-			toLog('info', '', $row_unsub[$LPID], 'Uitschrijving gesynced naar LaPosta');
+			toLog('info', $row_unsub[$LPID], 'Uitschrijving gesynced naar LaPosta');
 			mysqli_query($db, "UPDATE $TableLP SET $LPstatus = 'uitgeschreven' WHERE $LPID = ". $row_unsub[$LPID]);
 		} else {
-			toLog('info', '', $row_unsub[$LPID], $email.' lijkt vaker voor te komen, niet uitgeschreven bij LaPosta');
+			toLog('info', $row_unsub[$LPID], $email.' lijkt vaker voor te komen, niet uitgeschreven bij LaPosta');
 		}
 	} while($row_unsub = mysqli_fetch_array($result_unsub));
 	

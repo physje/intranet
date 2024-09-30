@@ -155,10 +155,10 @@ foreach($roosters as $rooster) {
 						$param['subject']	= "Rooster-alert '". $roosterData['naam'] ."'";
 												
 						if(sendMail_new($param)) {
-							toLog('info', '', $beheerder, "Rooster-alert ". $roosterData['naam'] ." verstuurd");
+							toLog('info', $beheerder, "Rooster-alert ". $roosterData['naam'] ." verstuurd");
 							echo 'Mail verstuurd<br>';
 						} else {
-							toLog('error', '', $beheerder, "Kon geen rooster-alert ". $roosterData['naam'] ." versturen");
+							toLog('error', $beheerder, "Kon geen rooster-alert ". $roosterData['naam'] ." versturen");
 							echo "Kon geen rooster-alert ". $roosterData['naam'] ." versturen<br>";
 						}
 											

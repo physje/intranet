@@ -74,7 +74,7 @@ if(isset($_REQUEST['hash'])) {
 				if(cleanIBAN($_POST['oorspronkelijke_IBAN']) != cleanIBAN($_POST['IBAN']) AND $write2EB) {
 					$errorResult = eb_updateRelatieIbanByCode($voorgangerData['EB-relatie'], cleanIBAN($_POST['IBAN']));
 					if($errorResult) {
-						toLog('error', '', '', $errorResult);
+						toLog('error', '', $errorResult);
 						$IBANChangeSucces = false;						
 					} else {
 						toLog('debug', '', 'IBAN van relatie '. $voorgangerData['EB-relatie'] .' aangepast van '. $_POST['oorspronkelijke_IBAN'] .' naar '. $_POST['IBAN']);
@@ -84,7 +84,7 @@ if(isset($_REQUEST['hash'])) {
 				# op basis van IBAN zoeken of iemand al bekend is				
 				$errorResult = eb_getRelatieCodeByIban ($_POST['IBAN'], $EB_code);
 				if($errorResult) {
-					toLog('error', '', '', $errorResult);
+					toLog('error', '', $errorResult);
 					$IBANSearchSucces = false;
 				} else {
 					toLog('debug', '', 'IBAN '. $_POST['IBAN'] .' hoort bij relatie '. $EB_code);
@@ -94,7 +94,7 @@ if(isset($_REQUEST['hash'])) {
 					if($write2EB) {
 						$errorResult = eb_maakNieuweRelatieAan (makeVoorgangerName($voorganger, 6), 'm', '', '', $voorgangerData['plaats'], $voorgangerData['mail'], $_POST['IBAN'], $EB_code, $EB_id);
 						if($errorResult) {
-							toLog('error', '', '', $errorResult);
+							toLog('error', '', $errorResult);
 							$addRelatieSucces = false;
 						} else {
 							toLog('debug', '', 'Nieuwe relatie aangemaakt in e-boekhouden voor '.makeVoorgangerName($voorganger, 6) .' -> '. $EB_code);
@@ -189,12 +189,12 @@ if(isset($_REQUEST['hash'])) {
 				//$page[] = "toelichting:". $toelichting ."<br>\n";
 				
 				if($errorResult) {
-					toLog('error', '', '', $errorResult);
+					toLog('error', '', $errorResult);
 					$page[] = 'Er is iets niet goed gegaan met aanmaken van de declaratie<br>';
 					$page[] = 'Neem contact op met de webmaster zodat deze de logfiles kan uitlezen';
 					$sendDeclaratieSucces = false;
 				} else {
-					toLog('debug', '', '', "Declaratie aangemaakt; relatie:$relatie, boekstukNummer:$boekstukNummer, mutatieId:$mutatieId, factuurnummer:$factuurnummer");
+					toLog('debug', '', "Declaratie aangemaakt; relatie:$relatie, boekstukNummer:$boekstukNummer, mutatieId:$mutatieId, factuurnummer:$factuurnummer");
 				}
 			} else {
 				$mutatieId = '10101';
@@ -259,10 +259,10 @@ if(isset($_REQUEST['hash'])) {
 					$param_penning['message'] = implode("\n", $mailPenningsmeester);
 					
 					if(!sendMail_new($param_penning)) {
-						toLog('error', '', '', "Problemen met declaratie-notificatie (dienst $dienst, voorganger $voorganger)");
+						toLog('error', '', "Problemen met declaratie-notificatie (dienst $dienst, voorganger $voorganger)");
 						$page[] = "Er zijn problemen met het versturen van de notificatie-mail naar penningsmeester.";
 					} else {
-						toLog('debug', '', '', "Declaratie-notificatie naar penningsmeester voor ". date('j-n-Y', $dienstData['start']));
+						toLog('debug', '', "Declaratie-notificatie naar penningsmeester voor ". date('j-n-Y', $dienstData['start']));
 					}					
 				}
 				
@@ -311,10 +311,10 @@ if(isset($_REQUEST['hash'])) {
 					$param_predikant['attachment'][]	= array('file' => 'PDF/'. $mutatieNr .'.pdf', 'name' => "Declaratie $dagdeel ". date('j-n-Y', $dienstData['start']) ." Koningskerk Deventer.pdf");
 					
 					if(!sendMail_new($param_predikant)) {
-						toLog('error', '', '', "Problemen met declaratie-afschrift (dienst $dienst, voorganger $voorganger)");
+						toLog('error', '', "Problemen met declaratie-afschrift (dienst $dienst, voorganger $voorganger)");
 						$page[] = "Er zijn problemen met het versturen van een afschrift van de declaratie.";
 					} else {
-						toLog('debug', '', '', "Declaratie-afschrift naar $mailNaam voor ". date('j-n-Y', $dienstData['start']));
+						toLog('debug', '', "Declaratie-afschrift naar $mailNaam voor ". date('j-n-Y', $dienstData['start']));
 						$page[] = "Er is een afschrift van de declaratie naar ". ($voorgangerData['stijl'] == 0 ? 'u' : 'jou') ." verstuurd.";
 					}									
 				}
@@ -329,7 +329,7 @@ if(isset($_REQUEST['hash'])) {
 				# Zet de status op afgerond
 				setVoorgangerDeclaratieStatus(8, $dienst);
 				
-				toLog('info', '', '', "Declaratie ingediend voor ". $dagdeel .' van '. date('j-n-Y', $dienstData['start']) .' door '. makeVoorgangerName($voorganger, 3));
+				toLog('info', '', "Declaratie ingediend voor ". $dagdeel .' van '. date('j-n-Y', $dienstData['start']) .' door '. makeVoorgangerName($voorganger, 3));
 			}
 		} elseif(isset($_POST['check_iban'])) {
 			# Formulier waar IBAN wordt gecontroleerd
@@ -590,10 +590,10 @@ if(isset($_REQUEST['hash'])) {
 			$param['message'] = implode("<br>\n", $mailText);
 			
 			if(!sendMail_new($param)) {
-				toLog('error', '', '', "Problemen met declaratie-link versturen naar $mailNaam voor ". date('j-n-Y', $dienstData['start']));
+				toLog('error', '', "Problemen met declaratie-link versturen naar $mailNaam voor ". date('j-n-Y', $dienstData['start']));
 				$page[] = "Er zijn problemen met het versturen van de mail.";			
 			} else {
-				toLog('debug', '', '', "Declaratie-link verstuurd naar $mailNaam voor ". date('j-n-y', $dienstData['start']));
+				toLog('debug', '', "Declaratie-link verstuurd naar $mailNaam voor ". date('j-n-y', $dienstData['start']));
 				$page[] = "Er is een mail gestuurd.";
 			}
 		}

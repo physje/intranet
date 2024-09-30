@@ -51,9 +51,9 @@ if(isset($_POST['send_mail'])) {
 	$param['FromName']	= $_POST['naam_afzender'];
 			
 	if(sendMail_new($param)) {
-		toLog('debug', '', $lid, "Mail met als onderwerp '$FinalSubject' verstuurd");
+		toLog('debug', $lid, "Mail met als onderwerp '$FinalSubject' verstuurd");
 	} else {
-		toLog('error', '', $lid, "Problemen met versturen mail met onderwerp '$FinalSubject'");
+		toLog('error', $lid, "Problemen met versturen mail met onderwerp '$FinalSubject'");
 	}	
 } else {
 	$leden = getMembers();

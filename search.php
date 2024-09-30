@@ -140,7 +140,7 @@ $links[] = "</tr>";
 $links[] = "</table>";
 
 if(isset($_POST['search'])) {
-	//toLog('debug', $_SESSION['ID'], '', "Gezocht op S:$searchString G:$geslacht W:$wijk B:$sDag-$sMaand-$sJaar E:$eDag-$eMaand-$eJaar");
+	//toLog('debug', '', "Gezocht op S:$searchString G:$geslacht W:$wijk B:$sDag-$sMaand-$sJaar E:$eDag-$eMaand-$eJaar");
 	
 	# Geslacht
 	foreach($geslacht as $g) {

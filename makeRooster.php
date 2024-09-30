@@ -20,7 +20,7 @@ if(isset($_REQUEST['hash'])) {
 	} else {
 		$showLogin = false;
 		$_SESSION['useID'] = $id;
-		toLog('info', $id, '', 'rooster mbv hash');
+		toLog('info', '', 'rooster mbv hash');
 	}
 }
 

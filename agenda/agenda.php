@@ -16,7 +16,7 @@ if(isset($_REQUEST['hash'])) {
 	} else {
 		$showLogin = false;
 		$_SESSION['useID'] = $id;
-		toLog('info', $id, '', 'agenda mbv hash');
+		toLog('info', '', 'agenda mbv hash');
 	}
 }
 

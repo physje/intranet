@@ -161,10 +161,10 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 				$param['message'] = implode("<br>\n", $mailText);
 				
 				if(!sendMail_new($param)) {
-					toLog('error', '', '', "Problemen met voorgangersmail versturen naar $mailNaam voor ". date('j-n-Y', $dienstData['start']));
+					toLog('error', '', "Problemen met voorgangersmail versturen naar $mailNaam voor ". date('j-n-Y', $dienstData['start']));
 					echo "Problemen met mail versturen<br>\n";
 				} else {
-					toLog('info', '', '', "Voorgangersmail verstuurd naar $mailNaam voor ". date('j-n-Y', $dienstData['start']));
+					toLog('info', '', "Voorgangersmail verstuurd naar $mailNaam voor ". date('j-n-Y', $dienstData['start']));
 					echo "Mail verstuurd naar $mailNaam<br>\n";
 				}								
 			} else {
@@ -176,9 +176,9 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 		
 			setVoorgangerLastSeen($dienstData['voorganger_id'], $dienstData['start']);
 		} elseif(trim($voorgangerData['mail']) == '') {
-			toLog('info', '', '', "Geen voorgangersmail verstuurd voor ". $dagdeel .' van '. date('j-n', $dienstData['start']) ." omdat geen voorganger bekend is");
+			toLog('info', '', "Geen voorgangersmail verstuurd voor ". $dagdeel .' van '. date('j-n', $dienstData['start']) ." omdat geen voorganger bekend is");
 		} else {
-			toLog('error', '', '', "Kon geen voorgangersmail versturen voor ". $dagdeel .' van '. date('j-n', $dienstData['start']) .", ongeldig mailadres");
+			toLog('error', '', "Kon geen voorgangersmail versturen voor ". $dagdeel .' van '. date('j-n', $dienstData['start']) .", ongeldig mailadres");
 		}
 	}
 } else {

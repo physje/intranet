@@ -957,7 +957,7 @@ function sendMail_new($parameter) {
 			$UserMail	= getMailAdres($ontvanger[0], $formeel);
 		
 			$mail->AddAddress($UserMail, makeName($ontvanger[0], 5));
-			toLog('debug', '', $ontvanger[0], makeName($ontvanger[0], 5) .' in de Aan opgenomen');
+			toLog('debug', $ontvanger[0], makeName($ontvanger[0], 5) .' in de Aan opgenomen');
 			
 			# Als de ouders ook een CC moeten
 			# Alleen bij mensen die als relatie 'zoon' of 'dochter' hebben
@@ -967,7 +967,7 @@ function sendMail_new($parameter) {
 					$OuderData = getMemberDetails($ouder);
 					if($OuderData['mail'] != $UserMail AND $OuderData['mail'] != '') {
 						$mail->AddCC($OuderData['mail']);
-						toLog('debug', '', $ontvanger[0], makeName($ouder, 5) .' ('. $OuderData['mail'] .') als ouder in CC opgenomen');
+						toLog('debug', $ontvanger[0], makeName($ouder, 5) .' ('. $OuderData['mail'] .') als ouder in CC opgenomen');
 					}
 				}
 			}
@@ -983,17 +983,17 @@ function sendMail_new($parameter) {
 				$PartnerData = getMemberDetails($partner);
 				if($PartnerData['mail'] != $UserMail AND $PartnerData['mail'] != '') {
 					$mail->AddAddress($PartnerData['mail'], makeName($partner, 5));
-					toLog('debug', '', $ontvanger[0], makeName($partner, 5) .' ('. $PartnerData['mail'] .') als partner toegevoegd');
+					toLog('debug', $ontvanger[0], makeName($partner, 5) .' ('. $PartnerData['mail'] .') als partner toegevoegd');
 				}				
 			}			
 		} elseif(count($ontvanger) == 2) {
 			$address	= $ontvanger[0];
 			$naam			= $ontvanger[1];			
 			$mail->AddAddress($address, $naam);
-			toLog('debug', '', '', $naam .' ('. $address .') in de Aan opgenomen');
+			toLog('debug', '', $naam .' ('. $address .') in de Aan opgenomen');
 		} elseif(count($ontvanger) == 1 AND !is_numeric($ontvanger[0])) {
 			$mail->AddAddress($ontvanger[0]);
-			toLog('debug', '', '', $ontvanger[0] .' in de Aan opgenomen');
+			toLog('debug', '', $ontvanger[0] .' in de Aan opgenomen');
 		}
 	}
 	
@@ -1015,10 +1015,10 @@ function sendMail_new($parameter) {
 				$address = $ontvanger[0];
 				$naam = $ontvanger[1];				
 				$mail->AddCC($address, $naam);
-				toLog('debug', '', '', $naam .' ('. $address .') in de CC opgenomen');
+				toLog('debug', $ontvanger[1], $naam .' ('. $address .') in de CC opgenomen');
 			} elseif(count($ontvanger) == 1 AND !is_numeric($ontvanger[0])) {
 				$mail->AddCC($ontvanger[0]);
-				toLog('debug', '', '', $ontvanger[0] .' in de CC opgenomen');
+				toLog('debug', '', $ontvanger[0] .' in de CC opgenomen');
 			}
 		}
 	}
@@ -1035,10 +1035,10 @@ function sendMail_new($parameter) {
 			if(is_numeric($ontvanger)) {				
 				$UserMail	= getMailAdres($ontvanger, $formeel);
 				$mail->AddBCC($UserMail);
-				toLog('debug', '', $ontvanger, makeName($ontvanger, 5) .' in de BCC opgenomen');
+				toLog('debug', $ontvanger, makeName($ontvanger, 5) .' in de BCC opgenomen');
 			} else {
 				$mail->AddBCC($ontvanger);
-				toLog('debug', '', '', $ontvanger .' in de BCC opgenomen');
+				toLog('debug', '', $ontvanger .' in de BCC opgenomen');
 			}
 		}		
 	}
@@ -1047,10 +1047,10 @@ function sendMail_new($parameter) {
 	if(isset($parameter['file']) AND $parameter['file'] != "") {
 		if(isset($parameter['fileName']) AND $parameter['fileName'] != "") {
 			$mail->addAttachment($parameter['file'], $parameter['fileName']);
-			toLog('debug', '', '', $parameter['file'] .' is als '. $parameter['fileName'] .' opgenomen als bijlage');
+			toLog('debug', '', $parameter['file'] .' is als '. $parameter['fileName'] .' opgenomen als bijlage');
 		} else {
 			$mail->addAttachment($parameter['file']);
-			toLog('debug', '', '', $parameter['file'] .' is opgenomen als bijlage');
+			toLog('debug', '', $parameter['file'] .' is opgenomen als bijlage');
 		}
 	}
 	
@@ -1059,10 +1059,10 @@ function sendMail_new($parameter) {
 		foreach($parameter['attachment'] as $bijlage) {
 			if(is_array($bijlage) AND count($bijlage) > 1) {
 				$mail->addAttachment($bijlage['file'], $bijlage['name']);
-				toLog('debug', '', '', $bijlage['file'] .' is als '. $bijlage['name'] .' opgenomen als bijlage');
+				toLog('debug', '', $bijlage['file'] .' is als '. $bijlage['name'] .' opgenomen als bijlage');
 			} else {
 				$mail->addAttachment($bijlage['file']);
-				toLog('debug', '', '', $bijlage['file'] .' is opgenomen als bijlage');
+				toLog('debug', '', $bijlage['file'] .' is opgenomen als bijlage');
 			}
 		}
 	}
@@ -1173,7 +1173,7 @@ function getPartner($id) {
 	if(count($partner) == 1) {
 		return $partner;
 	} elseif(count($partner) > 1) {
-		toLog('error', '', $lid, "Lijkt meer dan 1 partner te hebben");
+		toLog('error', $lid, "Lijkt meer dan 1 partner te hebben");
 		return $partner;
 	} else {
 		return false;
@@ -1915,10 +1915,10 @@ function setVoorgangerDeclaratieStatus($status, $dienst) {
 	$sql = "UPDATE $TableDiensten SET $DienstDeclStatus = $status WHERE $DienstID = $dienst";
 	
 	if(mysqli_query($db, $sql)) {
-		toLog('debug', '', '', "Declaratie-status van dienst $dienst veranderd in ". $descr[$status]);
+		toLog('debug', '', "Declaratie-status van dienst $dienst veranderd in ". $descr[$status]);
 		return true;
 	} else {
-		toLog('error', '', '', "Aanpassen van declaratie-status van dienst $dienst naar ". $descr[$status] ." is mislukt");
+		toLog('error', '', "Aanpassen van declaratie-status van dienst $dienst naar ". $descr[$status] ." is mislukt");
 		return false;
 	}	
 }
@@ -1962,10 +1962,10 @@ function setDeclaratieStatus($status, $declaratie, $lid) {
 	$sql = "UPDATE $TableEBDeclaratie SET $EBDeclaratieStatus = $status WHERE $EBDeclaratieID = $declaratie";
 		
 	if(mysqli_query($db, $sql)) {
-		toLog('debug', '', $lid, "Declaratie-status van declaratie $declaratie veranderd in ". $descr[$status]);
+		toLog('debug', $lid, "Declaratie-status van declaratie $declaratie veranderd in ". $descr[$status]);
 		return true;
 	} else {
-		toLog('error', '', $lid, "Aanpassen van declaratie-status van declaratie $declaratie naar ". $descr[$status] ." is mislukt");
+		toLog('error', $lid, "Aanpassen van declaratie-status van declaratie $declaratie naar ". $descr[$status] ." is mislukt");
 		return false;
 	}	
 }
@@ -2571,10 +2571,10 @@ function setDeclaratieActionDate($declaratie, $tijd = 0) {
 	$sql = "UPDATE $TableEBDeclaratie SET $EBDeclaratieLastAction = $tijd WHERE $EBDeclaratieHash like '$declaratie'";
 	
 	if(mysqli_query($db, $sql)) {
-		toLog('debug', '', '', "Laatste actie van declaratie $declaratie gezet op ". time2str('%a %e %b %H:%M', $tijd));
+		toLog('debug', '', "Laatste actie van declaratie $declaratie gezet op ". time2str('%a %e %b %H:%M', $tijd));
 		return true;
 	} else {
-		toLog('error', '', '', "Kon laatste actie van declaratie $declaratie niet instellen op ". time2str('%a %e %b %H:%M', $tijd));
+		toLog('error', '', "Kon laatste actie van declaratie $declaratie niet instellen op ". time2str('%a %e %b %H:%M', $tijd));
 		return false;
 	}	
 }

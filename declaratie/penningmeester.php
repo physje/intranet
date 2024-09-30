@@ -29,7 +29,7 @@ if(isset($_REQUEST['hash'])) {
 	} else {
 		$showLogin = false;
 		$_SESSION['useID'] = $id;
-		toLog('info', $id, '', 'declaratie mbv hash');
+		toLog('info', '', 'declaratie mbv hash');
 	}
 }
 

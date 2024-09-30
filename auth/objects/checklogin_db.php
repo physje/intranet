@@ -87,7 +87,7 @@ if(isset($requiredUserGroups)) {
 	
 	if(count($overlap) == 0) {
 		# this user does not have the required user level
-		toLog('info', $_SESSION['useID'], '', 'Ingelogd maar onvoldoende rechten voor '. $_SERVER['PHP_SELF']);		
+		toLog('info', '', 'Ingelogd maar onvoldoende rechten voor '. $_SERVER['PHP_SELF']);		
 		$phpSP_message = $strUserNotAllowed;
 		include($cfgProgDir . "interface.php");
 		exit;

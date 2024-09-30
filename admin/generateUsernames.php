@@ -26,7 +26,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 				$sql_update = "UPDATE $TableUsers SET $UserUsername = '$username', $UserNewPassword = '". password_hash($password, PASSWORD_DEFAULT) ."'  WHERE $UserID = $id";
 				mysqli_query($db, $sql_update);
 				$text[] = 'Username aangemaakt voor '.  makeName($id, 5) ."($username)<br>";
-				toLog('info', '', $id, 'account aangemaakt');
+				toLog('info', $id, 'account aangemaakt');
 			}
 			
 			if($data['hash_short'] == '' OR $data['hash_long'] == '') {
@@ -45,7 +45,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 				$sql_update = "UPDATE $TableUsers SET $UserHashShort = '$hashS', $UserHashLong = '$hashL' WHERE $UserID = $id";
 				mysqli_query($db, $sql_update);
 				$text[] = 'Hash aangemaakt voor '.  makeName($id, 5) ."<br>";
-				toLog('debug', '', $id, 'hash aangemaakt');
+				toLog('debug', $id, 'hash aangemaakt');
 			}	
 			
 		} while($row = mysqli_fetch_array($result));

@@ -16,7 +16,7 @@ if(isset($_REQUEST['hash'])) {
 	} else {
 		$showLogin = false;
 		$_SESSION['useID'] = $dader;
-		toLog('info', $dader, $_REQUEST['id'], 'profiel mbv hash');
+		toLog('info', $_REQUEST['id'], 'profiel mbv hash');
 	}
 }
 

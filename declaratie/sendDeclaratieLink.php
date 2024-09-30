@@ -65,9 +65,9 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 			$param['message'] = implode("<br>\n", $mailText);
 			
 			if(!sendMail_new($param)) {
-				toLog('error', '', '', "Problemen met versturen online declaratie-formulier naar $mailNaam");
+				toLog('error', '', "Problemen met versturen online declaratie-formulier naar $mailNaam");
 			} else {
-				toLog('info', '', '', "Online declaratie-formulier verstuurd naar $mailNaam");
+				toLog('info', '', "Online declaratie-formulier verstuurd naar $mailNaam");
 			}
 						
 			setVoorgangerDeclaratieStatus(2, $dienst);			

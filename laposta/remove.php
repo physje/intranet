@@ -58,11 +58,11 @@ do {
 				$unsubscribeMember = lp_unsubscribeMember($listID, $email);
 				if($unsubscribeMember === true) {
 					echo makeName($scipioID, 5) .' ('. $email .') uitgeschreven voor '. $listID;
-					toLog('debug', '', $scipioID, 'Uitgeschreven voor '. $listID);
+					toLog('debug', $scipioID, 'Uitgeschreven voor '. $listID);
 					$succes++;
 				} else {
 					echo makeName($scipioID, 5) .' ('. $email .') <b>niet</b> uitgeschreven voor '. $listID;
-					toLog('error', '', $scipioID, "Uitschrijven voor $listID: ". $unsubscribeMember['error']);
+					toLog('error', $scipioID, "Uitschrijven voor $listID: ". $unsubscribeMember['error']);
 					$fail++;
 				}
 			}

@@ -13,7 +13,7 @@ if($row_wijkteam = mysqli_fetch_array($result_wijkteam)) {
 	do {
 		$sql_insert = "INSERT INTO $TableGrpUsr ($GrpUsrGroup, $GrpUsrUser) VALUES (50, ". $row_wijkteam[$WijkteamLid] .")";
 		if(mysqli_query($db, $sql_insert)) {
-			toLog('debug', '', $row_wijkteam[$WijkteamLid], 'In groep pastoraal bezoekers geplaatst');
+			toLog('debug', $row_wijkteam[$WijkteamLid], 'In groep pastoraal bezoekers geplaatst');
 		}
 		
 	} while($row_wijkteam = mysqli_fetch_array($result_wijkteam));

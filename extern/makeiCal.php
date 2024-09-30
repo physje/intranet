@@ -123,7 +123,7 @@ foreach($ids as $id) {
 	fwrite($file, implode("\r\n", $footer));
 	fclose ($file);
 	
-	toLog('debug', '', $id, 'Persoonlijke agenda geexporteerd');
+	toLog('debug', $id, 'Persoonlijke agenda geexporteerd');
 }
 
 ?>

@@ -18,7 +18,7 @@ if(isset($_REQUEST['search_member'])) {
 	$lidID = array_search($_POST['lid'], $namen);
 	$redirect = $ScriptURL."/profiel.php?id=".$lidID;
 	
-	toLog('debug', $_SESSION['ID'], $lidID, 'gezocht op '. $_POST['lid']);
+	toLog('debug', $lidID, 'gezocht op '. $_POST['lid']);
 	$url="Location: ". $redirect;
 	header($url);
 }

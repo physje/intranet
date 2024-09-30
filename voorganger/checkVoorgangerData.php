@@ -23,7 +23,7 @@ if(isset($_REQUEST['hash'])) {
 				$correct[] = '<p>';
 				$correct[] = 'Niet eerder dan over een jaar zullen wij weer controleren of de gegevens juist zijn. Mocht er in de tussentijd iets wijzigen, dan kan '. ($voorgangerData['stijl'] == 0 ? 'u' : 'je'). " dat via <a href='checkVoorgangerData.php?hash=$hash&correct=false'>deze link</a> alsnog wijzigen.";
 				
-				toLog('info', '', '', makeVoorgangerName($voorgangerID, 4) .' ['. $voorgangerID .'] heeft de voorgangersdata bevestigt');
+				toLog('info', '', makeVoorgangerName($voorgangerID, 4) .' ['. $voorgangerID .'] heeft de voorgangersdata bevestigt');
 			} else {
 				$correct[] = 'Helaas kon de bevestiging niet worden opgeslagen.';
 				$correct[] = 'Er is een bericht gestuurd naar de webmaster. Deze zal uitzoeken wat er aan de hand is.';

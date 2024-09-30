@@ -69,18 +69,18 @@ if($row = mysqli_fetch_array($result)) {
 				
 		if(!sendMail_new($param)) {
 			if($status == 3) {
-				toLog('error', '', $cluco, "Problemen met versturen reminder-mail aan cluco (". makeName($cluco, 5).") voor [$uniqueKey]");
+				toLog('error', $cluco, "Problemen met versturen reminder-mail aan cluco (". makeName($cluco, 5).") voor [$uniqueKey]");
 				$page[] = "Er zijn problemen met het versturen van de reminder-mail naar de clustercoordinator.<br>";
 			} else {
-				toLog('error', '', '', "Problemen met versturen reminder-mail aan penningmeester voor [$uniqueKey]");
+				toLog('error', '', "Problemen met versturen reminder-mail aan penningmeester voor [$uniqueKey]");
 				$page[] = "Er zijn problemen met het versturen van de reminder-mail naar de penningmeester.<br>";
 			}
 		} else {
 			if($status == 3) {
-				toLog('info', '', $cluco, "Reminder-mail aan cluco (". makeName($cluco, 5).") gestuurd voor [$uniqueKey]");
+				toLog('info', $cluco, "Reminder-mail aan cluco (". makeName($cluco, 5).") gestuurd voor [$uniqueKey]");
 				$page[] = "Reminder-mail aan cluco (". makeName($cluco, 5).") verstuurd<br>";
 			} else {
-				toLog('info', '', '', "Reminder-mail aan penningmeester gestuurd voor [$uniqueKey]");
+				toLog('info', '', "Reminder-mail aan penningmeester gestuurd voor [$uniqueKey]");
 				$page[] = "Reminder-mail aan penningmeester verstuurd<br>";
 			}
 		}		

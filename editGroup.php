@@ -29,6 +29,7 @@ if(isset($_POST['change_members'])) {
 		$delen = explode('|', $_POST['nieuw_lid']);
 		$newLidID = $delen[1];
 		addGroupLid($newLidID, $_POST['groep']);
+		toLog('debug', $newLidID, 'Als lid toegevoegd aan '. $groupData['naam']);
 	}
 	toLog('info', '', 'Leden '. $groupData['naam'] .' gewijzigd');
 }

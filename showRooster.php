@@ -13,7 +13,7 @@ if(isset($_REQUEST['hash'])) {
 	} else {
 		$showLogin = false;
 		$_SESSION['useID'] = $id;
-		toLog('info', $id, '', 'account mbv hash');
+		toLog('info', '', 'account mbv hash');
 	}
 }
 

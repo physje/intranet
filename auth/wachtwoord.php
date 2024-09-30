@@ -15,7 +15,7 @@ if(isset($_POST['opvragen']) AND isset($_POST['invoer']) AND trim($_POST['invoer
 		$text[] = "Er is helaas niks gevonden met '$invoer'";
 	} elseif(mysqli_num_rows($result) > 1) {
 		$text[] = "Er zijn meer leden die voldoen aan '$invoer'. Probeer het op een andere manier.";
-		toLog('error', $id, '', 'Inloggegevens gezocht met '. $invoer .', meer dan 1 resultaat');
+		toLog('error', '', 'Inloggegevens gezocht met '. $invoer .', meer dan 1 resultaat');
 	} else {
 		$row	= mysqli_fetch_array($result);
 		$id		= $row[$UserID];
@@ -37,10 +37,10 @@ if(isset($_POST['opvragen']) AND isset($_POST['invoer']) AND trim($_POST['invoer
 		$param['subject']		= "Nieuw wachtwoord voor $ScriptTitle";			
 				
 		if(!sendMail_new($param)) {
-			toLog('error', $id, '', 'problemen met wachtwoord-mail versturen');
+			toLog('error', '', 'problemen met wachtwoord-mail versturen');
 			$text[] = "Inloggegevens konden helaas niet verstuurd worden";			
 		} else {
-			toLog('info', $id, '', "Inloggegevens verstuurd naar ". makeName($id, 5));
+			toLog('info', '', "Inloggegevens verstuurd naar ". makeName($id, 5));
 			$text[] = "Inloggegevens zijn verstuurd";
 		}		
 	}

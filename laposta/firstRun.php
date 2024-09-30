@@ -75,13 +75,13 @@ do {
 			$sql_lp_insert = "INSERT INTO $TableLP ($LPID, $LPgeslacht, $LPmail, $LPVoornaam, $LPTussenvoegsel, $LPAchternaam, $LPwijk, $LPstatus, $LPrelatie, $LPdoop, $LPlastChecked, $LPlastSeen) VALUES ($scipioID, '". $data['geslacht'] ."', '". $data['mail'] ."', '". $data['voornaam'] ."', '". urlencode($data['tussenvoegsel']) ."', '". $data['achternaam'] ."', '". $data['wijk'] ."', 'actief', '". $data['relatie'] ."', '". $data['belijdenis'] ."', ". time() .", ". time() .")";
 			if(!mysqli_query($db, $sql_lp_insert)) {			
 				echo $sql_lp_insert;
-				toLog('error', '', $scipioID, 'Kon na insert niets toevoegen in lokale LP-tabel');
+				toLog('error', $scipioID, 'Kon na insert niets toevoegen in lokale LP-tabel');
 			}
 			
 		} else {
 			echo makeName($scipioID, 6) ." <b>niet</b> toegevoegd aan de LaPosta ledenlijst<br>\n";
 			echo json_encode($custom_fields);
-			toLog('error', '', $scipioID, 'ledenlijst: '. $addMember['error']);			
+			toLog('error', $scipioID, 'ledenlijst: '. $addMember['error']);			
 		}		
 	} else {			
 		# Updaten in leden-lijst
@@ -89,7 +89,7 @@ do {
 		if($updateMember === true) {				
 			echo makeName($scipioID, 6) ." geupdate<br>\n";
 		} else {
-			toLog('error', '', $scipioID, 'update: '. $updateMember['error']);
+			toLog('error', $scipioID, 'update: '. $updateMember['error']);
 		}	
 		
 		$sql_update = array();
