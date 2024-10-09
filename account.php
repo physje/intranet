@@ -13,6 +13,7 @@ if(isset($_REQUEST['hash'])) {
 		$showLogin = true;
 	} else {
 		$showLogin = false;
+		session_start(['cookie_lifetime' => $cookie_lifetime]);
 		$_SESSION['useID'] = $id;
 		toLog('info', '', 'account mbv hash');
 	}

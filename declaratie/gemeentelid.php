@@ -180,10 +180,10 @@ if(isset($_POST['correct'])) {
 		if(!$sendMail)	$param_cluco['testen'] = 1;
 					
 		if(!sendMail_new($param_cluco)) {
-			toLog('error', '', "Problemen met invoeren van declaratie [$uniqueKey] en voorleggen aan cluco (". makeName($cluco, 5).")");
+			toLog('error', $cluco, "Problemen met invoeren van declaratie [$uniqueKey] en voorleggen aan cluco (". makeName($cluco, 5).")");
 			$page[] = "Er zijn problemen met het versturen van de notificatie-mail naar de clustercoordinator.";
 		} else {
-			toLog('info', '', "Declaratie [$uniqueKey] ingevoerd en doorgestuurd naar cluco (". makeName($cluco, 5).")");
+			toLog('info', $cluco, "Declaratie [$uniqueKey] ingevoerd en doorgestuurd naar cluco (". makeName($cluco, 5).")");
 			$page[] = "De declaratie is ter goedkeuring voorgelegd aan ". makeName($cluco, 5) ." als clustercoordinator";
 		}
 		
