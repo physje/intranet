@@ -49,7 +49,7 @@ if($row = mysqli_fetch_array($result)) {
 			$ics[] = "SUMMARY:". $gebedspunt;
 		}
 		
-		$ics[] = "DESCRIPTION:". $gebedspunt . '\n\nWe nodigen u uit gebedspunten aan te aandragen!\nGraag voor de 15e van de maand  mailen naar gebedskalender@koningskerkdeventer.nl';
+		$ics[] = "DESCRIPTION:". $gebedspunt . '\n\nWe nodigen u uit gebedspunten aan te dragen! Mail uw punt naar gebedskalender@koningskerkdeventer.nl';
 		$ics[] = "STATUS:CONFIRMED";	
 		$ics[] = "TRANSP:TRANSPARENT";
 		$ics[] = "END:VEVENT";

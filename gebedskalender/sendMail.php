@@ -10,8 +10,7 @@ $Kop[] = "Beste {{voornaam}},<br>";
 $Kop[] = "<br>";
 		
 $Staart[] = "<br>";
-$Staart[] = "We nodigen u uit gebedspunten aan te aandragen!<br>";
-$Staart[] = "Graag voor de 15e van de maand  mailen naar <a href='mailto:gebedskalender@koningskerkdeventer.nl'>gebedskalender@koningskerkdeventer.nl</a><br>";
+$Staart[] = "<i>We nodigen u uit gebedspunten aan te dragen! Mail uw punt naar <a href='mailto:gebedskalender@koningskerkdeventer.nl'>gebedskalender@koningskerkdeventer.nl</a></i><br>";
 $Staart[] = "<br>";
 $Staart[] = "Met groet,<br>";
 $Staart[] = "het gebedskalenderteam<br>";
