@@ -1,6 +1,6 @@
 <?php
 include_once('../include/functions.php');
-include_once('../include/EB_functions.php');
+#include_once('../include/EB_functions.php');
 include_once('../include/config.php');
 include_once('../include/HTML_TopBottom.php');
 
@@ -8,6 +8,8 @@ $db = connect_db();
 $cfgProgDir = '../auth/';
 $requiredUserGroups = array(1, 20);
 include($cfgProgDir. "secure.php");
+
+$top_right = $top_keft = $left = $right = array();
 
 if(isset($_REQUEST['new'])) {
 	$sql = "INSERT INTO $TableVoorganger ($VoorgangerVoor, $VoorgangerAchter) VALUES ('nieuwe', 'voorganger')";
@@ -18,7 +20,14 @@ if(isset($_REQUEST['new'])) {
 	$nieuweVoorganger = false;
 }
 
-if(isset($_REQUEST['voorgangerID'])) {
+if(isset($_REQUEST['delete_data'])) {
+	$sql = "UPDATE $TableVoorganger SET $VoorgangerActive = '0' WHERE $VoorgangerID = '". $_POST['voorgangerID'] ."'";
+	if(mysqli_query($db, $sql)) {
+		$left[] = "De gegevens van ". makeVoorgangerName($_POST['voorgangerID'], 3) ." zijn niet meer zichtbaar.<p>";
+	}
+	$left[] = "Ga terug naar het <a href='editVoorganger.php'>overzicht</a>.";
+	
+} elseif(isset($_REQUEST['voorgangerID'])) {
 	# Sla predikant gegevens op
 	if(isset($_POST['save_data'])) {
 		if($_POST['achter'] == '') {
@@ -184,7 +193,7 @@ if(isset($_REQUEST['voorgangerID'])) {
 	$left[] = "	<input type='checkbox' name='reiskosten' value='ja'". ($voorgangerData['reiskosten'] == 1 ? ' checked' : '') ."> Reiskosten-vergoeding</td>";
 	$left[] = "</tr>";		
 	$left[] = "</table>";
-	$left[] = "<p class='after_table'><input type='submit' name='save_data' value='Gegevens opslaan'></p>";
+	$left[] = "<p class='after_table'><input type='submit' name='save_data' value='Gegevens opslaan'>&nbsp;<input type='submit' name='delete_data' value='Voorganger verwijderen'></p>";
 	$left[] = "</form>";
 	
 	
@@ -217,10 +226,12 @@ if(isset($_REQUEST['voorgangerID'])) {
 		$right[] = "	<td><select name='EB_relatie'>";
 		$right[] = "	<option value=''>Selecteer relatie</option>";
 		
+		/*
 		$relaties = eb_getRelaties();	
 		foreach($relaties as $relatieData) {
 			$right[] = "	<option value='". $relatieData['code'] ."'". ($voorgangerData['EB-relatie'] == $relatieData['code'] ? ' selected' : '') .">". substr($relatieData['naam'], 0, 35) ."</option>";
-		}		
+		}
+		*/		
 				
 		$right[] = "	</select></td>";
 		$right[] = "</tr>";
@@ -312,11 +323,10 @@ if(isset($_REQUEST['voorgangerID'])) {
 	echo "<h1>". $voor.' '.($voorgangerData['tussen'] == '' ? '' : $voorgangerData['tussen']. ' ').$voorgangerData['achter'] ."</h1>";
 }
 
-if(isset($top_left))	echo "<div class='content_block'>".NL. implode(NL, $top_left).NL."</div>".NL;
-echo "<div class='content_block'>".NL. implode(NL, $left).NL."</div>".NL;
-
-if(isset($top_right))	echo "<div class='content_block'>".NL. implode(NL, $top_right).NL."</div>".NL;
-echo "<div class='content_block'>".NL. implode(NL, $right).NL."</div>".NL;
+if(isset($top_left) AND count($top_left) > 0)		echo "<div class='content_block'>".NL. implode(NL, $top_left).NL."</div>".NL;
+if(isset($left) AND count($left) > 0)						echo "<div class='content_block'>".NL. implode(NL, $left).NL."</div>".NL;
+if(isset($top_right) AND count($top_right) > 0)	echo "<div class='content_block'>".NL. implode(NL, $top_right).NL."</div>".NL;
+if(isset($right) AND count($right) > 0)					echo "<div class='content_block'>".NL. implode(NL, $right).NL."</div>".NL;
 
 echo '</div> <!-- end \'content_vert_kolom\' -->'.NL;
 echo showCSSFooter();

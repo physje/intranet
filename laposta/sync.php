@@ -18,7 +18,7 @@ $listIDs['gebed (maand)']	= $LPGebedMaandListID;
 $listIDs['70 plus']				= $LP70plusListID;
 $listIDs = $listIDs+$LPWijkListID;
 
-$70plus = mktime(0,0,0, date('m'), date('d'), (date('Y')-70));
+$zeventigPlus = mktime(0,0,0, date('m'), date('d'), (date('Y')-70));
 
 # Ga op zoek naar alle personen met een mailadres
 # Mailadres is daarbij alles met een @-teken erin
@@ -110,7 +110,7 @@ do {
 				}
 				
 				# Toevoegen aan de 70+-lijst (indien nodig)
-				if($data['geb_unix'] < $70plus) {
+				if($data['geb_unix'] < $zeventigPlus) {
 					$addMember = lp_addMember($LP70plusListID, $email, $custom_fields_short);
 					if($addMember === true) {
 						toLog('debug', $scipioID, 'Toegevoegd aan LaPosta 70+-lijst');
@@ -201,7 +201,7 @@ do {
 				}
 				
 				# Toevoegen aan de 70+-lijst (indien nodig)
-				if($row_lp[$LP70plus] == '0' AND ($data['geb_unix'] < $70plus)) {
+				if($row_lp[$LP70plus] == '0' AND ($data['geb_unix'] < $zeventigPlus)) {
 					$addMember = lp_addMember($LP70plusListID, $email, $custom_fields_short);
 					if($addMember === true) {
 						toLog('info', $scipioID, 'Toegevoegd aan LaPosta 70+-lijst');

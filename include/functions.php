@@ -1509,10 +1509,11 @@ function getAgendaDetails($id) {
 	return $data;
 }
 
-function getVoorgangers() {
-	global $TableVoorganger, $VoorgangerID, $VoorgangerAchter, $db;
+function getVoorgangers($onlyActive = true) {
+	global $TableVoorganger, $VoorgangerID, $VoorgangerActive, $VoorgangerAchter, $db;
 	
-	$sql = "SELECT * FROM $TableVoorganger ORDER BY $VoorgangerAchter";
+	$sql = "SELECT * FROM $TableVoorganger ". ($onlyActive ? "WHERE $VoorgangerActive = '1' " : '') ."ORDER BY $VoorgangerAchter";
+		
 	$result = mysqli_query($db, $sql);
 	if($row = mysqli_fetch_array($result)) {
 		do {

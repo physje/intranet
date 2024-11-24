@@ -128,6 +128,7 @@ $RoosOpmOpmerking							= "opmerking";
 
 $TableVoorganger 							= "predikanten";
 $VoorgangerID 								= "id";
+$VoorgangerActive							= "actief";
 $VoorgangerTitel 							= "titel";
 $VoorgangerVoor								= "voornaam";
 $VoorgangerInit 							= "initialen";
