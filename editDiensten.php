@@ -17,7 +17,7 @@ if(isset($_POST['save']) OR isset($_POST['maanden'])) {
 		$details	= getKerkdienstDetails($dienst);
 		
 		# Admin mag dag, maand en jaar wijzigen
-		if(in_array(1, getMyGroups($_SESSION['useID']))) {
+		if(in_array(1, $myGroups)) {
 			$dag				= $_POST['sDag'][$dienst];
 			$maand			= $_POST['sMaand'][$dienst];
 			$jaar				= $_POST['sJaar'][$dienst];
@@ -53,9 +53,15 @@ if(isset($_REQUEST['new'])) {
 	toLog('info', '', 'Dienst voor '. date("d-m-Y", $start) .' toegevoegd');
 }
 
-if(isset($_REQUEST['delete']) AND !isset($_REQUEST['cancel'])) {
+if(isset($_REQUEST['delete']) AND (in_array(1, $myGroups) OR in_array(28, $myGroups))) {
 	$details	= getKerkdienstDetails($_REQUEST['id']);
 	
+	$query	= "UPDATE $TableDiensten SET $DienstActive = '0' WHERE $DienstID = ". $_REQUEST['id'];
+	$result = mysqli_query($db, $query);
+	
+	toLog('info', '', formatDagdeel($details['start']).' van '. date("d-m-Y", $details['start']) .' ['. $_REQUEST['id'] .'] op inactief gezet');
+		
+	/*
 	if(isset($_REQUEST['sureDelete'])) {
 		$query	= "DELETE FROM $TableDiensten WHERE $DienstID = ". $_REQUEST['id'];
 		$result = mysqli_query($db, $query);
@@ -81,10 +87,11 @@ if(isset($_REQUEST['delete']) AND !isset($_REQUEST['cancel'])) {
 		$text[] = "</tr>";
 		$text[] = "</table>";		
 		$text[] = "</form>";		
-	}	
+	}
+	*/
 }
 
-if(!isset($_REQUEST['delete']) OR (isset($_REQUEST['delete']) AND isset($_REQUEST['sureDelete'])) OR (isset($_REQUEST['delete']) AND isset($_REQUEST['cancel']))) {
+if(true) {
 	$blokGrootte = (92*24*60*60);
 	
 	if(isset($_POST['start'])) {
@@ -131,7 +138,7 @@ if(!isset($_REQUEST['delete']) OR (isset($_REQUEST['delete']) AND isset($_REQUES
 		
 		$text[] = "<tr>";
 		
-		if(in_array(1, getMyGroups($_SESSION['useID']))) {
+		if(in_array(1, $myGroups)) {
 			$sDag			= date("d", $data['start']);
 			$sMaand		= date("m", $data['start']);
 			$sJaar		= date("Y", $data['start']);

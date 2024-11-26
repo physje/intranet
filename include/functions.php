@@ -149,11 +149,11 @@ function getAllKerkdiensten($fromNow = false) {
 
 
 function getKerkdiensten($startTijd, $eindTijd) {
-	global $TableDiensten, $DienstID, $DienstEind, $db;
+	global $TableDiensten, $DienstID, $DienstActive, $DienstEind, $db;
 	
 	$id = array();
 				
-	$sql = "SELECT $DienstID FROM $TableDiensten WHERE $DienstEind BETWEEN $startTijd AND $eindTijd ORDER BY $DienstEind ASC";
+	$sql = "SELECT $DienstID FROM $TableDiensten WHERE $DienstActive = '1' AND $DienstEind BETWEEN $startTijd AND $eindTijd ORDER BY $DienstEind ASC";
 		
 	$result = mysqli_query($db, $sql);
 	if($row = mysqli_fetch_array($result)) {

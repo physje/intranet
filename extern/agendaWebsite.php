@@ -4,7 +4,7 @@ include_once('../include/config.php');
 
 $db = connect_db();
 
-$sql_dienst = "SELECT $DienstID FROM $TableDiensten WHERE $DienstEind > ". time() ." ORDER BY $DienstEind ASC LIMIT 0,3";
+$sql_dienst = "SELECT $DienstID FROM $TableDiensten WHERE $DienstActive = '1' AND $DienstEind > ". time() ." ORDER BY $DienstEind ASC LIMIT 0,3";
 $result_dienst = mysqli_query($db, $sql_dienst);
 if($row_dienst = mysqli_fetch_array($result_dienst)) {		
 	$HTML[] = "<div class='row'>";

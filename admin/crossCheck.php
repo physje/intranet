@@ -39,7 +39,7 @@ foreach($roosters as $rooster) {
 	
 	echo "<h1>". $details['naam'] ."</h1>";
 	
-	$sql = "SELECT $TablePlanning.$PlanningUser FROM $TablePlanning, $TableDiensten WHERE $TablePlanning.$PlanningGroup = $rooster AND $TablePlanning.$PlanningDienst = $TableDiensten.$DienstID  AND $TableDiensten.$DienstStart > ". time();
+	$sql = "SELECT $TablePlanning.$PlanningUser FROM $TablePlanning, $TableDiensten WHERE $TablePlanning.$PlanningGroup = $rooster AND $TablePlanning.$PlanningDienst = $TableDiensten.$DienstID  AND $TableDiensten.$DienstActive = '1' AND $TableDiensten.$DienstStart > ". time();
 	
 	//echo "[$sql]";
 		

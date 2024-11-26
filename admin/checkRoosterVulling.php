@@ -20,10 +20,10 @@ foreach($roosters as $rooster) {
 		
 		# Is het een "normaal" rooster
 		if($roosterData['text_only'] == 0) {
-			$sql = "SELECT * FROM $TableDiensten, $TablePlanning WHERE $TablePlanning.$PlanningDienst = $TableDiensten.$DienstID AND $TablePlanning.$PlanningGroup = $rooster AND $TableDiensten.$DienstStart > ". (time()+(($roosterData['alert']-1)*$week));
+			$sql = "SELECT * FROM $TableDiensten, $TablePlanning WHERE $TablePlanning.$PlanningDienst = $TableDiensten.$DienstID AND $TablePlanning.$PlanningGroup = $rooster AND $TableDiensten.$DienstActive = '1' AND $TableDiensten.$DienstStart > ". (time()+(($roosterData['alert']-1)*$week));
 		# Of text-only rooster
 		} elseif($roosterData['text_only'] == 1) {
-			$sql = "SELECT * FROM $TableDiensten, $TablePlanningTxt WHERE $TablePlanningTxt.$PlanningTxTDienst = $TableDiensten.$DienstID AND $TablePlanningTxt.$PlanningTxTGroup = $rooster AND $TableDiensten.$DienstStart > ". (time()+(($roosterData['alert']-1)*$week));
+			$sql = "SELECT * FROM $TableDiensten, $TablePlanningTxt WHERE $TablePlanningTxt.$PlanningTxTDienst = $TableDiensten.$DienstID AND $TablePlanningTxt.$PlanningTxTGroup = $rooster AND $TableDiensten.$DienstActive = '1' AND $TableDiensten.$DienstStart > ". (time()+(($roosterData['alert']-1)*$week));
 		}
 		$result = mysqli_query($db, $sql);
 
@@ -37,9 +37,9 @@ foreach($roosters as $rooster) {
 			# Wat is de laatste dienst die nog wel gevonden is
 			# Eerst in geval van een "normaal" rooster, daarna bij een text-only rooster
 			if($roosterData['text_only'] == 0) {
-				$sql_last = "SELECT MAX($TableDiensten.$DienstStart) as lastDienst FROM $TableDiensten, $TablePlanning WHERE $TablePlanning.$PlanningDienst = $TableDiensten.$DienstID AND $TablePlanning.$PlanningGroup = $rooster";
+				$sql_last = "SELECT MAX($TableDiensten.$DienstStart) as lastDienst FROM $TableDiensten, $TablePlanning WHERE $TablePlanning.$PlanningDienst = $TableDiensten.$DienstID AND $TableDiensten.$DienstActive = '1' AND $TablePlanning.$PlanningGroup = $rooster";
 			} else {
-				$sql_last = "SELECT MAX($TableDiensten.$DienstStart) as lastDienst FROM $TableDiensten, $TablePlanningTxt WHERE $TablePlanningTxt.$PlanningTxTDienst = $TableDiensten.$DienstID AND $TablePlanningTxt.$PlanningTxTGroup = $rooster";
+				$sql_last = "SELECT MAX($TableDiensten.$DienstStart) as lastDienst FROM $TableDiensten, $TablePlanningTxt WHERE $TablePlanningTxt.$PlanningTxTDienst = $TableDiensten.$DienstID AND $TableDiensten.$DienstActive = '1' AND $TablePlanningTxt.$PlanningTxTGroup = $rooster";
 			}
 			
 			$result_last = mysqli_query($db, $sql_last);

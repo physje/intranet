@@ -81,6 +81,7 @@ $GrpUsrUser										= "lid";
                     					
 $TableDiensten								= "kerkdiensten";
 $DienstID											= "id";
+$DienstActive									= "actief";
 $DienstStart									= "start";
 $DienstEind										= "eind";
 $DienstVoorganger							= "voorganger";
