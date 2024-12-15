@@ -165,7 +165,7 @@ if($row_agenda = mysqli_fetch_array($result_agenda)) {
 		$ics[] = "DTEND;TZID=Europe/Amsterdam:". date("Ymd\THis", $row_agenda[$AgendaEind]);	
 		$ics[] = "LAST-MODIFIED:". date("Ymd\THis", time());
 		$ics[] = "SUMMARY:". urldecode($row_agenda[$AgendaTitel]);
-		$ics[] = 'DESCRIPTION:'.urldecode($row_agenda[$AgendaDescr]);
+		$ics[] = 'DESCRIPTION:'.str_replace("\r\n", '\n', urldecode($row_agenda[$AgendaDescr]));
 		$ics[] = "STATUS:CONFIRMED";	
 		$ics[] = "TRANSP:TRANSPARENT";
 		$ics[] = "END:VEVENT";

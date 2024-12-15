@@ -3,6 +3,10 @@ include_once('include/functions.php');
 include_once('include/config.php');
 include_once('include/HTML_TopBottom.php');
 
+# 1 = Admin
+# 28 = Cluster Eredienst
+# 52 = Scipio-beheer
+
 $requiredUserGroups = array(1, 28, 52);
 $cfgProgDir = 'auth/';
 include($cfgProgDir. "secure.php");
@@ -17,7 +21,7 @@ if(isset($_POST['save']) OR isset($_POST['maanden'])) {
 		$details	= getKerkdienstDetails($dienst);
 		
 		# Admin mag dag, maand en jaar wijzigen
-		if(in_array(1, $myGroups)) {
+		if(in_array(1, $myGroups) OR in_array(28, $myGroups)) {
 			$dag				= $_POST['sDag'][$dienst];
 			$maand			= $_POST['sMaand'][$dienst];
 			$jaar				= $_POST['sJaar'][$dienst];
@@ -138,7 +142,7 @@ if(true) {
 		
 		$text[] = "<tr>";
 		
-		if(in_array(1, $myGroups)) {
+		if(in_array(1, $myGroups) OR in_array(28, $myGroups)) {
 			$sDag			= date("d", $data['start']);
 			$sMaand		= date("m", $data['start']);
 			$sJaar		= date("Y", $data['start']);

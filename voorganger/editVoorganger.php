@@ -24,6 +24,7 @@ if(isset($_REQUEST['delete_data'])) {
 	$sql = "UPDATE $TableVoorganger SET $VoorgangerActive = '0' WHERE $VoorgangerID = '". $_POST['voorgangerID'] ."'";
 	if(mysqli_query($db, $sql)) {
 		$left[] = "De gegevens van ". makeVoorgangerName($_POST['voorgangerID'], 3) ." zijn niet meer zichtbaar.<p>";
+		toLog('info', '', makeVoorgangerName($_POST['voorgangerID'], 3) .' ('. $_REQUEST['voorgangerID'] .') is inactief gezet');
 	}
 	$left[] = "Ga terug naar het <a href='editVoorganger.php'>overzicht</a>.";
 	
