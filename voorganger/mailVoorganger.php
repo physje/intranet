@@ -101,7 +101,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 			$opsomming[] = "<ul>";
 			$opsomming[] = "<li>De ouderling van dienst verzorgt de mededelingen voorafgaand aan de dienst.</li>";
 			$opsomming[] = "<li>".($schriftlezer > 0 ? "De schriftlezing wordt gedaan door ". makeName($schriftlezer, 5) : "Het is nog niet bekend wie de schriftlezing doet").". Wij gebruiken de vertaling NBV21.</li>";
-			$opsomming[] = "<li>".($beameraar > 0 ? "De beamer wordt bediend door ". makeName($beameraar, 5) : "Het is nog niet bekend wie de beamer bediend").".</li>";
+			$opsomming[] = "<li>".($beameraar > 0 ? "De beamer wordt bediend door ". makeName($beameraar, 5) : "Het is nog niet bekend wie de beamer bedient").".</li>";
 			$opsomming[] = "<li>Aankondiging/toelichting op de collecte en het collectegebed, wordt gedaan door de diaken van dienst.</li>";
 			$opsomming[] = "<li>De ouderling van dienst verzorgt het dankgebed en de voorbeden (meestal aansluitend aan het collectegebed)</li>";
 			$opsomming[] = "<li>De dienst wordt live vertaald door het vertaalteam voor gemeenteleden die de Nederlandse taal nog niet machtig zijn. Het helpt het vertaalteam als bij het verzenden van de liturgie ook de preek of een preekschets wordt toegevoegd zodat men zich kan voorbereiden.</li>";
