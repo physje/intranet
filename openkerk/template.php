@@ -59,7 +59,7 @@ if(isset($_POST['enroll'])) {
 		
 		do {
 			$nieuweDag	= mktime(0,0,0,date('n', $start),(date('j', $start)+$offset));
-			$week				= fmod(strftime('%W', $nieuweDag), 2);
+			$week				= fmod(strftime('%V', $nieuweDag), 2);
 			$dag				= strftime('%w', $nieuweDag);
 									
 			# Als er een leeg rooster moet worden uitgerold, alleen op vakantie dagen

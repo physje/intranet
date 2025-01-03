@@ -136,7 +136,9 @@ if(isset($_REQUEST['hash'])) {
 }
 $block_rooster[] = "<input type='hidden' name='blokken' value='$blokken'>";
 $block_rooster[] = "<table>";
-$block_rooster[] = "<caption><a href='rooster_details.php?rooster=". $_REQUEST['rooster'] ."'>Mis je diensten? Wil je de tekst van de mail aanpassen? Klik hier om instellingen van het rooster aan te passen.</a></caption>";
+if(in_array($beheerder, $myGroups)) {
+	$block_rooster[] = "<caption><a href='rooster_details.php?rooster=". $_REQUEST['rooster'] ."'>Mis je diensten? Wil je de tekst van de mail aanpassen? Klik hier om instellingen van het rooster aan te passen.</a></caption>";
+}
 $block_rooster[] = "<thead>";
 $block_rooster[] = "<tr>";
 $block_rooster[] = "	<th>Dienst</th>";
