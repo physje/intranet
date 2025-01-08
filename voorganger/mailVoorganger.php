@@ -80,7 +80,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 			
 			$lastTekstUpdate = mktime(23,59,59,1,1,2025);
 			
-			if($voorgangerData['last_voorgaan'] < $lastTekstUpdate)) {
+			if($voorgangerData['last_voorgaan'] < $lastTekstUpdate) {
 				$mailText[] = "<b>LET OP: onderstaande tekst is gewijzigd tov vorige keer.</b>";
 				$mailText[] = "";
 			}
@@ -100,13 +100,16 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 				$mailText[] = "";
 				$mailText[] = "<i>Bandleider</i>";				
 				$mailText[] = "De muzikale begeleiding wordt geco&ouml;rdineerd door ". makeName($bandleider, 5) ." ($adresBand). Wij waarderen het als predikant en bandleider de interactie zoeken over de liturgie. ".($voorgangerData['stijl'] == 0 ? 'Wilt u' : 'Wil jij').", ". $aanspeekNaam ." als voorganger in de week voorafgaand ".($voorgangerData['stijl'] == 0 ? 'uw' : 'jouw')." voorstel voor liturgie met liederen, preekthema en bijbelteksten met ". makeName($bandleider, 1) ." delen? ". ($bandData['geslacht'] == 'M' ? 'Hij' : 'Zij') ." kan eventueel suggesties aandragen en helpen inschatten of liederen goed uit te voeren zijn (dit ivm niveau muzikanten, bekendheid van het lied in de gemeente, of dat een lied zeer recent al vaker is gezongen). Als er Engelse liederen worden gebruikt willen we graag dat de vertaling in het Nederlands erbij staat. Uiterlijk op woensdagavond moet de liturgie bekend en gedeeld zijn.";
+				
+				# Reinier heeft zelf ID 91
+				if($dienstData['voorganger_id'] != 91) {
+					$mailText[] = "De liturgie graag ook delen met onze eigen predikant ds. Reinier Kramer.  Hij leest graag mee in het kader van integraliteit en overlap van opvolgende Erediensten.";				
+				}
+				$mailText[] = "";
 			} else {
 				$mailText[] = "";
 			}
-			
-			$mailText[] = "De liturgie graag ook delen met onze eigen predikant ds. Reinier Kramer.  Hij leest graag mee in het kader van integraliteit en overlap van opvolgende Erediensten.";
-			$mailText[] = "";
-						
+								
 			$opsomming = array();
 			$opsomming[] = "<i>Andere taken</i>";
 			$opsomming[] = "<ul>";
@@ -120,7 +123,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 			$opsomming[] = "Voorafgaand aan de schriftlezing gaat een gedeelte van de basisschoolkinderen naar de bijbelklas of basiscatechese. Wij zijn gewend dat er in de Eredienst vaak een moment speciaal aandacht is voor kinderen of jeugd. Dit kan een kindermoment zijn voor de schriftlezing en voordat een deel van de kinderen naar bijbelklas of basiscatechese gaan. Dit kan ook in de vorm van een jeugdmoment zijn.";
 			
 			$mailText[] = implode("\n", $opsomming);
-			#$mailText[] = "";			
+			#$mailText[] = "";	
 			$mailText[] = "Indien gewenst kan hiervoor een gemeentelid ingeschakeld worden. Bespreek dit dan graag met de regisseur.";			
 			$mailText[] = "";
 			$mailText[] = "<i>Communicatie</i>";

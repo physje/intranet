@@ -51,7 +51,7 @@ if(isset($_POST['save']) OR isset($_POST['maanden'])) {
 if(isset($_REQUEST['new'])) {
 	$start	= mktime(9,0,0,date("n"),date("j")+1, date("Y"));
 	$eind		= mktime(9,30,0,date("n"),date("j")+1, date("Y"));		
-	$query	= "INSERT INTO $TableDiensten ($DienstStart, $DienstEind) VALUES ('$start', '$eind')";
+	$query	= "INSERT INTO $TableDiensten ($DienstStart, $DienstEind, $DienstOpmerking) VALUES ('$start', '$eind' , 'Handmatig toegevoegd')";
 	$result = mysqli_query($db, $query);
 			
 	toLog('info', '', 'Dienst voor '. date("d-m-Y", $start) .' toegevoegd');
