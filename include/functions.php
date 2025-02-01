@@ -402,7 +402,7 @@ function getMyRoostersBeheer($id) {
 }
 
 function getRoosterDetails($id) {
-	global $TableRoosters, $RoostersID, $RoostersNaam, $RoostersBeheerder, $RoostersGroep, $RoostersPlanner, $RoostersFields, $RoostersReminder, $RoostersMail, $RoostersSubject, $RoostersFrom, $RoostersFromAddr, $RoostersGelijk, $RoostersTextOnly, $RoostersAlert, $RoostersOpmerking, $db;
+	global $TableRoosters, $RoostersID, $RoostersNaam, $RoostersBeheerder, $RoostersGroep, $RoostersPlanner, $RoostersFields, $RoostersReminder, $RoostersMail, $RoostersSubject, $RoostersFrom, $RoostersFromAddr, $RoostersGelijk, $RoostersTextOnly, $RoostersOuderCC, $RoostersPartnerTo, $RoostersAlert, $RoostersOpmerking, $db;
 	
 	$data = array();
 	
@@ -422,7 +422,10 @@ function getRoosterDetails($id) {
 		$data['gelijk']	= $row[$RoostersGelijk];
 		$data['text_only']	= $row[$RoostersTextOnly];
 		$data['alert']	= $row[$RoostersAlert];
-		$data['opmerking']	= $row[$RoostersOpmerking];
+		$data['opmerking']	= $row[$RoostersOpmerking];		
+		$data['ouderMail']	= $row[$RoostersOuderCC];
+		$data['partnerMail']	= $row[$RoostersPartnerTo];
+		
 	}
 	return $data;	
 }

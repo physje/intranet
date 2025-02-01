@@ -39,6 +39,8 @@ if($showLogin) {
 	include($cfgProgDir. "secure.php");
 }
 
+$myGroups = getMyGroups($_SESSION['useID']);
+
 # Als er op een knop gedrukt is, het rooster wegschrijven
 if(isset($_POST['save']) OR isset($_POST['maanden'])) {
 	if($RoosterData['text_only'] == 0) {	

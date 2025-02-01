@@ -22,8 +22,8 @@ include($cfgProgDir. "secure.php");
 
 # Als op de knop van de details geklikt is die data wegschrijven
 if(isset($_POST['save_details'])) {
-	$sql = "UPDATE $TableRoosters SET $RoostersGelijk = '". $_POST['gelijkeDiensten'] ."', ". (isset($_POST['interneOpmerking']) ? $RoostersOpmerking ." = '". $_POST['interneOpmerking'] ."', " : ""). $RoostersLastChange ." = '". date("Y-m-d H:i:s") ."' WHERE $RoostersID like ". $_POST['rooster'];
-	mysqli_query($db, $sql);
+	$sql = "UPDATE $TableRoosters SET $RoostersGelijk = '". $_POST['gelijkeDiensten'] ."', $RoostersOpmerking = '". (isset($_POST['interneOpmerking']) ? $_POST['interneOpmerking'] : "") ."', $RoostersOuderCC = '". (isset($_POST['ouderMail']) ? $_POST['ouderMail'] : "") ."', $RoostersPartnerTo = '". (isset($_POST['partnerMail']) ? $_POST['partnerMail'] : "") ."', $RoostersLastChange = '". date("Y-m-d H:i:s") ."' WHERE $RoostersID like ". $_POST['rooster'];
+	mysqli_query($db, $sql);	
 }
 
 # Als op de knop van de mail geklikt is die data wegschrijven
