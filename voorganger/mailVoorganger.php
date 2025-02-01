@@ -32,9 +32,9 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 		$schriftlezer		= $aSchriftlezer[0];
 		$adresSchrift		= getMailAdres($schriftlezer);
 		
-		$aRegisseur			= getRoosterVulling(26, $dienst);
-		$regisseur			= $aRegisseur[0];
-		$adresRegisseur	= getMailAdres($regisseur, true);		
+		#$aRegisseur			= getRoosterVulling(26, $dienst);
+		#$regisseur			= $aRegisseur[0];
+		#$adresRegisseur	= getMailAdres($regisseur, true);		
 		
 		$aBeamer				= getRoosterVulling(11, $dienst);
 		$beameraar			= $aBeamer[0];
@@ -60,7 +60,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 				$param['to'][] = array($voorgangerData['mail'], $mailNaam);
 				$param['cc'][] = array($adresBand, makeName($bandleider, 6));
 				$param['cc'][] = array($adresSchrift, makeName($schriftlezer, 6));
-				$param['cc'][] = array($adresRegisseur, makeName($regisseur, 6));
+				#$param['cc'][] = array($adresRegisseur, makeName($regisseur, 6));
 								
 				# CC toevoegen
 				foreach($voorgangerCC as $adres => $naam) {
@@ -89,12 +89,14 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 			$mailText[] = "";
 			$mailText[] = "Jullie staan op het rooster voor de $dagdeel van ". time2str ('%A %e %B', $dienstData['start'])." om ". date('H:i', $dienstData['start'])." uur in de Koningskerk te Deventer.";
 			
+			/*
 			if($regisseur > 0) {
 				$mailText[] = "";
 				$mailText[] = "<i>Regisseur</i>";
 				$mailText[] = "In deze dienst is ". makeName($regisseur, 5) ." de regisseur. De regisseur zal met ". ($voorgangerData['stijl'] == 0 ? 'u' : 'je')." bespreken of er bijzonderheden zijn in de dienst. Als het een speciale Eredienst betreft, waarin bijvoorbeeld gedoopt wordt of het Heilig Avondmaal gevierd wordt, zal de regisseur tijdig het eerste initiatief nemen.";
 				$mailText[] = ($voorgangerData['stijl'] == 0 ? 'Heeft u' : 'Heb je')." vragen of ". ($voorgangerData['stijl'] == 0 ? 'wilt u' : 'wil je')." overleggen over bijzonderheden van de dienst? Neem dan contact op met ". makeName($regisseur, 1) .".";
 			}
+			*/
 			
 			if($bandleider > 0) {
 				$mailText[] = "";
@@ -124,11 +126,12 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 			
 			$mailText[] = implode("\n", $opsomming);
 			#$mailText[] = "";	
-			$mailText[] = "Indien gewenst kan hiervoor een gemeentelid ingeschakeld worden. Bespreek dit dan graag met de regisseur.";			
+			#$mailText[] = "Indien gewenst kan hiervoor een gemeentelid ingeschakeld worden. Bespreek dit dan graag met de regisseur.";			
 			$mailText[] = "";
 			$mailText[] = "<i>Communicatie</i>";
-			$mailText[] = "De regisseur is het eerste aanspreekpunt bij vragen of opmerkingen. Neem dus gerust contact op met ". makeName($regisseur, 1) .".";
-			$mailText[] = "Als je deze mail beantwoordt aan \"allen\", dan zijn ook alle andere betrokkenen op tijd op de hoogte:";
+			#$mailText[] = "De regisseur is het eerste aanspreekpunt bij vragen of opmerkingen. Neem dus gerust contact op met ". makeName($regisseur, 1) .".";
+			#$mailText[] = "Als je deze mail beantwoordt aan \"allen\", dan zijn ook alle andere betrokkenen op tijd op de hoogte:";
+			$mailText[] = "Als je deze mail beantwoordt aan \"allen\", zijn alle  betrokkenen op tijd op de hoogte:";
  			$mailText[] = "";
 			$mailText[] = "(Het gaat in ieder geval om de volgende mailadressen die aangeschreven moeten worden:";
 			$mailText[] = "reinier.kramer@koningskerkdeventer.nl";
