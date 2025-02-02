@@ -21,7 +21,7 @@ if($row		= mysqli_fetch_array($result)) {
 		
 		$persoon = $row[$OKRoosterPersoon];
 		
-		if($persoon != 'externTG' AND $persoon != 'externSM') {		
+		if($persoon != 'externTG' AND $persoon != 'externSM' AND $persoon != '') {		
 			# Vraag de tijden voor deze persoon op
 			$sql_tijden			= "SELECT * FROM $TableOpenKerkRooster WHERE $OKRoosterStart BETWEEN $startDag AND $eindDag AND $OKRoosterPersoon = '". $persoon ."'";
 			$result_tijden	= mysqli_query($db, $sql_tijden);
