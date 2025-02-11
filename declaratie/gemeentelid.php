@@ -527,8 +527,8 @@ if(isset($_POST['correct'])) {
 		foreach($overige as $key => $string) {
 			if($string != '' OR $first) {
 				$page[] = "	<tr>";
-				$page[] = "		<td colspan='3'><input type='text' name='overig[$key]' value='$string'></td>";			
-				$page[] = "		<td colspan='1'>&euro;<input type='text' name='overig_price[$key]' value='". (isset($_POST['overig_price'][$key]) ? price2RightFormat($_POST['overig_price'][$key]) : '') ."' size='2'></td>";
+				$page[] = "		<td colspan='3'><input type='text' name='overig[$key]' value='$string' placeholder='Korte omschrijving van de post'></td>";			
+				$page[] = "		<td colspan='1'>&euro;<input type='text' name='overig_price[$key]' value='". (isset($_POST['overig_price'][$key]) ? price2RightFormat($_POST['overig_price'][$key]) : '') ."' size='2' placeholder='1,23'></td>";
 				$page[] = "	</tr>";
 			}
 						
