@@ -468,7 +468,7 @@ if(isset($_POST['correct'])) {
 		if($_POST['eigen'] == 'Ja') {
 			$page[] = "<tr>";
 			$page[] = "	<td valign='top' colspan='2'>Wat is uw rekeningnummer</td>";
-			$page[] = "	<td valign='top'><input type='text' name='iban' value='$iban'></td>";
+			$page[] = "	<td valign='top'><input type='text' name='iban' value='$iban' placeholder='NL99XXXX0000000000'></td>";
 			$page[] = "	<td>&nbsp;</td>";
 			$page[] = "</tr>";
 			
@@ -492,9 +492,9 @@ if(isset($_POST['correct'])) {
 			$page[] = "		<td>&nbsp;</td>";
 			$page[] = "	</tr>";
 			$page[] = "	<tr>";
-			$page[] = "		<td><input type='text' name='reis_van' value='$reis_van' size='25'></td>";
+			$page[] = "		<td><input type='text' name='reis_van' value='$reis_van' size='25' placeholder='Adres en plaats van vertrekpunt'></td>";
 			$page[] = "		<td>&nbsp;</td>";
-			$page[] = "		<td><input type='text' name='reis_naar' value='$reis_naar' size='25' placeholder='Adres en woonplaats van de bestemming'></td>";
+			$page[] = "		<td><input type='text' name='reis_naar' value='$reis_naar' size='25' placeholder='Adres en plaats van bestemming'></td>";
 			$page[] = "		<td>&nbsp;</td>";
 			$page[] = "	</tr>";
 			
@@ -527,7 +527,7 @@ if(isset($_POST['correct'])) {
 		foreach($overige as $key => $string) {
 			if($string != '' OR $first) {
 				$page[] = "	<tr>";
-				$page[] = "		<td colspan='3'><input type='text' name='overig[$key]' value='$string' placeholder='Omschrijving van de kosten (bv bosje bloemen, lunch, oid)'></td>";			
+				$page[] = "		<td colspan='3'><input type='text' name='overig[$key]' value='$string' placeholder='Omschrijving van de kosten (bv bosje bloemen, HEMA, uitje Follow-Light oid)'></td>";
 				$page[] = "		<td colspan='1'>&euro;<input type='text' name='overig_price[$key]' value='". (isset($_POST['overig_price'][$key]) ? price2RightFormat($_POST['overig_price'][$key]) : '') ."' size='2' placeholder='1,23'></td>";
 				$page[] = "	</tr>";
 			}

@@ -183,7 +183,7 @@ if(isset($_POST['remove'])) {
 		$text[] = "</tr>";
 		$text[] = "<tr>";
 		$text[] = "	<td>Titel</td>";
-		$text[] = "	<td colspan=2><input type='text' name='titel' value='$titel' size='50'></td>";
+		$text[] = "	<td colspan=2><input type='text' name='titel' value='$titel' size='50' placeholder='Titel van de afspraak'></td>";
 		$text[] = "</tr>";
 		$text[] = "<tr>";
 		$text[] = "	<td>Omschrijving</td>";

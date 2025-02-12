@@ -339,7 +339,7 @@ if(isset($_REQUEST['hash'])) {
 			$page[] = "Voer hieronder het bankrekening-nummer in waarnaar het bedrag moet worden overgemaakt.<br>";
 			$page[] = "<br>";
 			$page[] = "<input type='hidden' name='oorspronkelijke_IBAN' value='$IBAN' size='30'>";
-			$page[] = "<input type='text' name='IBAN' value='$IBAN' size='30'>";
+			$page[] = "<input type='text' name='IBAN' value='$IBAN' size='30' placeholder='NL99XXXX0000000000'>";
 			$page[] = "<input type='submit' name='indienen' value='Dien declaratie in'>";
 			$page[] = "</form>";
 		} elseif(isset($_POST['check_form'])) {
@@ -441,7 +441,7 @@ if(isset($_REQUEST['hash'])) {
 				$page[] = "	</tr>";
 				$page[] = "	<tr>";
 				$page[] = "		<td>&nbsp;</td>";
-				$page[] = "		<td><input type='text' name='reis_van' value='". (!isset($_POST['reis_van']) ? $voorgangerData['reis_van'] : $_POST['reis_van']) ."' size='30'></td>";
+				$page[] = "		<td><input type='text' name='reis_van' value='". (!isset($_POST['reis_van']) ? $voorgangerData['reis_van'] : $_POST['reis_van']) ."' size='30' placeholder='Adres en plaats van het vertrekpunt'></td>";
 				$page[] = "		<td>&nbsp;</td>";
 				$page[] = "		<td><input type='text' name='reis_naar' value='Mari&euml;nburghstraat 4, Deventer' size='30'></td>";
 				$page[] = "		<td colspan='2'>&nbsp;</td>";
@@ -497,9 +497,9 @@ if(isset($_REQUEST['hash'])) {
 					if($string != '' OR $first) {
 						$page[] = "	<tr>";
 						$page[] = "		<td>&nbsp;</td>";
-						$page[] = "		<td colspan='3'><input type='text' name='overig[$key]' value='$string' size='50'></td>";
+						$page[] = "		<td colspan='3'><input type='text' name='overig[$key]' value='$string' size='50' placeholder='Omschrijving van eventuele extra kosten'></td>";
 						$page[] = "		<td>&nbsp;</td>";
-						$page[] = "		<td>&euro;&nbsp;<input type='text' name='overig_price[$key]' value='". str_replace(',', '.', $_POST['overig_price'][$key]) ."' size='5'></td>";
+						$page[] = "		<td>&euro;&nbsp;<input type='text' name='overig_price[$key]' value='". str_replace(',', '.', $_POST['overig_price'][$key]) ."' size='5' placeholder='1,23'></td>";
 						$page[] = "	</tr>";
 					}
       	
