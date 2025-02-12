@@ -219,6 +219,13 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 				} else {
 					$toelichting		= implode(', ', $JSON['overig']);
 				}
+				
+				# eBoekhouden heeft een limiet voor 200 tekens voor de toelichting
+				# Omdat bij de toelichting altijd de key (van 8 tekens) met haakjes wordt getoond
+				# moet de grens op 188 tekens komen te liggen.
+				if(strlen($toelichting) > 188) {
+					$toelichting = 'declaratie '. time2str('%e %B %Y', $row[$EBDeclaratieTijd]);
+				}
 							
 				if($write2EB)	{					
 					$errorResult = eb_verstuurDeclaratie ($EBCode, $boekstukNummer, $factuurnummer, $totaal, $_POST['GBR'], $toelichting.' ('.$_REQUEST['key'].')', $mutatieId);
