@@ -127,8 +127,8 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 						$param['subject']			= $FinalSubject;
 						$param['ReplyToName']	= $roosterData['naam_afzender'];
 						$param['ReplyTo']			= $roosterData['mail_afzender'];
-						if($RoosterData['partnerMail'] == 1)	$param['partnerTo']		= true;
-						if($RoosterData['ouderMail'] == 1)		$param['ouderCC']		= true;
+						if($RoosterData['partnerMail'] == '1')	$param['partnerTo']		= true;
+						if($RoosterData['ouderMail'] == '1')		$param['ouderCC']		= true;
 									
 						if(sendMail_new($param)) {
 							toLog('info', $lid, 'herinnering-mail '. $roosterData['naam'] .' verstuurd');
