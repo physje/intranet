@@ -7,7 +7,8 @@ $db = connect_db();
 
 $stap = 5;
 
-for($i=1 ; $i<8 ; $i++) {
+# 365 dagen / 5 = 73
+for($i=1 ; $i<75 ; $i++) {
 	$step[] = "$EBDeclaratieLastAction BETWEEN ". mktime(0, 0, 0, date("m"), date("d")-($i*$stap)) ." AND ". mktime(23, 59, 59, date("m"), date("d")-($i*$stap));
 }
 

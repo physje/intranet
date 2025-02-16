@@ -68,7 +68,11 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 				$param['cc'][] = array($adresBand, makeName($bandleider, 6));
 				$param['cc'][] = array($adresSchrift, makeName($schriftlezer, 6));
 				$param['cc'][] = array($adresOuderling, makeName($ouderling, 6));
-				$param['cc'][] = array($adresJeugd, makeName($jeugdmoment, 6));
+				
+				# Als Reinier geen voorganger is, gemeentelid voor jeugdmoment in de CC
+				if($dienstData['voorganger_id'] != 91) {
+					$param['cc'][] = array($adresJeugd, makeName($jeugdmoment, 6));
+				}
 								
 				# CC toevoegen
 				foreach($voorgangerCC as $adres => $naam) {
@@ -128,7 +132,11 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 			$opsomming[] = "<li>De ouderling van dienst verzorgt het dankgebed en de voorbeden (meestal aansluitend aan het collectegebed)</li>";
 			$opsomming[] = "<li>De dienst wordt live vertaald door het vertaalteam voor gemeenteleden die de Nederlandse taal nog niet machtig zijn. Het helpt het vertaalteam als bij het verzenden van de liturgie ook de preek of een preekschets wordt toegevoegd zodat men zich kan voorbereiden.</li>";
 			$opsomming[] = "</ul>";
-			$opsomming[] = "Voorafgaand aan de schriftlezing gaat een gedeelte van de basisschoolkinderen naar de bijbelklas of basiscatechese. Wij zijn gewend dat er in de Eredienst vaak een moment speciaal aandacht is voor kinderen of jeugd. Dit kan een kindermoment zijn voor de schriftlezing en voordat een deel van de kinderen naar bijbelklas of basiscatechese gaan. Dit kan ook in de vorm van een jeugdmoment zijn. Bij een gastpredikant is hier standaard een gemeentelid voor ingeroosterd die in de week voorafgaand contact met ".($voorgangerData['stijl'] == 0 ? 'u' : 'je')." zal opnemen over vorm en onderwerp. Voor deze dienst is ". makeName($jeugdmoment, 5) ." daarvoor als gemeentelid ingeroosterd.";			
+			
+			# Reinier heeft ID 91
+			if($dienstData['voorganger_id'] != 91) {
+				$opsomming[] = "Voorafgaand aan de schriftlezing gaat een gedeelte van de basisschoolkinderen naar de bijbelklas of basiscatechese. Wij zijn gewend dat er in de Eredienst vaak een moment speciaal aandacht is voor kinderen of jeugd. Dit kan een kindermoment zijn voor de schriftlezing en voordat een deel van de kinderen naar bijbelklas of basiscatechese gaan. Dit kan ook in de vorm van een jeugdmoment zijn. Bij een gastpredikant is hier standaard een gemeentelid voor ingeroosterd die in de week voorafgaand contact met ".($voorgangerData['stijl'] == 0 ? 'u' : 'je')." zal opnemen over vorm en onderwerp. Voor deze dienst is ". makeName($jeugdmoment, 5) ." daarvoor als gemeentelid ingeroosterd.";
+			}
 			
 			$mailText[] = implode("\n", $opsomming);			
 			$mailText[] = "";
