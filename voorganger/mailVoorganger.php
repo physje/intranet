@@ -124,7 +124,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 			$opsomming = array();
 			$opsomming[] = "<i>Andere taken</i>";
 			$opsomming[] = "<ul>";
-			$opsomming[] = "<li>". makeName($ouderling, 5) ." zal als ouderling van dienst de mededelingen voorafgaand aan de dienst verzorgen.</li>";
+			$opsomming[] = "<li>".($ouderling > 0 ? makeName($ouderling, 5) ." zal als ouderling van dienst" : "De ouderling van dienst zal"). " de mededelingen voorafgaand aan de dienst verzorgen.</li>";
 			$opsomming[] = "<li>".($schriftlezer > 0 ? "De schriftlezing wordt gedaan door ". makeName($schriftlezer, 5) : "Het is nog niet bekend wie de schriftlezing doet").". Wij gebruiken de vertaling NBV21.</li>";
 			$opsomming[] = "<li>".($beameraar > 0 ? "De beamer wordt bediend door ". makeName($beameraar, 5) : "Het is nog niet bekend wie de beamer bedient").".</li>";
 			$opsomming[] = "<li>".($koster > 0 ? makeName($koster, 5) ." is koster" : "Het is nog niet bekend wie de koster is").".</li>";
@@ -134,7 +134,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 			$opsomming[] = "</ul>";
 			
 			# Reinier heeft ID 91
-			if($dienstData['voorganger_id'] != 91) {
+			if($dienstData['voorganger_id'] != 91 AND $jeugdmoment > 0) {
 				$opsomming[] = "Voorafgaand aan de schriftlezing gaat een gedeelte van de basisschoolkinderen naar de bijbelklas of basiscatechese. Wij zijn gewend dat er in de Eredienst vaak een moment speciaal aandacht is voor kinderen of jeugd. Dit kan een kindermoment zijn voor de schriftlezing en voordat een deel van de kinderen naar bijbelklas of basiscatechese gaan. Dit kan ook in de vorm van een jeugdmoment zijn. Bij een gastpredikant is hier standaard een gemeentelid voor ingeroosterd die in de week voorafgaand contact met ".($voorgangerData['stijl'] == 0 ? 'u' : 'je')." zal opnemen over vorm en onderwerp. Voor deze dienst is ". makeName($jeugdmoment, 5) ." daarvoor als gemeentelid ingeroosterd.";
 			}
 			
@@ -174,7 +174,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 			}
 			
 			$mailText[] = "";
-			$mailText[] = "Als er onduidelijkheid is of er zijn vragen dan kan ". ($voorgangerData['stijl'] == 0 ? 'u' : 'je') ." contact opnemen met de ouderling van dienst via mail, met Sander Lagendijk als Clustercoo&ouml;rdinator Eredienst (06-12586835) of met mij.";			
+			$mailText[] = "Als er onduidelijkheid is of er zijn vragen dan kan ". ($voorgangerData['stijl'] == 0 ? 'u' : 'je') ." contact opnemen met ". ($ouderling > 0 ? "de ouderling van dienst via mail, met " : ""). "Sander Lagendijk als Clustercoo&ouml;rdinator Eredienst (06-12586835) of met mij.";			
 			$mailText[] = "";
 			$mailText[] = "Vriendelijke groeten";
 			$mailText[] = "";
