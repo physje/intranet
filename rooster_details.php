@@ -22,7 +22,7 @@ include($cfgProgDir. "secure.php");
 
 # Als op de knop van de details geklikt is die data wegschrijven
 if(isset($_POST['save_details'])) {
-	$sql = "UPDATE $TableRoosters SET $RoostersGelijk = '". $_POST['gelijkeDiensten'] ."', $RoostersOpmerking = '". (isset($_POST['interneOpmerking']) ? $_POST['interneOpmerking'] : "") ."', $RoostersOuderCC = '". (isset($_POST['ouderMail']) ? $_POST['ouderMail'] : "") ."', $RoostersPartnerTo = '". (isset($_POST['partnerMail']) ? $_POST['partnerMail'] : "") ."', $RoostersLastChange = '". date("Y-m-d H:i:s") ."' WHERE $RoostersID like ". $_POST['rooster'];
+	$sql = "UPDATE $TableRoosters SET $RoostersGelijk = '". $_POST['gelijkeDiensten'] ."', $RoostersOpmerking = '". (isset($_POST['interneOpmerking']) ? $_POST['interneOpmerking'] : "") ."', $RoostersOuderCC = '". (isset($_POST['ouderMail']) ? $_POST['ouderMail'] : "") ."', $RoostersPartnerTo = '". (isset($_POST['partnerMail']) ? $_POST['partnerMail'] : "") ."', $RoostersVoorganger = '". (isset($_POST['voorganger']) ? $_POST['voorganger'] : "") ."', $RoostersLastChange = '". date("Y-m-d H:i:s") ."' WHERE $RoostersID like ". $_POST['rooster'];
 	mysqli_query($db, $sql);	
 }
 
@@ -57,10 +57,13 @@ $rooster_details[] = "	<td><input type='checkbox' name='interneOpmerking' value=
 $rooster_details[] = "	<td>Mogelijkheid om interne opmerkingen bij het rooster te plaatsen<br><small>(huidige opmerkingen worden verwijderd bij uitvinken)</small></td>";
 $rooster_details[] = "</tr>";
 $rooster_details[] = "<tr>";
+$rooster_details[] = "	<td><input type='checkbox' name='voorganger' value='1'". ($RoosterData['showVoorganger'] == 1 ? ' checked' : '') ."></td>";
+$rooster_details[] = "	<td>Mogelijkheid om achter elke dienst de voorganger te tonen</td>";
+$rooster_details[] = "</tr>";
+$rooster_details[] = "<tr>";
 $rooster_details[] = "	<td><input type='checkbox' name='ouderMail' value='1'". ($RoosterData['ouderMail'] == 1 ? ' checked' : '') ."></td>";
 $rooster_details[] = "	<td>Mocht er een tiener op het rooster staan, stuur zijn/haar ouders dan een CC van de remindermail</td>";
 $rooster_details[] = "</tr>";
-
 $rooster_details[] = "<tr>";
 $rooster_details[] = "	<td><input type='checkbox' name='partnerMail' value='1'". ($RoosterData['partnerMail'] == 1 ? ' checked' : '') ."></td>";
 $rooster_details[] = "	<td>Stuur niet alleen de persoon op het rooster een remindermail, maar ook zijn/haar partner</td>";

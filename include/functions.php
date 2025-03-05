@@ -402,7 +402,7 @@ function getMyRoostersBeheer($id) {
 }
 
 function getRoosterDetails($id) {
-	global $TableRoosters, $RoostersID, $RoostersNaam, $RoostersBeheerder, $RoostersGroep, $RoostersPlanner, $RoostersFields, $RoostersReminder, $RoostersMail, $RoostersSubject, $RoostersFrom, $RoostersFromAddr, $RoostersGelijk, $RoostersTextOnly, $RoostersOuderCC, $RoostersPartnerTo, $RoostersAlert, $RoostersOpmerking, $db;
+	global $TableRoosters, $RoostersID, $RoostersNaam, $RoostersBeheerder, $RoostersGroep, $RoostersPlanner, $RoostersFields, $RoostersReminder, $RoostersMail, $RoostersSubject, $RoostersFrom, $RoostersFromAddr, $RoostersGelijk, $RoostersTextOnly, $RoostersOuderCC, $RoostersPartnerTo, $RoostersAlert, $RoostersOpmerking, $RoostersVoorganger, $db;
 	
 	$data = array();
 	
@@ -422,7 +422,8 @@ function getRoosterDetails($id) {
 		$data['gelijk']	= $row[$RoostersGelijk];
 		$data['text_only']	= $row[$RoostersTextOnly];
 		$data['alert']	= $row[$RoostersAlert];
-		$data['opmerking']	= $row[$RoostersOpmerking];		
+		$data['opmerking']	= $row[$RoostersOpmerking];
+		$data['showVoorganger']	= $row[$RoostersVoorganger];
 		$data['ouderMail']	= $row[$RoostersOuderCC];
 		$data['partnerMail']	= $row[$RoostersPartnerTo];
 		
@@ -912,10 +913,10 @@ function sendMail_new($parameter) {
 	# Even checken of de partner in de Aan moeten
 	if(!isset($parameter['partnerTo'])) {
 		$partnerTo = false;
-		toLog('debug', '', 'partner niet in de To');
+		toLog('debug', '', 'partner niet in de Aan');
 	} else {
-		$partnerTo = $parameter['partnerTo'];
-		toLog('debug', '', 'partner in de To = '. $partnerTo);
+		$partnerTo = true;		
+		toLog('debug', '', 'partner in de Aan');
 	}	
 		
 	$mail = new PHPMailer\PHPMailer\PHPMailer;

@@ -69,6 +69,7 @@ $RoostersFrom									= "naam_afzender";
 $RoostersFromAddr							= "mail_afzender";
 $RoostersGelijk								= "gelijke_diensten";
 $RoostersOpmerking						= "opmerking";
+$RoostersVoorganger						= "voorganger";
 $RoostersTextOnly							= "text_only";
 $RoostersOuderCC							= "ouder";
 $RoostersPartnerTo						= "partner";

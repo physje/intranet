@@ -120,13 +120,18 @@ $header[] = '<style>';
 $header[] = '@media only screen and (max-width: 760px), (min-device-width: 768px) and (max-device-width: 1024px)  {';
 $header[] = '	td:nth-of-type(1):before { content: "Dienst"; }';
 $header[] = '	td:nth-of-type(2):before { content: "'.($RoosterData['text_only'] == 0 ? 'Persoon' : 'Roostertekst') .'"; }';
+$i = 2;
 
 if($RoosterData['opmerking'] == 1) {
-	$header[] = '	td:nth-of-type(3):before { content: "Interne opmerking"; }';
-	$header[] = '	td:nth-of-type(4):before { content: "Bijzonderheid"; }';
-} else {
-	$header[] = '	td:nth-of-type(3):before { content: "Bijzonderheid"; }';
+	$i++;	$header[] = '	td:nth-of-type('. $i . '):before { content: "Interne opmerking"; }';
 }
+
+if($RoosterData['showVoorganger'] == 1) {
+	$i++;	$header[] = '	td:nth-of-type('. $i . '):before { content: "Voorganger"; }';
+}
+
+$i++;
+$header[] = '	td:nth-of-type('. $i . '):before { content: "Bijzonderheid"; }';
 $header[] = "}";
 $header[] = "</style>";
 
@@ -150,6 +155,7 @@ if($RoosterData['text_only'] == 0) {
 	$block_rooster[] = "	<th>Roostertekst</th>";
 }
 if($RoosterData['opmerking'] == 1)	$block_rooster[] = "	<th class='th_rot'>Interne opmerking</th>";
+if($RoosterData['showVoorganger'] == 1)	$block_rooster[] = "	<th class='th_rot'>Voorganger</th>";
 $block_rooster[] = "	<th>Bijzonderheid</th>";
 $block_rooster[] = "</tr>";
 $block_rooster[] = "</thead>";
@@ -162,7 +168,7 @@ foreach($diensten as $dienst) {
 		$details = getKerkdienstDetails($dienst);
 		$vulling = getRoosterVulling($_REQUEST['rooster'], $dienst);
 		$opmerking = getRoosterOpmerking($_REQUEST['rooster'], $dienst);
-		
+				
 		if(in_array($RoosterData['gelijk'], array(1, 3, 5, 6))) {
 			$korteDatum = true;
 		} else {
@@ -199,8 +205,14 @@ foreach($diensten as $dienst) {
 		}
 		
 		if($RoosterData['opmerking'] == 1) {
-			$block_rooster[] = "	<td><input type='text' name='opmerking[$dienst]' value='$opmerking'></td>";			
+			$block_rooster[] = "	<td><input type='text' name='opmerking[$dienst]' value='$opmerking'></td>";
 		}
+		
+		if($RoosterData['showVoorganger'] == 1) {
+			$block_rooster[] = "	<td>". $details['voorganger'] ."</td>";			
+		}
+		
+		
 		$block_rooster[] = "	<td>". ($details['bijzonderheden'] != '' ? $details['bijzonderheden'] : '&nbsp;' )."</td>";
 		$block_rooster[] = "</tr>";
 	}
