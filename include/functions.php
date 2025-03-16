@@ -1216,9 +1216,9 @@ function toLog($type, $slachtoffer, $message) {
  	
  	if($message != '') {
  		session_start(['cookie_lifetime' => $cookie_lifetime]);
- 		
+ 		 		 		
 		$tijd = time();
-		$sql = "INSERT INTO $TableLog ($LogTime, $LogType, $LogUser, $LogDisguised, $LogSubject, $LogMessage) VALUES ($tijd, '$type', '". $_SESSION['realID'] ."', '". (isset($_SESSION['fakeID']) ? $_SESSION['fakeID'] : '') ."', '$slachtoffer', '". addslashes($message) ."')";
+		$sql = "INSERT INTO $TableLog ($LogTime, $LogType, $LogUser, $LogDisguised, $LogSubject, $LogMessage) VALUES ($tijd, '$type', '". (isset($_SESSION['realID']) ? $_SESSION['realID'] : '') ."', '". (isset($_SESSION['fakeID']) ? $_SESSION['fakeID'] : '') ."', '$slachtoffer', '". addslashes($message) ."')";
 		if(!mysqli_query($db, $sql)) {
 			echo "log-error : ". $sql;
 		}
@@ -2769,6 +2769,36 @@ function knownLoginFromIP($id, $ip) {
 	} else {
 		return false;
 	}
+}
+
+function resize_image($file, $w, $h, $crop=false) {
+	list($width, $height) = getimagesize($file);
+	$r = $width / $height;
+	
+	if ($crop) {
+		if ($width > $height) {
+			$width = ceil($width-($width*abs($r-$w/$h)));
+		} else {
+			$height = ceil($height-($height*abs($r-$w/$h)));
+		}
+		
+		$newwidth = $w;
+		$newheight = $h;
+   } else {
+   	if ($w/$h > $r) {
+   		$newwidth = $h*$r;
+   		$newheight = $h;
+   	} else {
+   		$newheight = $w/$r;
+   		$newwidth = $w;
+   	}
+  }
+  
+  $src = imagecreatefromjpeg($file);
+  $dst = imagecreatetruecolor($newwidth, $newheight);
+  imagecopyresampled($dst, $src, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
+  
+  return $dst;
 }
 
 ?>
