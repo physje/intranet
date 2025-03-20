@@ -289,7 +289,7 @@ if(isset($_POST['correct'])) {
 			# Als het JPG's zijn & te groot -> resize
 			foreach($_FILES['bijlage'] as $bijlage) {
 				$bestandsnaam = $bijlage['name'];
-				$bestandsgrootte = $bijlage['size'];							
+				$bestandsgrootte = $bijlage['size'];
 				$path_parts = pathinfo($bestandsnaam);
 				
 				if($bestandsgrootte > (1100*1024) AND ($path_parts['extension'] != 'jpg' OR $path_parts['extension'] != 'jpeg')) {
@@ -301,22 +301,31 @@ if(isset($_POST['correct'])) {
 			*/
 			
 			# Bestandsgrootte	
-			foreach($_FILES['bijlage']['size'] as $fileSize) {
+			#foreach($_FILES['bijlage']['size'] as $fileSize) {
+			foreach($_FILES['bijlage'] as $key => $bijlage) {
+				$fileSize = $bijlage['size'];
+				
 				if($fileSize > (1100*1024) AND !isset($resized)) {
 					$checkFields = false;
 					$meldingBestand = 'Bestand te groot. Maximaal 1 MB';
 					
+					$bestandsnaam = $bijlage['name'];
+					$path_parts = pathinfo($bestandsnaam);
+										
 					# Bij plaatjes, voeg link naar online resizen toe
 					if(isset($path_parts['extension']) AND ($path_parts['extension'] == 'jpg' OR $path_parts['extension'] == 'jpeg')) {
-						$meldingBestand .= ". Plaatje kleiner maken kan ook <a href='https://www.reduceimages.com/' target='_blank'>online</a>";				
+						$meldingBestand .= ". Foto's kleiner maken kan ook <a href='https://www.reduceimages.com/' target='_blank'>online</a>";
+						#$meldingBestand = 'Een van de bijlages was te groot en is daarom automatisch verkleind. Controleer of dit is goed gegaan.';
+						
+						#$_FILES['bijlage']['tmp_name'][$key] = resize_image($bestandsnaam, 1024, 1024);						
 					}
 				}
 			}
 			
 			# Aantal bestanden
-			if(count($_FILES['bijlage']['size']) > 2) {
+			if(count($_FILES['bijlage']['size']) > 5) {
 				$checkFields = false;
-				$meldingBestand = 'Maximaal 2 bestanden';
+				$meldingBestand = 'Maximaal 5 bestanden';
 			}			
 			
 			# Alleen PDF's / JPG's
@@ -574,7 +583,7 @@ if(isset($_POST['correct'])) {
 			(isset($_POST['reset_files']))
 		) {
 			$page[] = "<tr>";
-			$page[] = "	<td colspan='3'><input type='file' name='bijlage[]' accept='application/pdf, image/jpeg' multiple><br><small>Alleen PDF of JPG; max. 2 files; max 1 MB/stuk</small></td>";
+			$page[] = "	<td colspan='3'><input type='file' name='bijlage[]' accept='application/pdf, image/jpeg' multiple><br><small>Alleen PDF of JPG; max. 5 files; max 1 MB/stuk</small></td>";
 			$page[] = "	<td>&nbsp;</td>";
 			$page[] = "</tr>";
 			
