@@ -205,7 +205,7 @@ if(isset($_POST['correct'])) {
 		$thuisAdres = $gebruikersData['straat'].' '.$gebruikersData['huisnummer'].', '.ucwords(strtolower($gebruikersData['plaats']));
 		
 		if($gebruikersData['eb_code'] > 0) {
-			eb_getRelatieIbanByCode($gebruikersData['eb_code'], $EBIBAN);
+			eb_getRelatieIbanByCode($gebruikersData['eb_code'], $EBIBAN);			
 		} else {
 			$EBIBAN = '';
 		}
@@ -284,49 +284,34 @@ if(isset($_POST['correct'])) {
 		
 		# Check van bestanden
 		if(isset($_FILES['bijlage'])) {
+			$aantal = count($_FILES['bijlage']['size']);
 			
-			/*
-			# Als het JPG's zijn & te groot -> resize
-			foreach($_FILES['bijlage'] as $bijlage) {
-				$bestandsnaam = $bijlage['name'];
-				$bestandsgrootte = $bijlage['size'];
-				$path_parts = pathinfo($bestandsnaam);
-				
-				if($bestandsgrootte > (1100*1024) AND ($path_parts['extension'] != 'jpg' OR $path_parts['extension'] != 'jpeg')) {
-					$checkFields = false;
-					$resized = true;
-					$meldingBestand = 'De bijlages zijn te groot en daarom automatisch verkleind. Controleer of dit is goed gegaan.';					
-				}
-			}			
-			*/
+			# Aantal bestanden
+			if($aantal > 5) {
+				$checkFields = false;
+				$meldingBestand = 'Maximaal 5 bestanden';
+			}	
 			
-			# Bestandsgrootte	
-			#foreach($_FILES['bijlage']['size'] as $fileSize) {
-			foreach($_FILES['bijlage'] as $key => $bijlage) {
-				$fileSize = $bijlage['size'];
+			for($i=0 ; $i < $aantal ; $i++) {
+				$fileSize = $_FILES['bijlage']['size'][$i];
+				$fileType = $_FILES['bijlage']['type'][$i];
+				$bestandsnaam = $_FILES['bijlage']['tmp_name'][$i];
 				
 				if($fileSize > (1100*1024) AND !isset($resized)) {
 					$checkFields = false;
 					$meldingBestand = 'Bestand te groot. Maximaal 1 MB';
-					
-					$bestandsnaam = $bijlage['name'];
-					$path_parts = pathinfo($bestandsnaam);
-										
+															
 					# Bij plaatjes, voeg link naar online resizen toe
-					if(isset($path_parts['extension']) AND ($path_parts['extension'] == 'jpg' OR $path_parts['extension'] == 'jpeg')) {
-						$meldingBestand .= ". Foto's kleiner maken kan ook <a href='https://www.reduceimages.com/' target='_blank'>online</a>";
+					if(isset($fileType) AND ($fileType == 'jpg' OR $fileType == 'image/jpeg')) {
+						$meldingBestand .= ".<br>Foto's als bewijs hoeven geen hoge resolutie te hebben, kleiner maken kan bv via <a href='https://www.reduceimages.com/' target='_blank'>online</a>";
 						#$meldingBestand = 'Een van de bijlages was te groot en is daarom automatisch verkleind. Controleer of dit is goed gegaan.';
 						
-						#$_FILES['bijlage']['tmp_name'][$key] = resize_image($bestandsnaam, 1024, 1024);						
+						#echo resize_image($bestandsnaam, 1024, 1024);						
 					}
 				}
 			}
 			
-			# Aantal bestanden
-			if(count($_FILES['bijlage']['size']) > 5) {
-				$checkFields = false;
-				$meldingBestand = 'Maximaal 5 bestanden';
-			}			
+		
 			
 			# Alleen PDF's / JPG's
 			foreach($_FILES['bijlage']['name'] as $bestandsnaam) {
