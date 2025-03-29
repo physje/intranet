@@ -70,11 +70,26 @@ if(isset($_POST['post'])) {
 # Bestand uploaden en op de juiste plaats zetten
 if(isset($_FILES['bijlage'])) {
 	foreach($_FILES['bijlage']['tmp_name'] as $key => $tmpFile) {
+		$fileSize = $_FILES['bijlage']['size'][$key];
+		$fileType = $_FILES['bijlage']['type'][$key];
 		$oldName = trim($tmpFile);
-		$newName = 'uploads/'.generateFilename();
+		$newName = 'uploads/'.generateFilename();		
+		
 		if(move_uploaded_file($oldName, $newName)) {
-			$page[] = "<input type='hidden' name='bijlage[]' value='$newName'>";
-			$page[] = "<input type='hidden' name='bijlage_naam[]' value='". trim($_FILES['bijlage']['name'][$key]) ."'>";	
+			$bestands_naam = $bijlage_naam = '';			
+			if($fileType == 'image/jpeg' AND $fileSize > (1024*1024)) {
+				# Resize de foto en verwijder de oude
+				$newFile = resize_image($newName, 1024, 1024);				
+				unlink($newName);
+				
+				$bestands_naam = $newFile;
+				$bijlage_naam = 'resized_'.trim($_FILES['bijlage']['name'][$key]);
+			} else {
+				$bestands_naam = $newName;
+				$bijlage_naam = trim($_FILES['bijlage']['name'][$key]);
+			}			
+			$page[] = "<input type='hidden' name='bijlage[]' value='$bestands_naam'>";
+			$page[] = "<input type='hidden' name='bijlage_naam[]' value='$bijlage_naam'>";	
 		}
 	}
 } elseif(isset($_POST['bijlage'])) {
@@ -297,16 +312,12 @@ if(isset($_POST['correct'])) {
 				$fileType = $_FILES['bijlage']['type'][$i];
 				$bestandsnaam = $_FILES['bijlage']['tmp_name'][$i];
 				
-				if($fileSize > (1100*1024) AND !isset($resized)) {
-					$checkFields = false;
-					$meldingBestand = 'Bestand te groot. Maximaal 1 MB';
-															
-					# Bij plaatjes, voeg link naar online resizen toe
-					if(isset($fileType) AND ($fileType == 'jpg' OR $fileType == 'image/jpeg')) {
-						$meldingBestand .= ".<br>Foto's als bewijs hoeven geen hoge resolutie te hebben, kleiner maken kan bv via <a href='https://www.reduceimages.com/' target='_blank'>online</a>";
-						#$meldingBestand = 'Een van de bijlages was te groot en is daarom automatisch verkleind. Controleer of dit is goed gegaan.';
-						
-						#echo resize_image($bestandsnaam, 1024, 1024);						
+				# Plaatjes worden automatisch geschaald bij opslaan
+				# Daar hoeft dus geen melding voor te zijn
+				if(isset($fileType) AND $fileType != 'jpg' AND $fileType != 'image/jpeg') {					
+					if($fileSize > (1100*1024)) {
+						$checkFields = false;
+						$meldingBestand = 'Bestand te groot. Maximaal 1 MB';
 					}
 				}
 			}

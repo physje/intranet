@@ -2772,6 +2772,8 @@ function knownLoginFromIP($id, $ip) {
 }
 
 function resize_image($file, $w, $h, $crop=false) {
+	$newFile = 'uploads/'.generateFilename();
+	
 	list($width, $height) = getimagesize($file);
 	$r = $width / $height;
 	
@@ -2797,8 +2799,9 @@ function resize_image($file, $w, $h, $crop=false) {
   $src = imagecreatefromjpeg($file);
   $dst = imagecreatetruecolor($newwidth, $newheight);
   imagecopyresampled($dst, $src, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
+  imagejpeg($dst, $newFile, 100);
   
-  return $dst;
+  return $newFile;
 }
 
 ?>
