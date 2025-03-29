@@ -96,7 +96,7 @@ if($leeg) {
 
 $block_2[] = "<a href='showCombineRooster.php?rs=". $_REQUEST['rooster'] ."&pdf'>PDF-versie</a>";
 
-echo showCSSHeader(array('default', 'table_default'));
+echo showCSSHeader(array('default', 'table_default'), '', $RoosterData['naam']);
 echo '<div class="content_vert_kolom">'.NL;
 echo "<h1>". $RoosterData['naam'] ."</h1>".NL;
 echo "<div class='content_block'>".NL. implode(NL, $block_1).NL."</div>".NL;

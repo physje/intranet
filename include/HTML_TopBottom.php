@@ -68,7 +68,7 @@ $HTMLFooter .= '</html>'.NL;
 $HTMLFooter .= "\n\n<!--     Deze pagina is onderdeel van $ScriptTitle $Version gemaakt door Matthijs Draijer     -->";
 
 
-function showCSSHeader($sheets = array('default'), $header = '') {
+function showCSSHeader($sheets = array('default'), $header = '', $pageTitle = '') {
 	global $pageTitle, $ScriptTitle, $Version, $ScriptURL;
 	
 	$Header[] = "<!--     Deze pagina is onderdeel van $ScriptTitle $Version gemaakt door Matthijs Draijer     -->";
@@ -89,6 +89,13 @@ function showCSSHeader($sheets = array('default'), $header = '') {
 	$Header[] = "	<link rel='icon' href='". $ScriptURL ."images/logo.ico'>";
 	$Header[] = "	<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>";
 	$Header[] = "	<meta name='viewport' content='width=device-width, initial-scale=1'>";
+	$Header[] = "	<meta property=\"og:locale\" content=\"nl_NL\" />";
+	$Header[] = "	<meta property=\"og:site_name\" content=\"$ScriptTitle\" />";
+	$Header[] = "	<meta property=\"og:type\" content=\"article\" />";
+	$Header[] = "	<meta property=\"og:title\" content=\"". ((isset($pageTitle) AND $pageTitle != '') ? $pageTitle : "") ."\" />";
+	$Header[] = "	<meta property=\"og:description\" content=\"Intranet van de Koningskerk in Deventer\" />";
+	$Header[] = "	<meta property=\"og:url\" content=\"". $_SERVER['PHP_SELF']."\" />";
+	$Header[] = "	<meta property=\"og:image\" content=\"". $ScriptURL ."images/logoKoningsKerk.png\" />";	
 	$Header[] = '</head>';
 	$Header[] = '<body>';	
 	$Header[] = '<div class="middenstuk">';
