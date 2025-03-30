@@ -72,13 +72,15 @@ body{font-family:arial;background:#FFFFFF;text-align:center;}
 #entry div.submit label{float:none;display:inline;font-size:11px;}
 #entry button{border:0;padding:0 30px;height:30px;line-height:30px;text-align:center;font-size:16px;font-weight:bold;color:#fff;background:#8C1974;cursor:pointer;}
 </style>
+<!--
 <meta property="og:locale" content="nl_NL" />";
 <meta property="og:site_name" content="<?php echo $ScriptTitle ?>" />
 <meta property="og:type" content="article" />
 <meta property="og:title" content="<?PHP ((isset($pageTitle) AND $pageTitle != '') ? echo $pageTitle : "") ?>" />
 <meta property="og:description" content="Intranet van de Koningskerk in Deventer" />
 <meta property="og:url" content="<?php echo $ScriptServer.$_SERVER['PHP_SELF'] ?>" />
-<meta property="og:image" content="<? echo $ScriptURL ."images/logoKoningsKerk.png" ?>" />	
+<meta property="og:image" content="<? echo $ScriptURL ."images/logoKoningsKerk.png" ?>" />
+-->
 
 </head>
 <body>
