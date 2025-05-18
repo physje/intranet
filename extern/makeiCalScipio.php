@@ -83,9 +83,9 @@ if($row_dienst = mysqli_fetch_array($result_dienst)) {
 				$data_rooster = getRoosterDetails($rooster);
 				
 				if($data_rooster['gelijk'] == 1) {					
-					$sql_persoon = "SELECT * FROM $TablePlanning WHERE $PlanningGroup = $rooster AND (". implode(' OR ', $tmpDienst) .")";
+					$sql_persoon = "SELECT * FROM $TablePlanning WHERE $PlanningGroup = $rooster AND (". implode(' OR ', $tmpDienst) .") ORDER BY $PlanningPositie ASC";
 				} else {
-					$sql_persoon = "SELECT * FROM $TablePlanning WHERE $PlanningGroup = $rooster AND $PlanningDienst = $dienst";
+					$sql_persoon = "SELECT * FROM $TablePlanning WHERE $PlanningGroup = $rooster AND $PlanningDienst = $dienst ORDER BY $PlanningPositie ASC";
 				}
 				$result_persoon = mysqli_query($db, $sql_persoon);
 								
