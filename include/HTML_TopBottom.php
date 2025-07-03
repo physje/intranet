@@ -94,7 +94,7 @@ function showCSSHeader($sheets = array('default'), $header = '', $pageTitle = ''
 	$Header[] = "	<meta property=\"og:type\" content=\"article\" />";
 	$Header[] = "	<meta property=\"og:title\" content=\"". ((isset($pageTitle) AND $pageTitle != '') ? $pageTitle : "") ."\" />";
 	$Header[] = "	<meta property=\"og:description\" content=\"Intranet van de Koningskerk in Deventer\" />";
-	$Header[] = "	<meta property=\"og:url\" content=\"". $_SERVER['PHP_SELF']."\" />";
+	$Header[] = "	<meta property=\"og:url\" content=\"". $ScriptServer.$_SERVER['PHP_SELF']."\" />";
 	$Header[] = "	<meta property=\"og:image\" content=\"". $ScriptURL ."images/logoKoningsKerk.png\" />";	
 	$Header[] = '</head>';
 	$Header[] = '<body>';	
