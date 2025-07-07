@@ -104,7 +104,7 @@ foreach($roosters as $rooster) {
       	
 				if((!$verlopen OR $lastWarning) AND $deadline> 0) {
 					# geadresseerden
-					$beheerders = array();
+					$beheerders = $namenBeheerders = array();
 					$beheerders = getGroupMembers($roosterData['beheerder']);
 					
 					foreach($beheerders as $dummy => $lid)	$namenBeheerders[$lid] = makeName($lid, 1);
