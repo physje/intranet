@@ -13,8 +13,8 @@ if(isset($_REQUEST['hash'])) {
 		$showLogin = true;
 	} else {
 		$showLogin = false;
-		session_start(['cookie_lifetime' => $cookie_lifetime]);
-		$_SESSION['realID'] = $id;
+		session_start(['cookie_lifetime' => $cookie_lifetime]);		
+		$_SESSION['useID'] = $id;
 		toLog('info', '', 'account mbv hash');
 	}
 }
@@ -133,17 +133,15 @@ if(isset($_POST['data_opslaan']) AND $unique) {
 	
 	
 	$twoFactor[] = "<h2>2 factor toegang (2FA)</h2>";
-	$twoFactor[] = "<table>";
-	$twoFactor[] = "<tr>";
-	$twoFactor[] = "	<td colspan='2'>Het is mogelijk uw account beter te beveiligen door naast een gebruikersnaam & wachtwoord-combinatie, ook gebruik te maken van een code die uw telefoon genereert als u wilt inloggen. Dat heeft 2-factor authenticatie. Op die manier moet u inloggen met iets dat u weet (gebruikersnaam & wachtwoord) en iets dat u heeft (telefoon), dubbel zo veilig dus.<br>";
-	$twoFactor[] = "	Via onderstaande link krijgt u meer informatie over 2-factor authenticatie en hoe dat in te stellen.<br>";
-	$twoFactor[] = "<br>";
-	$twoFactor[] = "<a href='2FA.php'>".(get2FACode($_SESSION['useID']) != '' ? 'Zet 2FA uit' : 'Zet 2FA aan')."</a>.</td>";
-	
-	$twoFactor[] = "</tr>";
-	$twoFactor[] = "</table>";
-	
-	
+	#$twoFactor[] = "<table>";
+	#$twoFactor[] = "<tr>";
+	#$twoFactor[] = "	<td colspan='2'>Het is mogelijk uw account beter te beveiligen door naast een gebruikersnaam & wachtwoord-combinatie, ook gebruik te maken van een code die uw telefoon genereert als u wilt inloggen. Dat heeft 2-factor authenticatie. Op die manier moet u inloggen met iets dat u weet (gebruikersnaam & wachtwoord) en iets dat u heeft (telefoon), dubbel zo veilig dus.<br>";
+	#$twoFactor[] = "	Via onderstaande link krijgt u meer informatie over 2-factor authenticatie en hoe dat in te stellen.<br>";
+	#$twoFactor[] = "<br>";
+	#$twoFactor[] = "<a href='2FA.php'>".(get2FACode($_SESSION['useID']) != '' ? 'Zet 2FA uit' : 'Zet 2FA aan')."</a>.</td>";	
+	#$twoFactor[] = "</tr>";
+	#$twoFactor[] = "</table>";
+	$twoFactor[] = "Wegens technische problemen is 2FA momenteel uitgeschakeld";	
 }
 
 

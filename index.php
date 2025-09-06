@@ -270,7 +270,9 @@ $EBDeel[] = "<b>Declaraties</b>";
 
 $EBLinks['declaratie/'] = 'Dien declaratie in';
 
-if(in_array(1, $myGroups) OR in_array(38, $myGroups)) {
+if(in_array($_SESSION['useID'], $clusterCoordinatoren)) {
+	$EBLinks['declaratie/cluco.php'] = 'Overzicht ingediende declaraties';	
+} elseif(in_array(1, $myGroups) OR in_array(38, $myGroups)) {
 	$EBLinks['declaratie/overzichtDeclaraties.php'] = 'Status declaraties';	
 	$EBLinks['declaratie/opschonenOudeBijlages.php'] = 'Verwijder oude bijlages';
 }
