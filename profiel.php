@@ -16,6 +16,7 @@ if(isset($_REQUEST['hash'])) {
 	} else {
 		$showLogin = false;
 		session_start(['cookie_lifetime' => $cookie_lifetime]);
+		$_SESSION['useID'] = $dader;
 		$_SESSION['realID'] = $dader;
 		toLog('info', $_REQUEST['id'], 'profiel mbv hash');
 	}

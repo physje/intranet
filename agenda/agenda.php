@@ -17,6 +17,7 @@ if(isset($_REQUEST['hash'])) {
 		$showLogin = false;
 		session_start(['cookie_lifetime' => $cookie_lifetime]);
 		$_SESSION['useID'] = $id;
+		$_SESSION['realID'] = $id;
 		toLog('info', '', 'agenda mbv hash');
 	}
 }
