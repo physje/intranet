@@ -348,6 +348,8 @@ if(isset($_SESSION['fakeID'])) {
 $site[] = "<a href='account.php' target='_blank'>Account</a>";
 $site[] = "<a href='profiel.php' target='_blank'>Profiel</a>";
 $site[] = "<a href='ledenlijst.php' target='_blank'>Ledenlijst</a>";
+$site[] = "<a href='admin/stats.php' target='_blank'>Statistieken</a>";
+$site[] = "<a href='admin/leeftijdsOpbouw.php' target='_blank'>Leeftijds-opbouw</a>";
 if(in_array(1, $myGroups)) {
 	$site[] = "<a href='search.php' target='_blank'>Zoeken</a>";
 }
