@@ -107,7 +107,7 @@ $legend[] = "</table>";
 
 $sort[] = "Groepeer op ". ($group == 'l' ? "<a href='?group=j'>geboortjaar</a>" : "<a href='?group=l'>leeftijd</a>");
 
-echo showCSSHeader();
+echo showCSSHeader(array('default', 'table_default'));
 echo '<div class="content_vert_kolom_full">'.NL;
 echo '<h1>Leeftijdsopbouw</h1>'.NL;
 echo "<div class='content_block'>". implode(NL, $tree) ."</div>".NL;
