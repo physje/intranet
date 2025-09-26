@@ -19,7 +19,7 @@ if(!isset($_SESSION['useID'])) {
 	$ingelogd = true;
 }
 
-$text[] = "<h1>Handleiding ". $ScriptTitle ."</h1><br>";
+#$text[] = "<h1>Handleiding ". $ScriptTitle ."</h1><br>";
 $text[] = "Welkom op de site met de handleiding voor ". $ScriptTitle .".<br>";
 $text[] = "<br>";
 $text[] = "Deze handleiding legt per onderdeel uit wat er mogelijk is en hoe je bepaalde zaken doet of regelt.";
@@ -175,14 +175,21 @@ $text[] = "<li>Er komt nu een pop-up-venster om te bevestigen dat je de agenda w
 $text[] = "</ol>";
 */
 
-echo $HTMLHeader;
-echo '<table border=0 width=100%>'.NL;
-echo '<tr>'.NL;
-echo "	<td width='15%' valign='top'>&nbsp;</td>".NL;
-echo "	<td width='70%' valign='top'>". showBlock(implode(NL, $text), 100)."</td>".NL;
-echo "	<td width='15%' valign='top'>&nbsp;</td>".NL;
-echo '</tr>'.NL;
-echo '</table>'.NL;
-echo $HTMLFooter;
+#echo $HTMLHeader;
+#echo '<table border=0 width=100%>'.NL;
+#echo '<tr>'.NL;
+#echo "	<td width='15%' valign='top'>&nbsp;</td>".NL;
+#echo "	<td width='70%' valign='top'>". showBlock(implode(NL, $text), 100)."</td>".NL;
+#echo "	<td width='15%' valign='top'>&nbsp;</td>".NL;
+#echo '</tr>'.NL;
+#echo '</table>'.NL;
+#echo $HTMLFooter;
+
+echo showCSSHeader(array('default', 'table_default'));
+echo '<div class="content_vert_kolom_full">'.NL;
+echo '<h1>Handleiding '. $ScriptTitle .'</h1>'.NL;
+echo "<div class='content_block'>". implode(NL, $text) ."</div>".NL;
+echo '</div> <!-- end \'content_vert_kolom_full\' -->'.NL;
+echo showCSSFooter();
 
 ?>
