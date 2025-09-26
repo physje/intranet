@@ -15,7 +15,7 @@ if(!isset($_SESSION['useID'])) {
 	session_start(['cookie_lifetime' => $cookie_lifetime]);
 }
 
-if(isset($_SESSION['ID'])) {
+if(isset($_SESSION['useID'])) {
 	$memberData = getMemberDetails($_SESSION['useID']);
 	$agendaURL = $ScriptURL ."ical/".$memberData['username'].'-'. $memberData['hash_short'] .".ics";
 	$agendaNaam = "3GK (". makeName($_SESSION['useID'], 1) .")";
