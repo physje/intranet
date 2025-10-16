@@ -27,8 +27,6 @@ class Team {
             $this->name = $details['naam'];
             $this->beheerder = $details['beheerder'];
             $this->leden = $leden;            
-        } else {
-            return false;
         }
     }
 

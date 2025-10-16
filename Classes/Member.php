@@ -30,7 +30,9 @@ class Member {
 	private $emailType;
 
 	public $teams;
-	public $beheer;
+	public $roosters;
+	public $beheer_teams;
+	public $beheer_roosters;
 	
 	#public $straat;
 	#public $huisnummer;
@@ -93,16 +95,40 @@ class Member {
 		return $this->teams;
 	}
 
-	
-	function getBeheerTeams() {
-		if(!isset($this->beheer)) {
+	function getRoosters() {
+		if(!isset($this->roosters)) {
 			$db = new Mysql();
-			$data = $db->select("SELECT `groepen`.`id` FROM `groepen`, `group_member` WHERE `groepen`.`beheerder` = `group_member`.`commissie` AND `group_member`.`lid` = ". $this->id ." ORDER BY `groepen`.`naam`");
+			$data = $db->select("SELECT `commissie` FROM `group_member` WHERE `lid` like ". $this->id, true);
+			#$sql = "SELECT $TableRoosters.$RoostersID FROM $TableRoosters, $TableGrpUsr WHERE $TableGrpUsr.$GrpUsrGroup = $TableRoosters.$RoostersGroep AND $TableGrpUsr.$GrpUsrUser = $id";
 
-			$this->beheer = $data;	
+			$this->roosters = $data;	
 		}
 
-		return $this->beheer;
+		return $this->roosters;
+	}
+
+	
+	function getBeheerTeams() {
+		if(!isset($this->beheer_teams)) {
+			$db = new Mysql();
+			$data = $db->select("SELECT `groepen`.`id` FROM `groepen`, `group_member` WHERE `groepen`.`beheerder` = `group_member`.`commissie` AND `group_member`.`lid` = ". $this->id ." ORDER BY `groepen`.`naam`");
+			
+			$this->beheer_teams = $data;	
+		}
+
+		return $this->beheer_teams;
+	}
+
+	
+	function getBeheerRooster() {
+		if(!isset($this->beheer_roosters)) {
+			$db = new Mysql();
+			$data = $db->select("SELECT `roosters`.`id` FROM `roosters`, `group_member` WHERE `roosters`.`beheerder` = `group_member`.`commissie` AND `group_member`.`lid` = ". $this->id ." ORDER BY `roosters`.`naam`");
+			# "SELECT $TableRoosters.$RoostersID FROM $TableRoosters, $TableGroups, $TableGrpUsr WHERE ($TableRoosters.$RoostersBeheerder = $TableGroups.$GroupID OR $TableRoosters.$RoostersPlanner = $TableGroups.$GroupID) AND $TableGroups.$GroupID = $TableGrpUsr.$GrpUsrGroup AND $TableGrpUsr.$GrpUsrUser = $id"
+			$this->beheer_roosters = $data;	
+		}
+
+		return $this->beheer_roosters;
 	}
 
 
