@@ -1,22 +1,26 @@
 <?php
-include_once('include/functions.php');
-include_once('include/config.php');
+include_once('Classes/Member.php');
+include_once('Classes/Team.php');
+#include_once('include/functions.php');
+#include_once('include/config.php');
 include_once('include/HTML_TopBottom.php');
-$cfgProgDir = 'auth/';
-include($cfgProgDir. "secure.php");
-$db = connect_db();
 
-$memberData = getMemberDetails($_SESSION['useID']);
+// $cfgProgDir = 'auth/';
+// include($cfgProgDir. "secure.php");
+#$db = connect_db();
+
+#$memberData = getMemberDetails($_SESSION['useID']);
+$gebruiker = new Member($_SESSION['useID']);
 
 # Data over gebruiker icm roosters opvragen
-$allRoosters = getRoosters(0);
-$myRoosters = getRoosters($_SESSION['useID']);
-$myRoosterBeheer = getMyRoostersBeheer($_SESSION['useID']);
+// $allRoosters = getRoosters(0);
+// $myRoosters = getRoosters($_SESSION['useID']);
+// $myRoosterBeheer = getMyRoostersBeheer($_SESSION['useID']);
 
 # Data over gebruiker icm groepen opvragen
-$allGroups = getAllGroups();	
-$myGroups = getMyGroups($_SESSION['useID']);
-$myGroepBeheer = getMyGroupsBeheer($_SESSION['useID']);
+$allGroups = TeamTemplate::getAllTeams();
+$myGroups = $gebruiker->getTeams();
+$myGroepBeheer = $gebruiker->getBeheerTeams();
 
 $blocks = array();
 
