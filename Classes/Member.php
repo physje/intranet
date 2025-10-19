@@ -1,54 +1,26 @@
 <?php
-class Member {	
-	## Properties
-	#private $scipio_id;
-	#private $kerk_adres;
-	#private $vestiging;
-	#private $last_change;
-	#private $last_visit;
-	#private $last_scipio;
-	#private $username;
-	#private $password;
-	#private $password_new;
-	#private $MFA_code;
-	#private $hash_short;
-	#private $hash_long;
-  
-	#public $status;
-		
-	public $id;
-	public $voorletters;
-	public $voornaam;
-	public $tussenvoegsel;
-	public $achternaam;
-	public $meisjesnaam;
-	public $geslacht;
-	public $email;
-	public $email_formeel;
+class Member {		
+	public int $id;
+	public int $adres;
+	public string $voorletters;
+	public string $voornaam;
+	public string $tussenvoegsel;
+	public string $achternaam;
+	public string $meisjesnaam;
+	public string $geslacht;
+	public string $email;
+	public string $email_formeel;
 	
-	private $nameType;
-	private $emailType;
+	public int $nameType;
+	public int $emailType;
 
-	public $teams;
-	public $roosters;
-	public $beheer_teams;
-	public $beheer_roosters;
-	
-	#public $straat;
-	#public $huisnummer;
-	#public $letter;
-	#public $toevoeging;
-	#public $postcode;
-	#public $plaats;
-	#public $geboortedatum;
-	#public $telefoon;
-	
-	#public $belijdenis;
-	#public $burgelijk;
-	#public $relatie;
-	#public $wijk;
-	#public $eb_code;
+	public array $teams;
+	public array $roosters;
+	public array $beheer_teams;
+	public array $beheer_roosters;
 
+	public array $familie;
+	
 	## Methods
 	function __construct(int $id = 0) {
 		$this->nameType = 2;
@@ -57,8 +29,9 @@ class Member {
 		if($id > 0) {
 			$db = new Mysql();
 			$data = $db->select("SELECT * FROM `leden` WHERE `scipio_id` = ". $id);
-							
+			
 			$this->id = $id;
+			$this->adres = $data['kerk_adres'];
 			$this->voorletters = $data['voorletters'];
 			$this->voornaam = $data['voornaam'];
 			$this->tussenvoegsel = $data['tussenvoegsel'];
@@ -71,68 +44,85 @@ class Member {
 	}
 	
 	
-	
-	function setNameType(int $type) {
-		$this->nameType = $type;
-	}
-	
-	
-	
-	function setMailType(int $type) {
-		$this->emailType = $type;
-	}  	
-	
-	
-
+	/**
+	 * @return array Geeft een array terug met teams waar dit lid deel van uitmaakt
+	 */
 	function getTeams() {
 		if(!isset($this->teams)) {
 			$db = new Mysql();
 			$data = $db->select("SELECT `commissie` FROM `group_member` WHERE `lid` like ". $this->id, true);
 
-			$this->teams = $data;	
+			$this->teams = array_column($data, 'commissie');	
 		}
 
 		return $this->teams;
 	}
 
+
+	/**
+	 * @return array Geeft een array terug met roosters waar dit lid op ingepland kan worden
+	 */
 	function getRoosters() {
 		if(!isset($this->roosters)) {
 			$db = new Mysql();
-			$data = $db->select("SELECT `commissie` FROM `group_member` WHERE `lid` like ". $this->id, true);
-			#$sql = "SELECT $TableRoosters.$RoostersID FROM $TableRoosters, $TableGrpUsr WHERE $TableGrpUsr.$GrpUsrGroup = $TableRoosters.$RoostersGroep AND $TableGrpUsr.$GrpUsrUser = $id";
+			$data = $db->select("SELECT `roosters`.`id` FROM `roosters`, `group_member` WHERE `group_member`.`commissie` = `roosters`.`groep` AND `group_member`.`lid` = ". $this->id, true);
 
-			$this->roosters = $data;	
+			$this->roosters = array_column($data, 'id');	
 		}
 
 		return $this->roosters;
 	}
 
 	
+	/**
+	 * @return array Geeft een array terug met teams die dit lid beheert
+	 */
 	function getBeheerTeams() {
 		if(!isset($this->beheer_teams)) {
 			$db = new Mysql();
-			$data = $db->select("SELECT `groepen`.`id` FROM `groepen`, `group_member` WHERE `groepen`.`beheerder` = `group_member`.`commissie` AND `group_member`.`lid` = ". $this->id ." ORDER BY `groepen`.`naam`");
+			$data = $db->select("SELECT `groepen`.`id` FROM `groepen`, `group_member` WHERE `groepen`.`beheerder` = `group_member`.`commissie` AND `group_member`.`lid` = ". $this->id ." ORDER BY `groepen`.`naam`", true);
 			
-			$this->beheer_teams = $data;	
+			$this->beheer_teams = array_column($data, 'id');	
 		}
 
 		return $this->beheer_teams;
 	}
 
 	
+	/**
+	 * @return array Geeft een array terug met roosters die dit lid beheert
+	 */
 	function getBeheerRooster() {
 		if(!isset($this->beheer_roosters)) {
 			$db = new Mysql();
-			$data = $db->select("SELECT `roosters`.`id` FROM `roosters`, `group_member` WHERE `roosters`.`beheerder` = `group_member`.`commissie` AND `group_member`.`lid` = ". $this->id ." ORDER BY `roosters`.`naam`");
-			# "SELECT $TableRoosters.$RoostersID FROM $TableRoosters, $TableGroups, $TableGrpUsr WHERE ($TableRoosters.$RoostersBeheerder = $TableGroups.$GroupID OR $TableRoosters.$RoostersPlanner = $TableGroups.$GroupID) AND $TableGroups.$GroupID = $TableGrpUsr.$GrpUsrGroup AND $TableGrpUsr.$GrpUsrUser = $id"
-			$this->beheer_roosters = $data;	
+			$data = $db->select("SELECT `roosters`.`id` FROM `roosters`, `groepen`, `group_member` WHERE (`roosters`.`beheerder` = `groepen`.`id` OR `roosters`.`planner` = `groepen`.`id`) AND `groepen`.`id` = `group_member`.`commissie` AND `group_member`.`lid` = ". $this->id ." GROUP BY `roosters`.`id`", true);
+
+			$this->beheer_roosters = array_column($data, "id");			
 		}
 
 		return $this->beheer_roosters;
 	}
 
 
+	/**
+	 * @return array Geeft een array terug met ID's van familieleden van dit lid
+	 */
+	function getFamilieLeden() {
+		if(!isset($this->familie)) {
+			$db = new Mysql();
+			$data = $db->select("SELECT `scipio_id` FROM `leden` WHERE `kerk_adres` = ". $this->adres, true);
+
+			$this->familie = array_column($data, "scipio_id");			
+		}
+
+		return $this->familie;
+	}
+
+
 	
+	/**
+	 * @return string Geeft de naam van het lid terug (afhankelijk van nameType)
+	 */
 	function getName() {
 		if($this->voornaam != '') {
 			$voor = $this->voornaam;
@@ -159,15 +149,23 @@ class Member {
 			case 2:
 				return $voor .' '. $achter;
 				break;
+			case 3:
+				return $this->voorletters .' ('. $this->voornaam .') '. $achterFull;
+				break;
 			default:
 				return $voor .' '. $achterFull;
 		}
 	}
 	
 	
-	# 1 : gewone mail
-	# 2 : formeel mailadres
-	function getMail() {  	
+
+	/**
+	 * @return string Geeft het mailadres van het lid terug (afhankelijk van emailType)
+	 */
+	function getMail() { 
+		# 1 : gewone mail
+		# 2 : formeel mailadres
+
 		switch ($this->emailType) {
 			case 1:
 				return $this->email;
@@ -176,7 +174,27 @@ class Member {
 				return $this->email_formeel;
 				break; 		
 		}
-	}  
+	}
+	
+	
+	/**
+	 * @param string $type Type leden dat opgehaald moet worden: all, volwassen, adressen
+	 * 
+	 * @return array Geeft een array terug met ID's van alle leden in de database
+	 */
+	public static function getMembers($type = 'all') {
+		$db = new Mysql();
+
+		if($type == 'all') {
+			$data = $db->select("SELECT `scipio_id` FROM `leden` WHERE `status` like 'actief' ORDER BY `achternaam`", true);
+		} elseif($type == 'volwassen') {
+			$data = $db->select("SELECT `scipio_id` FROM `leden` WHERE `status` like 'actief' AND `geboortedatum` < '". (date("Y")-18) ."-". date("m-d") ."' ORDER BY `achternaam`", true);
+		} elseif($type == 'adressen') {
+			$data = $db->select("SELECT `scipio_id` FROM `leden` WHERE `status` like 'actief' AND (`relatie` like 'gezinshoofd' OR `relatie` like 'zelfstandig') GROUP BY `kerk_adres` ORDER BY `achternaam`", true);
+		}
+				
+		return array_column($data, 'scipio_id');
+	}
 
 }
 

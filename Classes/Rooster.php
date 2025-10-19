@@ -1,25 +1,97 @@
 <?php
 
 class Rooster {
+    /**
+     * @var int ID van het rooster
+     */
     public int $id;
+
+    /**
+     * @var string Naam van het rooster
+     */
     public string $naam;
+
+    /**
+     * @var int ID van het team dat voor dit rooster ingedeeld moet worden
+     */
     public int $groep;
+
+    /**
+     * @var int ID van het team dat dit rooster beheert
+     */
     public int $beheerder;
+
+    /**
+     * @var int ID van het team dat dit rooster mag plannen/vullen
+     */
     public int $planner;
+
+    /**
+     * @var int Aantal velden in het rooster
+     */
     public int $velden;
+
+    /**
+     * @var bool Moet er een reminder gestuurd worden of niet
+     */
     public bool $reminder;
-    public bool $gelijk;
+
+    /**
+     * @var int Waarde van het gelijke diensten veld (0=geen, 1=tweede, 2=ochtend, 3=middag/avond, 4=middag, 5=avond)
+     */
+    public int $gelijk;
+
+    /**
+     * @var bool Moet de voorganger tijdens het maken van het rooster getoond worden of niet
+     */
     public bool $voorganger;
+
+    /**
+     * @var bool Moet er een interne opmerking gemaakt kunnen worden of niet
+     */
     public bool $opmerking;
+
+    /**
+     * @var bool Moet de ouder in CC worden meegenomen bij de reminder-mail
+     */
     public bool $ouder;
+
+    /**
+     * @var bool Moet de partner in CC worden meegenomen bij de reminder-mail
+     */
     public bool $partner;
+
+    /**
+     * @var bool Is dit een tekst-only rooster of niet
+     */
     public bool $tekst;
-    public bool $alert;
+
+    /**
+     * @var int Hoeveek week van te voren moet er een alert gestuurd worden bij bijna aflopen van het rooster
+     */
+    public int $alert;
+
+    /**
+     * @var string Mailtekst voor de remindermail
+     */
     public string $mail;
+
+    /**
+     * @var string Onderwerp van de remindermail
+     */
     public string $onderwerp;
+
+    /**
+     * @var string Afzenderadres van de remindermail
+     */
     public string $van;
+
+    /**
+     * @var string Naam van de afzender van de remindermail
+     */
     public string $vanNaam;
-    private int $lastChange;
+
+    private $lastChange;
 
     function __construct($rooster = 0) {
         if($rooster > 0) {            
@@ -34,11 +106,11 @@ class Rooster {
             $this->velden = $data['aantal'];
             $this->reminder = $data['reminder'];
             $this->gelijk = $data['gelijke_diensten'];
-            $this->voorganger = $data['voorganger'];
-            $this->opmerking = $data['opmerking'];
-            $this->ouder = $data['ouder'];
-            $this->partner = $data['partner'];
-            $this->tekst = $data['text_only'];
+            $this->voorganger = ($data['voorganger'] == 1 ? true : false);
+            $this->opmerking = ($data['opmerking'] == 1 ? true : false);
+            $this->ouder = ($data['ouder'] == 1 ? true : false);
+            $this->partner = ($data['partner'] == 1 ? true : false);
+            $this->tekst = ($data['text_only'] == 1 ? true : false);
             $this->alert = $data['alert'];
             $this->mail = $data['mail'];
             $this->onderwerp = $data['onderwerp'];
@@ -49,93 +121,16 @@ class Rooster {
     }
 
 
+    /**
+     * @return array Geeft een array terug met ID's van alle roosters in de database
+     */
     public static function getAllRoosters() {
         $db = new Mysql;
         $data = $db->select("SELECT `id` FROM `roosters`");
         
-        return $data;
+        return array_column($data, 'id');
     }
 
-    
-
-
-    /**
-     * @return int ID van het rooster
-     */
-    function getID() {
-        return $this->id;
-    }
-
-
-
-    /**
-     * @return string Naam van het rooster
-     */
-    function getName() {
-        return $this->naam;
-    }
-
-
-
-    /**
-     * @return int ID van het team dat dit rooster beheert
-     */
-    function getBeheerder() {
-        return $this->beheerder;
-    }
-
-
-
-    /**
-     * @return int ID van het team dat dit rooster mag vullen
-     */
-    function getPlanner() {
-        return $this->planner;
-    }
-
-
-    /**
-     * @return int ID van het team dat voor dit rooster ingedeeld moet worden
-     */
-    function getGroep() {
-        return $this->groep;
-    }
-
-
-
-    // /**
-    //  * @param int $beheerder ID van het team dat dit rooster beheert
-    //  */
-    // function setBeheerder(int $beheerder) {
-    //     $this->beheerder = $beheerder;
-    // }
-
-
-    
-    // /**
-    //  * @param int $planner ID van het team dat dit rooster mag vullen
-    //  */
-    // function setPlanner(int $planner) {
-    //     $this->planner = $planner;
-    // }
-
-
-    
-    // /**
-    //  * @param int $groep ID van het team dat voor dit rooster ingedeeld moet worden
-    //  */
-    // function setGroep(int $groep) {
-    //     $this->groep = $groep;
-    // }
-
-
-    
-    // /**
-    //  * @param string $name Naam van het rooster
-    //  */
-    // function setName(string $name) {
-    //     $this->naam = $name;
-    // }
 
    /**
      * Sla het rooster op in de MySQL-database

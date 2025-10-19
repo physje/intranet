@@ -1,15 +1,48 @@
 <?php
 class Kerkdienst {
+    /**
+     * @var int ID van de kerkdienst
+     */
     public int $dienst;
-    public bool $actief;
+    /**
+     * @var bool Is de kerkdienst actief of niet
+     */
+    public bool $actief;    
+    /**
+     * @var int Starttijd van de kerkdienst in UNIX-tijd
+     */
     public int $start;
+    /**
+     * @var int Eindtijd van de kerkdienst in UNIX-tijd
+     */
     public int $eind;
+    /**
+     * @var int ID van de voorganger
+     */
     public int $voorganger;
+    /**
+     * @var string Omschrijving 1ste collecte
+     */
     public string $collecte_1;
+    /**
+     * @var string Omschrijving 2de collecte
+     */
     public string $collecte_2;
+    /**
+     * @var string Interne opmerking bij de kerkdienst
+     */
     public string $opmerking;
+    /**
+     * @var bool Is dit een geruilde kerkdienst of niet
+     */
     public bool $ruiling;
+    /**
+     * @var bool Is dit een speciale dienst of niet
+     */
     public bool $specialeDienst;
+    /**
+     * @var int Declaratie-status van de voorganger van deze kerkdienst
+     */ 
     public int $declaratieStatus;
 
     function __construct($dienst = 0)
@@ -26,8 +59,8 @@ class Kerkdienst {
             $this->collecte_1 = urldecode($data['collecte_1']);
             $this->collecte_2 = urldecode($data['collecte_2']);
             $this->opmerking = urldecode($data['opmerking']);
-            $this->ruiling = $data['ruiling'];
-            $this->specialeDienst = $data['speciaal'];
+            $this->ruiling = ($data['ruiling'] == 1 ? true : false);
+            $this->specialeDienst = ($data['speciaal'] == 1 ? true : false);
             $this->declaratieStatus = $data['declaratie_status'];
         } else {
             $this->start = time()+300;
@@ -47,9 +80,9 @@ class Kerkdienst {
      */
     public static function getDiensten(int $startTijd, int $eindTijd) {
         $db = new Mysql;
-        $data = $db->select("SELECT `id` FROM `kerkdiensten` WHERE `actief` = '1' AND `start` BETWEEN $startTijd AND $eindTijd ORDER BY `eind` ASC");
-        
-        return $data;
+        $data = $db->select("SELECT `id` FROM `kerkdiensten` WHERE `actief` = '1' AND `start` BETWEEN $startTijd AND $eindTijd ORDER BY `eind` ASC", true);
+
+        return array_column($data, "id");
     }
 
 

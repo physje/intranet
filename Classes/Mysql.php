@@ -32,6 +32,9 @@ class Mysql extends Dbconfig {
 	
 	
 	
+	/**
+	 * @return mysqli Verbindt met de database en geeft de verbinding terug
+	 */
 	function connect() : mysqli {
 		$mysqli = new mysqli($this->hostName , $this->userName , $this->passWord , $this->dbName);		
 		$this -> connection = $mysqli;

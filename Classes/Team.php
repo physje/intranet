@@ -38,54 +38,9 @@ class Team {
         $db = new Mysql;
         $data = $db->select("SELECT `id` FROM `groepen`");
         
-        return $data;
+        return array_column($data, 'id');
     }
     
-
-
-    /**
-     * @return int ID van het team
-     */
-    function getID() {
-        return $this->team;
-    }
-
-
-
-    /**
-     * @return string Naam van het team
-     */
-    function getName() {
-        return $this->name;
-    }
-
-
-
-    /**
-     * @return int ID van het team dat dit team beheert
-     */
-    function getBeheerder() {
-        return $this->beheerder;
-    }
-
-
-
-    /**
-     * @param int $beheerder ID van het team dat dit team beheert
-     */
-    function setBeheerder(int $beheerder) {
-        $this->beheerder = $beheerder;
-    }
-    
-
-    
-    /**
-     * @param string $name Naam van het team
-     */
-    function setName(string $name) {
-        $this->name = $name;
-    }
-
 
 
     /**

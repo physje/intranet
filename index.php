@@ -1,24 +1,29 @@
 <?php
 include_once('Classes/Member.php');
 include_once('Classes/Team.php');
-#include_once('include/functions.php');
-#include_once('include/config.php');
+include_once('Classes/Rooster.php');
+include_once('Classes/Mysql.php');
+include_once('Classes/Logging.php');
+include_once('include/functions.php');
+include_once('include/config.php');
 include_once('include/HTML_TopBottom.php');
 
-// $cfgProgDir = 'auth/';
-// include($cfgProgDir. "secure.php");
+#session_start();
+#$_SESSION['useID'] = 984285;
+
+$cfgProgDir = 'auth/';
+include($cfgProgDir. "secure.php");
 #$db = connect_db();
 
-#$memberData = getMemberDetails($_SESSION['useID']);
 $gebruiker = new Member($_SESSION['useID']);
 
 # Data over gebruiker icm roosters opvragen
-// $allRoosters = getRoosters(0);
-// $myRoosters = getRoosters($_SESSION['useID']);
-// $myRoosterBeheer = getMyRoostersBeheer($_SESSION['useID']);
+$allRoosters = Rooster::getAllRoosters();
+$myRoosters = $gebruiker->getRoosters();
+$myRoosterBeheer = $gebruiker->getBeheerRooster();
 
 # Data over gebruiker icm groepen opvragen
-$allGroups = TeamTemplate::getAllTeams();
+$allGroups = Team::getAllTeams();
 $myGroups = $gebruiker->getTeams();
 $myGroepBeheer = $gebruiker->getBeheerTeams();
 
@@ -29,13 +34,13 @@ if(count($allRoosters) > 0) {
 	$txtRooster[] = "<b>Roosters</b>";
 	
 	foreach($allRoosters as $rooster) {
-		$data = getRoosterDetails($rooster);
+		$data = new Rooster($rooster);
 		if(in_array($rooster, $myRoosters)) {
 			$class = "own";
 		} else {
 			$class = "general";
 		}
-		$txtRooster[] = "<a class='$class' href='showRooster.php?rooster=$rooster' target='_blank'>".$data['naam']."</a>";
+		$txtRooster[] = "<a class='$class' href='showRooster.php?id=$rooster' target='_blank'>". $data->naam ."</a>";
 	}	
 	$txtRooster[] = "<a class='$class' href='showCombineRooster.php' target='_blank'>Toon combinatie-rooster</a>";
 	$txtRooster[] = "<a class='$class' href='roosterKomendeWeek.php' target='_blank'>Toon rooster komende week</a>";
@@ -48,8 +53,8 @@ if(count($allRoosters) > 0) {
 if(count($myRoosterBeheer) > 0) {
 	$txtRoosterBeheer[] = "<b>Roosters die ik kan wijzigen</b>";
 	foreach($myRoosterBeheer as $rooster) {
-		$data = getRoosterDetails($rooster);
-		$txtRoosterBeheer[] = "<a href='makeRooster.php?rooster=$rooster' target='_blank'>".$data['naam']."</a>";
+		$data = new Rooster($rooster);
+		$txtRoosterBeheer[] = "<a href='makeRooster.php?id=$rooster' target='_blank'>". $data->naam ."</a>";
 	}
 	$blocks[] = $txtRoosterBeheer;
 }
@@ -61,46 +66,46 @@ if(in_array(1, $myGroups)) {
 	$adminRoosters[] = "<b>Beheer roosters</b> (Admin)";
 	
 	foreach($allRoosters as $rooster) {
-		$data = getRoosterDetails($rooster);
-		$adminRoosters[] = "<a href='makeRooster.php?rooster=$rooster' target='_blank'>".$data['naam']."</a>";
+		$data = new Rooster($rooster);
+		$adminRoosters[] = "<a href='makeRooster.php?id=$rooster' target='_blank'>". $data->naam ."</a>";
 	}
 	$blocks[] = $adminRoosters;
 }
 
 
 
-# Groepen
-$showGroupsClass = array();
+// # Groepen
+// $showGroupsClass = array();
 
-foreach($allGroups as $groep) {
-	$tonen = false;	
-	$data = getGroupDetails($groep);
-	if(in_array($groep, $myGroups)) {
-		$class = "own";
-		if($data['html-int'] != "") {
-			$tonen = true;
-		}
-	} else {
-		$class = "general";
-		if($data['html-ext'] != "") {
-			$tonen = true;
-		}
-	}
+// foreach($allGroups as $groep) {
+// 	$tonen = false;	
+// 	$data = new Team($groep);
+// 	if(in_array($groep, $myGroups)) {
+// 		$class = "own";
+// 		if($data['html-int'] != "") {
+// 			$tonen = true;
+// 		}
+// 	} else {
+// 		$class = "general";
+// 		if($data['html-ext'] != "") {
+// 			$tonen = true;
+// 		}
+// 	}
 	
-	if($tonen) {
-		$showGroupsClass[$groep] = $class;		
-	}	
-}
+// 	if($tonen) {
+// 		$showGroupsClass[$groep] = $class;		
+// 	}	
+// }
 
-if(count($showGroupsClass) > 0) {
-	$txtGroepen[] = "<b>Pagina's van teams</b>";
+// if(count($showGroupsClass) > 0) {
+// 	$txtGroepen[] = "<b>Pagina's van teams</b>";
 	
-	foreach($showGroupsClass as $groep => $class) {
-		$data = getGroupDetails($groep);
-		$txtGroepen[] = "<a class='$class' href='group.php?groep=$groep' target='_blank'>".$data['naam']."</a>";
-	}	
-	$blocks[] = $txtGroepen;
-}
+// 	foreach($showGroupsClass as $groep => $class) {
+// 		$data = getGroupDetails($groep);
+// 		$txtGroepen[] = "<a class='$class' href='group.php?groep=$groep' target='_blank'>".$data['naam']."</a>";
+// 	}	
+// 	$blocks[] = $txtGroepen;
+// }
 
 
 
@@ -108,8 +113,8 @@ if(count($showGroupsClass) > 0) {
 if(count($myGroepBeheer) > 0) {
 	$txtGroepBeheer[] = "<b>Teams die ik beheer</b>";
 	foreach($myGroepBeheer as $groep) {
-		$data = getGroupDetails($groep);
-		$txtGroepBeheer[] = "<a href='editGroup.php?groep=$groep' target='_blank'>".$data['naam']."</a>";
+		$data = new Team($groep);
+		$txtGroepBeheer[] = "<a href='editGroup.php?groep=$groep' target='_blank'>".$data->name."</a>";
 	}
 	$blocks[] = $txtGroepBeheer;
 }
@@ -120,15 +125,16 @@ if(count($myGroepBeheer) > 0) {
 if(in_array(1, $myGroups)) {	
 	$txtGroepAdmin[] = "<b>Beheer teams</b> (Admin)";
 	foreach($allGroups as $groep) {
-		$data = getGroupDetails($groep);
-		$txtGroepAdmin[] = "<a href='editGroup.php?groep=$groep' target='_blank'>".$data['naam']."</a>";
+		$data = new Team($groep);
+		$txtGroepAdmin[] = "<a href='editGroup.php?groep=$groep' target='_blank'>".$data->name."</a>";
 	}
 	$blocks[] = $txtGroepAdmin;
 }
 
 
 
-# Bezoek-registratie
+
+/* # Bezoek-registratie
 # 8 = Ouderlingen
 # 9 = Diakenen
 # 34 = Predikanten
@@ -358,7 +364,7 @@ if(in_array(1, $myGroups)) {
 	$site[] = "<a href='search.php' target='_blank'>Zoeken</a>";
 }
 $site[] = "<a href='auth/objects/logout.php' target='_blank'>Uitloggen</a>";
-$blocks[] = $site;
+$blocks[] = $site; */
 
 
 echo showCSSHeader();
