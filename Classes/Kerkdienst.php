@@ -1,4 +1,5 @@
 <?php
+
 class Kerkdienst {
     /**
      * @var int ID van de kerkdienst
@@ -79,6 +80,9 @@ class Kerkdienst {
      * @return Array met ID's van alle kerkdiensten
      */
     public static function getDiensten(int $startTijd, int $eindTijd) {
+        if($startTijd == 0) $startTijd = time();
+        if($eindTijd == 0)  $eindTijd = time()+(365*24*60*60);
+        
         $db = new Mysql;
         $data = $db->select("SELECT `id` FROM `kerkdiensten` WHERE `actief` = '1' AND `start` BETWEEN $startTijd AND $eindTijd ORDER BY `eind` ASC", true);
 

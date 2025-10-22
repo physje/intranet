@@ -16,17 +16,12 @@ class Team {
         if($team > 0) {
             $db = new Mysql;
             $details = $db->select("SELECT * FROM `groepen` WHERE `id` = ". $team);
-            $groep = $db->select("SELECT * FROM `group_member` WHERE `commissie` = ". $team, true);
-            
-            $leden = array();
-            foreach($groep as $row) {                
-                $leden[] = $row['lid'];
-            }
-
+            $groep = $db->select("SELECT `lid` FROM `group_member` WHERE `commissie` = ". $team, true);
+                        
             $this->team = $team;
             $this->name = $details['naam'];
             $this->beheerder = $details['beheerder'];
-            $this->leden = $leden;            
+            $this->leden = array_column($groep, 'lid');            
         }
     }
 
@@ -34,7 +29,7 @@ class Team {
     /**
      * @return Array met ID's van alle teams
      */
-    public static function getAllTeams() {
+    public static function getAllTeams() : array {
         $db = new Mysql;
         $data = $db->select("SELECT `id` FROM `groepen`");
         

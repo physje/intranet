@@ -1,11 +1,9 @@
 <?php
-
-include 'Dbconfig.php';
-
+include_once('KKDConfig.php');
 /**
  * Class om te communiceren met de MySQL-database
  */
-class Mysql extends Dbconfig {
+class Mysql implements KKDConfig {
 	public $connection;
 	public $dataSet;
 	
@@ -17,17 +15,12 @@ class Mysql extends Dbconfig {
 	
 		
 	function __construct() {
-		$dbPara = new Dbconfig();
-		$this -> dbName = $dbPara -> dbName;
-		$this -> hostName = $dbPara -> serverName;
-		$this -> userName = $dbPara -> userName;
-		$this -> passWord = $dbPara ->passCode;		
-		$dbPara = NULL;
-		
-		#$this -> connection = NULL;
-		#$this -> dataSet = NULL;
-		
-		return $this -> connect();
+		$this -> dbName = KKDConfig::dbName;
+		$this -> hostName = KKDConfig::serverName;
+		$this -> userName = KKDConfig::userName;
+		$this -> passWord = KKDConfig::passCode;		
+				
+		return $this -> connect();		
 	}
 	
 	
@@ -37,7 +30,9 @@ class Mysql extends Dbconfig {
 	 */
 	function connect() : mysqli {
 		$mysqli = new mysqli($this->hostName , $this->userName , $this->passWord , $this->dbName);		
+		$mysqli -> set_charset("utf8mb4");
 		$this -> connection = $mysqli;
+		
 		
 		return $this -> connection;
 	}
@@ -83,13 +78,6 @@ class Mysql extends Dbconfig {
 		return $data;
 	}
 		
-	
-	// function selectAll($tableName)  {
-	// 	$sqlQuery = 'SELECT * FROM '.$tableName;				
-	// 	return $this -> select($sqlQuery);
-	// }
-
-
 
 	/**
 	 * @param string $sqlQuery Query die moet worden uitgevoerd

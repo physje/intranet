@@ -24,6 +24,7 @@ function time2str(string $format, int $time = 0) {
 	d = 01 to 31 (%d)
 	m = 01 to 12 (%m)
 	M = Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec (%b)
+	F = January to December (%B)
 	Y = 4 digit year (%Y)
 	H = 00 to 23 (%H)
 	i = 00 to 59 (%M)
@@ -123,5 +124,15 @@ function toonDienst(int $dienst, int $gelijk) {
 			return false;
 		}
 	}
+}
+
+/**
+ * @param string $name Naam van de parameter die via $_REQUEST is binnengekomen
+ * @param mixed $default Standaardwaarde als de parameter niet is gezet
+ * 
+ * @return [type] Waarde van de parameter of de standaardwaarde
+ */
+function getParam(string $name, $default = '') {
+	return isset($_REQUEST[$name]) ? $_REQUEST[$name] : $default;
 }
 ?>

@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Class voor de planning/vulling van een rooster
+ */
 class Vulling {
     /**
      * @var int Dienst ID
@@ -31,8 +34,12 @@ class Vulling {
      */
     public string $opmerking;
 
-    function __construct($dienst = 0, $rooster = 0)
-    {
+
+    /**
+     * @param int $dienst ID van de kerkdienst
+     * @param int $rooster ID van het rooster  
+     */
+    function __construct($dienst = 0, $rooster = 0) {
         if($dienst > 0 and $rooster > 0) {
             $db = new Mysql;
             $r = new Rooster($rooster);
@@ -59,7 +66,7 @@ class Vulling {
             }
 
             # Opmerking ophalen
-            $db->select("SELECT `opmerking` FROM `rooster_opmerkingen` WHERE `rooster` = ". $this->rooster ." AND `dienst` = ". $this->dienst);
+            $data = $db->select("SELECT `opmerking` FROM `rooster_opmerkingen` WHERE `rooster` = ". $this->rooster ." AND `dienst` = ". $this->dienst);
             if(isset($data['opmerking'])) {
                 $this->opmerking = $data['opmerking'];
             } else {
@@ -68,6 +75,9 @@ class Vulling {
         }       
     }
 
+    /**
+     * @return [type]
+     */
     function save() {        
         $db = new Mysql;
 
@@ -90,8 +100,9 @@ class Vulling {
 
             # Interne opmerking opslaan
             $db->query("DELETE FROM `rooster_opmerkingen` WHERE `rooster` = ". $this->rooster ." AND `dienst` = ". $this->dienst);
-            if(isset($this->opmerking) AND $this->opmerking != '') {
-                $db->query("INSERT INTO `rooster_opmerkingen` (`rooster`, `dienst`, `opmerking`) VALUES (". $this->rooster .", ". $this->dienst .", '". urlencode($this->opmerking) ."')");
+                        
+            if(isset($this->opmerking) AND $this->opmerking != '') {                
+                $db->query("INSERT INTO `rooster_opmerkingen` (`rooster`, `dienst`, `opmerking`) VALUES (". $this->rooster .", ". $this->dienst .", '". urlencode($this->opmerking) ."')");                
             }
         }        
     }   

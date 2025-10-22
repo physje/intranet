@@ -45,8 +45,8 @@ function showCSSFooter() {
 	#$Footer[] = '			</div>';
 	$Footer[] = '		</div> <!-- end \'row\' -->';
 	$Footer[] = '		<div class="dunnebalk">&nbsp;</div>';
-	$Footer[] = '		<div class="bredebalk">&nbsp;</div>';
-	$Footer[] = '	</div> <!-- end \'content\' -->';
+	$Footer[] = '		</div> <!-- end \'content\' -->';
+	$Footer[] = '	<div class="bredebalk">&nbsp;</div>';
 	$Footer[] = '</div> <!-- end \'middenstuk\' -->';
 	$Footer[] = '</body>';
 	$Footer[] = '</html>';

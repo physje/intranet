@@ -1,7 +1,9 @@
 <?php
+
 class Member {		
 	public int $id;
 	public int $adres;
+	public string $relatie;
 	public string $voorletters;
 	public string $voornaam;
 	public string $tussenvoegsel;
@@ -10,6 +12,9 @@ class Member {
 	public string $geslacht;
 	public string $email;
 	public string $email_formeel;
+	public string $username;
+	public string $hash;
+	public string $hash_short;
 	
 	public int $nameType;
 	public int $emailType;
@@ -38,6 +43,7 @@ class Member {
 			$this->achternaam = $data['achternaam'];
 			$this->meisjesnaam = $data['meisjesnaam'];
 			$this->geslacht = $data['geslacht'];
+			$this->relatie = $data['relatie'];
 			$this->email = $data['email'];
 			$this->email_formeel = $data['formeel'];
 		}  	   
@@ -194,6 +200,56 @@ class Member {
 		}
 				
 		return array_column($data, 'scipio_id');
+	}
+
+
+	/**
+	 * @return array|null Geeft een array terug met ID's van de ouders van dit lid, of null als er geen ouders zijn
+	 */
+	public function getParents() {
+		$familie = $this->getFamilieLeden();
+
+		foreach($familie as $lid_id) {
+			$lid = new Member($lid_id);
+
+			if(in_array($lid->relatie, ['echtgenote', 'gezinshoofd', 'echtgenoot', 'levenspartner', 'partner'])) {				
+				$ouders[] = $lid_id;
+			}
+		}
+
+		if(count($ouders) > 1) {
+			return $ouders;
+		} else {
+			return null;
+		}
+	}
+
+
+	/**
+	 * @return int|null Geeft een array terug met ID's van de partner(s) van dit lid, of null als er geen partner is
+	 */
+	public function getPartner() {
+		if(!in_array($this->relatie, ['zoon', 'dochter', 'inw. persoon', 'zelfstandig'])) {			
+			$familie = $this->getFamilieLeden();
+
+			$partner = [];
+			foreach($familie as $lid_id) {
+				$lid = new Member($lid_id);
+
+				if(!in_array($this->relatie, ['zoon', 'dochter', 'inw. persoon']) && $lid_id != $this->id && in_array($lid->relatie, ['echtgenote', 'echtgenoot', 'gezinshoofd', 'levenspartner', 'partner'])) {
+					$partner[] = $lid_id;
+				}
+			}
+		}
+
+		if(count($partner) == 1) {
+			return $partner[0];
+		} elseif(count($partner) > 1) {
+			toLog('Meer dan 1 partner geregistreerd: '. implode(', ', $partner), 'error');
+			return $partner[0];
+		} else {
+			return null;
+		}		
 	}
 
 }
