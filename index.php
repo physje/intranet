@@ -4,16 +4,13 @@ include_once('Classes/Team.php');
 include_once('Classes/Rooster.php');
 include_once('Classes/Mysql.php');
 include_once('Classes/Logging.php');
+include_once('Classes/Wijk.php');
 include_once('include/functions.php');
 include_once('include/config.php');
 include_once('include/HTML_TopBottom.php');
 
-#session_start();
-#$_SESSION['useID'] = 984285;
-
 $cfgProgDir = 'auth/';
 include($cfgProgDir. "secure.php");
-#$db = connect_db();
 
 $gebruiker = new Member($_SESSION['useID']);
 
@@ -74,7 +71,7 @@ if(in_array(1, $myGroups)) {
 
 
 
-// # Groepen
+# Groepen
 // $showGroupsClass = array();
 
 // foreach($allGroups as $groep) {
@@ -114,7 +111,7 @@ if(count($myGroepBeheer) > 0) {
 	$txtGroepBeheer[] = "<b>Teams die ik beheer</b>";
 	foreach($myGroepBeheer as $groep) {
 		$data = new Team($groep);
-		$txtGroepBeheer[] = "<a href='editGroup.php?groep=$groep' target='_blank'>".$data->name."</a>";
+		$txtGroepBeheer[] = "<a href='editGroup.php?id=$groep' target='_blank'>".$data->name."</a>";
 	}
 	$blocks[] = $txtGroepBeheer;
 }
@@ -126,7 +123,7 @@ if(in_array(1, $myGroups)) {
 	$txtGroepAdmin[] = "<b>Beheer teams</b> (Admin)";
 	foreach($allGroups as $groep) {
 		$data = new Team($groep);
-		$txtGroepAdmin[] = "<a href='editGroup.php?groep=$groep' target='_blank'>".$data->name."</a>";
+		$txtGroepAdmin[] = "<a href='editGroup.php?id=$groep' target='_blank'>".$data->name."</a>";
 	}
 	$blocks[] = $txtGroepAdmin;
 }
@@ -134,7 +131,7 @@ if(in_array(1, $myGroups)) {
 
 
 
-/* # Bezoek-registratie
+# Bezoek-registratie
 # 8 = Ouderlingen
 # 9 = Diakenen
 # 34 = Predikanten
@@ -148,7 +145,9 @@ if(in_array(1, $myGroups) OR in_array(8, $myGroups) OR in_array(9, $myGroups) OR
 	# Link dan direct door naar die wijk
 	$hit = array();	
 	foreach($wijkArray as $wijk) {
-		$wijkteam = getWijkteamLeden($wijk);		
+		$w = new Wijk();
+		$w->wijk = $wijk;
+		$wijkteam = $w->getWijkteam();
 		if(array_key_exists($_SESSION['useID'], $wijkteam))	$hit[] = $wijk;
 	}
 	$BezoekLinks['pastoraat/index.php'. ((count($hit) == 1) ? '?wijk='. $hit[0] : '')] = 'Registratie bezoeken'. ((count($hit) == 1) ? ' wijk '. $hit[0] : '');
@@ -165,7 +164,6 @@ if(in_array(1, $myGroups) OR in_array(8, $myGroups) OR in_array(9, $myGroups) OR
 	
 	$blocks[] = $BezoekDeel;
 }
-
 
 
 # Gegevens wijzigen-deel
@@ -344,16 +342,17 @@ $blocks[] = $gebedsDeel;
 $links[] = "<b>Links</b>";
 $links[] = "<a href='http://www.koningskerkdeventer.nl/' target='_blank'>koningskerkdeventer.nl</a>";
 $links[] = "<a href='agenda/agenda.php' target='_blank'>Agenda voor Scipio</a>";
-$links[] = "<a href='ical/".$memberData['username'].'-'. $memberData['hash_short'] .".ics' target='_blank'>Persoonlijke digitale agenda</a>";
+#$links[] = "<a href='ical/".$gebruiker->username.'-'. $gebruiker->hash_short .".ics' target='_blank'>Persoonlijke digitale agenda</a>";
 $blocks[] = $links;
 
 
 
 # Site
 if(isset($_SESSION['fakeID'])) {
-	$site[] = "<b>Ingelogd als ". makeName($_SESSION['realID'], 5)."</b> (vermomd als ". makeName($_SESSION['fakeID'], 5) .")";
+	$fakeUser = new Member($_SESSION['fakeID']);
+	$site[] = "<b>Ingelogd als ". $gebruiker->getName() ."</b> (vermomd als ". $fakeUser->getName() .")";
 } else {
-	$site[] = "<b>Ingelogd als ". makeName($_SESSION['useID'], 5)."</b>";
+	$site[] = "<b>Ingelogd als ". $gebruiker->getName() ."</b>";
 }
 $site[] = "<a href='account.php' target='_blank'>Account</a>";
 $site[] = "<a href='profiel.php' target='_blank'>Profiel</a>";
@@ -364,8 +363,7 @@ if(in_array(1, $myGroups)) {
 	$site[] = "<a href='search.php' target='_blank'>Zoeken</a>";
 }
 $site[] = "<a href='auth/objects/logout.php' target='_blank'>Uitloggen</a>";
-$blocks[] = $site; */
-
+$blocks[] = $site;
 
 echo showCSSHeader();
 echo '<div class="content_vert_kolom">'.NL;

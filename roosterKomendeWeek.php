@@ -1,9 +1,11 @@
 <?php
+
 include_once('Classes/Kerkdienst.php');
 include_once('Classes/Logging.php');
 include_once('Classes/Rooster.php');
 include_once('Classes/Vulling.php');
 include_once('Classes/Member.php');
+include_once('Classes/Voorganger.php');
 include_once('include/functions.php');
 include_once('include/config.php');
 include_once('include/HTML_TopBottom.php');
@@ -29,16 +31,15 @@ $roosters = Rooster::getAllRoosters();
 
 $dienstBlocken = array();
 
-var_dump($diensten);
-
 foreach($diensten as $dienst) {	
 	$kerkdienst = new Kerkdienst($dienst);
+	$voorganger = new Voorganger($kerkdienst->voorganger);
 	$dagdeel	= formatDagdeel($kerkdienst->start);
 	
 	$block_1 = array();
 	$block_1[] = "<table>";
 	$block_1[] = "<tr>";
-	$block_1[] = "	<td colspan='2'><h2>". ucfirst($dagdeel) .' '. time2str("j M", $kerkdienst->start).($kerkdienst->opmerking != "" ? ' ('.$kerkdienst->opmerking.')' : '').'; '.$kerkdienst->voorganger."</h2></td>";
+	$block_1[] = "	<td colspan='2'><h2>". ucfirst($dagdeel) .' '. time2str("j M", $kerkdienst->start).($kerkdienst->opmerking != "" ? ' ('.$kerkdienst->opmerking.')' : '').'; '.$voorganger->getName()."</h2></td>";
 	$block_1[] = "</tr>".NL;
 	$block_1[] = "<tr>";
 	$block_1[] = "	<td>". ($kerkdienst->collecte_2 != '' ? '1ste collecte' : 'Collecte') ."</td>";

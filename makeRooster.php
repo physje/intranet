@@ -5,6 +5,7 @@ include_once('Classes/Team.php');
 include_once('Classes/Kerkdienst.php');
 include_once('Classes/Vulling.php');
 include_once('Classes/Logging.php');
+include_once('Classes/Voorganger.php');
 include_once('include/functions.php');
 include_once('include/config.php');
 include_once('include/HTML_TopBottom.php');
@@ -59,7 +60,7 @@ if(isset($_POST['save']) OR isset($_POST['maanden'])) {
 			$vulling->tekst_only = false;
 
 			if(isset($_POST['opmerking'][$dienst]) AND $_POST['opmerking'][$dienst] != '') {
-				$vulling->opmerking = $_POST['opmerking'][$dienst];
+				$vulling->opmerking = $_POST['opmerking'][$dienst];				
 			}
 
 			$vulling->save();
@@ -165,8 +166,8 @@ $statistiek = array();
 
 foreach($diensten as $dienst) {
 	if(toonDienst($dienst, $rooster->gelijk)) {	
-		$kerkdienst = new Kerkdienst($dienst);
-		$vulling = new Vulling($dienst, $rooster->id);				
+		$kerkdienst = new Kerkdienst($dienst);		
+		$vulling	= new Vulling($dienst, $rooster->id);
 		   		
 		if(in_array($rooster->gelijk, array(1, 3, 5, 6))) {
 			$korteDatum = true;
@@ -212,7 +213,9 @@ foreach($diensten as $dienst) {
 		}
 		
 		if($rooster->voorganger) {
-			$block_rooster[] = "	<td>". $kerkdienst->voorganger ."</td>";			
+			$predikant	= new Voorganger($kerkdienst->voorganger);
+			$predikant->nameType = 4;
+			$block_rooster[] = "	<td>". $predikant->getName() ."</td>";			
 		}
 		
 		
@@ -242,7 +245,7 @@ echo showCSSHeader(array('default', 'table_rot'), $header);
 echo '<div class="content_vert_kolom_full">'.NL;
 echo '<h1>'. $rooster->naam .'</h1>'.NL;
 echo "<div class='content_block'>".NL. implode(NL, $block_rooster).NL."</div>".NL;
-if($rooster->tekst) {
+if(!$rooster->tekst) {
 	echo "<div class='content_block'>".NL. implode(NL, $block_stat).NL."</div>".NL;
 }
 echo '</div> <!-- end \'content_vert_kolom_full\' -->'.NL;

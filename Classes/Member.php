@@ -208,6 +208,7 @@ class Member {
 	 */
 	public function getParents() {
 		$familie = $this->getFamilieLeden();
+		$ouders = array();
 
 		foreach($familie as $lid_id) {
 			$lid = new Member($lid_id);
@@ -217,11 +218,7 @@ class Member {
 			}
 		}
 
-		if(count($ouders) > 1) {
-			return $ouders;
-		} else {
-			return null;
-		}
+		return $ouders; 
 	}
 
 
@@ -229,10 +226,11 @@ class Member {
 	 * @return int|null Geeft een array terug met ID's van de partner(s) van dit lid, of null als er geen partner is
 	 */
 	public function getPartner() {
+		$partner = [];
+
 		if(!in_array($this->relatie, ['zoon', 'dochter', 'inw. persoon', 'zelfstandig'])) {			
 			$familie = $this->getFamilieLeden();
-
-			$partner = [];
+			
 			foreach($familie as $lid_id) {
 				$lid = new Member($lid_id);
 
