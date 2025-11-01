@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Class voor het versturen van mails specifiek voor de Koningskerk
+ * het is een uitbreiding op PHPMailer
+ */
 class KKDMailer extends PHPMailer\PHPMailer\PHPMailer implements KKDConfig {
 
     /**
@@ -9,7 +13,7 @@ class KKDMailer extends PHPMailer\PHPMailer\PHPMailer implements KKDConfig {
     /**
      * @var int ID van het lid dat de mail moet ontvanger. Gebruik $ontvangers als je naam+mailadres wilt gebruiken
      */
-    public int $aan;   
+    public int $aan;
     /**
      * @var bool Moet de ouders in de CC worden meegenomen
      */
@@ -19,32 +23,57 @@ class KKDMailer extends PHPMailer\PHPMailer\PHPMailer implements KKDConfig {
      * @var bool Moet de partner worden opgenomen in de Aan
      */
     public bool $partnerTo;
+
+    /**
+     * @var array Array met [adres, naam] van ontvangers die als CC moeten worden meegenomen
+     */
     public array $copy;
+
+    /**
+     * @var array Array met [adres, naam] van de ontvangers die als BCC moeten worden meegenomen
+     */
     public array $blancoCopy;
+
+    /**
+     * @var array Array met bijlages
+     */
     public array $bijlage;
+
+    /**
+     * @var bool Moet de mail getoond worden ipv verstuurd (true) of daadwerkelijk verstuurd (false)
+     */
     public bool $testen;
-    
+
+    /**
+     * Maak een KKDMailer-object aan en configueer dit met KKD-parameters
+     * Default staat testen uit
+     */
     function __construct() {
         parent::__construct(true);
 
         // Server settings
         $this->CharSet = 'utf8mb4_unicode_ci';
         $this->Host			= KKDConfig::MailHost;
-        $this->Port       = KKDConfig::MailPort;
-        $this->SMTPSecure = KKDConfig::SMTPSecure;
-        $this->SMTPAuth   = KKDConfig::SMTPAuth;
+        $this->Port         = KKDConfig::MailPort;
+        $this->SMTPSecure   = KKDConfig::SMTPSecure;
+        $this->SMTPAuth     = KKDConfig::SMTPAuth;
         $this->Username		= KKDConfig::SMTPUsername;
         $this->Password		= KKDConfig::SMTPPassword;
-        
-        $this->From = KKDConfig::noReplyAdress;
-        $this->FromName = KKDConfig::ScriptTitle;
-        
-        $this->testen = false;
-        
+
+        // Mail setting
+        $this->From         = KKDConfig::noReplyAdress;
+        $this->FromName     = KKDConfig::ScriptTitle;
         $this->IsHTML(true);
         $this->isSMTP();
+
+        // Varia
+        $this->testen       = false;
     }
 
+    /**
+     * Verstuur de KKD-mail.
+     * @return bool Of versturen succesvol was
+     */
     function sendMail() {
         try {
             # Ontvangers (text)
@@ -66,7 +95,7 @@ class KKDMailer extends PHPMailer\PHPMailer\PHPMailer implements KKDConfig {
                 if($p != null) {
                     $partner = new Member($p);
                     $this->addAddress($partner->getMail(), $partner->getName());
-                }                
+                }
             }
 
             # Ouders in de CC
@@ -80,7 +109,12 @@ class KKDMailer extends PHPMailer\PHPMailer\PHPMailer implements KKDConfig {
             }
 
             if($this->testen) {
-                var_dump($this);
+                echo 'Aan : '. implode('|', array_keys($this->all_recipients)) .'<br>';
+                echo 'Onderwerp : '. $this->Subject .'<br>';
+                echo 'Bericht : '. $this->Body .'<br>';
+                if(count($this->attachment) > 0) {
+                    echo 'Bijlage : '. implode('|', $this->attachment[0]) .'<br>';
+                }
             } else {
                 $this->send();
             }

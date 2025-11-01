@@ -1,17 +1,17 @@
 <?php
 
-include_once('Classes/Kerkdienst.php');
-include_once('Classes/Logging.php');
-include_once('Classes/Rooster.php');
-include_once('Classes/Vulling.php');
-include_once('Classes/Member.php');
-include_once('Classes/Voorganger.php');
-include_once('include/functions.php');
-include_once('include/config.php');
-include_once('include/HTML_TopBottom.php');
+include_once('../Classes/Kerkdienst.php');
+include_once('../Classes/Logging.php');
+include_once('../Classes/Rooster.php');
+include_once('../Classes/Vulling.php');
+include_once('../Classes/Member.php');
+include_once('../Classes/Voorganger.php');
+include_once('../include/functions.php');
+include_once('../include/config.php');
+include_once('../include/HTML_TopBottom.php');
 
 if(isset($_REQUEST['id'])) {
-	$cfgProgDir = 'auth/';
+	$cfgProgDir = '../auth/';
 	include($cfgProgDir. "secure.php");
 		
 	$kerkdienst = new Kerkdienst($_REQUEST['id']);
@@ -91,7 +91,7 @@ foreach($diensten as $dienst) {
 		
 		if($string != "") {
 			$block_1[] = "<tr>";
-			$block_1[] = "	<td><a href='showRooster.php?id=$rooster'>". $roosterDetails->naam ."</a></td>";
+			$block_1[] = "	<td><a href='index.php?id=$rooster'>". $roosterDetails->naam ."</a></td>";
 			$block_1[] = "	<td>". $string ."</td>";
 			$block_1[] = "</tr>".NL;
 		}

@@ -50,7 +50,7 @@ if (isset($logout) && !(isset($_GET['logout']) || isset($_POST['logout']))) {
     include($cfgProgDir . "objects/checklogin.php");
 
     # check login with Database
-    include($cfgProgDir . 'objects/checklogin_db.php');    
+    include($cfgProgDir . 'objects/checklogin_db.php');
 }
 
 ?>

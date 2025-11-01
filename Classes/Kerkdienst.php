@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Class voor een kerkdienst. Denk daarbij aan starttijd, eindtijd, collectes, voorganger, etc.
+ */
 class Kerkdienst {
     /**
      * @var int ID van de kerkdienst
@@ -8,7 +11,7 @@ class Kerkdienst {
     /**
      * @var bool Is de kerkdienst actief of niet
      */
-    public bool $actief;    
+    public bool $actief;
     /**
      * @var int Starttijd van de kerkdienst in UNIX-tijd
      */
@@ -43,11 +46,15 @@ class Kerkdienst {
     public bool $specialeDienst;
     /**
      * @var int Declaratie-status van de voorganger van deze kerkdienst
-     */ 
+     */
     public int $declaratieStatus;
 
-    function __construct($dienst = 0)
-    {
+    /**
+     * Maak een Kerkdienst-object aan
+     * Door een dienst-ID (optioneel) op te geven wordt het object gevuld met data van die dienst
+     * @param int $dienst ID van de dienst
+     */
+    function __construct($dienst = 0) {
         if($dienst > 0) {
             $db = new Mysql;
             $data = $db->select("SELECT * FROM `kerkdiensten` WHERE `id` = ". $dienst);
@@ -66,23 +73,21 @@ class Kerkdienst {
         } else {
             $this->start = time()+300;
             $this->eind = $this->start + 3600;
-        }       
+        }
     }
 
 
     /**
      * Methode om de kerkdiensten in het tijdsblok tussen startTijd en eindTijd op te vragen
-     * 
-     * @param int $startTijd Unix-tijd van het startmoment
-     * 
-     * @param int $eindTijd Unix-tijd van de eindtijd
-     * 
+     *
+     * @param int $startTijd Unix-tijd van het startmoment; 0 = huidige moment
+     * @param int $eindTijd Unix-tijd van de eindtijd; 0 = 1 jaar vooruit
      * @return Array met ID's van alle kerkdiensten
      */
     public static function getDiensten(int $startTijd, int $eindTijd) {
         if($startTijd == 0) $startTijd = time();
         if($eindTijd == 0)  $eindTijd = time()+(365*24*60*60);
-        
+
         $db = new Mysql;
         $data = $db->select("SELECT `id` FROM `kerkdiensten` WHERE `actief` = '1' AND `start` BETWEEN $startTijd AND $eindTijd ORDER BY `eind` ASC", true);
 
@@ -90,11 +95,15 @@ class Kerkdienst {
     }
 
 
+    /**
+     * Sla het Kerkdienst-object op in de database
+     * @return bool Succesvol opgeslagen of niet
+     */
     function save() {
         $db = new Mysql;
 
         if(isset($this -> dienst)) {
-            $db -> query("UPDATE `kerkdiensten` SET 
+            $sql = "UPDATE `kerkdiensten` SET
                 `actief` = ". $this->actief .",
                 `start` = ". $this->start .",
                 `eind` = ". $this->eind .",
@@ -104,15 +113,13 @@ class Kerkdienst {
                 `opmerking` = ". urlencode($this->opmerking) .",
                 `ruiling` = ". $this->ruiling .",
                 `speciaal` = ". $this->specialeDienst .",
-                `declaratie_status` = ". $this->declaratieStatus ."            
-                WHERE `id` = ". $this->dienst);
+                `declaratie_status` = ". $this->declaratieStatus ."
+                WHERE `id` = ". $this->dienst;
         } else {
-            $db -> query("INSERT INTO `kerkdiensten` (`start`, `eind`) VALUES (". $this->start .",". $this->eind .")");
+            $sql = "INSERT INTO `kerkdiensten` (`start`, `eind`) VALUES (". $this->start .",". $this->eind .")";
         }
+
+        return $db -> query($sql);
     }
-
-
-
-
 }
 ?>

@@ -1,14 +1,14 @@
 <?php
-include_once('Classes/Member.php');
-include_once('Classes/Team.php');
-include_once('Classes/Rooster.php');
-include_once('Classes/Kerkdienst.php');
-include_once('Classes/Mysql.php');
-include_once('Classes/Logging.php');
-include_once('Classes/Vulling.php');
-include_once('include/functions.php');
-include_once('include/config.php');
-include_once('include/HTML_TopBottom.php');
+include_once('../Classes/Member.php');
+include_once('../Classes/Team.php');
+include_once('../Classes/Rooster.php');
+include_once('../Classes/Kerkdienst.php');
+include_once('../Classes/Mysql.php');
+include_once('../Classes/Logging.php');
+include_once('../Classes/Vulling.php');
+include_once('../include/functions.php');
+include_once('../include/config.php');
+include_once('../include/HTML_TopBottom.php');
 $showLogin = true;
 
 if(isset($_REQUEST['hash'])) {
@@ -27,7 +27,7 @@ if(isset($_REQUEST['hash'])) {
 }
 
 if($showLogin) {
-	$cfgProgDir = 'auth/';
+	$cfgProgDir = '../auth/';
 	include($cfgProgDir. "secure.php");
 }
 
@@ -43,7 +43,7 @@ $showRuilen		= false;
 # Moet het symbool voor ruilen getoond worden
 #		1a) Je zit in de groep waar dit rooster voor geldt
 #		1b)	Een van je familie-leden zit in de groep die op het rooster staat
-#		2)	Het is een rooster wat niet geimporteerd wordt 
+#		2)	Het is een rooster wat niet geimporteerd wordt
 if((in_array($_SESSION['useID'], $IDs) OR count(array_intersect($familie, $IDs)) > 0) AND !in_array($_REQUEST['id'], $importRoosters)) {
 	$showRuilen = true;
 }
@@ -70,13 +70,13 @@ foreach($diensten as $dienst) {
 							
 			foreach($vulling->leden as $lid) {
 				$person = new Member($lid);
-				$string = "<a href='profiel.php?id=$lid'>". $person->getName() ."</a>";
+				$string = "<a href='../profiel.php?id=$lid'>". $person->getName() ."</a>";
 				
 				#if((in_array($_SESSION['ID'], $IDs) OR in_array($_SESSION['ID'], $vulling)) AND !in_array($_REQUEST['rooster'], $importRoosters)) {
 				if($showRuilen AND in_array($lid, $familie)) {
-					$string .= " <a href='ruilen.php?id=". $_REQUEST['id'] ."&dienst_d=$dienst&dader=$lid' title='klik om ruiling door te geven'><img src='images/wisselen.png'></a>";
+					$string .= " <a href='ruilen.php?id=". $_REQUEST['id'] ."&d_d=$dienst&d=$lid' title='klik om ruiling door te geven'><img src='../images/wisselen.png'></a>";
 				} elseif($showRuilen) {
-					$string .= " <a href='ruilen.php?id=". $_REQUEST['id'] ."&dienst_s=$dienst&slachtoffer=$lid' title='klik ruiling door te geven'><img src='images/wisselen.png'></a>";
+					$string .= " <a href='ruilen.php?id=". $_REQUEST['id'] ."&d_s=$dienst&s=$lid' title='klik ruiling door te geven'><img src='../images/wisselen.png'></a>";
 				}
 								
 				$namen[] = $string;
@@ -88,7 +88,7 @@ foreach($diensten as $dienst) {
 		
 		if(trim($RoosterString) != '') {
 			$block_1[] = "<tr>";
-			$block_1[] = "	<td><a href='roosterKomendeWeek.php?id=$dienst'>".time2str("j M H:s", $kerkdienst->start)."</a></td>";
+			$block_1[] = "	<td><a href='komendeWeek.php?id=$dienst'>".time2str("j M H:s", $kerkdienst->start)."</a></td>";
 			$block_1[] = "	<td>". $RoosterString ."</td>";
 			$block_1[] = "</tr>";
 			$leeg = false;
@@ -103,7 +103,7 @@ if($leeg) {
 	$block_1[] = '</table>';
 }
 
-$block_2[] = "<a href='showCombineRooster.php?rs=". $_REQUEST['id'] ."&pdf'>PDF-versie</a>";
+$block_2[] = "<a href='combinatieRooster.php?rs=". $_REQUEST['id'] ."&pdf'>PDF-versie</a>";
 
 echo showCSSHeader(array('default', 'table_default'), '', $rooster->naam);
 echo '<div class="content_vert_kolom">'.NL;

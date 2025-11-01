@@ -18,6 +18,7 @@ $gebruiker = new Member($_SESSION['useID']);
 $allRoosters = Rooster::getAllRoosters();
 $myRoosters = $gebruiker->getRoosters();
 $myRoosterBeheer = $gebruiker->getBeheerRooster();
+$myRoosterPlanner = $gebruiker->getPlannerRooster();
 
 # Data over gebruiker icm groepen opvragen
 $allGroups = Team::getAllTeams();
@@ -37,21 +38,28 @@ if(count($allRoosters) > 0) {
 		} else {
 			$class = "general";
 		}
-		$txtRooster[] = "<a class='$class' href='showRooster.php?id=$rooster' target='_blank'>". $data->naam ."</a>";
+		$txtRooster[] = "<a class='$class' href='rooster/index.php?id=$rooster' target='_blank'>". $data->naam ."</a>";
 	}	
-	$txtRooster[] = "<a class='$class' href='showCombineRooster.php' target='_blank'>Toon combinatie-rooster</a>";
-	$txtRooster[] = "<a class='$class' href='roosterKomendeWeek.php' target='_blank'>Toon rooster komende week</a>";
+	$txtRooster[] = "<a class='$class' href='rooster/combinatieRooster.php' target='_blank'>Toon combinatie-rooster</a>";
+	$txtRooster[] = "<a class='$class' href='rooster/komendeWeek.php' target='_blank'>Toon rooster komende week</a>";
 	$blocks[] = $txtRooster;	
 }
 
 
 
 # Rooster-beheer
-if(count($myRoosterBeheer) > 0) {
+if(count($myRoosterBeheer) > 0 || count($myRoosterPlanner) > 0) {
 	$txtRoosterBeheer[] = "<b>Roosters die ik kan wijzigen</b>";
-	foreach($myRoosterBeheer as $rooster) {
-		$data = new Rooster($rooster);
-		$txtRoosterBeheer[] = "<a href='makeRooster.php?id=$rooster' target='_blank'>". $data->naam ."</a>";
+
+	foreach($allRoosters as $rooster) {
+		if(in_array($rooster, $myRoosterBeheer) || in_array($rooster, $myRoosterPlanner)) {
+			$data = new Rooster($rooster);
+			$subLink = array();
+			if(in_array($rooster, $myRoosterBeheer))	$subLink[] = "<a href='rooster/details.php?id=$rooster' target='_blank'>details</a>";
+			if(in_array($rooster, $myRoosterPlanner))	$subLink[] = "<a href='rooster/edit.php?id=$rooster' target='_blank'>planning</a>";
+
+			$txtRoosterBeheer[] = $data->naam ." (". implode(' | ', $subLink) .")";
+		}
 	}
 	$blocks[] = $txtRoosterBeheer;
 }
@@ -63,8 +71,8 @@ if(in_array(1, $myGroups)) {
 	$adminRoosters[] = "<b>Beheer roosters</b> (Admin)";
 	
 	foreach($allRoosters as $rooster) {
-		$data = new Rooster($rooster);
-		$adminRoosters[] = "<a href='makeRooster.php?id=$rooster' target='_blank'>". $data->naam ."</a>";
+		$data = new Rooster($rooster);		
+		$adminRoosters[] = $data->naam ." (<a href='rooster/edit.php?id=$rooster' target='_blank'>planning</a> | <a href='rooster/details.php?id=$rooster' target='_blank'>details</a>)";
 	}
 	$blocks[] = $adminRoosters;
 }
@@ -111,7 +119,7 @@ if(count($myGroepBeheer) > 0) {
 	$txtGroepBeheer[] = "<b>Teams die ik beheer</b>";
 	foreach($myGroepBeheer as $groep) {
 		$data = new Team($groep);
-		$txtGroepBeheer[] = "<a href='editGroup.php?id=$groep' target='_blank'>".$data->name."</a>";
+		$txtGroepBeheer[] = "<a href='team/edit.php?id=$groep' target='_blank'>". $data->name ."</a>";
 	}
 	$blocks[] = $txtGroepBeheer;
 }
@@ -123,7 +131,7 @@ if(in_array(1, $myGroups)) {
 	$txtGroepAdmin[] = "<b>Beheer teams</b> (Admin)";
 	foreach($allGroups as $groep) {
 		$data = new Team($groep);
-		$txtGroepAdmin[] = "<a href='editGroup.php?id=$groep' target='_blank'>".$data->name."</a>";
+		$txtGroepAdmin[] = "<a href='team/edit.php?id=$groep' target='_blank'>". $data->name ."</a>";
 	}
 	$blocks[] = $txtGroepAdmin;
 }
@@ -229,10 +237,10 @@ if(in_array(1, $myGroups) OR in_array(43, $myGroups) OR in_array(44, $myGroups))
 	}
 	
 	if(in_array(1, $myGroups) OR in_array(43, $myGroups)) {
-		$OpenKerkLinks['openkerk/editRooster.php'] = 'Rooster wijzigen';
+		$OpenKerkLinks['openkerk/edit.php'] = 'Rooster wijzigen';
 	}
 		
-	$OpenKerkLinks['openkerk/showRooster.php'] = 'Rooster tonen';
+	$OpenKerkLinks['openkerk/'] = 'Rooster tonen';
 	
 	foreach($OpenKerkLinks as $link => $naam) {
 		$OpenKerkDeel[] = "<a href='$link' target='_blank'>$naam</a>";
@@ -250,8 +258,8 @@ if(in_array(1, $myGroups)) {
 	$adminLinks['admin/generateUsernames.php'] = 'Gebruikersnamen aanmaken';
 	$adminLinks['admin/generateDiensten.php'] = 'Kerkdiensten aanmaken';
 	$adminLinks['editDiensten.php'] = 'Kerkdiensten wijzigen';	
-	$adminLinks['admin/editGroepen.php'] = 'Groepen wijzigen';	
-	$adminLinks['admin/editRoosters.php'] = 'Roosters wijzigen';	
+	$adminLinks['team/admin.php'] = 'Groepen wijzigen';	
+	$adminLinks['rooster/admin.php'] = 'Roosters wijzigen';	
 	$adminLinks['admin/editWijkteams.php'] = 'Wijkteams wijzigen';	
 	$adminLinks['admin/crossCheck.php'] = 'Check databases';
 	$adminLinks['admin/log.php'] = 'Bekijk logfiles';
@@ -349,8 +357,8 @@ $blocks[] = $links;
 
 # Site
 if(isset($_SESSION['fakeID'])) {
-	$fakeUser = new Member($_SESSION['fakeID']);
-	$site[] = "<b>Ingelogd als ". $gebruiker->getName() ."</b> (vermomd als ". $fakeUser->getName() .")";
+	$realUser = new Member($_SESSION['realID']);
+	$site[] = "<b>Ingelogd als ". $realUser->getName() ."</b> (vermomd als ". $gebruiker->getName() .")";
 } else {
 	$site[] = "<b>Ingelogd als ". $gebruiker->getName() ."</b>";
 }

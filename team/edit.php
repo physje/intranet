@@ -1,11 +1,11 @@
 <?php
-include_once('classes/Mysql.php');
-include_once('classes/Team.php');
-include_once('Classes/Member.php');
-include_once('Classes/Logging.php');
-include_once('include/functions.php');
-include_once('include/config.php');
-include_once('include/HTML_TopBottom.php');
+include_once('../Classes/Mysql.php');
+include_once('../Classes/Team.php');
+include_once('../Classes/Member.php');
+include_once('../Classes/Logging.php');
+include_once('../include/functions.php');
+include_once('../include/config.php');
+include_once('../include/HTML_TopBottom.php');
 
 if(!isset($_REQUEST['id'])) {
 	echo "geen groep gedefinieerd";
@@ -16,7 +16,7 @@ $team = new Team($_REQUEST['id']);
 $beheerder = $team->beheerder;
 
 $requiredUserGroups = array(1, $beheerder);
-$cfgProgDir = 'auth/';
+$cfgProgDir = '../auth/';
 include($cfgProgDir. "secure.php");
 
 if(isset($_POST['change_members'])) {

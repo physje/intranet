@@ -1,5 +1,10 @@
 <?php
-include_once("Classes/Mysql.php");
+$temp = explode('/', $_SERVER['REQUEST_URI']);
+if(count($temp) == 4) {
+	include_once("Classes/Mysql.php");
+} else {
+	include_once("../Classes/Mysql.php");
+}
 
 # NL is een nieuwe regel
 define("NL", "\n");
@@ -87,10 +92,10 @@ foreach($names as $name) {
 				$$name = $newValue;
 			}
 		} else {
-			$$name = urldecode($row['value']);
+			$$name = urldecode($row['value']);			
 			
-			if($row['sleutel'] == 'true')	$$name = true;
-			if($row['sleutel'] == 'false')	$$name = false;		
+			if($row['value'] == 'true')		$$name = true;
+			if($row['value'] == 'false')	$$name = false;
 		}		
 	}
 }

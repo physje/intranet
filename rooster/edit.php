@@ -1,14 +1,14 @@
 <?php
-include_once('Classes/Rooster.php');
-include_once('Classes/Member.php');
-include_once('Classes/Team.php');
-include_once('Classes/Kerkdienst.php');
-include_once('Classes/Vulling.php');
-include_once('Classes/Logging.php');
-include_once('Classes/Voorganger.php');
-include_once('include/functions.php');
-include_once('include/config.php');
-include_once('include/HTML_TopBottom.php');
+include_once('../Classes/Rooster.php');
+include_once('../Classes/Member.php');
+include_once('../Classes/Team.php');
+include_once('../Classes/Kerkdienst.php');
+include_once('../Classes/Vulling.php');
+include_once('../Classes/Logging.php');
+include_once('../Classes/Voorganger.php');
+include_once('../include/functions.php');
+include_once('../include/config.php');
+include_once('../include/HTML_TopBottom.php');
 
 $showLogin = true;
 
@@ -42,7 +42,7 @@ $planner = $rooster->planner;
 if($showLogin) {
 	# Ken kijk- en schrijf-rechten toe aan admin, beheerder en planner
 	$requiredUserGroups = array(1, $beheerder, $planner);
-	$cfgProgDir = 'auth/';
+	$cfgProgDir = '../auth/';
 	include($cfgProgDir. "secure.php");
 }
 

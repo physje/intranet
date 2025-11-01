@@ -1,4 +1,7 @@
 <?php
+/**
+ * Class om een voorganger toe te voegen, wijzigen of te tonen
+ */
 class Voorganger {
     /**
      * @var int $id ID van de voorganger
@@ -8,7 +11,7 @@ class Voorganger {
     /**
      * @var bool $active Is de voorganger actief of niet
      */
-    public bool $active;    
+    public bool $active;
 
     /**
      * @var string $aanhef Aanhef van de voorganger (bijv. "ds.", "dr.", etc.)
@@ -81,7 +84,7 @@ class Voorganger {
     public string $opmerkingen;
 
     /**
-     * @var string $hash Unieke hash voor de voorganger 
+     * @var string $hash Unieke hash voor de voorganger
      */
     public string $hash;
 
@@ -105,45 +108,53 @@ class Voorganger {
      */
     public int $nameType;
 
+    /**
+     * @param int $id ID van de voorganger
+     */
     function __construct(int $id = 0) {
         if($id > 0) {
             $db = new Mysql;
             $data = $db->select("SELECT * FROM `predikanten` WHERE `id` = ". $id);
-            
+
+            var_dump($id);
+            var_dump($data);
+
             $this->id = $id;
-            $this->active = ($data['actief'] == 1 ? true : false);        
+            $this->active = ($data['actief'] == 1 ? true : false);
             $this->aanhef = $data['titel'];
-            $this->initialen = $data['initialen'];
-            $this->voornaam = $data['voornaam'];
-            $this->tussenvoegsel = $data['tussen'];
-            $this->achternaam = $data['achternaam'];
+            $this->initialen = urldecode($data['initialen']);
+            $this->voornaam = urldecode($data['voornaam']);
+            $this->tussenvoegsel = urldecode($data['tussen']);
+            $this->achternaam = urldecode($data['achternaam']);
             $this->telefoon = $data['telefoon'];
             $this->mobiel = $data['mobiel'];
-            $this->preekvoorziener = $data['naam_pv'];
+            $this->preekvoorziener = urldecode($data['naam_pv']);
             $this->preekvoorziener_telefoon = $data['tel_pv'];
-            $this->mail = $data['mail'];
-            $this->plaats = $data['plaats'];
-            $this->denominatie = $data['kerk'];
+            $this->mail = urldecode($data['mail']);
+            $this->plaats = urldecode($data['plaats']);
+            $this->denominatie = urldecode($data['kerk']);
             $this->stijl = $data['stijl'];
-            $this->opmerkingen = $data['opmerking'];
+            $this->opmerkingen = urldecode($data['opmerking']);
             $this->hash = $data['hash'];
             $this->aandachtspunt = ($data['aandachtspunten'] == 1 ? true : false);
             $this->declaratie = ($data['declaratie'] == 1 ? true : false);
             $this->reiskosten = ($data['reiskosten'] == 1 ? true : false);
-        } 
+        }
         $this->nameType = 3;
     }
 
 
-    # Possible nameTypes:
-    // type = 1 : W.M. van Wijk
-    // type = 2 : ds. van Wijk
-    // type = 3 : ds. W.M. van Wijk
-    // type = 4 : Wim van Wijk -> W.M. van Wijk (bij ontbreken voornaam)
-    // type = 5 : Wim -> ds. van Wijk (bij ontbreken voornaam)
-    // type = 6 : Wijk; van, W.M.
-    // type = 7 : van Wijk
-    // type = 8 : Wijk; van, Wim -> Wijk; van, W.M. (bij ontbreken voornaam)
+    /**
+     * @return string Opgemaakte naam van de voorganger op basis van type
+     * type = 1 : W.M. van Wijk
+     * type = 2 : ds. van Wijk
+     * type = 3 : ds. W.M. van Wijk
+     * type = 4 : Wim van Wijk -> W.M. van Wijk (bij ontbreken voornaam)
+     * type = 5 : Wim -> ds. van Wijk (bij ontbreken voornaam)
+     * type = 6 : Wijk; van, W.M.
+     * type = 7 : van Wijk
+     * type = 8 : Wijk; van, Wim -> Wijk; van, W.M. (bij ontbreken voornaam)     *
+     */
     function getName() {
         if($this->tussenvoegsel != '') {
             $voorgangerAchterNaam = lcfirst($this->tussenvoegsel).' '. $this->achternaam;
@@ -202,6 +213,10 @@ class Voorganger {
 	    if($this->nameType == 1) {
             return $this->initialen.' '.$voorgangerAchterNaam;
         }
+    }
+
+    function save() {
+
     }
 }
 ?>

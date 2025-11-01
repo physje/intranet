@@ -1,16 +1,16 @@
 <?php
-include_once('classes/Kerkdienst.php');
-include_once('classes/Voorganger.php');
-include_once('Classes/Member.php');
-include_once('Classes/Logging.php');
-include_once('Classes/Rooster.php');
-include_once('Classes/Vulling.php');
-include_once('include/functions.php');
-include_once('include/config.php');
-include_once('include/pdf/config.php');
-include_once('include/pdf/3gk_table.php');
-include_once('include/HTML_TopBottom.php');
-$cfgProgDir = 'auth/';
+include_once('../Classes/Kerkdienst.php');
+include_once('../Classes/Voorganger.php');
+include_once('../Classes/Member.php');
+include_once('../Classes/Logging.php');
+include_once('../Classes/Rooster.php');
+include_once('../Classes/Vulling.php');
+include_once('../include/functions.php');
+include_once('../include/config.php');
+include_once('../include/pdf/config.php');
+include_once('../include/pdf/3gk_table.php');
+include_once('../include/HTML_TopBottom.php');
+$cfgProgDir = '../auth/';
 include($cfgProgDir. "secure.php");
 
 $roosters = $text = $header = $data = array();
