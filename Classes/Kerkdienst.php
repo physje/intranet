@@ -36,6 +36,9 @@ class Kerkdienst {
      * @var string Interne opmerking bij de kerkdienst
      */
     public string $opmerking;
+    
+    public string $liturgie;
+
     /**
      * @var bool Is dit een geruilde kerkdienst of niet
      */
@@ -67,6 +70,7 @@ class Kerkdienst {
             $this->collecte_1 = urldecode($data['collecte_1']);
             $this->collecte_2 = urldecode($data['collecte_2']);
             $this->opmerking = urldecode($data['opmerking']);
+            $this->liturgie = urldecode($data['liturgie']);            
             $this->ruiling = ($data['ruiling'] == 1 ? true : false);
             $this->specialeDienst = ($data['speciaal'] == 1 ? true : false);
             $this->declaratieStatus = $data['declaratie_status'];
@@ -77,6 +81,7 @@ class Kerkdienst {
             $this->voorganger = 0;
             $this->collecte_1 = '';
             $this->collecte_2 = '';
+            $this->liturgie = '';
             $this->opmerking = '';
             $this->ruiling = false;
             $this->specialeDienst = false;
@@ -116,6 +121,7 @@ class Kerkdienst {
         $data['voorganger'] = $this->voorganger;
         $data['collecte_1'] = urlencode($this->collecte_1);
         $data['collecte_2'] = urlencode($this->collecte_2);
+        $data['liturgie'] = urlencode($this->liturgie);
         $data['opmerking'] = urlencode($this->opmerking);
         $data['ruiling'] = $this->ruiling;
         $data['speciaal'] = $this->specialeDienst;

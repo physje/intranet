@@ -1,42 +1,45 @@
 <?php
-include_once('include/functions.php');
-include_once('include/config.php');
-include_once('include/HTML_TopBottom.php');
+include_once('../include/functions.php');
+include_once('../include/config.php');
+include_once('../include/HTML_TopBottom.php');
+include_once('../Classes/Member.php');
+include_once('../Classes/Kerkdienst.php');
+include_once('../Classes/Logging.php');
 
 $requiredUserGroups = array(1, 11, 28, 52);
-$cfgProgDir = 'auth/';
+$cfgProgDir = '../auth/';
 include($cfgProgDir. "secure.php");
-$db = connect_db();
 
 $aantalMaanden = 1;
 
 if(isset($_REQUEST['dienstID'])) {
-
     if(isset($_REQUEST['save'])) {
-    	$sql = "UPDATE $TableDiensten SET ";
-    	$sql .= "$DienstLiturgie = '". urlencode($_REQUEST['liturgieTekst']) ."' ";
-    	$sql .= "WHERE $DienstID = '". $_REQUEST['dienstID'] ."'";
+    	#$sql = "UPDATE $TableDiensten SET ";
+    	#$sql .= "$DienstLiturgie = '". urlencode($_REQUEST['liturgieTekst']) ."' ";
+    	#$sql .= "WHERE $DienstID = '". $_REQUEST['dienstID'] ."'";
+        $dienst = new Kerkdienst($_REQUEST['dienstID']);
+        $dienst->liturgie = $_REQUEST['liturgieTekst'];
 		
-		if(mysqli_query($db, $sql)) {
+		if($dienst->save()) {
 			$text[] = "Liturgie succesvol opgeslagen!";
-			toLog('info', '', 'Litugie ('. $_REQUEST['dienstID'] .') bijgewerkt');
+			toLog('Litugie ('. time2str("D j M", $dienst->start) .') bijgewerkt');
 		} else {
 			$text[] = "Helaas, er ging iets niet goed met het opslaan van de liturgie";
-			toLog('error', '', 'Liturgie ('. $_REQUEST['dienstID'] .') konden niet worden opgeslagen');
+			toLog('Liturgie ('. time2str("D j M", $dienst->start) .') konden niet worden opgeslagen', 'error');
 		}
-    } else {
-        $liturgie = getLiturgie($_REQUEST['dienstID']);
-        $dienstInfo = getKerkdienstDetails($_REQUEST['dienstID']);
+    } else {        
+        $dienst = new Kerkdienst($_REQUEST['dienstID']);
+        $liturgie = $dienst->liturgie;
 
         $text[] = "<form method='post' action='$_SERVER[PHP_SELF]?dienstID=".$_REQUEST['dienstID']."'>";
 
         if(!$liturgie) {
             # Geen liturgie aanwezig voor geselecteerde dienst, nieuwe invoeren
-            $text[] = "Voer hieronder de nieuwe liturgie in voor de dienst van ". time2str("%e %B %Y", $dienstInfo['start']). " om ". date("H:i", $dienstInfo['start']). ":<br><br>";
+            $text[] = "Voer hieronder de nieuwe liturgie in voor de dienst van ". time2str("j F Y", $dienst->start). " om ". date("H:i", $dienst->start). ":<br><br>";
             $text[] = "<textarea rows='30' name='liturgieTekst' cols='50' font: normal 1em Verdana, sans-serif></textarea>";
         } else {
             # Liturgie gevonden voor geselecteerde dienst, bijwerken
-            $text[] = "Pas hieronder de liturgie aan voor de dienst van ". time2str("%e %B %Y", $dienstInfo['start']). " om ". date("H:i", $dienstInfo['start']). ":<br><br>";
+            $text[] = "Pas hieronder de liturgie aan voor de dienst van ". time2str("j F Y",  $dienst->start). " om ". date("H:i", $dienst->start). ":<br><br>";
             $text[] = "<textarea rows='30' name='liturgieTekst' cols='50'>". $liturgie. "</textarea>";
         }
 
@@ -44,17 +47,16 @@ if(isset($_REQUEST['dienstID'])) {
         $text[] = "<p class='after_table'><input type='submit' name='save' value='Opslaan'></p>";
         $text[] = "</form>";
     }
-
 } else {
     # Haal alle kerkdiensten binnen een tijdsvak op
-    $diensten = getKerkdiensten(mktime(0,0,0), mktime(date("H"),date("i"),date("s"),(date("n")+$aantalMaanden)));
+    $diensten = Kerkdienst::getDiensten(mktime(0,0,0), mktime(date("H"),date("i"),date("s"),(date("n")+$aantalMaanden)));
 
     # Bouw formulier op
     $text[] = "Klik op de 'edit' link achter de kerdienst waarvan de liturgie moet worden ingevoerd of aangepast.<br><br>";
     $text[] = "<form method='post' action='$_SERVER[PHP_SELF]'>";
     $text[] = "<input type='hidden' name='blokken' value='$aantalMaanden'>";
     $text[] = "<table>";
-		$text[] = "<thead>";
+	$text[] = "<thead>";
     $text[] = "<tr>";
     $text[] = "	<th>Datum</th>";
     $text[] = "	<th>Start</th>";
@@ -63,15 +65,15 @@ if(isset($_REQUEST['dienstID'])) {
     $text[] = "</tr>";
     $text[] = "</thead>";
 
-    foreach($diensten as $dienst) {
-        $data = getKerkdienstDetails($dienst);
+    foreach($diensten as $dienstID) {
+        $dienst = new Kerkdienst($dienstID);
 
         $text[] = "<tr>";
-        $text[] = "	<td align='right'>". time2str("%a %e %b", $data['start']) ."</td>";
+        $text[] = "	<td align='right'>". time2str("D j M", $dienst->start) ."</td>";
         //$text[] = "	<td align='right'>". date("d-m-Y", $data['start']) ."</td>";
-        $text[] = "	<td>". date('H:i', $data['start']) ."</td>";
-        $text[] = "	<td>". $data['bijzonderheden'] ."</td>";
-        $text[] = " <td><a href='?dienstID=$dienst'>edit</a></td>";
+        $text[] = "	<td>". date('H:i', $dienst->start) ."</td>";
+        $text[] = "	<td>". $dienst->opmerking ."</td>";
+        $text[] = " <td><a href='?dienstID=$dienstID'>edit</a></td>";
         $text[] = "</tr>";
     }
     $text[] = "</table>";

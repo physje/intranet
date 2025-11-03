@@ -1,65 +1,68 @@
 <?php
-include_once('include/functions.php');
-include_once('include/config.php');
-include_once('include/config_mails.php');
-include_once('include/HTML_TopBottom.php');
-include_once('include/HTML_HeaderFooter.php');
+include_once('../include/functions.php');
+include_once('../include/config.php');
+include_once('../include/config_mails.php');
+include_once('../include/HTML_TopBottom.php');
+include_once('../Classes/Member.php');
+include_once('../Classes/Kerkdienst.php');
+include_once('../Classes/Logging.php');
+include_once('../Classes/KKDMailer.php');
 
-$db = connect_db();
-$cfgProgDir = 'auth/';
+$cfgProgDir = '../auth/';
 $requiredUserGroups = array(1, 22, 52);
 include($cfgProgDir. "secure.php");
+$bericht = array();
 
 # Als er op een knop gedrukt is, het rooster wegschrijven
-if(isset($_POST['save']) OR isset($_POST['maanden'])) {	
-	foreach($_POST['collecte'] as $dienst => $collectes) {
-		$oldData = getKerkdienstDetails($dienst);
-		
-		$set = array();
-		$set[] = $DienstCollecte_1 .' = \''. urlencode($collectes[1]) .'\'';
-		$set[] = $DienstCollecte_2 .' = \''. urlencode($collectes[2]) .'\'';
-		
-		$sql = "UPDATE $TableDiensten SET ". implode(', ', $set)." WHERE $DienstID = ". $dienst;		
-			
-		if(mysqli_query($db, $sql)) {
-			if($oldData['collecte_1'] != $collectes[1]) {
-				$dagdeel = formatDagdeel($oldData['start']);				
-				if($oldData['collecte_1'] != '' AND $collectes[1] != '' ) {
-					$bericht[] = '1ste collecte van de '. $dagdeel.' van '. date('d-m-y', $oldData['start']).' is gewijzigd van <i>'. $oldData['collecte_1'] .'</i> naar <i>'. $collectes[1] .'</i>';
-				} elseif($collectes[1] == '') {
-					$bericht[] = '<i>'. $oldData['collecte_1'] .'</i> is als 1ste collecte van de '. $dagdeel.' van '. date('d-m-y', $oldData['start']).' verwijderd.';
+if(isset($_POST['save']) || isset($_POST['maanden'])) {	
+	foreach($_POST['collecte'] as $dienstID => $collectes) {
+		$dienst = new Kerkdienst($dienstID);
+		$oldCollecte_1 = $dienst->collecte_1;
+		$oldCollecte_2 = $dienst->collecte_2;
+		$dienst->collecte_1 = $collectes[1];
+		$dienst->collecte_2 = $collectes[2];
+				
+		if($dienst->save()) {
+			if($oldCollecte_1 != $dienst->collecte_1) {
+				$dagdeel = formatDagdeel($dienst->start);				
+				if($oldCollecte_1 != '' && $dienst->collecte_1 != '' ) {
+					$bericht[] = '1ste collecte van de '. $dagdeel.' van '. date('d-m-y', $dienst->start).' is gewijzigd van <i>'. $oldCollecte_1 .'</i> naar <i>'. $dienst->collecte_1 .'</i>';
+				} elseif($dienst->collecte_1 == '') {
+					$bericht[] = '<i>'. $oldCollecte_1 .'</i> is als 1ste collecte van de '. $dagdeel.' van '. date('d-m-y', $dienst->start).' verwijderd.';
 				} else {
-					$bericht[] = '<i>'. $collectes[1] .'</i> is als 1ste collecte van de '. $dagdeel.' van '. date('d-m-y', $oldData['start']).' toegevoegd.';
+					$bericht[] = '<i>'. $dienst->collecte_1 .'</i> is als 1ste collecte van de '. $dagdeel.' van '. date('d-m-y', $dienst->start).' toegevoegd.';
 				}
 			}
-			
-			if($oldData['collecte_2'] != $collectes[2]) {
-				$dagdeel = formatDagdeel($oldData['start']);
-				if($oldData['collecte_2'] != '' AND $collectes[2] != '') {
-					$bericht[] = '2de collecte van de '. $dagdeel.' van '. date('d-m-y', $oldData['start']).' is gewijzigd van <i>'. $oldData['collecte_2'] .'</i> naar <i>'. $collectes[2] .'</i>';
-				} elseif($collectes[2] == '') {
-					$bericht[] = '<i>'. $oldData['collecte_2'] .'</i> is als 2de collecte van de '. $dagdeel.' van '. date('d-m-y', $oldData['start']).' verwijderd.';
+
+			if($oldCollecte_2 != $dienst->collecte_2) {
+				$dagdeel = formatDagdeel($dienst->start);				
+				if($oldCollecte_2 != '' && $dienst->collecte_2 != '' ) {
+					$bericht[] = '2de collecte van de '. $dagdeel.' van '. date('d-m-y', $dienst->start).' is gewijzigd van <i>'. $oldCollecte_2 .'</i> naar <i>'. $dienst->collecte_2 .'</i>';
+				} elseif($dienst->collecte_2 == '') {
+					$bericht[] = '<i>'. $oldCollecte_2 .'</i> is als 2de collecte van de '. $dagdeel.' van '. date('d-m-y', $dienst->start).' verwijderd.';
 				} else {
-					$bericht[] = '<i>'. $collectes[2] .'</i> is als 2de collecte van de '. $dagdeel.' van '. date('d-m-y', $oldData['start']).' toegevoegd.';
+					$bericht[] = '<i>'. $dienst->collecte_2 .'</i> is als 2de collecte van de '. $dagdeel.' van '. date('d-m-y', $dienst->start).' toegevoegd.';
 				}
 			}
 		} else {
-			toLog('error', '', 'Collectes van '. date('d-m-y', $oldData['start']) .' konden niet worden opgeslagen');
+			toLog('Collectes van '. date('d-m-y', $dienst->start) .' konden niet worden opgeslagen', 'error');
 		}
 	}
 	
-	if(isset($bericht)){
-		$param['to'][] = array('scipiobeheer@koningskerkdeventer.nl', 'Scipio beheer');
-		$param['subject'] = count($bericht).' '.(count($bericht) > 1 ? 'gewijzigde collectedoelen' : 'gewijzigd collectedoel');
-		$param['message'] = implode('<br>', $bericht);
+	if(count($bericht) > 0){
+		$KKD = new KKDMailer();
+		$KKD->addAddress('scipiobeheer@koningskerkdeventer.nl', 'Scipio beheer');
+		$KKD->Subject	= count($bericht).' '.(count($bericht) > 1 ? 'gewijzigde collectedoelen' : 'gewijzigd collectedoel');
+		$KKD->Body		= implode('<br>', $bericht);
+		$KKD->testen = true;
 				
-		if(!sendMail_new($param)) {
-			toLog('error', '', 'Kon geen mail sturen naar Scipio-beheer voor gewijzigde collectes');
+		if($KKD->sendMail()) {
+			toLog('Mail gestuurd naar Scipio-beheer voor gewijzigde collectes', 'debug');			
 		} else {
-			toLog('debug', '', 'Mail gestuurd naar Scipio-beheer voor gewijzigde collectes');
+			toLog('Kon geen mail sturen naar Scipio-beheer voor gewijzigde collectes', 'error');
 		}		
 	}	
-	toLog('info', '', 'Collectes bijgewerkt');
+	toLog('Collectes bijgewerkt');
 }
 
 # Als er op de knop van 3 maanden extra geklikt is, 3 maanden bij de eindtijd toevoegen
@@ -75,11 +78,10 @@ if(isset($_POST['maanden'])) {
 }
 
 # Haal alle kerkdiensten binnen een tijdsvak op
-$diensten = getKerkdiensten(mktime(0,0,0), mktime(date("H"),date("i"),date("s"),(date("n")+(3*$blokken))));
+$diensten = Kerkdienst::getDiensten(mktime(0,0,0), mktime(date("H"),date("i"),date("s"),(date("n")+(3*$blokken))));
 
-//$text[] = "<form method='post' action='$_SERVER[PHP_SELF]'>";
+$text = array();
 $text[] = "<form method='post' action='$_SERVER[PHP_SELF]'>";
-
 $text[] = "<input type='hidden' name='blokken' value='$blokken'>";
 $text[] = "<table>";
 $text[] = "<thead>";
@@ -92,15 +94,15 @@ $text[] = "	<th>Bijzonderheid</th>";
 $text[] = "</tr>";
 $text[] = "</thead>";
 
-foreach($diensten as $dienst) {
-	$data = getKerkdienstDetails($dienst);
+foreach($diensten as $dienstID) {
+	$dienst = new Kerkdienst($dienstID);	
 	
 	$text[] = "<tr>";
-	$text[] = "	<td align='right'>". time2str("%a %e %b", $data['start']) ."</td>";
-	$text[] = "	<td>". date('H:i', $data['start']) ."</td>";	
-	$text[] = "	<td><input type='text' name='collecte[$dienst][1]' value='". addslashes($data['collecte_1']) ."'></td>";
-	$text[] = "	<td><input type='text' name='collecte[$dienst][2]' value='". addslashes($data['collecte_2']) ."'></td>";		
-	$text[] = "	<td>". ($data['bijzonderheden'] != '' ? $data['bijzonderheden'] : '&nbsp;') ."</td>";
+	$text[] = "	<td align='right'>". time2str("D j M", $dienst->start) ."</td>";
+	$text[] = "	<td>". date('H:i', $dienst->start) ."</td>";	
+	$text[] = "	<td><input type='text' name='collecte[$dienstID][1]' value='". addslashes($dienst->collecte_1) ."'></td>";
+	$text[] = "	<td><input type='text' name='collecte[$dienstID][2]' value='". addslashes($dienst->collecte_2) ."'></td>";		
+	$text[] = "	<td>". ($dienst->opmerking != '' ? $dienst->opmerking : '&nbsp;') ."</td>";
 	$text[] = "</tr>";
 }
 
