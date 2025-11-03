@@ -185,20 +185,20 @@ if(in_array(1, $myGroups) OR in_array(11, $myGroups) OR in_array(20, $myGroups) 
 }
 
 if(in_array(1, $myGroups) OR in_array(20, $myGroups)) {
-	$wijzigLinks['voorganger/editVoorganger.php'] = 'Gegevens van voorgangers wijzigen';	
-	$wijzigLinks['voorganger/voorgangerRooster.php'] = 'Preekrooster invoeren';	
+	$wijzigLinks['voorganger/edit.php'] = 'Gegevens van voorgangers wijzigen';	
+	$wijzigLinks['voorganger/rooster.php'] = 'Preekrooster invoeren';	
 }
 
 if(in_array(1, $myGroups) OR in_array(11, $myGroups) OR in_array(52, $myGroups)) {
-	$wijzigLinks['editLiturgie.php'] = 'Liturgie invoeren of aanpassen';
+	$wijzigLinks['diensten/liturgie.php'] = 'Liturgie invoeren of aanpassen';
 }
 
 if(in_array(1, $myGroups) OR in_array(22, $myGroups) OR in_array(52, $myGroups)) {
-	$wijzigLinks['editCollectes.php'] = 'Collecte-doelen invoeren';	
+	$wijzigLinks['diensten/collectes.php'] = 'Collecte-doelen invoeren';	
 }
 
 if(in_array(1, $myGroups) OR in_array(28, $myGroups) OR in_array(52, $myGroups)) {
-	$wijzigLinks['editDiensten.php'] = 'Kerkdiensten wijzigen';	
+	$wijzigLinks['diensten/edit.php'] = 'Kerkdiensten wijzigen';	
 }
 
 if(isset($wijzigLinks) AND is_array($wijzigLinks)) {	

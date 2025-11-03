@@ -1,4 +1,7 @@
 <?php
+/**
+ * Class met configuration-parameters
+ */
 interface KKDConfig {
     # MySQL
     public const serverName = "localhost";
@@ -7,12 +10,12 @@ interface KKDConfig {
     public const dbName = "kkd";
 
     # Mail
-    public const noReplyAdress = '';
-    public const ScriptTitle = '';
-    public const MailHost = '';
-    public const MailPort = '';
-    public const SMTPSecure = '';
+    public const noReplyAdress = 'noreply@koningskerkdeventer.nl';
+    public const ScriptTitle = 'Koningskerk Intranet';
+    public const MailHost = 'mail.koningskerkdeventer.nl';
+    public const MailPort = '465';
+    public const SMTPSecure = 'ssl';
     public const SMTPAuth = true;
-    public const SMTPUsername = '';
-    public const SMTPPassword = '';
+    public const SMTPUsername = 'intranet@koningskerkdeventer.nl';
+    public const SMTPPassword = 'FQsmEB3lo7wv';
 }

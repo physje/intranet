@@ -200,3 +200,12 @@ function generateFilename() {
     $guidText = substr($s,0,4) . '-'. date('dmyHis').'-'. substr($s,4);
     return $guidText;
 }
+
+function isValidEmail($email) {
+	if(filter_var($email, FILTER_VALIDATE_EMAIL)) {
+		return true;
+	}
+	return false;
+}
+
+?>

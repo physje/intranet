@@ -30,9 +30,8 @@ class Mysql implements KKDConfig {
 	 */
 	function connect() : mysqli {
 		$mysqli = new mysqli($this->hostName , $this->userName , $this->passWord , $this->dbName);		
-		$mysqli -> set_charset("utf8mb4");
-		$this -> connection = $mysqli;
-		
+		$mysqli -> set_charset("utf8mb4");		
+		$this -> connection = $mysqli;		
 		
 		return $this -> connection;
 	}
@@ -79,7 +78,7 @@ class Mysql implements KKDConfig {
 		if(!$result) {
             return false;
 		} else {
-			return true;
+			return $result;
 		}
 	}
 }

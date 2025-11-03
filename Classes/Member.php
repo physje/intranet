@@ -293,7 +293,11 @@ class Member {
 	 * Geeft de naam van het lid terug (afhankelijk van nameType).
 	 * @return string String met naam
 	 */
-	function getName() {
+	function getName($type = 0) {
+        if($type == 0) {
+            $type = $this->nameType;
+        }
+
 		if($this->voornaam != '') {
 			$voor = $this->voornaam;
 		} else {
@@ -312,7 +316,7 @@ class Member {
 			$achterFull = $achter;
 		}  		
 		
-		switch ($this->nameType) {
+		switch ($type) {
 			case 1:
 				return $voor;
 				break;
@@ -336,13 +340,21 @@ class Member {
 	 * Geeft het mailadres van het lid terug (afhankelijk van emailType)
 	 * @return string String met mailadres
 	 */
-	function getMail() {
+	function getMail($type = 1) {        
 		# 1 : gewone mail
 		# 2 : formeel mailadres
 
-		switch ($this->emailType) {
+		if($this->email != '') {
+			$plain = $this->email;
+		} else {
+			$prtnr = $this->getPartner();
+			$partner = new Member($prtnr);
+			$plain = $partner->getMail($type);
+		}
+
+		switch ($type) {
 			case 1:
-				return $this->email;
+				return $plain;
 				break;
 			case 2:
 				return $this->email_formeel;

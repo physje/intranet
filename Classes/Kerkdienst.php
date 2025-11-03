@@ -60,7 +60,7 @@ class Kerkdienst {
             $data = $db->select("SELECT * FROM `kerkdiensten` WHERE `id` = ". $dienst);
 
             $this->dienst = $dienst;
-            $this->actief = $data['actief'];
+            $this->actief = ($data['actief'] == 1 ? true : false);
             $this->start = $data['start'];
             $this->eind = $data['eind'];
             $this->voorganger = $data['voorganger'];
@@ -71,8 +71,16 @@ class Kerkdienst {
             $this->specialeDienst = ($data['speciaal'] == 1 ? true : false);
             $this->declaratieStatus = $data['declaratie_status'];
         } else {
-            $this->start = time()+300;
-            $this->eind = $this->start + 3600;
+            $this->actief = true;
+            $this->start = mktime(9,0,0,date("n"),date("j")+1, date("Y"));
+            $this->eind = mktime(9,30,0,date("n"),date("j")+1, date("Y"));
+            $this->voorganger = 0;
+            $this->collecte_1 = '';
+            $this->collecte_2 = '';
+            $this->opmerking = '';
+            $this->ruiling = false;
+            $this->specialeDienst = false;
+            $this->declaratieStatus = 0;
         }
     }
 
@@ -102,21 +110,24 @@ class Kerkdienst {
     function save() {
         $db = new Mysql;
 
+        $data['actief'] = $this->actief;
+        $data['start'] = $this->start;
+        $data['eind'] =  $this->eind;
+        $data['voorganger'] = $this->voorganger;
+        $data['collecte_1'] = urlencode($this->collecte_1);
+        $data['collecte_2'] = urlencode($this->collecte_2);
+        $data['opmerking'] = urlencode($this->opmerking);
+        $data['ruiling'] = $this->ruiling;
+        $data['speciaal'] = $this->specialeDienst;
+        $data['declaratie_status'] = $this->declaratieStatus;
+
         if(isset($this -> dienst)) {
-            $sql = "UPDATE `kerkdiensten` SET
-                `actief` = ". $this->actief .",
-                `start` = ". $this->start .",
-                `eind` = ". $this->eind .",
-                `voorganger` = ". $this->voorganger .",
-                `collecte_1` = ". urlencode($this->collecte_1) .",
-                `collecte_2` = ". urlencode($this->collecte_2) .",
-                `opmerking` = ". urlencode($this->opmerking) .",
-                `ruiling` = ". $this->ruiling .",
-                `speciaal` = ". $this->specialeDienst .",
-                `declaratie_status` = ". $this->declaratieStatus ."
-                WHERE `id` = ". $this->dienst;
+            foreach($data as $key => $value) {
+                $set[] = "`$key` = '$value'";
+            }
+            $sql = "UPDATE `kerkdiensten` SET ". implode(', ', $set) ." WHERE `id` = ". $this->dienst;
         } else {
-            $sql = "INSERT INTO `kerkdiensten` (`start`, `eind`) VALUES (". $this->start .",". $this->eind .")";
+            $sql = "INSERT INTO `kerkdiensten` (`". implode('`, `', array_keys($data)) ."`) VALUES ('". implode("', '", array_values($data)) ."')";
         }
 
         return $db -> query($sql);

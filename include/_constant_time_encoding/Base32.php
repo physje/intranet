@@ -440,7 +440,7 @@ abstract class Base32 implements EncoderInterface
         $method = $upper
             ? 'encode5BitsUpper'
             : 'encode5Bits';
-        
+
         $dest = '';
         $srcLen = Binary::safeStrlen($src);
 

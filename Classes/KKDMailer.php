@@ -109,7 +109,13 @@ class KKDMailer extends PHPMailer\PHPMailer\PHPMailer implements KKDConfig {
             }
 
             if($this->testen) {
-                echo 'Aan : '. implode('|', array_keys($this->all_recipients)) .'<br>';
+                echo 'Aan : '. implode('|', array_column($this->to, 0)) .'<br>';
+                if(count($this->cc) > 0) {
+                    echo 'CC : '. implode('|', array_column($this->cc, 0)) .'<br>';
+                }
+                if(count($this->bcc) > 0) {
+                    echo 'BCC : '. implode('|', array_column($this->bcc, 0)) .'<br>';
+                }
                 echo 'Onderwerp : '. $this->Subject .'<br>';
                 echo 'Bericht : '. $this->Body .'<br>';
                 if(count($this->attachment) > 0) {
@@ -122,6 +128,7 @@ class KKDMailer extends PHPMailer\PHPMailer\PHPMailer implements KKDConfig {
             return true;
         } catch (Exception $e) {
             error_log("Mailer Error: " . $this->ErrorInfo);
+            echo $this->ErrorInfo;
             return false;
         }
     }
