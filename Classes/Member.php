@@ -82,7 +82,7 @@ class Member {
 			$this->geboorte_jaar = substr($data['geboortedatum'], 0, 4);
 			$this->geboorte_maand = substr($data['geboortedatum'], 5, 2);
 			$this->geboorte_dag = substr($data['geboortedatum'], 8, 2);			
-			$this->geboortedatum = $data['geboortedatum'];
+			$this->geboortedatum = $data['geboortedatum'];			
 			$this->relatie = $data['relatie'];
 			$this->doop_belijdenis = $data['belijdenis'];
 			$this->burgelijk = $data['burgstaat'];
@@ -217,6 +217,23 @@ class Member {
 				
 		return array_column($data, 'scipio_id');
 	}
+
+
+	
+	
+	/**
+	 * Vraag alle leden met een mailadres op
+	 * @return array Array met key = scipio-ID, value = mailadres
+	 */
+	# Mailadres is daarbij alles met een @-teken erin
+	public static function getMailadressen() {
+		$db = new Mysql();
+
+		$data = $db->select("SELECT `scipio_id`, `mail` FROM `leden` WHERE `mail` like '*@*' AND `status` like 'actief'", true);
+						
+		return array_column($data, 'mail', `scipio_id`);
+	}
+
 
 
 	/**
@@ -388,7 +405,7 @@ class Member {
 		$data['telefoon'] = $this->telefoon;
 		$data['email'] = urlencode(trim($this->email));
 		$data['formeel'] = urlencode(trim($this->email_formeel));
-		$data['geboortedatum'] = $this->geboortedatum;
+		$data['geboortedatum'] = $this->geboortedatum;		
 		$data['relatie'] = $this->relatie;
 		$data['belijdenis'] = $this->doop_belijdenis;
 		$data['burgstaat'] = $this->burgelijk;
