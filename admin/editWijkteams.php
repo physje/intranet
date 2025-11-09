@@ -6,6 +6,7 @@ include_once('../Classes/Wijk.php');
 include_once('../Classes/Team.php');
 include_once('../Classes/Member.php');
 include_once('../Classes/Voorganger.php');
+include_once('../Classes/Logging.php');
 
 $requiredUserGroups = array(1);
 $cfgProgDir = '../auth/';

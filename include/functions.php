@@ -201,11 +201,29 @@ function generateFilename() {
     return $guidText;
 }
 
+/**
+ * Controleer of het gegeven mailadres een geldig adres is.
+ * @param string $email Het te controleren mailadres
+ * 
+ * @return bool True (geldig) of False (ongeldig)
+ */
 function isValidEmail($email) {
 	if(filter_var($email, FILTER_VALIDATE_EMAIL)) {
 		return true;
 	}
 	return false;
+}
+
+/**
+ * Trim de whitespaces voor en achter de string.
+ * Deze werkt ook bij Unicode tekens
+ * @param string $string De string waar whitespaces getrimd moeten worden
+ * 
+ * @return string Getrimde string
+ */
+function trim_unicode($string) {
+	$string = preg_replace('/\s+/u', ' ', $string);
+	return trim($string);
 }
 
 ?>

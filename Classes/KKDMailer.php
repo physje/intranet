@@ -5,15 +5,21 @@
  * het is een uitbreiding op PHPMailer
  */
 class KKDMailer extends PHPMailer\PHPMailer\PHPMailer implements KKDConfig {
-
     /**
      * @var array Array met [adres, naam] van de ontvangers
      */
     public array $ontvangers;
+    
     /**
      * @var int ID van het lid dat de mail moet ontvanger. Gebruik $ontvangers als je naam+mailadres wilt gebruiken
      */
     public int $aan;
+
+    /**
+     * @var bool Moet het formele mailadres gebruikt worden?
+     */
+    public bool $formeel;
+    
     /**
      * @var bool Moet de ouders in de CC worden meegenomen
      */
@@ -68,6 +74,7 @@ class KKDMailer extends PHPMailer\PHPMailer\PHPMailer implements KKDConfig {
 
         // Varia
         $this->testen       = false;
+        $this->formeel      = false;
     }
 
     /**
@@ -86,7 +93,14 @@ class KKDMailer extends PHPMailer\PHPMailer\PHPMailer implements KKDConfig {
             # Ontvangers (ID)
             if(isset($this->aan)) {
                 $gebruiker = new Member($this->aan);
-                $this->addAddress($gebruiker->getMail(), $gebruiker->getName());
+
+                if($this->formeel) {                    
+                    $emailType = 2;
+                } else {
+                    $emailType = 1;
+                }
+
+                $this->addAddress($gebruiker->getMail($emailType), $gebruiker->getName());
             }
 
             # Partner in de Aan

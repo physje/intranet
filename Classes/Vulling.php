@@ -67,9 +67,6 @@ class Vulling {
                 $this->tekst_only = true;
             } else {
                 $data = $db->select("SELECT `positie`, `lid` FROM `planning` WHERE `dienst` = ". $this->dienst ." AND `commissie` = ". $this->rooster ." ORDER BY `positie` ASC", true);
-                #$values = array_column($data, 'lid');
-                #$keys = array_column($data, 'positie');
-                #$this->leden = array_combine($keys, $values);
                 $this->leden = array_column($data, 'lid', 'positie');
                 $this->tekst_only = false;
             }

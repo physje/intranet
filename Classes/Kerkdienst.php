@@ -8,56 +8,69 @@ class Kerkdienst {
      * @var int ID van de kerkdienst
      */
     public int $dienst;
+    
     /**
      * @var bool Is de kerkdienst actief of niet
      */
     public bool $actief;
+    
     /**
      * @var int Starttijd van de kerkdienst in UNIX-tijd
      */
     public int $start;
+    
     /**
      * @var int Eindtijd van de kerkdienst in UNIX-tijd
      */
     public int $eind;
+    
     /**
      * @var int ID van de voorganger
      */
     public int $voorganger;
+    
     /**
      * @var string Omschrijving 1ste collecte
      */
     public string $collecte_1;
+    
     /**
      * @var string Omschrijving 2de collecte
      */
     public string $collecte_2;
+    
     /**
      * @var string Interne opmerking bij de kerkdienst
      */
     public string $opmerking;
     
+    /**
+     * @var string Liturgie van de dienst
+     */
     public string $liturgie;
 
     /**
      * @var bool Is dit een geruilde kerkdienst of niet
      */
     public bool $ruiling;
+    
     /**
      * @var bool Is dit een speciale dienst of niet
      */
     public bool $specialeDienst;
+    
     /**
      * @var int Declaratie-status van de voorganger van deze kerkdienst
      */
     public int $declaratieStatus;
+
 
     /**
      * Maak een Kerkdienst-object aan
      * Door een dienst-ID (optioneel) op te geven wordt het object gevuld met data van die dienst
      * @param int $dienst ID van de dienst
      */
-    function __construct($dienst = 0) {
+    function __construct(int $dienst = 0) {
         if($dienst > 0) {
             $db = new Mysql;
             $data = $db->select("SELECT * FROM `kerkdiensten` WHERE `id` = ". $dienst);

@@ -8,58 +8,72 @@ class LaPostaData {
      * @var int ID in Scipio
      */
     public int $id;
+    
     /**
      * @var bool Komt deze voor in de lokale administratie (false) of is deze nieuw (true)
      */
     public bool $new;
+    
     /**
      * @var string Status van dit lid (actief, uitgeschreven, vertrokken, etc.)
      */
     public string $status;
+    
     /**
      * @var string Geslacht (M/V)
      */
     public string $geslacht;
+    
     /**
      * @var string Voornaam
      */
     public string $voornaam;
+    
     /**
      * @var string Tussenvoegsel
      */
     public string $tussenvoegsel;
+    
     /**
      * @var string Achternaam
      */
     public string $achternaam;
-	/**
+	
+    /**
 	 * @var string E-mailadres
 	 */
 	public string $mail;
-	/**
+	
+    /**
 	 * @var string Wijk
 	 */
 	public string $wijk;
+    
     /**
      * @var string Doop- of belijdend-lid
      */
     public string $doop;
+    
     /**
      * @var string Welke relatie heeft deze persoon (gehuwd, alleenstaand ed)
      */
     public string $relatie;
-	/**
+	
+    /**
 	 * @var string Is dit lid 70+
 	 */
 	public string $zeventigPlus;
+    
     /**
      * @var int UNIX-tijd waarop dit lid voor het laatst gezien is
      */
     public int $lastSeen;
+    
     /**
      * @var int UNIX-tijd waarop dit lid voor het laatst gecontroleerd is
      */
     public int $lastChecked;
+    
     /**
      * @var int Aantal uur nadat iemand voor het laatst gezien is, hij/zij als uitgeschreven beschouwd moet worden
      */
@@ -70,7 +84,7 @@ class LaPostaData {
      * Als ID niet bestaat of niet bekend is, wordt de eigenschap 'new' op True gezet
      * @param mixed $id
      */
-    public function __construct($id) {
+    public function __construct(int $id = 0) {
         $db = new Mysql();
 
         $this->deadline = 13;
@@ -149,7 +163,7 @@ class LaPostaData {
                 $set[] = "`$key`='$value'";
             }
 
-            $sql = "UPDATE `lp_data` SET ". implode(', ', $set) ." WHERE scipio_id = ". $this->id;
+            $sql = "UPDATE `lp_data` SET ". implode(', ', $set) ." WHERE `scipio_id` = ". $this->id;
         }
 
         return $db -> query($sql);
