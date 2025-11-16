@@ -87,6 +87,38 @@ function isValidHash(string $hash) {
 }
 
 
+function isValidVoorgangerHash(string $hash) {
+	$db = new Mysql();
+	$data = $db->select("SELECT `id` FROM `predikanten` WHERE `hash` like '$hash'");
+	
+	if(count($data) == 0) {
+		return false;
+	} else {
+		return $data['id'];
+	}
+}
+
+
+/**
+ * Zoek een gebruikersID op basis van username of mailadres.
+ * Username of mailadres moeten volledig overeenkomen, geen gedeeltelijke overeenkomst.
+ * @param string $input String waarop gezocht moet worden.
+ * 
+ * @return Array Array met userIDs. Als er geen gebruiker is gevonden False.
+ */
+function getUserByInput($input) {
+	$db = new Mysql();
+	$sql = "SELECT `scipio_id` FROM `leden` WHERE `username` like '". urlencode($input) ."' OR `email` like '". urlencode($input) ."' OR `formeel` like '". urlencode($input) ."'";
+	$data = $db->select($sql, true);
+	
+	if(count($data) == 0) {
+		return false;
+	} else {
+		return array_column($data, 'scipio_id');
+	}
+}
+
+
 /**
  * Bepaal op basis van een dienstID of het een ochtend-, middag- of avonddienst is.
  * @param int $start Starttijd in UNIX-tijd
@@ -153,6 +185,35 @@ function getParam(string $name, $default = '') {
 	return isset($_REQUEST[$name]) ? $_REQUEST[$name] : $default;
 }
 
+
+
+/**
+ * Geef 2 zoek-strings en krijg de tekst die tussen deze 2 strings staat terug 
+ * @param string $start Zoek-string vóór de te vinden tekst
+ * @param string $end Zoek-string ná de te vinden tekst
+ * @param string $string String waarin gezocht moet worden
+ * @param int $offset Vanaf waar gezocht moet worden
+ * 
+ * @return string Tussen start- en end-string in
+ */
+function getString(string $start, string $end, string $string, int $offset) {
+	if ($start != '') {
+		$startPos = strpos ($string, $start, $offset) + strlen($start);
+	} else {
+		$startPos = 0;
+	}
+	
+	if ($end != '') {
+		$eindPos	= strpos ($string, $end, $startPos);
+	} else {
+		$eindPos = strlen($string);
+	}
+		
+	$text	= substr ($string, $startPos, $eindPos-$startPos);
+	$rest	= substr ($string, $eindPos);
+		
+	return array($text, $rest);
+}
 
 /**
  * Verwijder een key uit een array.
@@ -226,4 +287,114 @@ function trim_unicode($string) {
 	return trim($string);
 }
 
+
+/**
+ * Genereer een wachtwoord
+ * @param int lengte van het wachtwoord, default is 8 tekens
+ * @return string wachtwoord
+ */
+function generatePassword ($length = 8) {
+	// start with a blank password
+	$password = "";
+
+	$klink[] = 'a';
+	$klink[] = 'e';
+	$klink[] = 'i';
+	$klink[] = 'o';
+	$klink[] = 'u';
+	$klink[] = 'ei';
+	$klink[] = 'ij';
+	$klink[] = 'ie';
+
+	$mede[] = 'b';
+	$mede[] = 'c';
+	$mede[] = 'd';
+	$mede[] = 'f';
+	$mede[] = 'g';
+	$mede[] = 'h';
+	$mede[] = 'j';
+	$mede[] = 'k';
+	$mede[] = 'l';
+	$mede[] = 'm';
+	$mede[] = 'n';
+	$mede[] = 'p';
+	$mede[] = 'q';
+	$mede[] = 'r';
+	$mede[] = 's';
+	$mede[] = 't';
+	$mede[] = 'v';
+	$mede[] = 'w';
+	$mede[] = 'x';
+	$mede[] = 'y';
+	$mede[] = 'z';
+	$mede[] = 'ch';
+
+	$len_klink = count($klink);
+	$len_mede = count($mede);
+
+	// set up a counter for how many characters are in the password so far
+	$i = 0;
+
+	// add random characters to $password until $length is reached
+	while(strlen($password) < $length) {
+		if(fmod($i, 2) == 0) {
+			$id = mt_rand(0, $len_mede-1);
+			$char = $mede[$id];
+		} else {
+			$id = mt_rand(0, $len_klink-1);
+			$char = $klink[$id];
+		}
+			
+		$password .= $char;
+		$i++;
+	}
+
+	// done!
+	return ucfirst($password);
+}
+
+
+/**
+ * Genereer een random code als hash
+ * @param int $length Lengte van de code, default is 8
+ * 
+ * @return string de random code
+ */
+function generateID($length=8) {    
+    $s = strtoupper(bin2hex(openssl_random_pseudo_bytes($length)));
+    $guidText = substr($s,0,$length);
+    return $guidText;
+}
+
+
+function getPasen($jaar) {
+	$url = 'https://www.kalender-365.nl/feestdagen/pasen.html';
+		
+	$i = 0;
+	$doorgaan = true;
+	$data = array();
+
+	$contents	= file_get_contents($url);
+	$rijen		= explode('<tr><td', $contents);
+	
+	$start		= mktime(0,0,0, 1, 1,$jaar);
+	$end		= mktime(0,0,0,12,31,$jaar);
+		
+	do {
+		$i++;
+		$rij = $rijen[$i];
+		
+		$tijd = getString('data-value="', '"', $rij, 0);
+		#$datum = getString('class="dtr tar">', '</td>', $rij, 0);
+				
+		if(($i > (count($rijen)-2)) OR ($tijd[0] > $start AND $tijd[0] < $end)) {	
+			$doorgaan = false;
+		}		
+	} while($doorgaan);
+	
+	$data['dag']	= date("j", $tijd[0]);
+	$data['maand']	= date("n", $tijd[0]);
+	
+	return $data;
+}
 ?>

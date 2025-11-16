@@ -2,8 +2,6 @@
 include_once('../include/functions.php');
 include_once('../include/config.php');
 
-$db = connect_db();
-
 # Initialiseer
 $header = $footer = $dienstenXML = $agendaXML = array();
 
@@ -23,41 +21,44 @@ $fmt_datum_kort = datefmt_create('nl_NL', IntlDateFormatter::FULL, IntlDateForma
 $fmt_tijd = datefmt_create('nl_NL', IntlDateFormatter::FULL, IntlDateFormatter::FULL, 'Europe/Amsterdam', IntlDateFormatter::GREGORIAN, 'HH:mm');
 
 # Vraag diensten op
-$diensten = getKerkdiensten($startTijd, $eindTijd);
+$diensten = Kerkdienst::getDiensten($startTijd, $eindTijd);
 
-foreach($diensten as $dienst) {
+foreach($diensten as $dienstID) {
 	# Wat is de ID van de dienst
 	# Welke gegevens horen daar bij
 	# Welke diensten zijn er nog meer die dag
-	$data_dienst = getKerkdienstDetails($dienst);		
+	$dienst = new Kerkdienst($dienstID);
+	$voorganger = new Voorganger($dienst->voorganger);
 	
 	# Eigenlijke XML-data
 	$xml = array();	
 				
-	if(date("H", $data_dienst['start']) < 12) {
+	if(date("H", $dienst->start) < 12) {
 		$xml[] = "    <dienst>Ochtenddienst</dienst>";
-	} elseif(date("H", $data_dienst['start']) < 18) {
+	} elseif(date("H", $dienst->start) < 18) {
 		$xml[] = "    <dienst>Middagdienst</dienst>";
 	} else {
 		$xml[] = "    <dienst>Avonddienst</dienst>";
 	}			
 	
 	
-	$xml[] = "    <dag>". datefmt_format($fmt_dag, $data_dienst['start']) ."</dag>";
-	$xml[] = "    <datum>". datefmt_format($fmt_datum, $data_dienst['start']) ."</datum>";
-	$xml[] = "    <datum_lang>". datefmt_format($fmt_datum_lang, $data_dienst['start']) ."</datum_lang>";
-	$xml[] = "    <datum_kort>". datefmt_format($fmt_datum_kort, $data_dienst['start']) ."</datum_kort>";
-	$xml[] = "    <start>". datefmt_format($fmt_tijd, $data_dienst['start']) ."</start>";
-	$xml[] = "    <eind>". datefmt_format($fmt_tijd, $data_dienst['eind']) ."</eind>";
-	$xml[] = "    <voorganger>".$data_dienst['voorganger']."</voorganger>";
-	$xml[] = "    <bijzonderheid>".$data_dienst['bijzonderheden']."</bijzonderheid>";
+	$xml[] = "    <dag>". datefmt_format($fmt_dag, $dienst->start) ."</dag>";
+	$xml[] = "    <datum>". datefmt_format($fmt_datum, $dienst->start) ."</datum>";
+	$xml[] = "    <datum_lang>". datefmt_format($fmt_datum_lang, $dienst->start) ."</datum_lang>";
+	$xml[] = "    <datum_kort>". datefmt_format($fmt_datum_kort, $dienst->start) ."</datum_kort>";
+	$xml[] = "    <start>". datefmt_format($fmt_tijd, $dienst->start) ."</start>";
+	$xml[] = "    <eind>". datefmt_format($fmt_tijd, $dienst->eind) ."</eind>";
+	$xml[] = "    <voorganger>".$voorganger->getName(0)."</voorganger>";
+	$xml[] = "    <bijzonderheid>".$dienst->opmerking."</bijzonderheid>";
 		
 	$dienstenXML[] = "  <kerkdienst>";
 	$dienstenXML = array_merge($dienstenXML, $xml);
 	$dienstenXML[] = "  </kerkdienst>";	
 }
 
+//TODO: Agenda toevoegen aan XML
 
+/*
 $sql_agenda = "SELECT * FROM $TableAgenda WHERE $AgendaEind BETWEEN $startTijd AND $eindTijd";
 $result_agenda = mysqli_query($db, $sql_agenda);
 if($row_agenda = mysqli_fetch_array($result_agenda)) {
@@ -80,7 +81,7 @@ if($row_agenda = mysqli_fetch_array($result_agenda)) {
 		
 	}while($row_agenda = mysqli_fetch_array($result_agenda));
 }
-
+*/
 
 $file_name = '../xml/agenda.xml';
 	

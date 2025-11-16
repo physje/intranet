@@ -49,6 +49,8 @@ class Member {
 	public array $beheer_roosters;
 	public array $planning_roosters;
 	public array $familie;
+	public int $pastor;
+	public int $bezoeker;
 	
 	## Methods
 	function __construct(int $id = 0) {
@@ -56,9 +58,41 @@ class Member {
 		$this->db = $db;
 		$this->nameType = 2;
 		$this->emailType = 1;
+		$this->status = '';
+		$this->adres = 0;
+		$this->geslacht = '';
+		$this->voorletters = '';
+		$this->voornaam = '';
+		$this->tussenvoegsel = '';
+		$this->achternaam = '';
+		$this->meisjesnaam = '';
+		$this->straat = '';
+		$this->huisnummer = 0;
+		$this->huisnummer_letter = '';
+		$this->huisnummer_toevoeging = '';
+		$this->postcode = '';
+		$this->woonplaats = '';
+		$this->wijk = '';
+		$this->telefoon = '';
+		$this->email = '';
+		$this->email_formeel = '';
+		$this->geboortedatum = '';			
+		$this->relatie = '';
+		$this->doop_belijdenis = '';
+		$this->burgelijk = '';
+		$this->tijd_vestiging = 0;
+		$this->tijd_wijziging = 0;
+		$this->tijd_bezoek = 0;
+		$this->tijd_scipipo = 0;
+		$this->boekhouden = 0;			
+		$this->MFA_code = '';
+		$this->username = '';
+		$this->password = '';
+		$this->hash_long = '';
+		$this->hash_short = '';
 		
 		if($id > 0) {			
-			$data = $db->select("SELECT * FROM `leden` WHERE `scipio_id` = ". $id);
+			$data = $db->select("SELECT * FROM `leden` WHERE `scipio_id` = ". $id);			
 			
 			$this->id = $id;
 			$this->status = $data['status'];
@@ -96,7 +130,24 @@ class Member {
 			$this->password = $data['password_new'];
 			$this->hash_long = urldecode($data['hash_long']);
 			$this->hash_short = urldecode($data['hash_short']);
-		}  	
+		} 
+	}
+
+
+	/**
+	 * Controleer of het id van een Member-object al in de database staat.
+	 * @return bool True als wel bekend, False indien onbekend
+	 */
+	function memberExist() : bool {
+		$db = $this->db;
+		$data = $db->select("SELECT * FROM `leden` WHERE `scipio_id` = ". $this->id, true);
+		
+		if(count($data) == 0) {
+			return false;			
+		} else {
+			return true;
+		}
+
 	}
 	
 	
@@ -198,49 +249,75 @@ class Member {
 
 		return $this->familie;
 	}
-	
-	/**
-	 * Geeft een array terug met ID's van alle leden in de database.
-	 * @param string $type Type leden dat opgehaald moet worden: all, volwassen, adressen
-	 * @return array array met lid-IDs
-	 */
-	public static function getMembers($type = 'all') {
-		$db = new Mysql();
 
-		if($type == 'all') {
-			$data = $db->select("SELECT `scipio_id` FROM `leden` WHERE `status` like 'actief' ORDER BY `achternaam`", true);
-		} elseif($type == 'volwassen') {
-			$data = $db->select("SELECT `scipio_id` FROM `leden` WHERE `status` like 'actief' AND `geboortedatum` < '". (date("Y")-18) ."-". date("m-d") ."' ORDER BY `achternaam`", true);
-		} elseif($type == 'adressen') {
-			$data = $db->select("SELECT `scipio_id` FROM `leden` WHERE `status` like 'actief' AND (`relatie` like 'gezinshoofd' OR `relatie` like 'zelfstandig') GROUP BY `kerk_adres` ORDER BY `achternaam`", true);
+	/**
+	 * @return int
+	 */
+	function getPastor() : int {
+		if(!isset($this->pastor)) {
+			$this->pastor = 0;
+
+			$db = $this->db;
+			$data = $db->select("SELECT `pastor` FROM `pastoraat_verdeling` WHERE `lid` = ". $this->id);
+
+			if(isset($data['pastor'])) {
+				$this->pastor = $data['pastor'];
+			}			
 		}
-				
-		return array_column($data, 'scipio_id');
+
+		return $this->pastor;
 	}
 
+	function setPastor() : bool {
+		$db = $this->db;
 
-	
-	
+		$sql = array();
+		$sql[] = "DELETE FROM `pastoraat_verdeling` WHERE `lid` = ". $this->id;
+		$sql[] = "INSERT INTO `pastoraat_verdeling` (`pastor`, `bezoeker`, lid) VALUES (". $this->pastor .", ". $this->bezoeker .", ". $this->id .")";
+
+		foreach($sql as $query) {			
+			if(!$db->query($query)){
+				return false;
+			}
+		}
+
+		return true;
+	}
+
 	/**
-	 * Vraag alle leden met een mailadres op
-	 * @return array Array met key = scipio-ID, value = mailadres
+	 * @return int
 	 */
-	# Mailadres is daarbij alles met een @-teken erin
-	public static function getMailadressen() {
-		$db = new Mysql();
+	function getBezoeker() : int {
+		if(!isset($this->bezoeker)) {
+			$this->bezoeker = 0;
 
-		$data = $db->select("SELECT `scipio_id`, `mail` FROM `leden` WHERE `mail` like '*@*' AND `status` like 'actief'", true);
-						
-		return array_column($data, 'mail', `scipio_id`);
+			$db = $this->db;
+			$data = $db->select("SELECT `bezoeker` FROM `pastoraat_verdeling` WHERE `lid` = ". $this->id);
+
+			if(isset($data['bezoeker'])) {
+				$this->bezoeker = $data['bezoeker'];
+			}			
+		}
+
+		return $this->bezoeker;
+	}
+	
+	function getWoonadres() {
+		return $this->straat .' '. $this->huisnummer.($this->huisnummer_letter != '' ? ' '.$this->huisnummer_letter : '').($this->huisnummer_toevoeging != '' ? ' '.$this->huisnummer_toevoeging : '');
 	}
 
 
+	function getPastoraleBezoeken() {
+		$db = $this->db;
+		$data = $db->select("SELECT `id` FROM `pastoraat` WHERE `lid` = ". $this->id ." ORDER BY `tijdstip` DESC", true);
+		return array_column($data, "id");
+	}
 
 	/**
 	 * Geeft een array terug met ID's van de ouders van dit lid.
 	 * @return array array met lid-IDs
 	 */
-	public function getParents() {
+	function getParents() {
 		$familie = $this->getFamilieLeden();
 		$ouders = array();
 
@@ -260,7 +337,7 @@ class Member {
 	 * Geeft een int terug met ID van de partner van dit lid.
 	 * @return int Int met ID van de partner van dit lid. Bij meerdere partners (uitzonderlijk) is het een array
 	 */
-	public function getPartner() {
+	function getPartner() {
 		$partner = [];
 
 		if(!in_array($this->relatie, ['zoon', 'dochter', 'inw. persoon', 'zelfstandig'])) {			
@@ -304,8 +381,37 @@ class Member {
 		}
 	}
 
+	/**
+	 * Genereer een gebruikersnaam voor deze gebruiker
+	 * @return string gebruikersnaam
+	 */
+	function generateUsername() {	
+		if($this->voorletters != '') {
+			$voor = strtoupper(str_replace('.', '', $this->voorletters));
+		}
 	
+		$achter = ucfirst(str_replace(' ', '', $this->achternaam));
+
+		$username = $voor.$achter;
+
+		$i = 1;
 	
+		while(!$this->isUniqueUsername($username)) {
+			if($this->meisjesnaam != '') {
+				$username = $voor.$achter.ucfirst(str_replace(' ', '', $this->meisjesnaam));
+			} elseif($this->voornaam != '') {
+				$username = ucfirst(str_replace(' ', '', $this->voornaam)).$achter;
+			} elseif($this->geboorte_jaar > 0) {
+				$username = $voor.$achter.$this->geboorte_jaar;
+			} else {
+				$username = $voor.$achter.$i;
+				$i++;
+			}
+		}
+		
+		return $username;
+	}
+
 	/**
 	 * Geeft de naam van het lid terug (afhankelijk van nameType).
 	 * @return string String met naam
@@ -369,12 +475,18 @@ class Member {
 			$plain = $partner->getMail($type);
 		}
 
+		if($this->email_formeel != '') {
+			$formeel = $this->email_formeel;
+		} else {
+			$formeel = $plain;
+		}
+
 		switch ($type) {
 			case 1:
 				return $plain;
 				break;
 			case 2:
-				return $this->email_formeel;
+				return $formeel;
 				break; 		
 		}
 	}
@@ -383,7 +495,8 @@ class Member {
 	 * Sla het Member-object op in de database
 	 * @return bool Succesvol of niet
 	 */
-	function update() {		
+	function save() {
+		$db = new Mysql;
 		$data = $set = array();
 
 		#$data['scipio_id'] = $this->id;
@@ -424,11 +537,85 @@ class Member {
 			$set[] = "`$key`='$value'";
 		}
 
-		$sql = "UPDATE `leden` SET ". implode(', ', $set) ." WHERE scipio_id = ". $this->id;
+		if($this->memberExist()) {
+            foreach($data as $key => $value) {
+                $set[] = "`$key` = '$value'";
+            }
+            $sql = "UPDATE `leden` SET ". implode(', ', $set) ." WHERE `scipio_id` = ". $this->id;			
+        } else {
+            $sql = "INSERT INTO `leden` (`". implode('`, `', array_keys($data)) ."`) VALUES ('". implode("', '", array_values($data)) ."')";
+			echo $sql;
+        }
 
-		$db = $this->db;
+		return $db -> query($sql);
+	}
+
+
+	/**
+	 * Geeft een array terug met ID's van alle leden in de database.
+	 * @param string $type Type leden dat opgehaald moet worden: all, volwassen, adressen
+	 * @return array array met lid-IDs
+	 */
+	static function getMembers($type = 'all') {
+		$db = new Mysql();
+
+		if($type == 'all') {
+			$data = $db->select("SELECT `scipio_id` FROM `leden` WHERE `status` like 'actief' ORDER BY `achternaam`", true);
+		} elseif($type == 'volwassen') {
+			$data = $db->select("SELECT `scipio_id` FROM `leden` WHERE `status` like 'actief' AND `geboortedatum` < '". (date("Y")-18) ."-". date("m-d") ."' ORDER BY `achternaam`", true);
+		} elseif($type == 'adressen') {
+			$data = $db->select("SELECT `scipio_id` FROM `leden` WHERE `status` like 'actief' AND (`relatie` like 'gezinshoofd' OR `relatie` like 'zelfstandig') GROUP BY `kerk_adres` ORDER BY `achternaam`", true);
+		}
+				
+		return array_column($data, 'scipio_id');
+	}
+
+	
+	
+	/**
+	 * Vraag alle leden met een mailadres op
+	 * @return array Array met key = scipio-ID, value = mailadres
+	 */
+	# Mailadres is daarbij alles met een @-teken erin	
+	static function getMailadressen() {
+		$db = new Mysql();
+
+		$data = $db->select("SELECT `scipio_id`, `mail` FROM `leden` WHERE `mail` like '*@*' AND `status` like 'actief'", true);
+						
+		return array_column($data, 'mail', 'scipio_id');
+	}
+
+
+
+	/**
+	 * Trek de toegang in van leden die niet de status 'actief' hebben.
+ 	 * @return bool Succesvol of niet
+ 	 */
+	static function setUsersInactive() {
+		$db = new Mysql();
+		
+		$sql = "UPDATE `leden` SET `username` = '', `hash_short` = '', `hash_long` = '' WHERE `status` NOT like 'actief'";
+
 		return $db->query($sql);
 	}
+
+
+
+	/**
+	 * Maak username en hashes aan voor actieve leden waar deze ontbreken
+	 * @return array Array met scipio-IDs
+	 */
+	static function getNewUsers() {
+		$db = new Mysql();
+		$sql = "SELECT * FROM `leden` WHERE `status` like 'actief' AND (`username` like '' OR `hash_short` like '' OR `hash_long` like '') ORDER BY `voornaam`";
+		
+		$data = $db->select($sql, true);
+						
+		return array_column($data, 'scipio_id');
+	}
+
+	
+
 }
 
 ?>

@@ -29,8 +29,14 @@ if($showLogin) {
 }
 
 if(isset($_POST['save_data'])) {
-	#$sql_update = "UPDATE $TableUsers SET $UserFormeelMail = '". $_POST['form_mail'] ."', $UserEBRelatie = '". $_POST['EB_relatie'] ."' WHERE $UserID like ". $_POST['id'];
-	#mysqli_query($db, $sql_update);
+	$user = new Member($_POST['id']);
+	$user->email_formeel = $_POST['form_mail'];
+	#$user->boekhouden = $_POST['EB_relatie'];
+	if($user->save()) {
+		toLog('Problemen met aanpassen profielgegevens', 'error');
+	} else {
+		toLog('Profielgegevens aangepast');
+	}
 }
 
 # Welk profiel wordt opgevraagd
@@ -226,6 +232,7 @@ if($aToon['EB_relatie']) {
 	$blok[] = "	<td><select name='EB_relatie'>";
 	$blok[] = "	<option value=''>Selecteer relatie</option>";
 	
+	//FIXME:Controleer boekhouden
 	#$relaties = eb_getRelaties();
 	
 	#foreach($relaties as $relatieData) {
@@ -291,7 +298,7 @@ echo '<div class="content_vert_kolom">'.NL;
 echo '<h1>'. $person->getName() .'</h1>'.NL;
 #echo '<h2>Profiel</h2>'.NL;
 echo "<div class='content_block'>".NL. implode(NL, $blok).NL."</div>".NL;
-#echo '<h2>Familieleden</h2>'.NL;
+echo '<h2>Familieleden</h2>'.NL;
 echo "<div class='content_block'>".NL. implode(NL, $blok_2).NL."</div>".NL;
 echo '</div> <!-- end \'content_vert_kolom_full\' -->'.NL;
 echo showCSSFooter();

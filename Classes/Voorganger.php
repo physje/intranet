@@ -76,7 +76,9 @@ class Voorganger {
     /**
      * @var string $stijl Aanspreekstijl van de voorganger (formeel, informeel, etc.)
      */
-    public string $stijl;
+    #public string $stijl;
+
+    public bool $vousvoyeren;
 
     /**
      * @var string $opmerkingen Opmerkingen over de voorganger
@@ -142,7 +144,8 @@ class Voorganger {
             $this->mail = urldecode($data['mail']);
             $this->plaats = urldecode($data['plaats']);
             $this->denominatie = urldecode($data['kerk']);
-            $this->stijl = $data['stijl'];
+            #$this->stijl = ($data['stijl'] == 1 ? true : false);
+            $this->vousvoyeren = ($data['stijl'] == 1 ? true : false);
             $this->opmerkingen = urldecode($data['opmerking']);
             $this->hash = $data['hash'];
             $this->aandachtspunt = ($data['aandachtspunten'] == 1 ? true : false);
@@ -170,7 +173,8 @@ class Voorganger {
             $this->mail = '';
             $this->plaats = '';
             $this->denominatie = '';
-            $this->stijl = '';
+            #$this->stijl = '';
+            $this->vousvoyeren = true;
             $this->opmerkingen = '';
             $this->hash = '';
             $this->aandachtspunt = true;
@@ -264,6 +268,12 @@ class Voorganger {
         }
     }
 
+
+
+   /**
+    * Geef alle actieve voorgangers
+    * @return Array Array met ID's van voorgangers die actief zijn
+    */
     static function getVoorgangers() {
         $db = new Mysql;
 
@@ -272,6 +282,13 @@ class Voorganger {
         return array_column($data, 'id');
     }
 
+
+
+   /**
+    * Geef alle voorgangers die frequent voorgaan.
+    * Frequent is meer dan 3x 
+    * @return Array Array met ID's van voorgangers die frequent voorgaan
+    */
     static function getFrequenteVoorgangers() {
         $db = new Mysql;
         $sql = "SELECT `voorganger`, count(*) as aantal FROM `kerkdiensten` GROUP BY `voorganger` HAVING aantal > 2 AND `voorganger` != 0 ORDER BY aantal DESC";
@@ -288,7 +305,7 @@ class Voorganger {
     function save() {
         $db = new Mysql;
 
-        $data['actief'] = $this->active;
+        $data['actief'] = ($this->active ? '1' : '0');
         $data['titel'] = $this->aanhef;
         $data['initialen'] = urlencode($this->initialen);
         $data['voornaam'] = urlencode($this->voornaam);
@@ -301,12 +318,12 @@ class Voorganger {
         $data['mail'] = urlencode($this->mail);
         $data['plaats'] = urlencode($this->plaats);
         $data['kerk'] = urlencode($this->denominatie);
-        $data['stijl'] = $this->stijl;
+        $data['stijl'] = ($this->vousvoyeren ? '1' : '0');
         $data['opmerking'] = urlencode($this->opmerkingen);
         $data['hash'] = $this->hash;
-        $data['aandachtspunten'] = $this->aandachtspunt;
-        $data['declaratie'] = $this->declaratie;
-        $data['reiskosten'] = $this->reiskosten;
+        $data['aandachtspunten'] = ($this->aandachtspunt ? '1' : '0');
+        $data['declaratie'] = ($this->declaratie ? '1' : '0');
+        $data['reiskosten'] = ($this->reiskosten ? '1' : '0');
 
         if(isset($this -> id)) {
             foreach($data as $key => $value) {

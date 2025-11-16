@@ -5,8 +5,6 @@ include_once('../include/LP_functions.php');
 
 # Deze gebruiken voor reguliere sync
 # De eerste keer kan je beter firstRun.php gebruiken
-
-
 $listIDs['leden']			= $LPLedenListID;
 $listIDs['trinitas']		= $LPTrinitasListID;
 $listIDs['trinitas (week)']	= $LPWeekTrinitasListID;

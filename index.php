@@ -257,16 +257,16 @@ if(in_array(1, $myGroups)) {
 	
 	$adminLinks['admin/generateUsernames.php'] = 'Gebruikersnamen aanmaken';
 	$adminLinks['admin/generateDiensten.php'] = 'Kerkdiensten aanmaken';
-	$adminLinks['editDiensten.php'] = 'Kerkdiensten wijzigen';	
+	#$adminLinks['editDiensten.php'] = 'Kerkdiensten wijzigen';	
 	$adminLinks['team/admin.php'] = 'Groepen wijzigen';	
 	$adminLinks['rooster/admin.php'] = 'Roosters wijzigen';	
 	$adminLinks['admin/editWijkteams.php'] = 'Wijkteams wijzigen';	
-	$adminLinks['admin/crossCheck.php'] = 'Check databases';
+	#$adminLinks['admin/crossCheck.php'] = 'Check databases';
 	$adminLinks['admin/log.php'] = 'Bekijk logfiles';
-	$adminLinks['admin/mailLog.php'] = 'Bekijk mail-files';
-	$adminLinks['admin/sendMail.php'] = 'Verstuur mail';
+	#$adminLinks['admin/mailLog.php'] = 'Bekijk mail-files';
+	#$adminLinks['admin/sendMail.php'] = 'Verstuur mail';
 	$adminLinks['admin/logins.php'] = 'Zoek binnen logins';
-	$adminLinks['admin/reviewRechten.php'] = 'Bekijk groepen en rechten';
+	#$adminLinks['admin/reviewRechten.php'] = 'Bekijk groepen en rechten';
 	$adminLinks['admin/configuration.php'] = 'Configuratie-variabelen';
 	$adminLinks['admin/vermommen.php'] = 'Vermommen';
 	$adminLinks['onderhoud/cleanUpDb.php'] = 'Verwijder oude diensten';

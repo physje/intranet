@@ -2,12 +2,13 @@
 include_once('../include/functions.php');
 include_once('../include/config.php');
 include_once('../include/HTML_TopBottom.php');
-include_once('../include/HTML_HeaderFooter.php');
+include_once('../Classes/Team.php');
 
-$db = connect_db();
+$adminTeam = new Team(1);
+$penningmeesterTeam = new Team(38);
 
-$toegestaanCluco = array_merge($clusterCoordinatoren, getGroupMembers(1), getGroupMembers(38));
-$toegestaanPenning = array_merge(getGroupMembers(1), getGroupMembers(38));
+$toegestaanCluco = array_merge($clusterCoordinatoren, $adminTeam->leden, $penningmeesterTeam->leden);
+$toegestaanPenning = array_merge($adminTeam->leden, $penningmeesterTeam->leden);
 
 # Om zo te kunnen controleren of iemand is ingelogd, even de sessie starten.
 session_start(['cookie_lifetime' => $cookie_lifetime]);

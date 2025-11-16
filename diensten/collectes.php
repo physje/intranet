@@ -55,6 +55,7 @@ if(isset($_POST['save']) || isset($_POST['maanden'])) {
 		$KKD->Subject	= count($bericht).' '.(count($bericht) > 1 ? 'gewijzigde collectedoelen' : 'gewijzigd collectedoel');
 		$KKD->Body		= implode('<br>', $bericht);
 		$KKD->testen = true;
+		//TODO: testen uitzetten
 				
 		if($KKD->sendMail()) {
 			toLog('Mail gestuurd naar Scipio-beheer voor gewijzigde collectes', 'debug');			

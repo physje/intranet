@@ -2,16 +2,20 @@
 include_once('../include/functions.php');
 include_once('../include/config.php');
 include_once('../include/config_mails.php');
-include_once('../include/HTML_HeaderFooter.php');
+include_once('../include/HTML_TopBottom.php');
+include_once('../Classes/Member.php');
+include_once('../Classes/Logging.php');
+include_once('../Classes/Wijk.php');
+include_once('../Classes/KKDMailer.php');
 
 $test = false;
 $debug = false;
 
-$db = connect_db();
+//TODO: Voor uploaden runnen en dan na uploaden eerst een keer runnen zonder mailen (om plaatsnamen ed recht te trekken). Daarna mailen aanzetten
 
 # Omdat de server deze dagelijks moet draaien wordt toegang niet gedaan op basis
 # van naam+wachtwoord maar op basis van IP-adres
-if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
+if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) || $test) {
 	$client = new SoapClient("ScipioConnect.wsdl");
 	
 	if(!$test) {
@@ -33,241 +37,255 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 	
 	foreach ($xml->persoon as $element) {
 		set_time_limit(10);
+		$newData = new Member();
 		
-		$namen = explode(' - ', trim($element->aanschrijfnaam));
+		$namen = explode(' - ', trim_unicode($element->aanschrijfnaam));
 		
 		if(count($namen) == 2) {
-			$velden[$UserMeisjesnaam] = trim($namen[1]);
+			$newData->meisjesnaam = trim_unicode($namen[1]);
 		} else {
-			$velden[$UserMeisjesnaam] = "";
+			$newData->meisjesnaam = "";
 		}
 		
 		$delen = explode(' ', $namen[0]);
 		
-		$velden[$UserVoorletters] = array_shift($delen);
-		$velden[$UserAchternaam] = array_pop($delen);
-		$velden[$UserTussenvoegsel] = implode(' ', $delen);		
-		$velden[$UserAdres] = trim($element->pefamilie);
-		$velden[$UserID] = trim($element->regnr);
-		//$velden[] = $element->aanschrijfnaam;
-		$velden[$UserVoornaam] = trim($element->roepnaam);
-		$velden[$UserGeslacht] = trim($element->geslacht);
-		$velden[$UserGeboorte] = substr($element->gebdatum, 0, 4).'-'.substr($element->gebdatum, 4, 2).'-'.substr($element->gebdatum, 6, 2);
-		#$velden[$UserGeboorte] = substr($element->gebdatum, 0, 4).'-'.substr($element->gebdatum, 4, 2).'-01';
-		$velden[$UserStatus] = trim($element->status);
-		$velden[$UserBurgelijk] = trim($element->burgstaat);
-		$velden[$UserBelijdenis] = trim($element->kerkstaat);
-		$velden[$UserRelatie] = trim($element->gezinsrelatie);
-		$velden[$UserMail] = trim($element->email);
-		$velden[$UserStraat] = trim($element->straat);
-		$velden[$UserHuisnummer] = trim($element->huisnr);
-		$velden[$UserHuisletter] = trim($element->huisltr);
-		$velden[$UserToevoeging] = trim($element->huisnrtoev);
-		$velden[$UserPC] = trim($element->postcode);
-		$velden[$UserPlaats] = trim($element->plaats);
-		$velden[$UserVestiging] = trim($element->vestigingsdatum);
-		$velden[$UsersLastSeen] = time();
+		if(count($delen) == 1) {
+			$newData->voorletters	= '';
+			$newData->achternaam	= implode(' ', $delen);
+			$newData->tussenvoegsel	= '';
+		} elseif(count($delen) == 2) {
+			$newData->voorletters	= array_shift($delen);
+			$newData->achternaam	= array_pop($delen);
+			$newData->tussenvoegsel	= '';
+		} else {
+			$newData->voorletters	= array_shift($delen);
+			$newData->achternaam	= array_pop($delen);
+			$newData->tussenvoegsel	= implode(' ', $delen);
+		}
+				
+		$newData->id 				= trim_unicode(intval($element->regnr));
+		$newData->adres				= trim_unicode($element->pefamilie);
+		$newData->voornaam			= trim_unicode($element->roepnaam);
+		$newData->geslacht			= trim_unicode($element->geslacht);
+		$newData->geboortedatum		= substr($element->gebdatum, 0, 4).'-'.substr($element->gebdatum, 4, 2).'-'.substr($element->gebdatum, 6, 2);
+		$newData->status			= trim_unicode($element->status);
+		$newData->burgelijk			= trim_unicode($element->burgstaat);
+		$newData->doop_belijdenis	= trim_unicode($element->kerkstaat);
+		$newData->relatie			= trim_unicode($element->gezinsrelatie);
+		$newData->email				= trim_unicode($element->email);
+		$newData->telefoon			= trim_unicode($element->telnr);
+		$newData->straat			= trim_unicode($element->straat);
+		$newData->huisnummer		= trim_unicode(intval($element->huisnr));
+		$newData->huisnummer_letter	= trim_unicode($element->huisltr);
+		$newData->huisnummer_toevoeging = trim_unicode($element->huisnrtoev);
+		$newData->postcode			= trim_unicode($element->postcode);
+		$newData->woonplaats		= trim_unicode(ucwords(strtolower($element->plaats)));
+		$newData->tijd_wijziging	= trim_unicode($element->mutatiedatum);
+		$newData->tijd_scipipo		= time();		
 		
+
 		# $element->wijk kan Wijk X zijn of ICF
 		# Op deze manier vis ik die laatste eruit, weet nog niet wat ik met die laatste aanmoet
 		if(is_numeric(strpos($element->wijk, 'Wijk'))) {
-		    $velden[$UserWijk] = substr($element->wijk, 5);
+		    $newData->wijk = substr($element->wijk, 5);
 		} else {
-		    $velden[$UserWijk] = $element->wijk;
-		}
-		
-		//$velden[] = 'sectie';
-		//$velden[] = 'mutatiedatum';
-		$velden[$UserTelefoon] = trim($element->telnr);
+		    $newData->wijk = $element->wijk;
+		}			
 		
 		# Als er geen voorletters bekendd zijn, deze aanmaken
-		if($velden[$UserVoorletters] == $velden[$UserVoornaam]) {
-			$delen = explode(' ', $velden[$UserVoornaam]);
-			$velden[$UserVoorletters] = '';
+		if($newData->voorletters == $newData->voornaam) {
+			$delen = explode(' ', $newData->voornaam);
+			$newData->voorletters = '';
 			
 			foreach($delen as $naam) {
-				$velden[$UserVoorletters] .= $naam[0].'.';
+				if(isset($naam[0]) && $naam[0] != '') {
+					$newData->voorletters .= $naam[0].'.';
+				}				
 			}
 		}
 		
 		# Vestigingsdatum is een string, omzetten naar UNIX-time
-		if($velden[$UserVestiging] != '') {			
-			$jaar = substr($velden[$UserVestiging], 0, 4);
-			$maand = substr($velden[$UserVestiging], 4, 2);
-			$dag = substr($velden[$UserVestiging], 6, 2);
+		if($element->vestigingsdatum != '') {			
+			$jaar = substr($element->vestigingsdatum, 0, 4);
+			$maand = substr($element->vestigingsdatum, 4, 2);
+			$dag = substr($element->vestigingsdatum, 6, 2);
 			
-			$velden[$UserVestiging] = mktime(12, 0, 0, $maand, $dag, $jaar);
+			$newData->tijd_vestiging = mktime(12, 0, 0, $maand, $dag, $jaar);
 		}
+
+		#$newData->tijd_wijziging = time();
 		
-		# Even alle velden doorlopen om slashes toe te voegen
-		foreach($velden as $key => $value) {
-			$velden[$key] = addslashes($value);
-		}
-				
-		# Komt het lid al voor ?
-		$sql_check = "SELECT $UserID FROM $TableUsers WHERE $UserID like '". $element->regnr ."'";
-		$result = mysqli_query($db, $sql_check);
-		
-		# Nee -> Toevoegen
-		if(mysqli_num_rows($result) == 0) {		
-			$sql_insert = "INSERT INTO $TableUsers (". implode(', ', array_keys($velden)) .") VALUES ('". implode("', '", array_values($velden)) ."')";
-			if(!mysqli_query($db, $sql_insert)) {
-				 echo '<b>'. $sql_insert ."</b><br>\n";
-				 toLog('error', $element->regnr, 'Toevoegen mislukt');
-			} else {
-				echo makeName($element->regnr, 5). " toegevoegd<br>\n";
-				toLog('info', $element->regnr, 'Toegevoegd');
+		# Als lid nog niet bestaat -> toevoegen
+		if(!$newData->memberExist()) {					
+			if(!$newData->save()) {
+				 echo "<b>Toevoegen mislukt</b><br>\n";
+				 toLog('Toevoegen mislukt', 'error', $newData->id);
+			} else {				
+				echo $newData->getName(). " toegevoegd<br>\n";
+				toLog('Toegevoegd', '', $newData->id);
 				
 				$item = array();
-				$item[] = "<b><a href='". $ScriptURL ."profiel.php?hash=[[hash]]&id=". $element->regnr ."'>". makeName($element->regnr, 6) ."</a></b> ('". substr($element->gebdatum, 2, 2) .")";
-				$item[] = $velden[$UserStraat].' '.$velden[$UserHuisnummer].$velden[$UserHuisletter].($velden[$UserToevoeging] != '' ? '-'.$velden[$UserToevoeging] : '').(strtolower($velden[$UserPlaats]) != 'deventer' ? ', '.ucwords(strtolower($velden[$UserPlaats])) : '');
-				if($velden[$UserTelefoon] != '')	$item[] = $velden[$UserTelefoon];
-				if($velden[$UserMail] != '')			$item[] = $velden[$UserMail];
-				$item[] = "";				
-				$wijk = $velden[$UserWijk];
+				$item[] = "<b><a href='". $ScriptURL ."profiel.php?hash=[[hash]]&id=". $newData->id ."'>". $newData->getName(6) ."</a></b> ('". substr($element->gebdatum, 2, 2) .")";
+				$item[] = $newData->getWoonadres().(strtolower($newData->woonplaats) != 'deventer' ? ', '.ucwords(strtolower($newData->woonplaats)) : '');
+				if($newData->telefoon != '')	$item[] = $newData->telefoon;
+				if($newData->email != '')		$item[] = $newData->email;
+				$item[] = "";
+
+				$wijk = $newData->wijk;
 				$mailBlockNew[$wijk][] = implode("<br>\n", $item);
-				$namenLedenNew[$wijk][] = makeName($element->regnr, 6);
+				$namenLedenNew[$wijk][] = $newData->getName(6);
 			}
 			
-		# Ja -> updaten
-		} else {
-			$oldData = getMemberDetails($element->regnr);
+		# bestaat wel -> updaten
+		} else {			
+			$oldData = new Member(intval($element->regnr));
 			
 			# Is het een actief of inactief lid?
 			# Mocht er wat wijzigen in inactieve leden, dan niet mailen
 			$actiefLid = true;
-			if($oldData['status'] != 'actief')	$actiefLid = false;
+			if($oldData->status != 'actief')	$actiefLid = false;
 			
 			# Variabele voor gewijzigde data verwijderen, als hij verderop wel bestaat betekent dat dat er data gewijzigd is
 			unset($changedData);
 			
 			# Als de status gewijzigd is
-			if($oldData['status'] != $velden[$UserStatus]) {
+			if($oldData->status != $newData->status) {				
 				$changedData['status'] = true;
-				toLog('info', $element->regnr, 'Wijziging Scipio status: '. $oldData['status'] .' -> '. $velden[$UserStatus]);
+				toLog('Wijziging Scipio status: '. $oldData->status .' -> '. $newData->status, '', $newData->id);				
 			}
 			
 			# Als het kerkelijk adres gewijzigd is
-			if($oldData['adres'] != $velden[$UserAdres]) {
+			if($oldData->adres != $newData->adres) {				
 				$changedData['adres'] = true;
-				toLog('info', $element->regnr, 'Wijziging Scipio adres: '. $oldData['adres'] .' -> '. $velden[$UserAdres]);
+				toLog('Wijziging Scipio adres: '. $oldData->adres .' -> '. $newData->adres, '', $newData->id);				
 			}
 			
-			# Als het kerkelijk adres gewijzigd is
-			if(addslashes($oldData['plaats']) != $velden[$UserPlaats]) {
+			# Als de woonplaats gewijzigd is
+			if($oldData->woonplaats != $newData->woonplaats) {				
 				$changedData['plaats'] = true;
-				toLog('info', $element->regnr, 'Wijziging Scipio plaats: '. $oldData['plaats'] .' -> '. $velden[$UserPlaats]);
+				toLog('Wijziging Scipio plaats: '. $oldData->woonplaats .' -> '. $newData->woonplaats, '', $newData->id);
 			}
 						
 			# Als de straatnaam gewijzigd is
-			if(addslashes($oldData['straat']) != $velden[$UserStraat]) {
+			if($oldData->straat != $newData->straat) {				
 				$changedData['straat'] = true;
-				toLog('info', $element->regnr, 'Wijziging Scipio straat: '. $oldData['straat'] .' -> '. $velden[$UserStraat]);
+				toLog('Wijziging Scipio straat: '. $oldData->straat .' -> '. $newData->straat, '', $newData->id);				
 			}
 			
 			# Als het huisnummer gewijzigd is
-			if($oldData['huisnummer'] != $velden[$UserHuisnummer]) {
+			if($oldData->huisnummer != $newData->huisnummer) {				
 				$changedData['huisnummer'] = true;
-				toLog('info', $element->regnr, 'Wijziging Scipio huisnummer: '. $oldData['huisnummer'] .' -> '. $velden[$UserHuisnummer]);
+				toLog('Wijziging Scipio huisnummer: '. $oldData->huisnummer .' -> '. $newData->huisnummer, '', $newData->id);
 			}	
 			
 			# Als het telefoonnummer gewijzigd is
-			if($oldData['tel'] != $velden[$UserTelefoon]) {
+			if($oldData->telefoon != $newData->telefoon) {				
 				$changedData['tel'] = true;
-				toLog('info', $element->regnr, 'Wijziging Scipio telefoon: '. $oldData['tel'] .' -> '. $velden[$UserTelefoon]);
+				toLog('Wijziging Scipio telefoon: '. $oldData->telefoon .' -> '. $newData->telefoon, '', $newData->id);				
 			}
 			
 			# Als het mailadres gewijzigd is
-			if($oldData['mail'] != $velden[$UserMail]) {
+			if($oldData->email != $newData->email) {				
 				$changedData['mail'] = true;
-				toLog('info', $element->regnr, 'Wijziging Scipio mail: '. $oldData['mail'] .' -> '. $velden[$UserMail]);
+				toLog('Wijziging Scipio mail: '. $oldData->email .' -> '. $newData->email, '', $newData->id);				
 			}
 			
 			# Als de wijk gewijzigd is
-			if($oldData['wijk'] != $velden[$UserWijk]) {
+			if($oldData->wijk != $newData->wijk) {				
 				$changedData['wijk'] = true;
-				toLog('info', $element->regnr, 'Wijziging Scipio wijk: '. $oldData['wijk'] .' -> '. $velden[$UserWijk]);
+				toLog('Wijziging Scipio wijk: '. $oldData->wijk .' -> '. $newData->wijk, '', $newData->id);
 			}
 			
-			if($oldData['relatie'] != $velden[$UserRelatie]) {
+			if($oldData->relatie != $newData->relatie) {
 				$changedData['relatie'] = true;
-				toLog('info', $element->regnr, 'Wijziging Scipio relatie: '. $oldData['relatie'] .' -> '. $velden[$UserRelatie]);
+				toLog('Wijziging Scipio relatie: '. $oldData->relatie .' -> '. $newData->relatie, '', $newData->id);				
 			}
 			
 			# Andere variabelen
-			if($oldData['huisletter'] != $velden[$UserHuisletter])								toLog('info', $element->regnr, 'Wijziging Scipio huisletter: '. $oldData['huisletter'] .' -> '. $velden[$UserHuisletter]);
-			if($oldData['toevoeging'] != $velden[$UserToevoeging])								toLog('info', $element->regnr, 'Wijziging Scipio toevoeging: '. $oldData['toevoeging'] .' -> '. $velden[$UserToevoeging]);
-			if($oldData['burgelijk'] != $velden[$UserBurgelijk])									toLog('info', $element->regnr, 'Wijziging Scipio burgerlijk: '. $oldData['burgelijk'] .' -> '. $velden[$UserBurgelijk]);			
-			if($oldData['belijdenis'] != $velden[$UserBelijdenis])								toLog('info', $element->regnr, 'Wijziging Scipio belijdenis: '. $oldData['belijdenis'] .' -> '. $velden[$UserBelijdenis]);
-			if(addslashes($oldData['achternaam']) != $velden[$UserAchternaam])		toLog('info', $element->regnr, 'Wijziging Scipio achternaam: '. $oldData['achternaam'] .' -> '. $velden[$UserAchternaam]);
-			if(addslashes($oldData['meisjesnaam']) != $velden[$UserMeisjesnaam])	toLog('info', $element->regnr, 'Wijziging Scipio meisjesnaam: '. $oldData['meisjesnaam'] .' -> '. $velden[$UserMeisjesnaam]);
-
-			# Array klaarmaken
-			$update = array();			
-			foreach($velden as $veld => $waarde) {
-				$update[] = "$veld = '$waarde'";
-			}
+			if($oldData->huisnummer_letter != $newData->huisnummer_letter)			toLog('Wijziging Scipio huisletter: '. $oldData->huisnummer_letter .' -> '. $newData->huisnummer_letter, '', $newData->id);
+			if($oldData->huisnummer_toevoeging != $newData->huisnummer_toevoeging)	toLog('Wijziging Scipio toevoeging: '. $oldData->huisnummer_toevoeging .' -> '. $newData->huisnummer_toevoeging, '', $newData->id);
+			if($oldData->burgelijk != $newData->burgelijk)							toLog('Wijziging Scipio burgerlijk: '. $oldData->burgelijk .' -> '. $newData->burgelijk, '', $newData->id);
+			if($oldData->doop_belijdenis != $newData->doop_belijdenis)				toLog('Wijziging Scipio belijdenis: '. $oldData->doop_belijdenis .' -> '. $newData->doop_belijdenis, '', $newData->id);
+			if($oldData->achternaam != $newData->achternaam)						toLog('Wijziging Scipio achternaam: '. $oldData->achternaam .' -> '. $newData->achternaam, '', $newData->id);
+			if($oldData->meisjesnaam != $newData->meisjesnaam)						toLog('Wijziging Scipio meisjesnaam: '. $oldData->meisjesnaam .' -> '. $newData->meisjesnaam, '', $newData->id);
 			
+								
 			# Kijken of er iets gewijzigd is
-			if(isset($changedData) AND $actiefLid) {
+			if(isset($changedData) && $actiefLid) {
 				# Als er iets gewijzigd is, het tijdstip toevoegen
-				$update[] = "$UserLastChange = ". time();
+				$oldData->tijd_wijziging = time();
 				
 				# Bericht initialiseren
 				$temp = array();
-				$temp[] = "<b><a href='". $ScriptURL ."profiel.php?hash=[[hash]]&id=". $element->regnr ."'>". makeName($element->regnr, 6) ."</a></b>";
-				//$temp[] = implode('|', array_keys($changedData));
-				
-				//if(isset($changedData['status']) AND $velden[$UserStatus] == 'vertrokken')									$temp[] = "Vertrokken";
-				//if(isset($changedData['status']) AND $velden[$UserStatus] == 'overleden')										$temp[] = "Overleden";
-				if(isset($changedData['status']))																														$temp[] = ucfirst($velden[$UserStatus]);
+				$temp[] = "<b><a href='". $ScriptURL ."profiel.php?hash=[[hash]]&id=". $newData->id ."'>". $newData->getName(6) ."</a></b>";
+				if(isset($changedData['status']))															$temp[] = ucfirst($newData->status);
 								
 				# relatie
-				if(isset($changedData['relatie']))																													$temp[] = "Kerkelijke status gewijzigd van ". $oldData['relatie'] .' naar '. $velden[$UserRelatie];
+				if(isset($changedData['relatie']))															$temp[] = "Kerkelijke status gewijzigd van ". $oldData->relatie .' naar '. $newData->relatie;
 				
 				# Ander telefoonnummer
-				if(isset($changedData['tel']) AND $velden[$UserTelefoon] != '' AND $oldData['tel'] !== '')	$temp[] = "Telefoonnummer gewijzigd van ".$oldData['tel'] .' naar '. $velden[$UserTelefoon];
-				if(isset($changedData['tel']) AND $velden[$UserTelefoon] == '')															$temp[] = "Telefoonnummer ". $oldData['tel'] ." verwijderd";
-				if(isset($changedData['tel']) AND $oldData['tel'] == '')																		$temp[] = "Telefoonnummer ". $velden[$UserTelefoon] ." toegevoegd";
+				if(isset($changedData['tel']) && $newData->telefoon != '' && $oldData->telefoon !== '')	$temp[] = "Telefoonnummer gewijzigd van ". $oldData->telefoon .' naar '. $newData->telefoon;
+				if(isset($changedData['tel']) && $newData->telefoon == '')									$temp[] = "Telefoonnummer ". $oldData->telefoon ." verwijderd";
+				if(isset($changedData['tel']) && $oldData->telefoon == '')									$temp[] = "Telefoonnummer ". $newData->telefoon ." toegevoegd";
 				
 				# Mailadres
-				if(isset($changedData['mail']) AND $velden[$UserMail] != '' AND $oldData['mail'] != '')			$temp[] = "Mailadres gewijzigd van ".$oldData['mail'] .' naar '. $velden[$UserMail];
-				if(isset($changedData['mail']) AND $velden[$UserMail] == '')																$temp[] = "Mailadres ".$oldData['mail'] ." verwijderd";
-				if(isset($changedData['mail']) AND $oldData['mail'] == '')																	$temp[] = "Mailadres ". $velden[$UserMail] ." toegevoegd";
+				if(isset($changedData['mail']) && $newData->email != '' && $oldData->email != '')			$temp[] = "Mailadres gewijzigd van ". $oldData->email .' naar '. $newData->email;
+				if(isset($changedData['mail']) && $newData->email == '')									$temp[] = "Mailadres ". $oldData->email ." verwijderd";
+				if(isset($changedData['mail']) && $oldData->email == '')									$temp[] = "Mailadres ". $newData->email ." toegevoegd";
 												
 				# Verhuizingen
-				if((isset($changedData['straat']) AND $velden[$UserStraat] != '') OR (isset($changedData['huisnummer']) AND $velden[$UserHuisnummer] != '') OR (isset($changedData['plaats']) AND $velden[$UserPlaats] != ''))	$temp[] = "Verhuisd van ". $oldData['straat'].' '.$oldData['huisnummer'].$oldData['huisletter'].($oldData['toevoeging'] != '' ? '-'.$oldData['toevoeging'] : '').(strtolower($oldData['plaats']) != 'deventer' ? ', '.ucwords(strtolower($oldData['plaats'])) : '').' naar '. $velden[$UserStraat].' '.$velden[$UserHuisnummer].$velden[$UserHuisletter].($velden[$UserToevoeging] != '' ? '-'.$velden[$UserToevoeging] : '').(strtolower($velden[$UserPlaats]) != 'deventer' ? ', '.ucwords(strtolower($velden[$UserPlaats])) : '');
-				if(isset($changedData['wijk']) AND !isset($changedData['status'])) {
-					$oudeWijk = $oldData['wijk'];
-					$nieuweWijk = $velden[$UserWijk];
+				if(
+					(isset($changedData['straat']) && $newData->straat != '') ||
+					(isset($changedData['huisnummer']) && $newData->huisnummer != '') || 
+					(isset($changedData['plaats']) && $newData->woonplaats != '')) {
+						$temp[] = "Verhuisd van ". $oldData->getWoonadres().(strtolower($oldData->woonplaats) != 'deventer' ? ', '. $oldData->woonplaats : '').' naar '. $newData->getWoonadres().(strtolower($newData->woonplaats) != 'deventer' ? ', '. $newData->woonplaats : '');
+				}
+
+				if(isset($changedData['wijk']) && !isset($changedData['status'])) {					
+					$item = $temp;
+					$item[] = "Overgegaan naar wijk ". $newData->wijk;					
+					$mailBlockChange[$oldData->wijk][] = implode("<br>\n", $item)."<br>\n";
+					$namenLedenChange[$oldData->wijk][] = $newData->getName(5);
 					
 					$item = $temp;
-					$item[] = "Overgegaan naar wijk ". $nieuweWijk;					
-					$mailBlockChange[$oudeWijk][] = implode("<br>\n", $item)."<br>\n";
-					$namenLedenChange[$oudeWijk][] = makeName($element->regnr, 5);
-					
-					$item = $temp;
-					$item[] = "Binnengekomen vanuit wijk ". $oudeWijk;					
-					$mailBlockChange[$nieuweWijk][] = implode("<br>\n", $item)."<br>\n";
-					$namenLedenChange[$nieuweWijk][] = makeName($element->regnr, 5);
-				} else {
-					$wijk = $oldData['wijk'];
-					$mailBlockChange[$wijk][] = implode("<br>\n", $temp)."<br>\n";
-					$namenLedenChange[$wijk][] = makeName($element->regnr, 5);
-				}				
+					$item[] = "Binnengekomen vanuit wijk ". $oldData->wijk;					
+					$mailBlockChange[$newData->wijk][] = implode("<br>\n", $item)."<br>\n";
+					$namenLedenChange[$newData->wijk][] = $newData->getName(5);
+				} else {					
+					$mailBlockChange[$oldData->wijk][] = implode("<br>\n", $temp)."<br>\n";
+					$namenLedenChange[$oldData->wijk][] = $newData->getName(5);
+				}
 			}
+
+			$oldData->status = $newData->status;
+			$oldData->adres = $newData->adres;
+			$oldData->voornaam = $newData->voornaam;
+			$oldData->achternaam = $newData->achternaam;
+			$oldData->meisjesnaam = $newData->meisjesnaam;
+			$oldData->telefoon = $newData->telefoon;
+			$oldData->email = $newData->email;
+			$oldData->geslacht = $newData->geslacht;
+			$oldData->relatie = $newData->relatie;
+			$oldData->burgelijk = $newData->burgelijk;
+			$oldData->doop_belijdenis = $newData->doop_belijdenis;
+			$oldData->straat = $newData->straat;
+			$oldData->huisnummer = $newData->huisnummer;
+			$oldData->huisnummer_letter = $newData->huisnummer_letter;
+			$oldData->huisnummer_toevoeging = $newData->huisnummer_toevoeging;
+			$oldData->postcode = $newData->postcode;
+			$oldData->woonplaats = $newData->woonplaats;
+			$oldData->wijk = $newData->wijk;
+			$oldData->tijd_scipipo = time();
 			
-			# Nieuwe gegevens inladen (of er nu iets gewijzigd is of niet)				
-			$sql_update = "UPDATE $TableUsers SET ". implode(', ', $update) ." WHERE $UserID like '". $element->regnr ."'";
-			
-			if(!mysqli_query($db, $sql_update)) {
-				 echo '<b>'. $sql_update ."</b><br>\n";
-				 toLog('error', $element->regnr, 'Updaten mislukt');
-				 echo $sql_update .'<br>';				
+			# Nieuwe gegevens inladen (of er nu iets gewijzigd is of niet)									
+			if(!$oldData->save()) {
+				 echo "<b>Updaten mislukt</b><br>\n";
+				 toLog('Updaten mislukt', 'error', $newData->id);
 			}
 		}
 	}
 	
+	/*
 	# Adressen die niet meer doorkomen verwijderen
 	# Bijvoorbeeld omdat mensen vanuit AVG niet meer gevonden willen worden
 	$sql_delete = "DELETE FROM $TableUsers WHERE $UsersLastSeen < ". mktime(date('H')-25);
@@ -278,17 +296,18 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 	} elseif(!$result_delete) {
 		toLog('error', '', 'Verwijderen van oudleden : '. $sql_delete);
 	}
+	*/
 		
-	if(count($mailBlockNew) > 0 OR count($mailBlockChange) > 0) {
+	if(count($mailBlockNew) > 0 || count($mailBlockChange) > 0) {
 		foreach($wijkArray as $wijk) {
 			$mailBericht = $subject = $namenWijkteam = $wijkTeam = $andereOntvangers = array();
-			$KB_in_CC = true;
+			$KB_in_CC = false;
 						
 			# Alleen als er een nieuw of gewijzigd iets is						
-			if(isset($mailBlockNew[$wijk]) OR isset($mailBlockChange[$wijk])) {				
-				$wijkTeam = getWijkteamLeden($wijk);
-				
-				foreach($wijkTeam as $lid => $dummy)	$namenWijkteam[$lid] = makeName($lid, 1);
+			if(isset($mailBlockNew[$wijk]) || isset($mailBlockChange[$wijk])) {
+				$w			= new Wijk;
+				$w->wijk	= $wijk;
+				$wijkTeam	= $w->getWijkteam();
 				
 				$mailBericht[] = "Beste [[voornaam]],<br>";
 				$mailBericht[] = "<br>";
@@ -316,44 +335,44 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 					}
 				}
 				
+				foreach($wijkTeam as $lid => $rol) {
+					$teamLid = new Member($lid);
+					$namenWijkteam[$lid] = $teamLid->getName(1);
+				}
+
 				foreach($wijkTeam as $lid => $rol) {					
-					$data = getMemberDetails($lid);					
+					$ontvanger = new Member($lid);
 					$andereOntvangers = excludeID($namenWijkteam, $lid);
 					
 					$HTMLBericht = implode("\n", $mailBericht).(count($andereOntvangers) > 0 ? "<br>Deze mail is ook naar ". makeOpsomming($andereOntvangers) ." gestuurd." : '');
 					
 					$replacedBericht = $HTMLBericht;
-					$replacedBericht = str_replace('[[hash]]', $data['hash_long'], $replacedBericht);
-					$replacedBericht = str_replace('[[voornaam]]', $data['voornaam'], $replacedBericht);
+					$replacedBericht = str_replace('[[hash]]', $ontvanger->hash_long, $replacedBericht);
+					$replacedBericht = str_replace('[[voornaam]]', $ontvanger->voornaam, $replacedBericht);
 					
-					unset($param);
-					$param['to'][]				= array($lid);
-					$param['message']			= $replacedBericht;
-					$param['subject']			= implode(' en ', $subject);
-					$param['formeel'] 		= true;
-					$param['ReplyTo']			= 'kerkelijkbureau@koningskerkdeventer.nl';
-					$param['ReplyToName']	= 'Kerkelijk Bureau';
+					$KKDMail = new KKDMailer();
+					$KKDMail->aan		= $ontvanger->id;
+					$KKDMail->formeel	= true;
+					$KKDMail->Body		= $replacedBericht;
+					$KKDMail->Subject	= implode(' en ', $subject);
+					$KKDMail->addReplyTo('kerkelijkbureau@koningskerkdeventer.nl', 'Kerkelijk Bureau');
+					$KKDMail->testen	= true;
+					//TODO: testen uitzetten
 															
-					if(sendMail_new($param)) {
-						toLog('info', $lid, "Wijzigingsmail wijkteam wijk $wijk verstuurd");
-						echo "Mail verstuurd naar ". makeName($lid, 1) ." (wijkteam wijk $wijk)<br>\n";
+					if($KKDMail->sendMail()) {
+						toLog("Wijzigingsmail wijkteam wijk $wijk verstuurd", '', $ontvanger->id);
+						echo "Mail verstuurd naar ". $ontvanger->getName(1) ." (wijkteam wijk $wijk)<br>\n";
 					} else {
-						toLog('error', $lid, "Problemen met wijzigingsmail ". makeName($lid, 1) ." (wijkteam wijk $wijk)");
+						toLog("Problemen met wijzigingsmail ". $ontvanger->getName(1) ." (wijkteam wijk $wijk)", 'error', $ontvanger->id);
 						echo "Problemen met mail versturen<br>\n";
 					}
-															
-					//echo 'Onderwerp :'. implode(' en ', $subject) .'<br>';
-					//echo 'Bericht :'. $replacedBericht .'<br>';
-					
-					# Alle parameters voor mailen resetten
-					unset($param);
 				}
 			}
 		}
 	}
 
-	toLog('info', '', 'Scipio data ingeladen');
+	toLog('Scipio data ingeladen');
 } else {
-	toLog('error', '', 'Poging handmatige run Scipio-import, IP:'.$_SERVER['REMOTE_ADDR']);
+	toLog('Poging handmatige run Scipio-import, IP:'.$_SERVER['REMOTE_ADDR'], 'error');
 }
 ?>

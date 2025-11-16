@@ -1,8 +1,13 @@
 <?php
 include_once('../include/functions.php');
 include_once('../include/config.php');
-
-$db = connect_db();
+include_once('../Classes/Voorganger.php');
+include_once('../Classes/Vulling.php');
+include_once('../Classes/Kerkdienst.php');
+include_once('../Classes/Rooster.php');
+include_once('../Classes/Member.php');
+include_once('../Classes/Logging.php');
+include_once('../Classes/OpenKerkRooster.php');
 
 $header[] = "BEGIN:VCALENDAR";
 $header[] = "VERSION:2.0";
@@ -32,124 +37,103 @@ $footer[] = "END:VCALENDAR";
 #################
 # Kerkdiensten	#
 #################
-$sql_dienst = "SELECT $DienstID FROM $TableDiensten WHERE $DienstActive = '1' AND $DienstEind > ". (time()-(31*24*60*60));
-$result_dienst = mysqli_query($db, $sql_dienst);
-if($row_dienst = mysqli_fetch_array($result_dienst)) {		
-	do {
-		# Wat is de ID van de dienst
-		# Welke gegevens horen daar bij
-		# Welke diensten zijn er nog meer die dag
-		$dienst = $row_dienst[$DienstID];		
-		$data_dienst = getKerkdienstDetails($dienst);		
-		$diensten = getKerkdiensten(mktime(0,0,0,date("n", $data_dienst['start']),date("j", $data_dienst['start']),date("Y", $data_dienst['start'])), mktime(23,59,59,date("n", $data_dienst['start']),date("j", $data_dienst['start']),date("Y", $data_dienst['start'])));
+
+# Maand terug tot jaar vooruit
+$startTijd = time()-(31*24*60*60);
+$eindTijd = time()+(365*24*60*60);
+
+$kerkdiensten = Kerkdienst::getDiensten($startTijd, $eindTijd);
+
+foreach($kerkdiensten as $dienstID) {
+	$dienst = new Kerkdienst($dienstID);
+	$voorganger = new Voorganger($dienst->voorganger);
 		
-		# Eigenlijke ICS-data
-		$ics = array();
-		$ics[] = "BEGIN:VEVENT";	
-		$ics[] = "UID:3GK-dienst-". substr('00'.$dienst, -3);
-		$ics[] = "DTSTART;TZID=Europe/Amsterdam:". date("Ymd\THis", $data_dienst['start']);
-		$ics[] = "DTEND;TZID=Europe/Amsterdam:". date("Ymd\THis", $data_dienst['eind']);	
-		$ics[] = "LAST-MODIFIED:". date("Ymd\THis", time());
-		
-		if($data_dienst['bijzonderheden'] != "") { $postfix = ' - '.$data_dienst['bijzonderheden']; } else { $postfix = ''; }
-				
-		if(date("H", $data_dienst['start']) < 12) {
-			$ics[] = "SUMMARY:Ochtenddienst ". $data_dienst['voorganger'].$postfix;
-		} elseif(date("H", $data_dienst['start']) < 18) {
-			$ics[] = "SUMMARY:Middagdienst ". $data_dienst['voorganger'].$postfix;
-		} else {
-			$ics[] = "SUMMARY:Avonddienst ". $data_dienst['voorganger'].$postfix;
-		}
-		
-		# Initialiseer
-		$DESCRIPTION = $CollecteString = '';
-		
-		# Collectes
-		if($data_dienst['collecte_1'] != '')	{ $CollecteString .= '1. '. $data_dienst['collecte_1']; }
-		if($data_dienst['collecte_2'] != '')	{ $CollecteString .= '\n2. '. $data_dienst['collecte_2']; }
-		
-		# Controleren op gelijke diensten
-		$tmpDienst = array();
-		foreach($diensten as $tmp) { $tmpDienst[] = "$PlanningDienst = $tmp"; }
-		
-		# Roosters (leden) opvragen
-		$sql_roosters = "SELECT * FROM $TableRoosters, $TablePlanning WHERE (". implode(' OR ', $tmpDienst) .") AND $TablePlanning.$PlanningGroup = $TableRoosters.$RoostersID GROUP BY $TablePlanning.$PlanningGroup ORDER BY $TableRoosters.$RoostersNaam";	
-		$result_roosters = mysqli_query($db, $sql_roosters);
-		if($row_roosters = mysqli_fetch_array($result_roosters)) {			
-			$RoosterString = '';
-		
-			do {
-				$rooster = $row_roosters[$PlanningGroup];			
-				$data_rooster = getRoosterDetails($rooster);
-				
-				if($data_rooster['gelijk'] == 1) {					
-					$sql_persoon = "SELECT * FROM $TablePlanning WHERE $PlanningGroup = $rooster AND (". implode(' OR ', $tmpDienst) .") ORDER BY $PlanningPositie ASC";
-				} else {
-					$sql_persoon = "SELECT * FROM $TablePlanning WHERE $PlanningGroup = $rooster AND $PlanningDienst = $dienst ORDER BY $PlanningPositie ASC";
+	# Eigenlijke ICS-data
+	$ics = array();
+	$ics[] = "BEGIN:VEVENT";
+	$ics[] = "UID:3GK-dienst-". substr('00000'. $dienst->dienst, -5);
+	$ics[] = "DTSTART;TZID=Europe/Amsterdam:". date("Ymd\THis", $dienst->start);
+	$ics[] = "DTEND;TZID=Europe/Amsterdam:". date("Ymd\THis", $dienst->eind);
+	$ics[] = "LAST-MODIFIED:". date("Ymd\THis", time());
+
+	if($dienst->opmerking != "") { $postfix = ' - '.$dienst->opmerking; } else { $postfix = ''; }
+
+	if(date("H", $dienst->dienst) < 12) {
+		$ics[] = "SUMMARY:Ochtenddienst ". $voorganger->getName(3) . $postfix;
+	} elseif(date("H", $dienst->dienst) < 18) {
+		$ics[] = "SUMMARY:Middagdienst ". $voorganger->getName(3) . $postfix;
+	} else {
+		$ics[] = "SUMMARY:Avonddienst ". $voorganger->getName(3) . $postfix;
+	}
+
+	# Initialiseer
+	$DESCRIPTION = $CollecteString = $RoosterString = '';
+
+	# Collectes
+	if($dienst->collecte_1 != '')	$CollecteString .= '1. '. $dienst->collecte_1;
+	if($dienst->collecte_2 != '')	$CollecteString .= '\n2. '. $dienst->collecte_2;
+
+	# Vraag andere diensten die dag op
+	$diensten = Kerkdienst::getDiensten(mktime(0,0,0,date("n", $dienst->start),date("j", $dienst->start),date("Y", $dienst->start)), mktime(23,59,59,date("n", $dienst->start),date("j", $dienst->start),date("Y", $dienst->start)));
+
+	# Vraag alle mogelijke roosters op
+	$roosters = Rooster::getAllRoosters();
+
+	foreach($roosters as $roosterID) {
+		$rooster = new Rooster($roosterID);
+		$personen = array();
+
+		# Gelijk = 1 betekent  rooster voor de hele dag gelijk.
+		# Daarom alle diensten doorlopen
+		if($rooster->gelijk == 1) {
+			foreach($diensten as $tmp) {
+				$tempVulling = new Vulling($tmp, $roosterID);
+
+				# Bij een tekst-rooster is de vulling een string, anders een array
+				# Daarom op beide checken
+				if(($tempVulling->tekst_only && $tempVulling->tekst != '') || (!$tempVulling->tekst_only && count($tempVulling->leden) > 0)) {
+					$vulling = $tempVulling;
 				}
-				$result_persoon = mysqli_query($db, $sql_persoon);
-								
-				if($row_persoon = mysqli_fetch_array($result_persoon)) {
-					$personen = array();
-					
-					do {
-						$personen[] = makeName($row_persoon[$PlanningUser], 5);
-					} while($row_persoon = mysqli_fetch_array($result_persoon));
-					
-					$RoosterString .= $data_rooster[$RoostersNaam] .'\n- '. implode('\n- ', $personen) .'\n\n';
-				}
-			} while($row_roosters = mysqli_fetch_array($result_roosters));
-			
-			
-			# Roosters (tekst) opvragen
-			# Let-op : lelijk opgelost, om te checken of er meerdere diensten op 1 zondag zijn hergebruik ik de array van het andere rooster
-			# Dit werkt bij de gratie dat ze dezelfde naam hebben... lelijk
-			$sql_txt_roosters = "SELECT * FROM $TablePlanningTxt WHERE (". implode(' OR ', $tmpDienst) .")";
-			$result_txt_roosters = mysqli_query($db, $sql_txt_roosters);
-			if($row_txt_roosters = mysqli_fetch_array($result_txt_roosters)) {
-				do {
-					$rooster = $row_txt_roosters[$PlanningTxTGroup];			
-					$data_txt_rooster = getRoosterDetails($rooster);
-					
-					if($data_txt_rooster['gelijk'] == 1) {					
-						$sql_text = "SELECT * FROM $TablePlanningTxt WHERE (". implode(' OR ', $tmpDienst) .") AND $PlanningTxTGroup = $rooster";
-					} else {
-						$sql_text = "SELECT * FROM $TablePlanningTxt WHERE $PlanningTxTDienst = $dienst AND $PlanningTxTGroup = $rooster";
-					}
-					
-					$result_text = mysqli_query($db, $sql_text);				
-					if($row_text = mysqli_fetch_array($result_text)) {
-						$vulling = getRoosterVulling($rooster, $row_text[$PlanningTxTDienst]);
-						
-						$RoosterString .= $data_txt_rooster[$RoostersNaam] .'\n'. $vulling .'\n\n';
-					}
-				} while($row_txt_roosters = mysqli_fetch_array($result_txt_roosters));
 			}
-									
-			if($CollecteString != '') {
-				$DESCRIPTION = 'COLLECTE\n'. $CollecteString.'\n\n';
+		} else {
+			$vulling = new Vulling($dienst->dienst, $roosterID);
+		}
+
+		# Tekst-rooster
+		if(isset($vulling) && $vulling->tekst_only && $vulling->tekst != '') {
+			$RoosterString .= $rooster->naam .'\n'. $vulling->tekst .'\n\n';
+		} elseif(isset($vulling) && !$vulling->tekst_only && count($vulling->leden) > 0) {
+			foreach($vulling->leden as $lid) {
+				$person = new Member($lid);
+				$personen[] = $person->getName();
 			}
 
-			if($data_dienst['liturgie'] != '') {
-				$DESCRIPTION .= 'LITURGIE\n'. str_replace("\r\n", '\n', $data_dienst['liturgie']).'\n\n';
-			}			
-						
-			if($RoosterString != '') {
-				$DESCRIPTION .= 'ROOSTERS\n'. $RoosterString;
-			}
-			
+			$RoosterString .= $rooster->naam .'\n- '. implode('\n- ', $personen) .'\n\n';
 		}
+	}
+
+	if($CollecteString != '') {
+		$DESCRIPTION = 'COLLECTE\n'. $CollecteString.'\n\n';
+	}
+
+	if($dienst->liturgie != '') {
+		$DESCRIPTION .= 'LITURGIE\n'. str_replace("\r\n", '\n', $dienst->liturgie).'\n\n';
+	}
+
+	if($RoosterString != '') {
+		$DESCRIPTION .= 'ROOSTERS\n'. $RoosterString;
+	}
+
+	$ics[] = 'DESCRIPTION:'.$DESCRIPTION;
+	$ics[] = "STATUS:CONFIRMED";	
+	$ics[] = "TRANSP:TRANSPARENT";
+	$ics[] = "END:VEVENT";
 		
-		$ics[] = 'DESCRIPTION:'.$DESCRIPTION;
-		$ics[] = "STATUS:CONFIRMED";	
-		$ics[] = "TRANSP:TRANSPARENT";
-		$ics[] = "END:VEVENT";
-		
-		$vEvent[] = implode("\r\n", $ics);		
-	} while($row_dienst = mysqli_fetch_array($result_dienst));	
+	$vEvent[] = implode("\r\n", $ics);
 }
 
-
+//TODO:Agenda toevoegen aan Scipio iCal
+/*
 #################
 # Agenda		  	#
 #################
@@ -172,41 +156,42 @@ if($row_agenda = mysqli_fetch_array($result_agenda)) {
 		$vEvent[] = implode("\r\n", $ics);
 	} while($row_agenda = mysqli_fetch_array($result_agenda));
 }
-
+*/
 
 #################
 # Open Kerk			#
 #################
-$sql_open = "SELECT FROM_UNIXTIME($OKRoosterEind, '%d.%m.%Y') as ndate, $OKRoosterEind FROM $TableOpenKerkRooster WHERE $OKRoosterEind > ". (time()-(24*60*60)) ." GROUP BY ndate";
-$result_open = mysqli_query($db, $sql_open);
-if($row_open = mysqli_fetch_array($result_open)) {
-	do {
-		$maand	= date("m", $row_open[$OKRoosterEind]);
-		$dag		= date("d", $row_open[$OKRoosterEind]);
-		$jaar		= date("Y", $row_open[$OKRoosterEind]);
-		
-		$sql_ok_min = "SELECT MIN($OKRoosterStart) as eerste FROM $TableOpenKerkRooster WHERE $OKRoosterEind BETWEEN ". mktime(0, 0, 0, $maand, $dag, $jaar) ." AND ". mktime(23, 59, 59, $maand, $dag, $jaar);
-		$result_ok_min = mysqli_query($db, $sql_ok_min);
-		$row_ok_min = mysqli_fetch_array($result_ok_min);
+$starts = OpenKerkRooster::getStarts($startTijd, $eindTijd);
+$grens = 0;
+foreach($starts as $OKID) {
+	$openkerk = new OpenKerkRooster($OKID);
 
-		$sql_ok_max = "SELECT MAX($OKRoosterEind) as laatste FROM $TableOpenKerkRooster WHERE $OKRoosterEind BETWEEN ". mktime(0, 0, 0, $maand, $dag, $jaar) ." AND ". mktime(23, 59, 59, $maand, $dag, $jaar);
-		$result_ok_max = mysqli_query($db, $sql_ok_max);
-		$row_ok_max = mysqli_fetch_array($result_ok_max);
-		
+	$maand	= date("m", $openkerk->start);
+	$dag	= date("d", $openkerk->start);
+	$jaar	= date("Y", $openkerk->start);
+
+	$s = mktime(0, 0, 0, $maand, $dag, $jaar);
+	$e = mktime(23, 59, 59, $maand, $dag, $jaar);
+
+	if($s > $grens) {
+		$grens = $e;
+		$vandaag = OpenKerkRooster::getStarts($s, $e);
+		$eerste = new OpenKerkRooster($vandaag[0]);
+		$laatste = new OpenKerkRooster(end($vandaag));
+
 		# Eigenlijke ICS-data
 		$ics = array();
 		$ics[] = "BEGIN:VEVENT";	
-		$ics[] = "UID:OPENKERK-". $row_open['ndate'];
-		$ics[] = "DTSTART;TZID=Europe/Amsterdam:". date("Ymd\THis", $row_ok_min['eerste']);
-		$ics[] = "DTEND;TZID=Europe/Amsterdam:". date("Ymd\THis", $row_ok_max['laatste']);	
+		$ics[] = "UID:OPENKERK-$dag-$maand-$jaar";
+		$ics[] = "DTSTART;TZID=Europe/Amsterdam:". date("Ymd\THis", $eerste->start);
+		$ics[] = "DTEND;TZID=Europe/Amsterdam:". date("Ymd\THis", $laatste->eind);	
 		$ics[] = "LAST-MODIFIED:". date("Ymd\THis", time());
 		$ics[] = "SUMMARY:Open Kerk";
-		#$ics[] = 'DESCRIPTION:'.urldecode($row_agenda[$AgendaDescr]);
 		$ics[] = "STATUS:CONFIRMED";	
 		$ics[] = "TRANSP:TRANSPARENT";
 		$ics[] = "END:VEVENT";
-		$vEvent[] = implode("\r\n", $ics);		
-	} while($row_open = mysqli_fetch_array($result_open));
+		$vEvent[] = implode("\r\n", $ics);
+	}
 }
 
 $file_name = '../ical/scipio.ics';
@@ -223,5 +208,5 @@ echo $ScriptURL.$file_name .'<br>';
 
 //echo implode("\r\n", $ics);
 
-toLog('debug', '', 'Agenda export voor Scipio aangemaakt');
+toLog('Agenda export voor Scipio aangemaakt', 'debug');
 ?>

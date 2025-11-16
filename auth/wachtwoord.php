@@ -3,42 +3,45 @@ include_once('../include/functions.php');
 include_once('../include/config.php');
 include_once('../include/config_mails.php');
 include_once('../include/HTML_TopBottom.php');
+include_once('../Classes/Member.php');
+include_once('../Classes/KKDMailer.php');
+include_once('../Classes/Logging.php');
 
 if(isset($_POST['opvragen']) AND isset($_POST['invoer']) AND trim($_POST['invoer']) != '') {
 	$invoer	= trim($_POST['invoer']);
-	$sql		= "SELECT $UserID FROM $TableUsers WHERE $UserUsername like '$invoer' OR $UserMail like '$invoer' OR $UserFormeelMail like '$invoer'";	
-	$result = mysqli_query($db, $sql);
+	#$sql		= "SELECT $UserID FROM $TableUsers WHERE $UserUsername like '$invoer' OR $UserMail like '$invoer' OR $UserFormeelMail like '$invoer'";	
+	#$result = mysqli_query($db, $sql);
+	$UserID = getUserByInput($invoer);
 			
-	if(mysqli_num_rows($result) == 0) {
+	if(!$UserID) {
 		$text[] = "Er is helaas niks gevonden met '$invoer'";
-	} elseif(mysqli_num_rows($result) > 1) {
+	} elseif(count($UserID) > 1) {
 		$text[] = "Er zijn meer leden die voldoen aan '$invoer'. Probeer het op een andere manier.";
-		toLog('error', '', 'Inloggegevens gezocht met '. $invoer .', meer dan 1 resultaat');
+		toLog('Inloggegevens gezocht met '. $invoer .', meer dan 1 resultaat', 'error');
 	} else {
-		$row	= mysqli_fetch_array($result);
-		$id		= $row[$UserID];
-		$data = getMemberDetails($id);
-		
-		$Mail[] = "Beste ". $data['voornaam'] .",<br>";
+		$user = new Member($UserID[0]);
+				
+		$Mail[] = "Beste ". $user->voornaam .",<br>";
 		$Mail[] = "<br>";
 		$Mail[] = "je hebt een nieuw wachtwoord aangevraagd voor $ScriptTitle.<br>";
 		$Mail[] = "Heb geen nieuw wachtwoord voor je aangemaakt, maar een link gemaakt waarmee je zelf een wachtwoord kunt instellen<br>";
-		$Mail[] = "Door <a href='". $ScriptURL ."account.php?hash=". $data['hash_long'] ."'>deze link</a> te volgen kom je op jouw persoonlijke account-pagina waarop je een wachtwoord kunt instellen.<br>";
+		$Mail[] = "Door <a href='". $ScriptURL ."account.php?hash=". $user->hash_long ."'>deze link</a> te volgen kom je op jouw persoonlijke account-pagina waarop je een wachtwoord kunt instellen.<br>";
 		$Mail[] = "<br>";
 		$Mail[] = "<i>Let wel op, iemand met deze link kan zonder in te loggen bij je account komen, wees er dus zuinig op!";
 		$Mail[] = "Mocht je het idee hebben dan iemand anders jouw link gebruikt/misbruikt, laat het weten, dan krijg jij een nieuwe link en maken we de oude link onklaar</i>.";
 		
-		$HTMLMail = implode("\n", $Mail);
-		
-		$param['to'][]			= array($id);
-		$param['message']		= $HTMLMail;
-		$param['subject']		= "Nieuw wachtwoord voor $ScriptTitle";			
+		$mail = new KKDMailer();
+		$mail->aan		= $user->id;
+		$mail->Body 	= implode("\n", $Mail);
+		$mail->Subject	= "Nieuw wachtwoord voor $ScriptTitle";
+		$mail->testen	= true;
+		//TODO: testen uitzetten
 				
-		if(!sendMail_new($param)) {
-			toLog('error', '', 'problemen met wachtwoord-mail versturen');
+		if(!$mail->Sendmail()) {
+			toLog('Problemen met wachtwoord-mail versturen', 'error', $user->id);
 			$text[] = "Inloggegevens konden helaas niet verstuurd worden";			
 		} else {
-			toLog('info', '', "Inloggegevens verstuurd naar ". makeName($id, 5));
+			toLog("Inloggegevens verstuurd", '', $user->id);
 			$text[] = "Inloggegevens zijn verstuurd";
 		}		
 	}
@@ -54,7 +57,7 @@ if(isset($_POST['opvragen']) AND isset($_POST['invoer']) AND trim($_POST['invoer
 	$text[] = "	<td><input type='text' name='invoer' value='$invoer' size='75'></td>";
 	$text[] = "</tr>";
 	
-	if(isset($_POST['invoer']) AND trim($_POST['invoer']) == '')	{
+	if(isset($invoer) AND trim($invoer) == '')	{
 		$text[] = "<tr>";
 		$text[] = "	<td><i>Veld lijkt leeg te zijn, vul gebruikersnaam of mailadres in</i></td>";
 		$text[] = "</tr>";
@@ -72,11 +75,7 @@ if(isset($_POST['opvragen']) AND isset($_POST['invoer']) AND trim($_POST['invoer
 
 echo showCSSHeader();
 echo '<div class="content_vert_kolom">'.NL;
-
-foreach($blocks as $block) {
-	echo "<div class='content_block'>". implode("<br>".NL, $text) ."</div>".NL;
-}
-
+echo "<div class='content_block'>". implode(NL, $text) ."</div>".NL;
 echo '</div> <!-- end \'content_vert_kolom\' -->'.NL;
 echo showCSSFooter();
 

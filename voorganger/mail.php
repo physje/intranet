@@ -59,7 +59,8 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 			$KKD = new KKDMailer();
 			$KKD->FromName = 'Preekvoorziening Koningskerk Deventer';
 			$KKD->addReplyTo($voorgangerReplyAddress, $voorgangerReplyName);
-			#$KKD->testen = true;
+			$KKD->testen = true;
+			//TODO: testen uitzetten
 			
 			# Als er niet getest wordt
 			if(!$sendTestMail) {
@@ -112,7 +113,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 			if(isset($bandleider)) {
 				$mailText[] = "";
 				$mailText[] = "<i>Bandleider</i>";				
-				$mailText[] = "De muzikale begeleiding wordt geco&ouml;rdineerd door ". $bandleider->getName() ." (". $bandleider->getMail() ."). Wij waarderen het als predikant en bandleider de interactie zoeken over de liturgie. ".($voorganger->stijl == 0 ? 'Wilt u' : 'Wil jij').", ". $aanspeekNaam ." als voorganger in de week voorafgaand ".($voorganger->stijl == 0 ? 'uw' : 'jouw')." voorstel voor liturgie met liederen, preekthema en bijbelteksten met ". $bandleider->getName(1) ." delen? ". ($bandleider->geslacht == 'M' ? 'Hij' : 'Zij') ." kan eventueel suggesties aandragen en helpen inschatten of liederen goed uit te voeren zijn (dit ivm niveau muzikanten, bekendheid van het lied in de gemeente, of dat een lied zeer recent al vaker is gezongen). Als er Engelse liederen worden gebruikt willen we graag dat de vertaling in het Nederlands erbij staat. Uiterlijk op ". time2str('l', ($dienst->start - (4*24*60*60)))."avond moet de liturgie bekend en gedeeld zijn.";
+				$mailText[] = "De muzikale begeleiding wordt geco&ouml;rdineerd door ". $bandleider->getName() ." (". $bandleider->getMail() ."). Wij waarderen het als predikant en bandleider de interactie zoeken over de liturgie. ".($voorganger->vousvoyeren ? 'Wilt u' : 'Wil jij').", ". $aanspeekNaam ." als voorganger in de week voorafgaand ".($voorganger->vousvoyeren ? 'uw' : 'jouw')." voorstel voor liturgie met liederen, preekthema en bijbelteksten met ". $bandleider->getName(1) ." delen? ". ($bandleider->geslacht == 'M' ? 'Hij' : 'Zij') ." kan eventueel suggesties aandragen en helpen inschatten of liederen goed uit te voeren zijn (dit ivm niveau muzikanten, bekendheid van het lied in de gemeente, of dat een lied zeer recent al vaker is gezongen). Als er Engelse liederen worden gebruikt willen we graag dat de vertaling in het Nederlands erbij staat. Uiterlijk op ". time2str('l', ($dienst->start - (4*24*60*60)))."avond moet de liturgie bekend en gedeeld zijn.";
 				
 				# Reinier heeft zelf ID 91
 				if($dienst->voorganger != 91) {
@@ -137,7 +138,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 			
 			# Reinier heeft ID 91
 			if($dienst->voorganger != 91 AND $jeugdmoment->id > 0) {
-				$opsomming[] = "Voorafgaand aan de schriftlezing gaat een gedeelte van de basisschoolkinderen naar de bijbelklas of basiscatechese. Wij zijn gewend dat er in de Eredienst vaak een moment speciaal aandacht is voor kinderen of jeugd. Dit kan een kindermoment zijn voor de schriftlezing en voordat een deel van de kinderen naar bijbelklas of basiscatechese gaan. Dit kan ook in de vorm van een jeugdmoment zijn. Bij een gastpredikant is hier standaard een gemeentelid voor ingeroosterd die in de week voorafgaand contact met ".($voorganger->stijl == 0 ? 'u' : 'je')." zal opnemen over vorm en onderwerp. Voor deze dienst is ". $jeugdmoment->getName() ." daarvoor als gemeentelid ingeroosterd.";
+				$opsomming[] = "Voorafgaand aan de schriftlezing gaat een gedeelte van de basisschoolkinderen naar de bijbelklas of basiscatechese. Wij zijn gewend dat er in de Eredienst vaak een moment speciaal aandacht is voor kinderen of jeugd. Dit kan een kindermoment zijn voor de schriftlezing en voordat een deel van de kinderen naar bijbelklas of basiscatechese gaan. Dit kan ook in de vorm van een jeugdmoment zijn. Bij een gastpredikant is hier standaard een gemeentelid voor ingeroosterd die in de week voorafgaand contact met ".($voorganger->vousvoyeren ? 'u' : 'je')." zal opnemen over vorm en onderwerp. Voor deze dienst is ". $jeugdmoment->getName() ." daarvoor als gemeentelid ingeroosterd.";
 			}
 			
 			$mailText[] = implode("\n", $opsomming);			
@@ -150,7 +151,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 			if($voorganger->declaratie && $dienst->ruiling == 0) {
 				$mailText[] = "";
 				$mailText[] = "<i>Declaratie</i>";
-				$mailText[] = "Op ". time2str ('l j F', $dienst->start).' '.($voorganger->stijl == 0 ? 'ontvangt u' : 'ontvang je') ." in de ochtend een link naar ". ($voorganger->stijl == 0 ? 'uw' : 'jouw') ." persoonlijke digitale declaratie-omgeving voor het declareren van ".($voorganger->stijl == 0 ? 'uw' : 'jouw')." onkosten.";
+				$mailText[] = "Op ". time2str ('l j F', $dienst->start).' '.($voorganger->vousvoyeren ? 'ontvangt u' : 'ontvang je') ." in de ochtend een link naar ". ($voorganger->vousvoyeren ? 'uw' : 'jouw') ." persoonlijke digitale declaratie-omgeving voor het declareren van ".($voorganger->vousvoyeren ? 'uw' : 'jouw')." onkosten.";
 				$dienst->declaratieStatus = 1;
 			}
 		
@@ -166,11 +167,11 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 					
 			if(count($bijlageText) > 0) {
 				$mailText[] = "";
-				$mailText[] = "In de bijlage ".($voorganger->stijl == 0 ? 'treft u' : 'tref je')." ". implode(' en ', $bijlageText) ." aan.";
+				$mailText[] = "In de bijlage ".($voorganger->vousvoyeren ? 'treft u' : 'tref je')." ". implode(' en ', $bijlageText) ." aan.";
 			}
 			
 			$mailText[] = "";
-			$mailText[] = "Als er onduidelijkheid is of er zijn vragen dan kan ". ($voorganger->stijl == 0 ? 'u' : 'je') ." contact opnemen met ". ($ouderling->id > 0 ? "de ouderling van dienst via <a href='mailto:". $ouderling->getName() ." <". $ouderling->getMail() .">'>mail</a>, met " : ""). "Sander Lagendijk als Clustercoo&ouml;rdinator Eredienst (<a href='tel:+31612586835'>06-12586835</a>) of met mij.";
+			$mailText[] = "Als er onduidelijkheid is of er zijn vragen dan kan ". ($voorganger->vousvoyeren ? 'u' : 'je') ." contact opnemen met ". ($ouderling->id > 0 ? "de ouderling van dienst via <a href='mailto:". $ouderling->getName() ." <". $ouderling->getMail() .">'>mail</a>, met " : ""). "Sander Lagendijk als Clustercoo&ouml;rdinator Eredienst (<a href='tel:+31612586835'>06-12586835</a>) of met mij.";
 			$mailText[] = "";
 			$mailText[] = "Vriendelijke groeten";
 			$mailText[] = "";

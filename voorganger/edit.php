@@ -67,7 +67,7 @@ if(isset($_REQUEST['delete_data'])) {
             $voorganger->mail			= $_POST['mail'];
             $voorganger->plaats			= $_POST['plaats'];
             $voorganger->denominatie	= $_POST['denom'];
-            $voorganger->stijl			= $_POST['stijl'];
+            $voorganger->vousvoyeren			= ($_POST['stijl'] == 1 ? true : false);
             $voorganger->opmerkingen	= $_POST['opm'];
             $voorganger->aandachtspunt	= ((isset($_POST['aandachtspunten']) && $_POST['aandachtspunten'] == 'ja') ? true : false);
             $voorganger->declaratie		= ((isset($_POST['declaratie']) && $_POST['declaratie'] == 'ja') ? true : false);
@@ -158,8 +158,8 @@ if(isset($_REQUEST['delete_data'])) {
 	$left[] = "<tr>";
 	$left[] = "	<td>Aanspreekstijl</td>";
 	$left[] = "	<td><select name='stijl'>";
-	$left[] = "	<option value='0'". (getParam('stijl', $voorganger->stijl) == 0 ? ' selected' : '') .">Vousvoyeren</option>";
-	$left[] = "	<option value='1'". (getParam('stijl', $voorganger->stijl) == 1 ? ' selected' : '') .">Tutoyeren</option>";		
+	$left[] = "	<option value='0'". (getParam('stijl', ($voorganger->vousvoyeren ? '1' : '0')) ? ' selected' : '') .">Vousvoyeren</option>";
+	$left[] = "	<option value='1'". (getParam('stijl', ($voorganger->vousvoyeren ? '0' : '1')) ? ' selected' : '') .">Tutoyeren</option>";		
 	$left[] = "	</select></td>";
 	$left[] = "</tr>";	
 	$left[] = "<tr>";

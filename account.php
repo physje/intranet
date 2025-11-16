@@ -11,14 +11,14 @@ if(isset($_REQUEST['hash'])) {
 	$id = isValidHash($_REQUEST['hash']);
 	
 	if(!is_numeric($id)) {
-		toLog('error', '', 'ongeldige hash (account)');
+		toLog('ongeldige hash (account)', 'error', '');
 		$showLogin = true;
 	} else {
 		$showLogin = false;
 		session_start(['cookie_lifetime' => $cookie_lifetime]);		
 		$_SESSION['useID'] = $id;
 		$_SESSION['realID'] = $id;
-		toLog('info', '', 'account mbv hash');
+		toLog('account mbv hash');
 	}
 }
 
@@ -50,7 +50,7 @@ if(isset($_POST['data_opslaan']) AND $unique) {
 	$person->username = $_POST['username'];
 	if($_POST['wachtwoord'] != '')	$person->password = password_hash($_POST['wachtwoord'], PASSWORD_DEFAULT);
 		
-	if(!$person->update()) {
+	if(!$person->save()) {
 		$account[] = "Er is een fout opgetreden.";
 		$account[] = $sql;
 		toLog('Fout met wijzigen accountgegevens', 'error', $_POST['id']);
