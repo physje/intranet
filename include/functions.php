@@ -48,6 +48,7 @@ function time2str(string $format, int $time = 0) {
 }
 
 
+
 /**
  * Schrijf iets weg in de logfiles.
  * @param string $message Log-bericht
@@ -70,6 +71,8 @@ function toLog(string $message, string $type = '', int $slachtoffer = 0) {
 	}
 }
 
+
+
 /**
  * Hoort een hash bij een persoon.
  * @param string $hash Hash van de persoon die inlogd
@@ -87,6 +90,12 @@ function isValidHash(string $hash) {
 }
 
 
+
+/**
+ * Hoort een hash bij een voorganger.
+ * @param string $hash Hash van de voorganger die probeert in te loggen
+ * @return false als hash onbekend is, anders ID van voorganger
+ */
 function isValidVoorgangerHash(string $hash) {
 	$db = new Mysql();
 	$data = $db->select("SELECT `id` FROM `predikanten` WHERE `hash` like '$hash'");
@@ -97,6 +106,7 @@ function isValidVoorgangerHash(string $hash) {
 		return $data['id'];
 	}
 }
+
 
 
 /**
@@ -119,6 +129,25 @@ function getUserByInput($input) {
 }
 
 
+
+/**
+ * @param float $price Prijs
+ * @param bool $euro Met €-teken
+ * 
+ * @return string Opgemaakte prijs
+ */
+function formatPrice(float $price, $euro = true) {
+	$input = $price/100;
+	
+	if($euro) {
+		return "&euro;&nbsp;". number_format($input, 2,',','.');
+	} else {
+		return number_format($input, 2,',','.');
+	}
+}
+
+
+
 /**
  * Bepaal op basis van een dienstID of het een ochtend-, middag- of avonddienst is.
  * @param int $start Starttijd in UNIX-tijd
@@ -139,6 +168,7 @@ function formatDagdeel(int $start, $dienst = true) {
 	
 	return $dagdeel;
 }
+
 
 
 /**
@@ -173,6 +203,8 @@ function toonDienst(int $dienst, int $gelijk) {
 		}
 	}
 }
+
+
 
 /**
  * Haal een parameter op.
@@ -215,6 +247,8 @@ function getString(string $start, string $end, string $string, int $offset) {
 	return array($text, $rest);
 }
 
+
+
 /**
  * Verwijder een key uit een array.
  *
@@ -232,6 +266,8 @@ function excludeID(array $oldArray, int $id) {
 	
 	return $newArray;
 }
+
+
 
 /**
  * Maak een opsomming van een array.
@@ -251,6 +287,8 @@ function makeOpsomming($array, $first = ',', $last = 'en') {
 	}
 }
 
+
+
 /**
  * Genereer een bestandsnaam.
  * De bestandsnaam bestaat uit hexadecimale tekens
@@ -261,6 +299,8 @@ function generateFilename() {
     $guidText = substr($s,0,4) . '-'. date('dmyHis').'-'. substr($s,4);
     return $guidText;
 }
+
+
 
 /**
  * Controleer of het gegeven mailadres een geldig adres is.
@@ -275,6 +315,8 @@ function isValidEmail($email) {
 	return false;
 }
 
+
+
 /**
  * Trim de whitespaces voor en achter de string.
  * Deze werkt ook bij Unicode tekens
@@ -286,6 +328,7 @@ function trim_unicode($string) {
 	$string = preg_replace('/\s+/u', ' ', $string);
 	return trim($string);
 }
+
 
 
 /**
@@ -354,6 +397,7 @@ function generatePassword ($length = 8) {
 }
 
 
+
 /**
  * Genereer een random code als hash
  * @param int $length Lengte van de code, default is 8
@@ -367,6 +411,13 @@ function generateID($length=8) {
 }
 
 
+
+/**
+ * Vraag de data van Pasen in een bepaald jaar op
+ * @param mixed $jaar Jaar waarvoor Pasen opgezocht moet worden
+ * 
+ * @return array Array met key 'dag' voor de dag, en key 'maand' voor de maand waarop Pasen valt
+ */
 function getPasen($jaar) {
 	$url = 'https://www.kalender-365.nl/feestdagen/pasen.html';
 		
@@ -396,5 +447,150 @@ function getPasen($jaar) {
 	$data['maand']	= date("n", $tijd[0]);
 	
 	return $data;
+}
+
+
+
+/**
+ * Zoek de GPS-coordinaten op van een adres
+ * @param mixed $q Adres waarop gezocht moet worden
+ * 
+ * @return Array met latitude- en longitude van het adres
+ */
+function getCoordinates($q) {
+	global $locationIQkey;
+		
+	$url = "https://eu1.locationiq.com/v1/search.php?key=$locationIQkey";	
+	$url .= "&q=". urlencode($q);
+	$url .= "&format=json";
+			
+	$contents		= file_get_contents($url);
+	$json				= json_decode($contents, true);		
+	$longitude	= $json[0]['lon'];	# 52
+	$latitude		= $json[0]['lat']; 	# 6
+		
+	return array($latitude, $longitude);
+}
+
+
+
+/**
+ * Zoek de reisafstand tussen 2 adressen
+ * @param string $start Startpunt
+ * @param string $end Eindpunt
+ * 
+ * @return array Array met heen- en terugreis
+ */
+function determineAddressDistance($start, $end) {
+	global $locationIQkey;
+	
+	$service = 'matrix';
+	$profile = 'driving';
+	
+	if($end == 'Mariënburghstraat 4, Deventer') {		
+		$latitude_end = '52.267184';
+		$longitude_end = '6.159086';
+	} else {
+		$coord_end = getCoordinates($end);
+		$latitude_end = $coord_end[0];
+		$longitude_end = $coord_end[1];		
+		
+		# Om niet 2x vlak achter elkaar een request te doen even 1 seconden wachten
+		sleep(1);
+	}
+		
+	$coord_start = getCoordinates($start);
+	$latitude_start = $coord_start[0];
+	$longitude_start = $coord_start[1];
+	
+	if($longitude_start > 0 AND $latitude_start > 0 AND $longitude_end > 0 AND $latitude_end > 0) {
+		$coordinates = "{$longitude_start},{$latitude_start};{$longitude_end},{$latitude_end}";
+
+		# https://locationiq.com/docs-html/index.html#matrix
+		$url = "https://eu1.locationiq.com/v1/$service/$profile/$coordinates?key=$locationIQkey&sources=0;1&destinations=1;0&annotations=distance";
+	
+		$contents		= file_get_contents($url);
+		$json				= json_decode($contents, true);
+	
+		$heen = ($json['distances'][0][0])/1000;
+		$terug = ($json['distances'][1][1])/1000;
+		
+		$afstand = array($heen, $terug);		
+	} else {
+		$afstand = array(0,0);
+	}
+		
+	return $afstand;
+}
+
+
+
+/**
+ * Genereer een link waarmee een gastpredikant zijn declaratie kan indienen
+ * @param int $dienst ID van de dienst waarvoor de link geldt
+ * @param int $voorganger ID van de predikant waarvoor de link geldt
+ * @param bool $afzeggen Moet het een link worden om af te zien van declaratie
+ * 
+ * @return string URL van de link voor de declaratie
+ */
+function generateDeclaratieLink(int $dienst, int $voorganger, $afzeggen = false) {
+	global $randomCodeDeclaratie, $ScriptURL;
+	
+	# Declaratielink genereren
+	$hash = urlencode(password_hash($dienst.'$'.$randomCodeDeclaratie.'$'.$voorganger, PASSWORD_BCRYPT));
+	$declaratieLink = $ScriptURL ."declaratie/". ($afzeggen ? 'geenDeclaratie.php' : 'gastpredikant.php') ."?hash=$hash&d=$dienst&v=$voorganger";
+	
+	return $declaratieLink;
+}
+
+
+
+/**
+ * Schoon een IBAN-nummer op
+ * @param string $iban IBAN-nummer wat opgeschoond moet worden
+ * 
+ * @return string Schoongemaakt IBAN-nummer
+ */
+function cleanIBAN($iban) {
+	$toClean = $iban;
+	
+	$toClean = trim($toClean);
+	$toClean = strtoupper($toClean);
+	$toClean = str_replace(' ', '', $toClean);
+	$toClean = str_replace('.', '', $toClean);
+	
+	return $toClean;
+}
+
+
+
+/**
+ * Controleer of een IBAN een bestaand/valide IBAN-nummer is
+ * @param string $iban IBAN wat gecontroleerd moet worden
+ * 
+ * @return bool Is het een geldig IBAN
+ */
+function validateIBAN($iban) {
+    $iban = strtolower(str_replace(' ','',$iban));
+    $Countries = array('al'=>28,'ad'=>24,'at'=>20,'az'=>28,'bh'=>22,'be'=>16,'ba'=>20,'br'=>29,'bg'=>22,'cr'=>21,'hr'=>21,'cy'=>28,'cz'=>24,'dk'=>18,'do'=>28,'ee'=>20,'fo'=>18,'fi'=>18,'fr'=>27,'ge'=>22,'de'=>22,'gi'=>23,'gr'=>27,'gl'=>18,'gt'=>28,'hu'=>28,'is'=>26,'ie'=>22,'il'=>23,'it'=>27,'jo'=>30,'kz'=>20,'kw'=>30,'lv'=>21,'lb'=>28,'li'=>21,'lt'=>20,'lu'=>20,'mk'=>19,'mt'=>31,'mr'=>27,'mu'=>30,'mc'=>27,'md'=>24,'me'=>22,'nl'=>18,'no'=>15,'pk'=>24,'ps'=>29,'pl'=>28,'pt'=>25,'qa'=>29,'ro'=>24,'sm'=>27,'sa'=>24,'rs'=>22,'sk'=>24,'si'=>19,'es'=>24,'se'=>24,'ch'=>21,'tn'=>24,'tr'=>26,'ae'=>23,'gb'=>22,'vg'=>24);
+    $Chars = array('a'=>10,'b'=>11,'c'=>12,'d'=>13,'e'=>14,'f'=>15,'g'=>16,'h'=>17,'i'=>18,'j'=>19,'k'=>20,'l'=>21,'m'=>22,'n'=>23,'o'=>24,'p'=>25,'q'=>26,'r'=>27,'s'=>28,'t'=>29,'u'=>30,'v'=>31,'w'=>32,'x'=>33,'y'=>34,'z'=>35);
+
+    if(strlen($iban) == $Countries[substr($iban,0,2)]){
+        $MovedChar = substr($iban, 4).substr($iban,0,4);
+        $MovedCharArray = str_split($MovedChar);
+        $NewString = "";
+
+        foreach($MovedCharArray AS $key => $value){
+            if(!is_numeric($MovedCharArray[$key])){
+                $MovedCharArray[$key] = $Chars[$MovedCharArray[$key]];
+            }
+            $NewString .= $MovedCharArray[$key];
+        }
+
+        if(bcmod($NewString, '97') == 1) {
+            return true;
+        }
+    }
+    return false;
 }
 ?>

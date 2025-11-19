@@ -4,124 +4,158 @@
  */
 class Voorganger {
     /**
-     * @var int $id ID van de voorganger
+     * @var int ID van de voorganger
      */
     public int $id;
 
     /**
-     * @var bool $active Is de voorganger actief of niet
+     * @var bool Is de voorganger actief of niet
      */
     public bool $active;
 
     /**
-     * @var string $aanhef Aanhef van de voorganger (bijv. "ds.", "dr.", etc.)
+     * @var string Aanhef van de voorganger (bijv. "ds.", "dr.", etc.)
      */
     public string $aanhef;
 
     /**
-     * @var string $initialen Initialen van de voorganger
+     * @var string Initialen van de voorganger
      */
     public string $initialen;
 
     /**
-     * @var string $voornaam Voornaam van de voorganger
+     * @var string Voornaam van de voorganger
      */
     public string $voornaam;
 
     /**
-     * @var string $tussenvoegsel Tussenvoegsel bij de achternaam
+     * @var string Tussenvoegsel bij de achternaam
      */
     public string $tussenvoegsel;
 
     /**
-     * @var string $achternaam Achternaam van de voorganger
+     * @var string Achternaam van de voorganger
      */
     public string $achternaam;
 
     /**
-     * @var string $telefoon Telefoonnummer van de voorganger
+     * @var string Telefoonnummer van de voorganger
      */
     public string $telefoon;
 
     /**
-     * @var string $mobiel Mobiel nummer van de voorganger
+     * @var string Mobiel nummer van de voorganger
      */
     public string $mobiel;
 
     /**
-     * @var string $preekvoorziener Naam van de preekvoorziener
+     * @var string Naam van de preekvoorziener
      */
     public string $preekvoorziener;
 
     /**
-     * @var string $preekvoorziener_telefoon Telefoonnummer van de preekvoorziener
+     * @var string Telefoonnummer van de preekvoorziener
      */
     public string $preekvoorziener_telefoon;
 
     /**
-     * @var string $mail E-mailadres van de voorganger
+     * @var string E-mailadres van de voorganger
      */
     public string $mail;
 
     /**
-     * @var string $plaats Plaats waar de voorganger werkt
+     * @var string Plaats waar de voorganger werkt
      */
     public string $plaats;
 
     /**
-     * @var string $denominatie Denominatie van de voorganger (NKG, CGK, etc.)
+     * @var string Denominatie van de voorganger (NKG, CGK, etc.)
      */
     public string $denominatie;
 
     /**
-     * @var string $stijl Aanspreekstijl van de voorganger (formeel, informeel, etc.)
+     * @var bool Vousvoyeren ja of nee
      */
-    #public string $stijl;
-
     public bool $vousvoyeren;
 
     /**
-     * @var string $opmerkingen Opmerkingen over de voorganger
+     * @var string Opmerkingen over de voorganger
      */
     public string $opmerkingen;
 
     /**
-     * @var string $hash Unieke hash voor de voorganger
+     * @var string Unieke hash voor de voorganger
      */
     public string $hash;
 
     /**
-     * @var bool $aandachtspunt Moet de voorganger de aandachtspunten voor de dienst ontvangen
+     * @var bool Moet de voorganger de aandachtspunten voor de dienst ontvangen
      */
     public bool $aandachtspunt;
 
     /**
-     * @var bool $declaratie Mag de voorganger declareren
+     * @var bool Mag de voorganger declareren
      */
     public bool $declaratie;
 
     /**
-     * @var bool $reiskosten Mag de voorganger reiskosten declareren
+     * @var bool Mag de voorganger reiskosten declareren
      */
     public bool $reiskosten;
 
     /**
-     * @var int $nameType Type van naamweergave voor de voorganger
+     * @var float Honorarium
+     */
+    public float $honorarium;
+    
+    /**
+     * @var float Honorarium wat voor een bepaalde datum gerekend moet worden
+     */
+    public float $honorarium_oud;
+    
+    /**
+     * @var float Honorarium voor speciale gelegenheden (bruiloft, begrafenis)
+     */
+    public float $honorarium_special;
+    
+    /**
+     * @var float KM-vergoeding per km
+     */
+    public float $km_vergoeding;
+    
+    /**
+     * @var string Vertrekpunt (woonadres) voor reiskostenvergoeding
+     */
+    public string $vertrekpunt;
+    
+    /**
+     * @var int ID in eBoekhouden
+     */
+    public int $boekhoud_id;
+    
+    /**
+     * @var int UNIX-tijd van laatste keer voorgaan
+     */
+    public int $last_voorgaan;
+    
+    /**
+     * @var int UNIX-tijd van laatste keer aandachtspunten ontvangen
+     */
+    public int $last_aandacht;
+    
+    /**
+     * @var int UNIX-tijd van laatste keer verifieren van de data
+     */
+    public int $last_data;
+    
+    /**
+     * @var int Type van naamweergave voor de voorganger
      */
     public int $nameType;
 
-    public float $honorarium;
-    public float $honorarium_oud;
-    public float $honorarium_special;
-    public float $km_vergoeding;
-    public int $boekhoud_id;
-
-    public int $last_voorgaan;
-    public int $last_aandacht;
-    public int $last_data;
 
     /**
-     * @param int $id ID van de voorganger
+     * @param int ID van de voorganger
      */
     function __construct(int $id = 0) {
         if($id > 0) {
@@ -158,6 +192,7 @@ class Voorganger {
             $this->honorarium = $data['honorarium_2023'];
             $this->honorarium_special = $data['honorarium_special'];
             $this->km_vergoeding = $data['km_vergoeding'];
+            $this->vertrekpunt = urldecode($data['vertrekpunt']);
             $this->boekhoud_id = $data['boekhoudenID'];
         } else {
             $this->active = true;
@@ -187,6 +222,7 @@ class Voorganger {
             $this->honorarium_oud = 0;
             $this->honorarium_special = 0;
             $this->km_vergoeding = 0;
+            $this->vertrekpunt = '';
             $this->boekhoud_id = 0;       
         }
         $this->nameType = 3;
@@ -194,7 +230,8 @@ class Voorganger {
 
 
     /**
-     * @return string Opgemaakte naam van de voorganger op basis van type
+     * Maak de naam van de voorganger op op basis van het type
+     * @param int $type Opmaaktype, default is 0
      * type = 1 : W.M. van Wijk
      * type = 2 : ds. van Wijk
      * type = 3 : ds. W.M. van Wijk
@@ -202,7 +239,8 @@ class Voorganger {
      * type = 5 : Wim -> ds. van Wijk (bij ontbreken voornaam)
      * type = 6 : Wijk; van, W.M.
      * type = 7 : van Wijk
-     * type = 8 : Wijk; van, Wim -> Wijk; van, W.M. (bij ontbreken voornaam)     *
+     * type = 8 : Wijk; van, Wim -> Wijk; van, W.M. (bij ontbreken voornaam)
+     * @return string Opgemaakte naam van de voorganger 
      */
     function getName($type = 0) {
         if($type == 0) {
@@ -324,6 +362,7 @@ class Voorganger {
         $data['aandachtspunten'] = ($this->aandachtspunt ? '1' : '0');
         $data['declaratie'] = ($this->declaratie ? '1' : '0');
         $data['reiskosten'] = ($this->reiskosten ? '1' : '0');
+        $data['vertrekpunt'] = urlencode($this->vertrekpunt);
 
         if(isset($this -> id)) {
             foreach($data as $key => $value) {

@@ -179,31 +179,33 @@ class Rooster {
      */
     function save() {
         $db = new Mysql;
+        
+        $data['naam'] = urlencode($this->naam);
+        $data['groep'] = $this->groep;
+        $data['beheerder'] = $this->beheerder;
+        $data['planner'] = $this->planner;
+        $data['aantal'] = $this->velden;
+        $data['reminder'] = ($this->reminder ? '1' : '0');
+        $data['gelijke_diensten'] = $this->gelijk;
+        $data['voorganger'] = ($this->voorganger ? '1' : '0');
+        $data['opmerking'] = ($this->opmerking ? '1' : '0');
+        $data['ouder'] = ($this->ouder ? '1' : '0');
+        $data['partner'] = ($this->partner ? '1' : '0');
+        $data['text_only'] = ($this->tekst ? '1' : '0');
+        $data['alert'] = $this->alert;
+        $data['mail'] = urlencode($this->mail);
+        $data['onderwerp'] = urlencode($this->onderwerp);
+        $data['mail_afzender'] = urlencode($this->van);
+        $data['naam_afzender'] = urlencode($this->vanNaam);
+        $data['last_change'] = time();
+
         if($this->id > 0) {
-            $query = "UPDATE `roosters` SET
-            `naam` = '". urlencode($this->naam) ."',
-            `groep` = ". $this->groep .",
-            `beheerder` = ". $this->beheerder .",
-            `planner` = ". $this->planner .",
-            `aantal` = '". $this->velden ."',
-            `reminder` = '". ($this->reminder ? '1' : '0') ."',
-            `gelijke_diensten` = '". $this->gelijk ."',
-            `voorganger` = '". ($this->voorganger ? '1' : '0') ."',
-            `opmerking` = '". ($this->opmerking ? '1' : '0') ."',
-            `ouder` = '". ($this->ouder ? '1' : '0') ."',
-            `partner` = '". ($this->partner ? '1' : '0') ."',
-            `text_only` = '". ($this->tekst ? '1' : '0') ."',
-            `alert` = '". $this->alert ."',
-            `mail` = '". urlencode($this->mail) ."',
-            `onderwerp` = '". urlencode($this->onderwerp) ."',
-            `mail_afzender` = '". urlencode($this->van) ."',
-            `naam_afzender` = '". urlencode($this->vanNaam) ."',
-            `last_change` = '". $this->lastChange ."' WHERE `id` = ". $this->id;
+			foreach($data as $key => $value) {
+				$set[] = "`$key` = '$value'";
+			}
+			$query = "UPDATE `rooster` SET ". implode(', ', $set) ." WHERE `id` = ". $this->id;			
         } else {
-            $query = "INSERT INTO `roosters`
-            (`naam`,`groep` ,`beheerder` ,`planner`,`aantal`,`reminder`,`gelijke_diensten`,`voorganger`,`opmerking`,`ouder`,`partner`,`text_only`,`alert`,`mail`,`onderwerp`,`mail_afzender`,`naam_afzender`,`last_change`)
-             VALUES
-            ('". $this->naam ."', '". $this->groep ."', '". $this->beheerder ."', '". $this->planner ."', '". $this->velden ."', '". $this->reminder ."', '". $this->gelijk ."', '". ($this->voorganger ? '1' : '0') ."', '". $this->opmerking ."', '". $this->ouder ."', '". $this->partner ."', '". $this->tekst ."', '". $this->alert ."', '". $this->mail ."', '". $this->onderwerp ."', '". $this->van ."', '". $this->vanNaam ."', ". time() .")";
+			$query = "INSERT INTO `rooster` (`". implode('`, `', array_keys($data)) ."`) VALUES ('". implode("', '", array_values($data)) ."')";
         }
 
         return $db->query($query);

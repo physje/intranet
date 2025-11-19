@@ -132,31 +132,32 @@ foreach($kerkdiensten as $dienstID) {
 	$vEvent[] = implode("\r\n", $ics);
 }
 
-//TODO:Agenda toevoegen aan Scipio iCal
-/*
+
+
 #################
 # Agenda		  	#
 #################
-$sql_agenda = "SELECT * FROM $TableAgenda WHERE $AgendaEind > ". (time()-(31*24*60*60));
-$result_agenda = mysqli_query($db, $sql_agenda);
-if($row_agenda = mysqli_fetch_array($result_agenda)) {
-	do {
-		# Eigenlijke ICS-data
-		$ics = array();
-		$ics[] = "BEGIN:VEVENT";	
-		$ics[] = "UID:3GK-agenda-". substr('00'.$row_agenda[$AgendaID], -3);
-		$ics[] = "DTSTART;TZID=Europe/Amsterdam:". date("Ymd\THis", $row_agenda[$AgendaStart]);
-		$ics[] = "DTEND;TZID=Europe/Amsterdam:". date("Ymd\THis", $row_agenda[$AgendaEind]);	
-		$ics[] = "LAST-MODIFIED:". date("Ymd\THis", time());
-		$ics[] = "SUMMARY:". urldecode($row_agenda[$AgendaTitel]);
-		$ics[] = 'DESCRIPTION:'.str_replace("\r\n", '\n', urldecode($row_agenda[$AgendaDescr]));
-		$ics[] = "STATUS:CONFIRMED";	
-		$ics[] = "TRANSP:TRANSPARENT";
-		$ics[] = "END:VEVENT";
-		$vEvent[] = implode("\r\n", $ics);
-	} while($row_agenda = mysqli_fetch_array($result_agenda));
+$agendaItems = Agenda::getAgendaItems($startTijd, $eindTijd);
+
+foreach($agendaItems as $agendaID) {
+	$agenda = new Agenda($agendaID);
+
+	# Eigenlijke ICS-data
+	$ics = array();
+	$ics[] = "BEGIN:VEVENT";	
+	$ics[] = "UID:3GK-agenda-". substr('000'.$agenda->id, -4);
+	$ics[] = "DTSTART;TZID=Europe/Amsterdam:". date("Ymd\THis", $agenda->start);
+	$ics[] = "DTEND;TZID=Europe/Amsterdam:". date("Ymd\THis", $agenda->eind);	
+	$ics[] = "LAST-MODIFIED:". date("Ymd\THis", time());
+	$ics[] = "SUMMARY:". $agenda->titel;
+	$ics[] = 'DESCRIPTION:'.str_replace("\r\n", '\n', $agenda->beschrijving);
+	$ics[] = "STATUS:CONFIRMED";	
+	$ics[] = "TRANSP:TRANSPARENT";
+	$ics[] = "END:VEVENT";
+	$vEvent[] = implode("\r\n", $ics);
 }
-*/
+
+
 
 #################
 # Open Kerk			#
