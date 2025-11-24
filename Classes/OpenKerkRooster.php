@@ -2,6 +2,10 @@
 
 /**
  * Class voor rooster-object voor de Open Kerk
+ * 
+ * @package Intranet KKD
+ * @author Matthijs Draijer
+ * @version 1.0.0
  */
 class OpenKerkRooster {
     /**

@@ -2,6 +2,10 @@
 include_once('KKDConfig.php');
 /**
  * Class om te communiceren met de MySQL-database
+ * 
+ * @package Intranet KKD
+ * @author Matthijs Draijer
+ * @version 1.0.0
  */
 class Mysql implements KKDConfig {
 	public $connection;

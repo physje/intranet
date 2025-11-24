@@ -2,6 +2,10 @@
 
 /**
  * Voor het loggen van acties op de site
+ * 
+ * @package Intranet KKD
+ * @author Matthijs Draijer
+ * @version 1.0.0
  */
 class Logging {
     /**

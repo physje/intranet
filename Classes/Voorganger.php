@@ -1,6 +1,10 @@
 <?php
 /**
  * Class om een voorganger toe te voegen, wijzigen of te tonen
+ * 
+ * @package Intranet KKD
+ * @author Matthijs Draijer
+ * @version 1.0.0
  */
 class Voorganger {
     /**
@@ -342,27 +346,36 @@ class Voorganger {
      */
     function save() {
         $db = new Mysql;
-
-        $data['actief'] = ($this->active ? '1' : '0');
-        $data['titel'] = $this->aanhef;
         $data['initialen'] = urlencode($this->initialen);
         $data['voornaam'] = urlencode($this->voornaam);
         $data['tussen'] = urlencode($this->tussenvoegsel);
         $data['achternaam'] = urlencode($this->achternaam);
-        $data['telefoon'] = $this->telefoon;
-        $data['mobiel'] = $this->mobiel;
-        $data['naam_pv'] = urlencode($this->preekvoorziener);
-        $data['tel_pv'] = $this->preekvoorziener_telefoon;
+        $data['naam_pv'] = urlencode($this->preekvoorziener);        
         $data['mail'] = urlencode($this->mail);
         $data['plaats'] = urlencode($this->plaats);
-        $data['kerk'] = urlencode($this->denominatie);
-        $data['stijl'] = ($this->vousvoyeren ? '1' : '0');
+        $data['kerk'] = urlencode($this->denominatie);        
         $data['opmerking'] = urlencode($this->opmerkingen);
-        $data['hash'] = $this->hash;
+        $data['vertrekpunt'] = urlencode($this->vertrekpunt);
+
+        $data['stijl'] = ($this->vousvoyeren ? '1' : '0');
+        $data['actief'] = ($this->active ? '1' : '0');
         $data['aandachtspunten'] = ($this->aandachtspunt ? '1' : '0');
         $data['declaratie'] = ($this->declaratie ? '1' : '0');
         $data['reiskosten'] = ($this->reiskosten ? '1' : '0');
-        $data['vertrekpunt'] = urlencode($this->vertrekpunt);
+
+        $data['titel'] = $this->aanhef;
+        $data['telefoon'] = $this->telefoon;
+        $data['mobiel'] = $this->mobiel;
+        $data['hash'] = $this->hash;
+        $data['tel_pv'] = $this->preekvoorziener_telefoon;
+        $data['laatst_aandacht'] = $this->last_aandacht;
+        $data['laatst_voorgaan'] = $this->last_voorgaan;
+        $data['laatst_gegevens'] = $this->last_data;
+        $data['honorarium_2023'] = $this->honorarium_oud;
+        $data['honorarium_2023'] = $this->honorarium;
+        $data['honorarium_special'] = $this->honorarium_special;
+        $data['km_vergoeding'] = $this->km_vergoeding;
+        $data['boekhoudenID'] = $this->boekhoud_id;
 
         if(isset($this -> id)) {
             foreach($data as $key => $value) {

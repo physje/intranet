@@ -2,6 +2,10 @@
 
 /**
  * Class voor een kerkdienst. Denk daarbij aan starttijd, eindtijd, collectes, voorganger, etc.
+ * 
+ * @package Intranet KKD
+ * @author Matthijs Draijer
+ * @version 1.0.0
  */
 class Kerkdienst {
     /**

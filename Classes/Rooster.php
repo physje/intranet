@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * [Description Rooster]
+ * 
+ * @package Intranet KKD
+ * @author Matthijs Draijer
+ * @version 1.0.0
+ */
 class Rooster {
     /**
      * @var int ID van het rooster

@@ -1,4 +1,15 @@
 <?php
+/**
+ * Script om herinnering-mails te versturen voor de komende kerkdienst.
+ * 
+ * Dit script wordt dagelijks uitgevoerd via een cronjob en kijkt naar diensten over 3 dagen.
+ * Zo wordt bv op donderdagochtend mails voor zondag verstuurd.
+ * Het script kijkt per rooster of er een herinnering verstuurd moet worden en kan ook overweg met roosters waar enkel tekst staat.
+ * 
+ * @package Intranet KKD
+ * @author Matthijs Draijer
+ * @version 1.0.0
+ */
 include_once('include/functions.php');
 include_once('include/config.php');
 include_once('include/config_mails.php');
@@ -145,6 +156,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 						}
 
 						$mail->testen = true;
+						//TODO: testen uitzetten
 									
 						if($mail->sendMail()) {
 							toLog('Herinnering-mail '. $rooster->naam .' verstuurd', 'info', $lid);

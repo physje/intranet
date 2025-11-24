@@ -1,6 +1,6 @@
 <?php
 include_once('include/functions.php');
-#include_once('include/EB_functions.php');
+include_once('include/EB_functions.php');
 include_once('include/config.php');
 include_once('Classes/Member.php');
 include_once('Classes/Wijk.php');
@@ -31,7 +31,7 @@ if($showLogin) {
 if(isset($_POST['save_data'])) {
 	$user = new Member($_POST['id']);
 	$user->email_formeel = $_POST['form_mail'];
-	#$user->boekhouden = $_POST['EB_relatie'];
+	$user->boekhouden = $_POST['EB_relatie'];
 	if($user->save()) {
 		toLog('Problemen met aanpassen profielgegevens', 'error');
 	} else {
@@ -69,29 +69,9 @@ $aToon['change'] = false;
 $aToon['visit'] = false;
 $aToon['familie'] = false;
 
-# Wijkteam mag alleen details van eigen wijk zien
 $wijk = new Wijk();
 $wijk->wijk = $person->wijk;
 $wijkteam = $wijk->getWijkteam();
-if(in_array($_SESSION['useID'], $wijkteam)) {
-	$aToon['adres'] = true;
-	$aToon['PC'] = true;
-	$aToon['tel'] = true;
-	$aToon['mail'] = true;
-	$aToon['geboorte'] = true;
-	$aToon['familie'] = true;
-}
-
-# Van je eigen profiel mag je weer meer zien
-if($_SESSION['useID'] == $id) {
-	$aToon['adres'] = true;
-	$aToon['PC'] = true;
-	$aToon['tel'] = true;
-	$aToon['mail'] = true;
-	$aToon['geboorte'] = true;
-	$aToon['username'] = true;
-	$aToon['familie'] = true;
-}
 
 # Admin mag alles zien
 if(in_array(1, $myGroups)) {
@@ -114,6 +94,29 @@ if(in_array(1, $myGroups)) {
 	$aToon['visit'] = true;
 	$aToon['familie'] = true;
 }
+
+# Van je eigen profiel mag je weer meer zien
+elseif($_SESSION['useID'] == $id) {
+	$aToon['adres'] = true;
+	$aToon['PC'] = true;
+	$aToon['tel'] = true;
+	$aToon['mail'] = true;
+	$aToon['geboorte'] = true;
+	$aToon['username'] = true;
+	$aToon['familie'] = true;
+}
+
+# Wijkteam mag alleen details van eigen wijk zien
+elseif(array_key_exists ($_SESSION['useID'], $wijkteam)) {
+	$aToon['adres'] = true;
+	$aToon['PC'] = true;
+	$aToon['tel'] = true;
+	$aToon['mail'] = true;
+	$aToon['geboorte'] = true;
+	$aToon['familie'] = true;
+}
+
+
 
 # Als je als admin bent ingelogd zie je alle leden, anders alleen de actieve
 #$familie = getFamilieleden($id, in_array(1, getMyGroups($_SESSION['useID'])));
@@ -232,12 +235,10 @@ if($aToon['EB_relatie']) {
 	$blok[] = "	<td><select name='EB_relatie'>";
 	$blok[] = "	<option value=''>Selecteer relatie</option>";
 	
-	//FIXME:Controleer boekhouden
-	#$relaties = eb_getRelaties();
-	
-	#foreach($relaties as $relatieData) {
-	#	$blok[] = "	<option value='". $relatieData['code'] ."'". ($person->boekhouden == $relatieData['code'] ? ' selected' : '') .">". substr($relatieData['naam'], 0, 35) ."</option>";
-	#}
+	$relaties = eb_getRelaties();	
+	foreach($relaties as $relatieData) {
+		$blok[] = "	<option value='". $relatieData['code'] ."'". ($person->boekhouden == $relatieData['code'] ? ' selected' : '') .">". substr($relatieData['naam'], 0, 35) ."</option>";
+	}
 			
 	$blok[] = "	</select></td>";
 	$blok[] = "	</tr>";	

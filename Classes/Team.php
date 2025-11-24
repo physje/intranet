@@ -2,7 +2,11 @@
 /**
  * Class voor het beheren van de leden in een team.
  * Het is mogelijk om leden toe te voegen en te verwijderen
-*/
+ * 
+ * @package Intranet KKD
+ * @author Matthijs Draijer
+ * @version 1.0.0
+ */
 class Team {
     /**
      * @var int ID van het team

@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * Class voor een lid in de kerkelijke administratie
+ * 
+ * @package Intranet KKD
+ * @author Matthijs Draijer
+ * @version 1.0.0
+ */
 class Member {		
 	public Mysql $db;
 	public int $id;

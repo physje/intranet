@@ -8,6 +8,10 @@
  *  - een rooster waar één of meerdere personen zijn ingedeeld per dienst.
  *
  * Of het een rooster met tekst, of een rooster zonder tekst is, is te achterhalen met de eigenschap 'text_only'
+ * 
+ * @package Intranet KKD
+ * @author Matthijs Draijer
+ * @version 1.0.0
  */
 class Vulling {
     /**

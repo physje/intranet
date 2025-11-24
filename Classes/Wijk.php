@@ -1,6 +1,10 @@
 <?php
 /**
  * Class voor het werken met wijken zoals het beheren van het wijkteam en wijkleden
+ * 
+ * @package Intranet KKD
+ * @author Matthijs Draijer
+ * @version 1.0.0
  */
 class Wijk {
     /**

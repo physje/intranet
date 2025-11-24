@@ -2,6 +2,10 @@
 
 /**
  * Class om de lokale administratie voor LaPosta bij te houden
+ * 
+ * @package Intranet KKD
+ * @author Matthijs Draijer
+ * @version 1.0.0
  */
 class LaPostaData {
     /**

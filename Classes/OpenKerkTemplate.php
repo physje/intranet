@@ -3,6 +3,10 @@
 /**
  * Template voor een Open Kerk rooster-moment.
  * Om een Object aan te maken moet een template ID, week (0/1), dag (0..6) en tijdsblok worden gegeven.
+ * 
+ * @package Intranet KKD
+ * @author Matthijs Draijer
+ * @version 1.0.0
  */
 class OpenKerkTemplate {
     public int $id;

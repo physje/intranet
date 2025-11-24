@@ -6,49 +6,78 @@ include_once('../include/config_mails.php');
 include_once('../include/HTML_TopBottom.php');
 include_once('../Classes/Kerkdienst.php');
 include_once('../Classes/Voorganger.php');
+include_once('../Classes/Declaratie.php');
+include_once('../Classes/KKDMailer.php');
+include_once('../Classes/Logging.php');
+include_once('../Classes/Boeknummer.php');
 include_once('genereerDeclaratiePdf.php');
 
 if($productieOmgeving) {
 	$write2EB = true;
 	$sendMail = true;
-	$sendTestMail = false;
 } else {
 	$write2EB = false;
 	$sendMail = false;
-	$sendTestMail = false;
 	
 	echo 'Test-omgeving';
 }
 
-if(isset($_REQUEST['hash'])) {
-	$hash		= urldecode($_REQUEST['hash']);	
-		
-	$dienst		= new Kerkdienst($_REQUEST['d']);
-	$voorganger	= new Voorganger($_REQUEST['v']);
+# Kijk of er een sessie actief is, zo niet start de sessie
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+# Kijk of er een declaratie-object in de sessie staat en laad die dan
+if(!isset($_SESSION['declaratie'])) {	
+	$declaratie = new Declaratie();
+	$declaratie->type = 'voorganger';
+	$_SESSION['declaratie'] = $declaratie;
+}
+$declaratie = $_SESSION['declaratie'];
+
+# Mocht het een gemeentelid-declaratie zijn, maak dan een nieuwe aan
+if($declaratie->type != 'voorganger') {
+	# Verwijder de oude declaratie en start een nieuwe
+	unset($_SESSION['declaratie']);
+	$declaratie = new Declaratie();
+	$declaratie->type = 'voorganger';
+	$_SESSION['declaratie'] = $declaratie;
+}
+
+if(isset($_REQUEST['hash']))		$declaratie->hash = urldecode($_REQUEST['hash']);
+if(isset($_REQUEST['d']))			$declaratie->dienst = $_REQUEST['d'];
+if(isset($_REQUEST['v']))			$declaratie->voorganger = $_REQUEST['v'];
+if(isset($_POST['reiskosten']))		$declaratie->reiskosten = str_replace(',', '.', $_POST['reiskosten']);
+if(isset($_POST['reis_van']))		$declaratie->van = urldecode($_POST['reis_van']);
+if(isset($_POST['reis_naar']))		$declaratie->naar = urldecode($_POST['reis_naar']);
+if(isset($_POST['km']))				$declaratie->afstand = urldecode($_POST['km']);
+if(isset($_POST['oorspronkelijke_IBAN']))	$declaratie->oorspronkelijke_IBAN = urldecode($_POST['oorspronkelijke_IBAN']);
+if(isset($_POST['IBAN']))					$declaratie->IBAN = urldecode($_POST['IBAN']);
+
+if(isset($_POST['overig'])) {
+	$declaratie->overigeKosten = array();
+	foreach($_POST['overig'] as $key => $string) {		
+		$declaratie->overigeKosten[$string] = floatval(str_replace(',', '.', $_POST['overig_price'][$key]));
+	}
+}
+
+if(isset($_REQUEST['reset'])) {
+	$declaratie = new Declaratie();
+	$declaratie->type = 'voorganger';
+}
+
+if(isset($declaratie->hash) && $declaratie->hash != '') {
+	$dienst		= new Kerkdienst($declaratie->dienst);
+	$voorganger	= new Voorganger($declaratie->voorganger);
 	$declaratieStatus = $dienst->declaratieStatus;
 
-	# De hash klopt & de predikant staat ook op het rooster & er is nog niet eerder een declaratie ingediend
-	if(password_verify($dienst->dienst.'$'.$randomCodeDeclaratie.'$'.$voorganger->id,$hash) && $dienst->voorganger == $voorganger->id && $declaratieStatus < 8) {		
-		#$firstData = getVoorgangerData($voorganger);
-		#$secondData = getDeclaratieData($voorganger, $dienst);		
-		#$voorgangerData = array_merge($firstData, $secondData);
+	# Geldige link &&
+	# de predikant staat ook op het rooster voor deze dienst &&
+	# er is nog niet eerder een declaratie ingediend
+	if(password_verify($dienst->dienst.'$'.$randomCodeDeclaratie.'$'.$voorganger->id,$declaratie->hash) && $dienst->voorganger == $voorganger->id && $declaratieStatus < 8) {
 
 		# Schrijf de variabelen die in het hele proces verzameld worden als hidden parameters weg in het formulier
 		$page[] = "<form method='post' action='$_SERVER[PHP_SELF]'>";		
-		if(isset($dienst))				$page[] = "<input type='hidden' name='d' value='". $dienst->dienst ."'>";
-		if(isset($voorganger))			$page[] = "<input type='hidden' name='v' value='". $voorganger->id ."'>";
-		if(isset($_REQUEST['hash']))	$page[] = "<input type='hidden' name='hash' value='". trim($_REQUEST['hash']) ."'>";
-		if(isset($_POST['reiskosten']))	$page[] = "<input type='hidden' name='reiskosten' value='". trim($_POST['reiskosten']) ."'>";
-		if(isset($_POST['reis_van']))	$page[] = "<input type='hidden' name='reis_van' value='". trim($_POST['reis_van']) ."'>";
-		if(isset($_POST['reis_naar']))	$page[] = "<input type='hidden' name='reis_naar' value='". trim($_POST['reis_naar']) ."'>";
-		if(isset($_POST['km']))			$page[] = "<input type='hidden' name='km' value='". trim($_POST['km']) ."'>";
-
-		if(isset($_POST['overig']))	{
-			foreach($_POST['overig'] as $key => $string) {
-				$page[] = "<input type='hidden' name='overig[$key]' value='$string'>";
-				$page[] = "<input type='hidden' name='overig_price[$key]' value='". $_POST['overig_price'][$key] ."'>";
-			}
-		}
 
 		if(isset($_POST['indienen'])) {
 			# Scherm waarbij
@@ -66,24 +95,24 @@ if(isset($_REQUEST['hash'])) {
 			# -------
 			# Relatie bepalen, vergelijken, en zo nodig updaten of invoeren
 			if($voorganger->boekhoud_id != '' && $voorganger->boekhoud_id > 0) {				
-				if(cleanIBAN($_POST['oorspronkelijke_IBAN']) != cleanIBAN($_POST['IBAN']) AND $write2EB) {
-					$errorResult = eb_updateRelatieIbanByCode($voorganger->boekhoud_id, cleanIBAN($_POST['IBAN']));
+				if(cleanIBAN($declaratie->oorspronkelijke_IBAN) != cleanIBAN($declaratie->IBAN) AND $write2EB) {
+					$errorResult = eb_updateRelatieIbanByCode($voorganger->boekhoud_id, cleanIBAN($declaratie->IBAN));
 					if($errorResult) {
 						toLog($errorResult, 'error');
 						$IBANChangeSucces = false;						
 					} else {
-						toLog('IBAN van relatie '. $voorganger->boekhoud_id .' aangepast van '. $_POST['oorspronkelijke_IBAN'] .' naar '. $_POST['IBAN'], 'debug');
+						toLog('IBAN van relatie '. $voorganger->boekhoud_id .' aangepast van '. $declaratie->oorspronkelijke_IBAN .' naar '. $declaratie->IBAN, 'debug');
 					}
 				}			
 			} else {
 				$EB_code = 0;
 				# op basis van IBAN zoeken of iemand al bekend is				
-				$errorResult = eb_getRelatieCodeByIban ($_POST['IBAN'], $EB_code);
+				$errorResult = eb_getRelatieCodeByIban ($declaratie->IBAN, $EB_code);
 				if($errorResult) {
 					toLog($errorResult, 'error');
 					$IBANSearchSucces = false;
 				} else {
-					toLog('IBAN '. $_POST['IBAN'] .' hoort bij relatie '. $EB_code, 'debug');
+					toLog('IBAN '. $declaratie->IBAN .' hoort bij relatie '. $EB_code, 'debug');
 					$voorganger->boekhoud_id = $EB_code;
 					$voorganger->save();
 				}
@@ -91,7 +120,7 @@ if(isset($_REQUEST['hash'])) {
 				// Als er geen nummer terugkomt, is dit IBAN niet bekend en moet deze voorganger worden toegevoegd
 				if(!$IBANSearchSucces) {
 					if($write2EB) {
-						$errorResult = eb_maakNieuweRelatieAan ($voorganger->getName(6), 'm', '', '', $voorganger->plaats, $voorganger->mail, $_POST['IBAN'], $EB_code, $EB_id);
+						$errorResult = eb_maakNieuweRelatieAan ($voorganger->getName(6), 'm', '', '', $voorganger->plaats, $voorganger->mail, $declaratie->IBAN, $EB_code, $EB_id);
 						if($errorResult) {
 							toLog($errorResult, 'error');
 							$addRelatieSucces = false;
@@ -109,7 +138,7 @@ if(isset($_REQUEST['hash'])) {
 							}
 						}
 					} else {
-						echo 'Nieuwe relatie aanmaken voor '. $_POST['IBAN'];
+						echo 'Nieuwe relatie aanmaken voor '. $declaratie->IBAN;
 					}
 				}				
 			}
@@ -132,34 +161,35 @@ if(isset($_REQUEST['hash'])) {
 			$mailPenningsmeester[] = "	</tr>";
 			
 			$totaal = $voorganger->honorarium;
-			$omschrijving[] = 'preekvergoeding: '. round(formatPrice($voorganger->honorarium, false));
+			$omschrijving[] = 'preekvergoeding: '. formatPrice($voorganger->honorarium, false);
 			
 			if($voorganger->reiskosten) {
 				$mailPenningsmeester[] = "	<tr>";
 				$mailPenningsmeester[] = "		<td colspan='2'>&nbsp;</td>";
-				$mailPenningsmeester[] = "		<td>Reiskosten<br><small>".$_POST['reis_van'] .' -> '. $_POST['reis_naar'] ." v.v.</small></td>";
-				$mailPenningsmeester[] = "		<td align='right' valign='top'>". formatPrice($_POST['reiskosten']) ."</td>";
+				$mailPenningsmeester[] = "		<td>Reiskosten<br><small>". $declaratie->van .' -> '. $declaratie->naar ." v.v.</small></td>";
+				$mailPenningsmeester[] = "		<td align='right' valign='top'>". formatPrice($declaratie->reiskosten) ."</td>";
 				$mailPenningsmeester[] = "	</tr>";
 				
-				$totaal = $totaal + $_POST['reiskosten'];
-				$omschrijving[] = 'kilometers: '. round($_POST['km']);
+				$totaal = $totaal + $declaratie->reiskosten;
+				$omschrijving[] = 'kilometers: '. round($declaratie->afstand);
 			}
 
 			$declaratieDataExtra = array();
 
-			foreach($_POST['overig'] as $key => $string) {
-				if($string != '') {
-					$price = 100*str_replace(',', '.', $_POST['overig_price'][$key]);
+			foreach($declaratie->overigeKosten as $item => $prijs) {
+				if($item != '') {
+					#$price = 100*str_replace(',', '.', $_POST['overig_price'][$key]);
+					$price = 100*$prijs;
 					$totaal = $totaal + $price;
 					
 					$mailPenningsmeester[] = "	<tr>";
 					$mailPenningsmeester[] = "		<td colspan='2'>&nbsp;</td>";
-					$mailPenningsmeester[] = "		<td>$string</td>";
+					$mailPenningsmeester[] = "		<td>$item</td>";
 					$mailPenningsmeester[] = "		<td align='right'>". formatPrice($price) ."</td>";
 					$mailPenningsmeester[] = "	</tr>";
 					
-					$declaratieDataExtra[] = array($string, $price);
-					$omschrijving[] = strtolower($string) .': '. formatPrice($price, false);
+					$declaratieDataExtra[] = array($item, $price);
+					$omschrijving[] = strtolower($item) .': '. formatPrice($price, false);
 				}
 			}
 
@@ -174,17 +204,12 @@ if(isset($_REQUEST['hash'])) {
 			
 			# -------
 			# In eboekhouden inschieten
-			if($write2EB && isset($voorganger->boekhoud_id) && $voorganger->boekhoud_id > 0) {				
-				$boekstukNummer = generateBoekstukNr(date('Y'));				
-				$factuurnummer = 'voorgaan-'.date('d-m-Y', $diens->start).'-'.$dagdeel;
-				$toelichting = implode(', ', $omschrijving);
-								
-				$errorResult = eb_verstuurDeclaratie ($voorganger->boekhoud_id, $boekstukNummer, $factuurnummer, $totaal, $cfgGBRPreek, $toelichting, $mutatieId);
-				//$page[] = "relatie:". $relatie ."<br>\n";
-				//$page[] = "boekstukNummer:". $boekstukNummer ."<br>\n";
-				//$page[] = "factuurnummer:". $factuurnummer ."<br>\n";
-				//$page[] = "totaal:". $totaal ."<br>\n";
-				//$page[] = "toelichting:". $toelichting ."<br>\n";
+			$boekstuk = new Boeknummer(date('Y', $dienst->start));
+			$factuurnummer = 'voorgaan-'.date('d-m-Y', $dienst->start).'-'.$dagdeel;
+			$toelichting = implode(', ', $omschrijving);
+
+			if($write2EB && isset($voorganger->boekhoud_id) && $voorganger->boekhoud_id > 0) {												
+				$errorResult = eb_verstuurDeclaratie ($voorganger->boekhoud_id, $boekstuk->nummer, $factuurnummer, $totaal, $cfgGBRPreek, $toelichting, $mutatieId);
 				
 				if($errorResult) {
 					toLog($errorResult, 'error');
@@ -192,13 +217,13 @@ if(isset($_REQUEST['hash'])) {
 					$page[] = 'Neem contact op met de webmaster zodat deze de logfiles kan uitlezen';
 					$sendDeclaratieSucces = false;
 				} else {
-					toLog("Declaratie aangemaakt; relatie:". $voorganger->boekhoud_id .", boekstukNummer:". $boekstukNummer .", mutatieId:". $mutatieId .", factuurnummer:". $factuurnummer);
+					toLog("Declaratie aangemaakt; relatie:". $voorganger->boekhoud_id .", boekstukNummer:". $boekstuk->nummer .", mutatieId:". $mutatieId .", factuurnummer:". $factuurnummer);
 				}
 			} else {
 				$mutatieId = '10101';
-				echo 'factuurnummer : '.'voorgaan-'.date('d-m-Y', $diens->start).'-'.$dagdeel ."<br>\n";
+				echo 'factuurnummer : '.'voorgaan-'.date('d-m-Y', $dienst->start).'-'.$dagdeel ."<br>\n";
 				echo 'toelichting :'. implode(', ', $omschrijving) ."<br>\n";
-				echo 'boekstukNummer :'. $boekstukNummer ."<br>\n";
+				echo 'boekstukNummer :'. $boekstuk->nummer ."<br>\n";
 			}
 			
 			# Als de declaratie succesvol is ingeschoten			
@@ -220,7 +245,7 @@ if(isset($_REQUEST['hash'])) {
 				$iban			= cleanIBAN($iban);
 				$declaratieData	= array(
 					array("Voorgaan $dagdeel ". date('d-m', $dienst->start), $voorganger->honorarium),
-					array("Reiskosten (". $_POST['reis_van'] .")", $_POST['reiskosten'])
+					array("Reiskosten (". $declaratie->van .")", $declaratie->reiskosten)
 				);
 			
 				$declaratieData = array_merge($declaratieData, $declaratieDataExtra);
@@ -231,14 +256,14 @@ if(isset($_REQUEST['hash'])) {
 				# -------		
 				# Mail naar penningmeester versturen				
 				$mail_p = new KKDMailer();
-				$mail_p->ontvangers = array($declaratieReplyAddress, $declaratieReplyName);
+				$mail_p->ontvangers[] = array($declaratieReplyAddress, $declaratieReplyName);
 				$mail_p->addCC($EBDeclaratieAddress);
 				$mail_p->addCC($FinAdminAddress);
     			$mail_p->Subject	= "Declaratie $dagdeel ". date('j-n-Y', $dienst->start);
-				$mail_p->bijlage	= array('file' => 'PDF/'. $mutatieNr .'.pdf', 'name' => $boekstukNummer .' '. $voorganger->getName(1) . ' '. date('d-m', $dienst->start) .' '. $dagdeel .'.pdf');	
-				$mail_p->Body		= implode("<br>\n", $mailPenningsmeester);
+				$mail_p->bijlage	= array('file' => 'PDF/'. $mutatieNr .'.pdf', 'name' => $boekstuk->nummer .' '. $voorganger->getName(1) . ' '. date('d-m', $dienst->start) .' '. $dagdeel .'.pdf');	
+				$mail_p->Body		= implode("\n", $mailPenningsmeester);
 
-				if(!$sendMail)	$mail_p->testen = true;
+				if(!$sendMail)	$mail_p->testen = true;				
 
 				if(!$mail_p->sendMail()) {
 					toLog("Problemen met declaratie-notificatie (dienst ". $dienst->dienst .", voorganger ". $voorganger->id .")", 'error');
@@ -267,7 +292,7 @@ if(isset($_REQUEST['hash'])) {
 				
 				# Nieuw mail-object aanmaken
 				$mail_v = new KKDMailer();
-				$mail_v->ontvangers = array($voorganger->mail, $voorganger->getName(4));
+				$mail_v->ontvangers[] = array($voorganger->mail, $voorganger->getName(4));				
 				$mail_v->Subject	= "Declaratie $dagdeel ". date('j-n-Y', $dienst->start);
 				$mail_v->From		= $declaratieReplyAddress;
 				$mail_v->FromName	= $declaratieReplyName;
@@ -287,13 +312,18 @@ if(isset($_REQUEST['hash'])) {
 				
 				# -------						
 				# update vertekpunt voor volgende keer
-				$voorganger->vertrekpunt = $_POST['reis_van'];
+				$voorganger->vertrekpunt = $declaratie->van;				
 				$voorganger->save();
 								
 				# -------
 				# Zet de status op afgerond
-				$dienst->declaratieStatus = 8;
-				$dienst->save();
+
+				//TODO: Weer op 8 zetten
+				#$dienst->declaratieStatus = 8;
+				#$dienst->save();
+
+				# En verwijder het huidige declaratie-object
+				$declaratie = null;
 				
 				toLog("Declaratie ingediend voor ". $dagdeel .' van '. date('j-n-Y', $dienst->start) .' door '. $voorganger->getName(3));
 			}
@@ -337,22 +367,23 @@ if(isset($_REQUEST['hash'])) {
 			if($voorganger->reiskosten) {
 				$page[] = "	<tr>";
 				$page[] = "		<td colspan='2'>&nbsp;</td>";
-				$page[] = "		<td>Reiskosten<br><small>".$_POST['reis_van'] .' -> '. $_POST['reis_naar'] ." v.v.</small></td>";
-				$page[] = "		<td align='right' valign='top'>". formatPrice($_POST['reiskosten']) ."</td>";
+				$page[] = "		<td>Reiskosten<br><small>". $declaratie->van .' -> '. $declaratie->naar ." v.v.</small></td>";
+				$page[] = "		<td align='right' valign='top'>". formatPrice($declaratie->reiskosten) ."</td>";
 				$page[] = "	</tr>";
 				
-				$totaal = $totaal + $_POST['reiskosten'];
+				$totaal = $totaal + $declaratie->reiskosten;				
 			}
 
-			foreach($_POST['overig'] as $key => $string) {
-				if($string != '') {
+			foreach($declaratie->overigeKosten as $item => $prijs) {				
+				if($item != '' && $prijs != '') {
 					$page[] = "	<tr>";
 					$page[] = "		<td colspan='2'>&nbsp;</td>";
-					$page[] = "		<td>$string</td>";
-					$page[] = "		<td align='right'>". formatPrice(100*str_replace(',', '.', $_POST['overig_price'][$key])) ."</td>";
+					$page[] = "		<td>$item</td>";
+					$page[] = "		<td align='right'>". formatPrice(100*$prijs) ."</td>";
+					#$page[] = "		<td align='right'>". $prijs ."</td>";
 					$page[] = "	</tr>";
 
-					$totaal = $totaal + 100*str_replace(',', '.', $_POST['overig_price'][$key]);
+					$totaal = $totaal + 100*$prijs;
 				}
 			}
 
@@ -368,8 +399,8 @@ if(isset($_REQUEST['hash'])) {
 			$page[] = "		<td colspan='4'>Zijn deze gegevens correct ?</td>";
 			$page[] = "	</tr>";
 			$page[] = "	<tr>";
-			$page[] = "		<td colspan='2'><input type='submit' name='check_iban' value='Ja'></td>";
 			$page[] = "		<td colspan='2'><input type='submit' name='redo_form' value='Nee'></td>";
+			$page[] = "		<td colspan='2'><input type='submit' name='check_iban' value='Ja'></td>";			
 			$page[] = "	</tr>";
 			$page[] = "</table>";
 			$page[] = "</form>";
@@ -409,9 +440,9 @@ if(isset($_REQUEST['hash'])) {
 				$page[] = "	</tr>";
 				$page[] = "	<tr>";
 				$page[] = "		<td>&nbsp;</td>";
-				$page[] = "		<td><input type='text' name='reis_van' value='". (!isset($_POST['reis_van']) ? $voorganger->vertrekpunt : $_POST['reis_van']) ."' size='30' placeholder='Adres en plaats van het vertrekpunt'></td>";
+				$page[] = "		<td><input type='text' name='reis_van' value='". ($declaratie->van == '' ? $voorganger->vertrekpunt : $declaratie->van) ."' size='30' placeholder='Adres en plaats van het vertrekpunt'></td>";
 				$page[] = "		<td>&nbsp;</td>";
-				$page[] = "		<td><input type='text' name='reis_naar' value='Mari&euml;nburghstraat 4, Deventer' size='30'></td>";
+				$page[] = "		<td><input type='text' name='reis_naar' value='". ($declaratie->naar == '' ? "Mari&euml;nburghstraat 4, Deventer" : $declaratie->naar) ."' size='30'></td>";
 				$page[] = "		<td colspan='2'>&nbsp;</td>";
 				$page[] = "	</tr>";
 			} else {
@@ -423,15 +454,20 @@ if(isset($_REQUEST['hash'])) {
 			# Als reis_van en reis_naar bekend zijn, kan het aantal kilometers worden uitgerekend
 			# en kan het volgende deel van het formulier getoond worden
 			# �f als er geen reiskosten gedeclareerd kunnen worden
-			if((isset($_POST['reis_van']) && isset($_POST['reis_naar']) && $voorganger->reiskosten) || !$voorganger->reiskosten) {
+			if(($declaratie->van != '' && $declaratie->naar != '' && $voorganger->reiskosten) || !$voorganger->reiskosten) {
 				$next = true;
 				$first = true;
 				
 				if($voorganger->reiskosten) {
-					$kms = determineAddressDistance($_POST['reis_van'], $_POST['reis_naar']);
-					$km = array_sum($kms);
-					
-					$reiskosten = $km * $voorganger->km_vergoeding;
+					if($declaratie->afstand > 0 && $declaratie->reiskosten > 0) {
+						$km = $declaratie->afstand;
+						$reiskosten = $declaratie->reiskosten;
+					} else {
+						$kms = determineAddressDistance($declaratie->van, $declaratie->naar);
+						$km = array_sum($kms);
+						
+						$reiskosten = $km * $voorganger->km_vergoeding;
+					}
 					
 					$page[] = "	<tr>";
 					$page[] = "		<td>&nbsp;</td>";
@@ -452,29 +488,20 @@ if(isset($_REQUEST['hash'])) {
 				$page[] = "		<td colspan='6'><b>Overige</b></td>";
 				$page[] = "	</tr>";
       	
-				if(isset($_POST['overig'])) {
-					$overige = $_POST['overig'];
-					$prijs = $_POST['overig_price'];
-				} else {
-					$overige = array();
-					$prijs = array(0 => '');
-				}
-      	
-				$overige[] = '';
+				$key = 0;
+				$declaratie->overigeKosten[''] = '';
       	
 				# Laat invoervelden voor overige zaken zien
-				foreach($overige as $key => $string) {
-					if($string != '' OR $first) {
+				foreach($declaratie->overigeKosten as $item => $prijs) {
+					if($item != '' OR $first) {
 						$page[] = "	<tr>";
 						$page[] = "		<td>&nbsp;</td>";
-						$page[] = "		<td colspan='3'><input type='text' name='overig[$key]' value='$string' size='50' placeholder='Omschrijving van eventuele extra kosten'></td>";
+						$page[] = "		<td colspan='3'><input type='text' name='overig[$key]' value='$item' size='50' placeholder='Omschrijving van eventuele extra kosten'></td>";
 						$page[] = "		<td>&nbsp;</td>";
-						$page[] = "		<td>&euro;&nbsp;<input type='text' name='overig_price[$key]' value='". str_replace(',', '.', $prijs[$key]) ."' size='5' placeholder='1,23'></td>";
+						$page[] = "		<td>&euro;&nbsp;<input type='text' name='overig_price[$key]' value='". str_replace('.', ',', $prijs) ."' size='5' placeholder='1,23'></td>";
 						$page[] = "	</tr>";
+						$key++;
 					}
-      	
-					# 1 lege regel is voldoende
-					if($string == '' AND $first)	$first = false;
 				}
 			}
 
@@ -595,5 +622,6 @@ echo "<div class='content_block'>".NL. implode(NL, $page).NL."</div>".NL;
 echo '</div> <!-- end \'content_vert_kolom_full\' -->'.NL;
 echo showCSSFooter();
 
-# Aantekeningen zijn verplaatst naar aantekeningen.txt
+# Sla de declaratie-gegevens op in de sessie
+$_SESSION['declaratie'] = $declaratie;
 ?>

@@ -2,6 +2,10 @@
 
 /**
  * Class voor agenda-items
+ * 
+ * @package Intranet KKD
+ * @author Matthijs Draijer
+ * @version 1.0.0
  */
 class Agenda {
 	/**
@@ -34,6 +38,9 @@ class Agenda {
 	 */
 	public int $eigenaar;
 
+    	/**
+    	 * @param int $id
+    	 */
     	function __construct($id = 0) {
 		if($id != 0) {
 			$db = new Mysql();

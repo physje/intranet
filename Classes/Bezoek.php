@@ -2,6 +2,10 @@
 
 /**
  * Class voor het bijhouden van pastoraal bezoeken
+ * 
+ * @package Intranet KKD
+ * @author Matthijs Draijer
+ * @version 1.0.0
  */
 class Bezoek {
     /**

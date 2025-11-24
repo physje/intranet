@@ -3,6 +3,10 @@
 /**
  * Class voor het versturen van mails specifiek voor de Koningskerk
  * het is een uitbreiding op PHPMailer
+ * 
+ * @package Intranet KKD
+ * @author Matthijs Draijer
+ * @version 1.0.0
  */
 class KKDMailer extends PHPMailer\PHPMailer\PHPMailer implements KKDConfig {
     /**

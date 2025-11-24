@@ -1,0 +1,1348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>    Documentation &raquo; Markers
+</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <base href="../">
+    <link rel="icon" href="images/favicon.ico"/>
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/base.css">
+            <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="css/template.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0/css/all.min.css" integrity="sha256-ybRkN9dBjhcS2qrW1z+hfCxq+1aBdwyQM5wlQoQVt/0=" crossorigin="anonymous" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.23.0/themes/prism-okaidia.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.23.0/plugins/line-numbers/prism-line-numbers.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.23.0/plugins/line-highlight/prism-line-highlight.css">
+                <script src="https://cdn.jsdelivr.net/npm/fuse.js@3.4.6"></script>
+        <script src="https://cdn.jsdelivr.net/npm/css-vars-ponyfill@2"></script>
+        <script src="js/search.js"></script>
+        <script defer src="js/searchIndex.js"></script>
+    </head>
+<body id="top">
+    <header class="phpdocumentor-header phpdocumentor-section">
+    <h1 class="phpdocumentor-title"><a href="" class="phpdocumentor-title__link">Documentation</a></h1>
+    <input class="phpdocumentor-header__menu-button" type="checkbox" id="menu-button" name="menu-button" />
+    <label class="phpdocumentor-header__menu-icon" for="menu-button">
+        <i class="fas fa-bars"></i>
+    </label>
+    <section data-search-form class="phpdocumentor-search">
+    <label>
+        <span class="visually-hidden">Search for</span>
+        <svg class="phpdocumentor-search__icon" width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="7.5" cy="7.5" r="6.5" stroke="currentColor" stroke-width="2"/>
+            <line x1="12.4892" y1="12.2727" x2="19.1559" y2="18.9393" stroke="currentColor" stroke-width="3"/>
+        </svg>
+        <input type="search" class="phpdocumentor-field phpdocumentor-search__field" placeholder="Loading .." disabled />
+    </label>
+</section>
+
+    <nav class="phpdocumentor-topnav">
+    <ul class="phpdocumentor-topnav__menu">
+        </ul>
+</nav>
+</header>
+
+    <main class="phpdocumentor">
+        <div class="phpdocumentor-section">
+            <input class="phpdocumentor-sidebar__menu-button" type="checkbox" id="sidebar-button" name="sidebar-button" />
+<label class="phpdocumentor-sidebar__menu-icon" for="sidebar-button">
+    Menu
+</label>
+<aside class="phpdocumentor-column -four phpdocumentor-sidebar">
+        
+    <section class="phpdocumentor-sidebar__category">
+        <h2 class="phpdocumentor-sidebar__category-header">Namespaces</h2>
+            </section>
+
+        <section class="phpdocumentor-sidebar__category">
+        <h2 class="phpdocumentor-sidebar__category-header">Packages</h2>
+                    <h3 class="phpdocumentor-sidebar__root-package"><a href="packages/Application.html"><abbr title="\Application">Application</abbr></a></h3>
+                                <h3 class="phpdocumentor-sidebar__root-package"><a href="packages/IntranetKKD.html"><abbr title="\IntranetKKD">IntranetKKD</abbr></a></h3>
+                        </section>
+    
+    <section class="phpdocumentor-sidebar__category">
+        <h2 class="phpdocumentor-sidebar__category-header">Reports</h2>
+                <h3 class="phpdocumentor-sidebar__root-package"><a href="reports/deprecated.html">Deprecated</a></h3>
+        <h3 class="phpdocumentor-sidebar__root-package"><a href="reports/errors.html">Errors</a></h3>
+        <h3 class="phpdocumentor-sidebar__root-package"><a href="reports/markers.html">Markers</a></h3>
+    </section>
+
+    <section class="phpdocumentor-sidebar__category">
+        <h2 class="phpdocumentor-sidebar__category-header">Indices</h2>
+        <h3 class="phpdocumentor-sidebar__root-package"><a href="indices/files.html">Files</a></h3>
+    </section>
+</aside>
+
+            <div class="phpdocumentor-column -eight phpdocumentor-content">
+                    <ul class="phpdocumentor-breadcrumbs">
+        <li><a href="">Home</a></li>
+    </ul>
+
+    <div class="phpdocumentor-row">
+        <h2 class="phpdocumentor-content__title">Markers</h2>
+
+                    <h3>Table of Contents</h3>
+            <table class="phpdocumentor-table_of_contents">
+                                                            <tr>
+                            <td class="phpdocumentor-cell"><a href="reports/markers.html#admin/vermommen.php">admin/vermommen.php</a></td>
+                            <td class="phpdocumentor-cell">3</td>
+                        </tr>
+                                                                                <tr>
+                            <td class="phpdocumentor-cell"><a href="reports/markers.html#auth/_2FA.php">auth/_2FA.php</a></td>
+                            <td class="phpdocumentor-cell">1</td>
+                        </tr>
+                                                                                <tr>
+                            <td class="phpdocumentor-cell"><a href="reports/markers.html#auth/interface.php">auth/interface.php</a></td>
+                            <td class="phpdocumentor-cell">11</td>
+                        </tr>
+                                                                                <tr>
+                            <td class="phpdocumentor-cell"><a href="reports/markers.html#auth/lng/lng_dutch.php">auth/lng/lng_dutch.php</a></td>
+                            <td class="phpdocumentor-cell">4</td>
+                        </tr>
+                                                                                <tr>
+                            <td class="phpdocumentor-cell"><a href="reports/markers.html#auth/lng/lng_english.php">auth/lng/lng_english.php</a></td>
+                            <td class="phpdocumentor-cell">4</td>
+                        </tr>
+                                                                                <tr>
+                            <td class="phpdocumentor-cell"><a href="reports/markers.html#auth/objects/checklogin.php">auth/objects/checklogin.php</a></td>
+                            <td class="phpdocumentor-cell">2</td>
+                        </tr>
+                                                                                <tr>
+                            <td class="phpdocumentor-cell"><a href="reports/markers.html#auth/objects/checklogin_db.php">auth/objects/checklogin_db.php</a></td>
+                            <td class="phpdocumentor-cell">2</td>
+                        </tr>
+                                                                                <tr>
+                            <td class="phpdocumentor-cell"><a href="reports/markers.html#auth/objects/functions.php">auth/objects/functions.php</a></td>
+                            <td class="phpdocumentor-cell">5</td>
+                        </tr>
+                                                                                <tr>
+                            <td class="phpdocumentor-cell"><a href="reports/markers.html#auth/secure.php">auth/secure.php</a></td>
+                            <td class="phpdocumentor-cell">2</td>
+                        </tr>
+                                                                                <tr>
+                            <td class="phpdocumentor-cell"><a href="reports/markers.html#auth/wachtwoord.php">auth/wachtwoord.php</a></td>
+                            <td class="phpdocumentor-cell">1</td>
+                        </tr>
+                                                                                <tr>
+                            <td class="phpdocumentor-cell"><a href="reports/markers.html#autocomplete_namen.php">autocomplete_namen.php</a></td>
+                            <td class="phpdocumentor-cell">5</td>
+                        </tr>
+                                                                                <tr>
+                            <td class="phpdocumentor-cell"><a href="reports/markers.html#Classes/KKDMailer.php">Classes/KKDMailer.php</a></td>
+                            <td class="phpdocumentor-cell">3</td>
+                        </tr>
+                                                                                <tr>
+                            <td class="phpdocumentor-cell"><a href="reports/markers.html#declaratie/gastpredikant.php">declaratie/gastpredikant.php</a></td>
+                            <td class="phpdocumentor-cell">2</td>
+                        </tr>
+                                                                                <tr>
+                            <td class="phpdocumentor-cell"><a href="reports/markers.html#diensten/collectes.php">diensten/collectes.php</a></td>
+                            <td class="phpdocumentor-cell">1</td>
+                        </tr>
+                                                                                <tr>
+                            <td class="phpdocumentor-cell"><a href="reports/markers.html#diensten/liturgie.php">diensten/liturgie.php</a></td>
+                            <td class="phpdocumentor-cell">1</td>
+                        </tr>
+                                                                                <tr>
+                            <td class="phpdocumentor-cell"><a href="reports/markers.html#download/handleiding_intranet.php">download/handleiding_intranet.php</a></td>
+                            <td class="phpdocumentor-cell">1</td>
+                        </tr>
+                                                                                <tr>
+                            <td class="phpdocumentor-cell"><a href="reports/markers.html#extern/handleiding.php">extern/handleiding.php</a></td>
+                            <td class="phpdocumentor-cell">4</td>
+                        </tr>
+                                                                                <tr>
+                            <td class="phpdocumentor-cell"><a href="reports/markers.html#extern/makeiCalScipio.php">extern/makeiCalScipio.php</a></td>
+                            <td class="phpdocumentor-cell">3</td>
+                        </tr>
+                                                                                <tr>
+                            <td class="phpdocumentor-cell"><a href="reports/markers.html#gebedskalender/makeiCal.php">gebedskalender/makeiCal.php</a></td>
+                            <td class="phpdocumentor-cell">2</td>
+                        </tr>
+                                                                                <tr>
+                            <td class="phpdocumentor-cell"><a href="reports/markers.html#ical/handleiding_ical.php">ical/handleiding_ical.php</a></td>
+                            <td class="phpdocumentor-cell">4</td>
+                        </tr>
+                                                                                <tr>
+                            <td class="phpdocumentor-cell"><a href="reports/markers.html#include/EB_functions.php">include/EB_functions.php</a></td>
+                            <td class="phpdocumentor-cell">6</td>
+                        </tr>
+                                                                                <tr>
+                            <td class="phpdocumentor-cell"><a href="reports/markers.html#include/functions.php">include/functions.php</a></td>
+                            <td class="phpdocumentor-cell">10</td>
+                        </tr>
+                                                                                <tr>
+                            <td class="phpdocumentor-cell"><a href="reports/markers.html#include/LP_functions.php">include/LP_functions.php</a></td>
+                            <td class="phpdocumentor-cell">2</td>
+                        </tr>
+                                                                                <tr>
+                            <td class="phpdocumentor-cell"><a href="reports/markers.html#index.php">index.php</a></td>
+                            <td class="phpdocumentor-cell">30</td>
+                        </tr>
+                                                                                <tr>
+                            <td class="phpdocumentor-cell"><a href="reports/markers.html#openkerk/mailen.php">openkerk/mailen.php</a></td>
+                            <td class="phpdocumentor-cell">1</td>
+                        </tr>
+                                                                                <tr>
+                            <td class="phpdocumentor-cell"><a href="reports/markers.html#openkerk/sendReminder.php">openkerk/sendReminder.php</a></td>
+                            <td class="phpdocumentor-cell">1</td>
+                        </tr>
+                                                                                <tr>
+                            <td class="phpdocumentor-cell"><a href="reports/markers.html#openkerk/template.php">openkerk/template.php</a></td>
+                            <td class="phpdocumentor-cell">1</td>
+                        </tr>
+                                                                                <tr>
+                            <td class="phpdocumentor-cell"><a href="reports/markers.html#profiel.php">profiel.php</a></td>
+                            <td class="phpdocumentor-cell">3</td>
+                        </tr>
+                                                                                <tr>
+                            <td class="phpdocumentor-cell"><a href="reports/markers.html#rooster/komendeWeek.php">rooster/komendeWeek.php</a></td>
+                            <td class="phpdocumentor-cell">1</td>
+                        </tr>
+                                                                                <tr>
+                            <td class="phpdocumentor-cell"><a href="reports/markers.html#rooster/ruilen.php">rooster/ruilen.php</a></td>
+                            <td class="phpdocumentor-cell">2</td>
+                        </tr>
+                                                                                <tr>
+                            <td class="phpdocumentor-cell"><a href="reports/markers.html#scipio/ScipioImport.php">scipio/ScipioImport.php</a></td>
+                            <td class="phpdocumentor-cell">2</td>
+                        </tr>
+                                                                                <tr>
+                            <td class="phpdocumentor-cell"><a href="reports/markers.html#sendReminder.php">sendReminder.php</a></td>
+                            <td class="phpdocumentor-cell">2</td>
+                        </tr>
+                                                                                <tr>
+                            <td class="phpdocumentor-cell"><a href="reports/markers.html#team/edit.php">team/edit.php</a></td>
+                            <td class="phpdocumentor-cell">3</td>
+                        </tr>
+                                                                                <tr>
+                            <td class="phpdocumentor-cell"><a href="reports/markers.html#voorganger/mail.php">voorganger/mail.php</a></td>
+                            <td class="phpdocumentor-cell">1</td>
+                        </tr>
+                                                                                <tr>
+                            <td class="phpdocumentor-cell"><a href="reports/markers.html#voorganger/mailData.php">voorganger/mailData.php</a></td>
+                            <td class="phpdocumentor-cell">1</td>
+                        </tr>
+                                                </table>
+        
+                    <a id="admin/vermommen.php"></a>
+            <h3><abbr title="admin/vermommen.php">vermommen.php</abbr></h3>
+            <table>
+                <thead>
+                <tr>
+                    <th class="phpdocumentor-heading">Type</th>
+                    <th class="phpdocumentor-heading">Line</th>
+                    <th class="phpdocumentor-heading">Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">48</td>
+                        <td class="phpdocumentor-cell">ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js&#039;&gt;&lt;/script&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">50</td>
+                        <td class="phpdocumentor-cell">ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/themes/smoothness/jquery-ui.css&#039;&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">51</td>
+                        <td class="phpdocumentor-cell">ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js&#039;&gt;&lt;/script&gt;&quot;;</td>
+                    </tr>
+                                </tbody>
+            </table>
+                    <a id="auth/_2FA.php"></a>
+            <h3><abbr title="auth/_2FA.php">_2FA.php</abbr></h3>
+            <table>
+                <thead>
+                <tr>
+                    <th class="phpdocumentor-heading">Type</th>
+                    <th class="phpdocumentor-heading">Line</th>
+                    <th class="phpdocumentor-heading">Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">1</td>
+                        <td class="phpdocumentor-cell">www.w3.org/1999/xhtml&quot;&gt;</td>
+                    </tr>
+                                </tbody>
+            </table>
+                    <a id="auth/interface.php"></a>
+            <h3><abbr title="auth/interface.php">interface.php</abbr></h3>
+            <table>
+                <thead>
+                <tr>
+                    <th class="phpdocumentor-heading">Type</th>
+                    <th class="phpdocumentor-heading">Line</th>
+                    <th class="phpdocumentor-heading">Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">6</td>
+                        <td class="phpdocumentor-cell">W3C//DTD XHTML 1.0 Transitional//EN&quot; &quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd&quot;&gt;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">7</td>
+                        <td class="phpdocumentor-cell">www.w3.org/1999/xhtml&quot;&gt;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">12</td>
+                        <td class="phpdocumentor-cell">------ check form ------</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">18</td>
+                        <td class="phpdocumentor-cell">--- entered_login ---</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">25</td>
+                        <td class="phpdocumentor-cell">--- entered_password ---</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">32</td>
+                        <td class="phpdocumentor-cell">--- check if errors occurred ---</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">39</td>
+                        <td class="phpdocumentor-cell">--&gt;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">73</td>
+                        <td class="phpdocumentor-cell">check for error messages</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">81</td>
+                        <td class="phpdocumentor-cell">if there are $_POST variables -- add them to the form...</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">109</td>
+                        <td class="phpdocumentor-cell">www.phpSecurePages.com&quot; TITLE=&quot;phpSecurePages &lt;?php echo $strInfo; ?&gt;&quot; TARGET=&quot;_blank&quot; CLASS=&quot;link&quot;&gt;phpSecurePages&lt;/A&gt;&lt;/p&gt; --&gt;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">117</td>
+                        <td class="phpdocumentor-cell">--&gt;</td>
+                    </tr>
+                                </tbody>
+            </table>
+                    <a id="auth/lng/lng_dutch.php"></a>
+            <h3><abbr title="auth/lng/lng_dutch.php">lng_dutch.php</abbr></h3>
+            <table>
+                <thead>
+                <tr>
+                    <th class="phpdocumentor-heading">Type</th>
+                    <th class="phpdocumentor-heading">Line</th>
+                    <th class="phpdocumentor-heading">Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">2</td>
+                        <td class="phpdocumentor-cell">------ Dutch translated by Paul Kruyt ------</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">4</td>
+                        <td class="phpdocumentor-cell">Login and Password errors</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">12</td>
+                        <td class="phpdocumentor-cell">Interface words</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">23</td>
+                        <td class="phpdocumentor-cell">Installation and Database errors</td>
+                    </tr>
+                                </tbody>
+            </table>
+                    <a id="auth/lng/lng_english.php"></a>
+            <h3><abbr title="auth/lng/lng_english.php">lng_english.php</abbr></h3>
+            <table>
+                <thead>
+                <tr>
+                    <th class="phpdocumentor-heading">Type</th>
+                    <th class="phpdocumentor-heading">Line</th>
+                    <th class="phpdocumentor-heading">Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">2</td>
+                        <td class="phpdocumentor-cell">------ English translated by Paul Kruyt ------</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">4</td>
+                        <td class="phpdocumentor-cell">Login and Password errors</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">12</td>
+                        <td class="phpdocumentor-cell">Interface words</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">23</td>
+                        <td class="phpdocumentor-cell">Installation and Database errors</td>
+                    </tr>
+                                </tbody>
+            </table>
+                    <a id="auth/objects/checklogin.php"></a>
+            <h3><abbr title="auth/objects/checklogin.php">checklogin.php</abbr></h3>
+            <table>
+                <thead>
+                <tr>
+                    <th class="phpdocumentor-heading">Type</th>
+                    <th class="phpdocumentor-heading">Line</th>
+                    <th class="phpdocumentor-heading">Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">7</td>
+                        <td class="phpdocumentor-cell">www.phpSecurePages.com                 */</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">12</td>
+                        <td class="phpdocumentor-cell">phpsecurepages.com   */</td>
+                    </tr>
+                                </tbody>
+            </table>
+                    <a id="auth/objects/checklogin_db.php"></a>
+            <h3><abbr title="auth/objects/checklogin_db.php">checklogin_db.php</abbr></h3>
+            <table>
+                <thead>
+                <tr>
+                    <th class="phpdocumentor-heading">Type</th>
+                    <th class="phpdocumentor-heading">Line</th>
+                    <th class="phpdocumentor-heading">Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">7</td>
+                        <td class="phpdocumentor-cell">www.phpSecurePages.com                 */</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">12</td>
+                        <td class="phpdocumentor-cell">phpsecurepages.com   */</td>
+                    </tr>
+                                </tbody>
+            </table>
+                    <a id="auth/objects/functions.php"></a>
+            <h3><abbr title="auth/objects/functions.php">functions.php</abbr></h3>
+            <table>
+                <thead>
+                <tr>
+                    <th class="phpdocumentor-heading">Type</th>
+                    <th class="phpdocumentor-heading">Line</th>
+                    <th class="phpdocumentor-heading">Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">7</td>
+                        <td class="phpdocumentor-cell">www.phpSecurePages.com                 */</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">12</td>
+                        <td class="phpdocumentor-cell">phpsecurepages.com   */</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">18</td>
+                        <td class="phpdocumentor-cell">functions and libraries</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">22</td>
+                        <td class="phpdocumentor-cell">create administrators email link</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">28</td>
+                        <td class="phpdocumentor-cell">check if the value of $needle exist in array $haystack</td>
+                    </tr>
+                                </tbody>
+            </table>
+                    <a id="auth/secure.php"></a>
+            <h3><abbr title="auth/secure.php">secure.php</abbr></h3>
+            <table>
+                <thead>
+                <tr>
+                    <th class="phpdocumentor-heading">Type</th>
+                    <th class="phpdocumentor-heading">Line</th>
+                    <th class="phpdocumentor-heading">Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">19</td>
+                        <td class="phpdocumentor-cell">&#039;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">21</td>
+                        <td class="phpdocumentor-cell">&#039;;</td>
+                    </tr>
+                                </tbody>
+            </table>
+                    <a id="auth/wachtwoord.php"></a>
+            <h3><abbr title="auth/wachtwoord.php">wachtwoord.php</abbr></h3>
+            <table>
+                <thead>
+                <tr>
+                    <th class="phpdocumentor-heading">Type</th>
+                    <th class="phpdocumentor-heading">Line</th>
+                    <th class="phpdocumentor-heading">Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">38</td>
+                        <td class="phpdocumentor-cell">TODO: testen uitzetten</td>
+                    </tr>
+                                </tbody>
+            </table>
+                    <a id="autocomplete_namen.php"></a>
+            <h3><abbr title="autocomplete_namen.php">autocomplete_namen.php</abbr></h3>
+            <table>
+                <thead>
+                <tr>
+                    <th class="phpdocumentor-heading">Type</th>
+                    <th class="phpdocumentor-heading">Line</th>
+                    <th class="phpdocumentor-heading">Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">2</td>
+                        <td class="phpdocumentor-cell">www.codexworld.com/autocomplete-textbox-using-jquery-php-mysql/</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">12</td>
+                        <td class="phpdocumentor-cell">Get search term</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">15</td>
+                        <td class="phpdocumentor-cell">Fetch matched data from the database</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">20</td>
+                        <td class="phpdocumentor-cell">Generate array with skills data</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">31</td>
+                        <td class="phpdocumentor-cell">Return results as json encoded array</td>
+                    </tr>
+                                </tbody>
+            </table>
+                    <a id="Classes/KKDMailer.php"></a>
+            <h3><abbr title="Classes/KKDMailer.php">KKDMailer.php</abbr></h3>
+            <table>
+                <thead>
+                <tr>
+                    <th class="phpdocumentor-heading">Type</th>
+                    <th class="phpdocumentor-heading">Line</th>
+                    <th class="phpdocumentor-heading">Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">64</td>
+                        <td class="phpdocumentor-cell">Server settings</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">73</td>
+                        <td class="phpdocumentor-cell">Mail setting</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">79</td>
+                        <td class="phpdocumentor-cell">Varia</td>
+                    </tr>
+                                </tbody>
+            </table>
+                    <a id="declaratie/gastpredikant.php"></a>
+            <h3><abbr title="declaratie/gastpredikant.php">gastpredikant.php</abbr></h3>
+            <table>
+                <thead>
+                <tr>
+                    <th class="phpdocumentor-heading">Type</th>
+                    <th class="phpdocumentor-heading">Line</th>
+                    <th class="phpdocumentor-heading">Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">120</td>
+                        <td class="phpdocumentor-cell">Als er geen nummer terugkomt, is dit IBAN niet bekend en moet deze voorganger worden toegevoegd</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">321</td>
+                        <td class="phpdocumentor-cell">TODO: Weer op 8 zetten</td>
+                    </tr>
+                                </tbody>
+            </table>
+                    <a id="diensten/collectes.php"></a>
+            <h3><abbr title="diensten/collectes.php">collectes.php</abbr></h3>
+            <table>
+                <thead>
+                <tr>
+                    <th class="phpdocumentor-heading">Type</th>
+                    <th class="phpdocumentor-heading">Line</th>
+                    <th class="phpdocumentor-heading">Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">58</td>
+                        <td class="phpdocumentor-cell">TODO: testen uitzetten</td>
+                    </tr>
+                                </tbody>
+            </table>
+                    <a id="diensten/liturgie.php"></a>
+            <h3><abbr title="diensten/liturgie.php">liturgie.php</abbr></h3>
+            <table>
+                <thead>
+                <tr>
+                    <th class="phpdocumentor-heading">Type</th>
+                    <th class="phpdocumentor-heading">Line</th>
+                    <th class="phpdocumentor-heading">Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">73</td>
+                        <td class="phpdocumentor-cell">$text[] = &quot;	&lt;td align=&#039;right&#039;&gt;&quot;. date(&quot;d-m-Y&quot;, $data[&#039;start&#039;]) .&quot;&lt;/td&gt;&quot;;</td>
+                    </tr>
+                                </tbody>
+            </table>
+                    <a id="download/handleiding_intranet.php"></a>
+            <h3><abbr title="download/handleiding_intranet.php">handleiding_intranet.php</abbr></h3>
+            <table>
+                <thead>
+                <tr>
+                    <th class="phpdocumentor-heading">Type</th>
+                    <th class="phpdocumentor-heading">Line</th>
+                    <th class="phpdocumentor-heading">Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">6</td>
+                        <td class="phpdocumentor-cell">FIXME: Oude wijze van MySQL</td>
+                    </tr>
+                                </tbody>
+            </table>
+                    <a id="extern/handleiding.php"></a>
+            <h3><abbr title="extern/handleiding.php">handleiding.php</abbr></h3>
+            <table>
+                <thead>
+                <tr>
+                    <th class="phpdocumentor-heading">Type</th>
+                    <th class="phpdocumentor-heading">Line</th>
+                    <th class="phpdocumentor-heading">Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">6</td>
+                        <td class="phpdocumentor-cell">FIXME: Oude wijze van MySQL</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">129</td>
+                        <td class="phpdocumentor-cell">calendar.google.com/calendar/u/0/r/settings/addbyurl&#039;&gt;deze pagina&lt;/a&gt; (mogelijk moet je inloggen op je Google-account).&lt;/li&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">143</td>
+                        <td class="phpdocumentor-cell">calendar.google.com/calendar/u/0/r/settings&#039;&gt;deze pagina&lt;/a&gt; (mogelijk moet je inloggen op je Google-account) en zoek aan de linkerkant onder het kopje &#039;&lt;i&gt;Instellingen voor andere agenda&#039;s&lt;/i&gt;&#039; naar je 3GK-agenda&quot;. ($agendaNaam != &#039;&#039; ? &quot; [waarschijnlijk bij jouw &#039;$agendaNaam&#039;]&quot; : &#039;&#039;) .&quot;.&lt;/li&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">149</td>
+                        <td class="phpdocumentor-cell">calendar.google.com/calendar/u/0/r/settings&#039;&gt;deze pagina&lt;/a&gt; (mogelijk moet je inloggen op je Google-account) en zoek aan de linkerkant onder het kopje &#039;&lt;i&gt;Instellingen voor andere agenda&#039;s&lt;/i&gt;&#039; naar je 3GK-agenda&quot;. ($agendaNaam != &#039;&#039; ? &quot; [waarschijnlijk bij jouw &#039;$agendaNaam&#039;]&quot; : &#039;&#039;) .&quot;.&lt;/li&gt;&quot;;</td>
+                    </tr>
+                                </tbody>
+            </table>
+                    <a id="extern/makeiCalScipio.php"></a>
+            <h3><abbr title="extern/makeiCalScipio.php">makeiCalScipio.php</abbr></h3>
+            <table>
+                <thead>
+                <tr>
+                    <th class="phpdocumentor-heading">Type</th>
+                    <th class="phpdocumentor-heading">Line</th>
+                    <th class="phpdocumentor-heading">Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">14</td>
+                        <td class="phpdocumentor-cell">$header[] = &quot;X-WR-CALDESC:3GK-gebedspunten.&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">15</td>
+                        <td class="phpdocumentor-cell">hacksw/handcal//NONSGML v1.0//EN&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">210</td>
+                        <td class="phpdocumentor-cell">echo implode(&quot;\r\n&quot;, $ics);</td>
+                    </tr>
+                                </tbody>
+            </table>
+                    <a id="gebedskalender/makeiCal.php"></a>
+            <h3><abbr title="gebedskalender/makeiCal.php">makeiCal.php</abbr></h3>
+            <table>
+                <thead>
+                <tr>
+                    <th class="phpdocumentor-heading">Type</th>
+                    <th class="phpdocumentor-heading">Line</th>
+                    <th class="phpdocumentor-heading">Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">6</td>
+                        <td class="phpdocumentor-cell">FIXME: Oude wijze van MySQL</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">11</td>
+                        <td class="phpdocumentor-cell">hacksw/handcal//NONSGML v1.0//EN&quot;;</td>
+                    </tr>
+                                </tbody>
+            </table>
+                    <a id="ical/handleiding_ical.php"></a>
+            <h3><abbr title="ical/handleiding_ical.php">handleiding_ical.php</abbr></h3>
+            <table>
+                <thead>
+                <tr>
+                    <th class="phpdocumentor-heading">Type</th>
+                    <th class="phpdocumentor-heading">Line</th>
+                    <th class="phpdocumentor-heading">Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">6</td>
+                        <td class="phpdocumentor-cell">FIXME: Oude wijze van MySQL</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">42</td>
+                        <td class="phpdocumentor-cell">calendar.google.com/calendar/u/0/r/settings/addbyurl&#039;&gt;deze pagina&lt;/a&gt; (mogelijk moet je inloggen op je Google-account).&lt;/li&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">56</td>
+                        <td class="phpdocumentor-cell">calendar.google.com/calendar/u/0/r/settings&#039;&gt;deze pagina&lt;/a&gt; (mogelijk moet je inloggen op je Google-account) en zoek aan de linkerkant onder het kopje &#039;&lt;i&gt;Instellingen voor andere agenda&#039;s&lt;/i&gt;&#039; naar je 3GK-agenda&quot;. ($agendaNaam != &#039;&#039; ? &quot; [waarschijnlijk bij jouw &#039;$agendaNaam&#039;]&quot; : &#039;&#039;) .&quot;.&lt;/li&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">62</td>
+                        <td class="phpdocumentor-cell">calendar.google.com/calendar/u/0/r/settings&#039;&gt;deze pagina&lt;/a&gt; (mogelijk moet je inloggen op je Google-account) en zoek aan de linkerkant onder het kopje &#039;&lt;i&gt;Instellingen voor andere agenda&#039;s&lt;/i&gt;&#039; naar je 3GK-agenda&quot;. ($agendaNaam != &#039;&#039; ? &quot; [waarschijnlijk bij jouw &#039;$agendaNaam&#039;]&quot; : &#039;&#039;) .&quot;.&lt;/li&gt;&quot;;</td>
+                    </tr>
+                                </tbody>
+            </table>
+                    <a id="include/EB_functions.php"></a>
+            <h3><abbr title="include/EB_functions.php">EB_functions.php</abbr></h3>
+            <table>
+                <thead>
+                <tr>
+                    <th class="phpdocumentor-heading">Type</th>
+                    <th class="phpdocumentor-heading">Line</th>
+                    <th class="phpdocumentor-heading">Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">59</td>
+                        <td class="phpdocumentor-cell">var_dump($mutaties);</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">64</td>
+                        <td class="phpdocumentor-cell">Getting the code of each relation</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">108</td>
+                        <td class="phpdocumentor-cell">Received relation code is different than the requested relation code</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">151</td>
+                        <td class="phpdocumentor-cell">Received relation code is different than the requested relation code</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">263</td>
+                        <td class="phpdocumentor-cell">Ingevoerde bedrag is in centen, omrekenen naar euro&#039;s</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">264</td>
+                        <td class="phpdocumentor-cell">$bedrag            = (double) round($bedragCenten / 100, 2);</td>
+                    </tr>
+                                </tbody>
+            </table>
+                    <a id="include/functions.php"></a>
+            <h3><abbr title="include/functions.php">functions.php</abbr></h3>
+            <table>
+                <thead>
+                <tr>
+                    <th class="phpdocumentor-heading">Type</th>
+                    <th class="phpdocumentor-heading">Line</th>
+                    <th class="phpdocumentor-heading">Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">27</td>
+                        <td class="phpdocumentor-cell">Check for Windows to find and replace the %e</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">28</td>
+                        <td class="phpdocumentor-cell">modifier correctly</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">340</td>
+                        <td class="phpdocumentor-cell">start with a blank password</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">378</td>
+                        <td class="phpdocumentor-cell">set up a counter for how many characters are in the password so far</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">381</td>
+                        <td class="phpdocumentor-cell">add random characters to $password until $length is reached</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">395</td>
+                        <td class="phpdocumentor-cell">done!</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">422</td>
+                        <td class="phpdocumentor-cell">www.kalender-365.nl/feestdagen/pasen.html&#039;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">463</td>
+                        <td class="phpdocumentor-cell">eu1.locationiq.com/v1/search.php?key=$locationIQkey&quot;;	</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">509</td>
+                        <td class="phpdocumentor-cell">locationiq.com/docs-html/index.html#matrix</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">510</td>
+                        <td class="phpdocumentor-cell">eu1.locationiq.com/v1/$service/$profile/$coordinates?key=$locationIQkey&amp;sources=0;1&amp;destinations=1;0&amp;annotations=distance&quot;;</td>
+                    </tr>
+                                </tbody>
+            </table>
+                    <a id="include/LP_functions.php"></a>
+            <h3><abbr title="include/LP_functions.php">LP_functions.php</abbr></h3>
+            <table>
+                <thead>
+                <tr>
+                    <th class="phpdocumentor-heading">Type</th>
+                    <th class="phpdocumentor-heading">Line</th>
+                    <th class="phpdocumentor-heading">Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">4</td>
+                        <td class="phpdocumentor-cell">api.laposta.nl/doc/?lib=php</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">5</td>
+                        <td class="phpdocumentor-cell">github.com/laposta/laposta-api-php</td>
+                    </tr>
+                                </tbody>
+            </table>
+                    <a id="index.php"></a>
+            <h3><abbr title="index.php">index.php</abbr></h3>
+            <table>
+                <thead>
+                <tr>
+                    <th class="phpdocumentor-heading">Type</th>
+                    <th class="phpdocumentor-heading">Line</th>
+                    <th class="phpdocumentor-heading">Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">83</td>
+                        <td class="phpdocumentor-cell">$showGroupsClass = array();</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">85</td>
+                        <td class="phpdocumentor-cell">foreach($allGroups as $groep) {</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">86</td>
+                        <td class="phpdocumentor-cell">$tonen = false;	</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">87</td>
+                        <td class="phpdocumentor-cell">$data = new Team($groep);</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">88</td>
+                        <td class="phpdocumentor-cell">if(in_array($groep, $myGroups)) {</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">89</td>
+                        <td class="phpdocumentor-cell">$class = &quot;own&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">90</td>
+                        <td class="phpdocumentor-cell">if($data[&#039;html-int&#039;] != &quot;&quot;) {</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">91</td>
+                        <td class="phpdocumentor-cell">$tonen = true;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">92</td>
+                        <td class="phpdocumentor-cell">}</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">93</td>
+                        <td class="phpdocumentor-cell">} else {</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">94</td>
+                        <td class="phpdocumentor-cell">$class = &quot;general&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">95</td>
+                        <td class="phpdocumentor-cell">if($data[&#039;html-ext&#039;] != &quot;&quot;) {</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">96</td>
+                        <td class="phpdocumentor-cell">$tonen = true;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">97</td>
+                        <td class="phpdocumentor-cell">}</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">98</td>
+                        <td class="phpdocumentor-cell">}</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">100</td>
+                        <td class="phpdocumentor-cell">if($tonen) {</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">101</td>
+                        <td class="phpdocumentor-cell">$showGroupsClass[$groep] = $class;		</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">102</td>
+                        <td class="phpdocumentor-cell">}	</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">103</td>
+                        <td class="phpdocumentor-cell">}</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">105</td>
+                        <td class="phpdocumentor-cell">if(count($showGroupsClass) &gt; 0) {</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">106</td>
+                        <td class="phpdocumentor-cell">$txtGroepen[] = &quot;&lt;b&gt;Pagina&#039;s van teams&lt;/b&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">108</td>
+                        <td class="phpdocumentor-cell">foreach($showGroupsClass as $groep =&gt; $class) {</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">109</td>
+                        <td class="phpdocumentor-cell">$data = getGroupDetails($groep);</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">110</td>
+                        <td class="phpdocumentor-cell">$txtGroepen[] = &quot;&lt;a class=&#039;$class&#039; href=&#039;group.php?groep=$groep&#039; target=&#039;_blank&#039;&gt;&quot;.$data[&#039;naam&#039;].&quot;&lt;/a&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">111</td>
+                        <td class="phpdocumentor-cell">}	</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">112</td>
+                        <td class="phpdocumentor-cell">$blocks[] = $txtGroepen;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">113</td>
+                        <td class="phpdocumentor-cell">}</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">300</td>
+                        <td class="phpdocumentor-cell">$EBLinks[&#039;declaratie/syncRelaties.php&#039;] = &#039;Synchroniseer relaties naar lokale database&#039;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">302</td>
+                        <td class="phpdocumentor-cell">secure.e-boekhouden.nl/handleiding/Documentatie_soap.pdf&#039;] = &#039;SOAP documenatie PDF&#039;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">351</td>
+                        <td class="phpdocumentor-cell">www.koningskerkdeventer.nl/&#039; target=&#039;_blank&#039;&gt;koningskerkdeventer.nl&lt;/a&gt;&quot;;</td>
+                    </tr>
+                                </tbody>
+            </table>
+                    <a id="openkerk/mailen.php"></a>
+            <h3><abbr title="openkerk/mailen.php">mailen.php</abbr></h3>
+            <table>
+                <thead>
+                <tr>
+                    <th class="phpdocumentor-heading">Type</th>
+                    <th class="phpdocumentor-heading">Line</th>
+                    <th class="phpdocumentor-heading">Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">107</td>
+                        <td class="phpdocumentor-cell">TODO: testen uitzetten</td>
+                    </tr>
+                                </tbody>
+            </table>
+                    <a id="openkerk/sendReminder.php"></a>
+            <h3><abbr title="openkerk/sendReminder.php">sendReminder.php</abbr></h3>
+            <table>
+                <thead>
+                <tr>
+                    <th class="phpdocumentor-heading">Type</th>
+                    <th class="phpdocumentor-heading">Line</th>
+                    <th class="phpdocumentor-heading">Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">64</td>
+                        <td class="phpdocumentor-cell">TODO: testen uitzetten</td>
+                    </tr>
+                                </tbody>
+            </table>
+                    <a id="openkerk/template.php"></a>
+            <h3><abbr title="openkerk/template.php">template.php</abbr></h3>
+            <table>
+                <thead>
+                <tr>
+                    <th class="phpdocumentor-heading">Type</th>
+                    <th class="phpdocumentor-heading">Line</th>
+                    <th class="phpdocumentor-heading">Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">70</td>
+                        <td class="phpdocumentor-cell">TODO: Check of dagen juiste start en einde hebben</td>
+                    </tr>
+                                </tbody>
+            </table>
+                    <a id="profiel.php"></a>
+            <h3><abbr title="profiel.php">profiel.php</abbr></h3>
+            <table>
+                <thead>
+                <tr>
+                    <th class="phpdocumentor-heading">Type</th>
+                    <th class="phpdocumentor-heading">Line</th>
+                    <th class="phpdocumentor-heading">Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">139</td>
+                        <td class="phpdocumentor-cell">www.google.nl/maps/place/&quot;. urlencode($person-&gt;straat .&#039; &#039;. $person-&gt;huisnummer . $person-&gt;huisnummer_letter .&#039;, &#039;. $person-&gt;postcode .&#039; &#039;. $person-&gt;woonplaats) .&quot;&#039; target=&#039;_blank&#039;&gt;&quot;. $person-&gt;straat .&#039; &#039;. $person-&gt;huisnummer . $person-&gt;huisnummer_letter . ($person-&gt;huisnummer_toevoeging != &#039;&#039; ? &#039;-&#039;.$person-&gt;huisnummer_toevoeging : &#039;&#039;).&quot;&lt;/a&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">141</td>
+                        <td class="phpdocumentor-cell">www.google.nl/maps/dir/&quot;. urlencode($gebruiker-&gt;straat .&#039; &#039;. $gebruiker-&gt;huisnummer . $gebruiker-&gt;huisnummer_letter .&#039;, &#039;. $gebruiker-&gt;postcode .&#039; &#039;. $gebruiker-&gt;woonplaats) .&quot;/&quot;. urlencode($person-&gt;straat .&#039; &#039;. $person-&gt;huisnummer . $person-&gt;huisnummer_letter .&#039;, &#039;. $person-&gt;postcode .&#039; &#039;. $person-&gt;woonplaats) .&quot;&#039; title=&#039;klik hier om de route te tonen&#039; target=&#039;_blank&#039;&gt;&lt;img src=&#039;images/GoogleMaps.png&#039;&gt;&lt;/a&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">185</td>
+                        <td class="phpdocumentor-cell">echo &quot;		&lt;td&gt;&quot;. time2str(&quot;%d %B &#039;%y&quot;, $personData[&#039;geb_unix&#039;]) .&quot;&lt;/td&gt;&quot;;</td>
+                    </tr>
+                                </tbody>
+            </table>
+                    <a id="rooster/komendeWeek.php"></a>
+            <h3><abbr title="rooster/komendeWeek.php">komendeWeek.php</abbr></h3>
+            <table>
+                <thead>
+                <tr>
+                    <th class="phpdocumentor-heading">Type</th>
+                    <th class="phpdocumentor-heading">Line</th>
+                    <th class="phpdocumentor-heading">Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">24</td>
+                        <td class="phpdocumentor-cell">$eind = mktime(23,59,59,date(&quot;n&quot;), (date(&quot;j&quot;)+7+(7-date(&quot;N&quot;))));</td>
+                    </tr>
+                                </tbody>
+            </table>
+                    <a id="rooster/ruilen.php"></a>
+            <h3><abbr title="rooster/ruilen.php">ruilen.php</abbr></h3>
+            <table>
+                <thead>
+                <tr>
+                    <th class="phpdocumentor-heading">Type</th>
+                    <th class="phpdocumentor-heading">Line</th>
+                    <th class="phpdocumentor-heading">Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">62</td>
+                        <td class="phpdocumentor-cell">TODO: testen uitzetten</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">84</td>
+                        <td class="phpdocumentor-cell">TODO: testen uitzetten</td>
+                    </tr>
+                                </tbody>
+            </table>
+                    <a id="scipio/ScipioImport.php"></a>
+            <h3><abbr title="scipio/ScipioImport.php">ScipioImport.php</abbr></h3>
+            <table>
+                <thead>
+                <tr>
+                    <th class="phpdocumentor-heading">Type</th>
+                    <th class="phpdocumentor-heading">Line</th>
+                    <th class="phpdocumentor-heading">Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">24</td>
+                        <td class="phpdocumentor-cell">TODO: Voor uploaden runnen en dan na uploaden eerst een keer runnen zonder mailen (om plaatsnamen ed recht te trekken). Daarna mailen aanzetten</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">370</td>
+                        <td class="phpdocumentor-cell">TODO: testen uitzetten</td>
+                    </tr>
+                                </tbody>
+            </table>
+                    <a id="sendReminder.php"></a>
+            <h3><abbr title="sendReminder.php">sendReminder.php</abbr></h3>
+            <table>
+                <thead>
+                <tr>
+                    <th class="phpdocumentor-heading">Type</th>
+                    <th class="phpdocumentor-heading">Line</th>
+                    <th class="phpdocumentor-heading">Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">127</td>
+                        <td class="phpdocumentor-cell">$ReplacedBericht .= &quot;Ps 3. : &lt;i&gt;recent is de site verplaatst. Mocht je een bladwijzer hebben gemaakt voor de oude site, dan dien je deze aan te passen. Dit geldt ook voor bovenstaande digitale agenda&lt;/i&gt;&lt;br&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">159</td>
+                        <td class="phpdocumentor-cell">TODO: testen uitzetten</td>
+                    </tr>
+                                </tbody>
+            </table>
+                    <a id="team/edit.php"></a>
+            <h3><abbr title="team/edit.php">edit.php</abbr></h3>
+            <table>
+                <thead>
+                <tr>
+                    <th class="phpdocumentor-heading">Type</th>
+                    <th class="phpdocumentor-heading">Line</th>
+                    <th class="phpdocumentor-heading">Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">84</td>
+                        <td class="phpdocumentor-cell">ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js&#039;&gt;&lt;/script&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">86</td>
+                        <td class="phpdocumentor-cell">ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/themes/smoothness/jquery-ui.css&#039;&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">87</td>
+                        <td class="phpdocumentor-cell">ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js&#039;&gt;&lt;/script&gt;&quot;;</td>
+                    </tr>
+                                </tbody>
+            </table>
+                    <a id="voorganger/mail.php"></a>
+            <h3><abbr title="voorganger/mail.php">mail.php</abbr></h3>
+            <table>
+                <thead>
+                <tr>
+                    <th class="phpdocumentor-heading">Type</th>
+                    <th class="phpdocumentor-heading">Line</th>
+                    <th class="phpdocumentor-heading">Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">63</td>
+                        <td class="phpdocumentor-cell">TODO: testen uitzetten</td>
+                    </tr>
+                                </tbody>
+            </table>
+                    <a id="voorganger/mailData.php"></a>
+            <h3><abbr title="voorganger/mailData.php">mailData.php</abbr></h3>
+            <table>
+                <thead>
+                <tr>
+                    <th class="phpdocumentor-heading">Type</th>
+                    <th class="phpdocumentor-heading">Line</th>
+                    <th class="phpdocumentor-heading">Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">75</td>
+                        <td class="phpdocumentor-cell">TODO: Testen uitzetten</td>
+                    </tr>
+                                </tbody>
+            </table>
+            </div>
+                <section data-search-results class="phpdocumentor-search-results phpdocumentor-search-results--hidden">
+    <section class="phpdocumentor-search-results__dialog">
+        <header class="phpdocumentor-search-results__header">
+            <h2 class="phpdocumentor-search-results__title">Search results</h2>
+            <button class="phpdocumentor-search-results__close"><i class="fas fa-times"></i></button>
+        </header>
+        <section class="phpdocumentor-search-results__body">
+            <ul class="phpdocumentor-search-results__entries"></ul>
+        </section>
+    </section>
+</section>
+            </div>
+        </div>
+        <a href="reports/markers.html#top" class="phpdocumentor-back-to-top"><i class="fas fa-chevron-circle-up"></i></a>
+
+    </main>
+
+    <script>
+        cssVars({});
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.23.0/prism.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.23.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.23.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.23.0/plugins/line-highlight/prism-line-highlight.min.js"></script>
+</body>
+</html>

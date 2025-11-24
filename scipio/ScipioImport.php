@@ -1,4 +1,14 @@
 <?php
+/**
+ * Script om ledengegevens uit Scipio te importeren.
+ * 
+ * Dit script wordt 2 keer per dag (4 uur en 16 uur) uitgevoerd via een cronjob.
+ * Wijzigingen worden doorgemaild naar de wijkteams.
+ * 
+ * @package Intranet KKD
+ * @author Matthijs Draijer
+ * @version 1.0.0
+ */
 include_once('../include/functions.php');
 include_once('../include/config.php');
 include_once('../include/config_mails.php');

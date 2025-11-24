@@ -61,6 +61,7 @@ foreach($personen as $persoon) {
 		$OKReminder->FromName	= 'Open Kerk herinnering';
 		$OKReminder->addReplyTo('maartendejonge55@gmail.com', 'Maarten de Jonge');
 		$OKReminder->testen		= true;
+		//TODO: testen uitzetten
 		$OKReminder->Sendmail();
 	}
 }
