@@ -341,7 +341,7 @@ class Voorganger {
 
     /**
      * Sla het voorgangers-object op in de database.
-     * @return int/bool Bij een nieuwe (=INSERT) voorganger wordt het id teruggegeven
+     * @return int|bool Bij een nieuwe (=INSERT) voorganger wordt het id teruggegeven
      * bij een update true/false al naar gelang query geslaagd is
      */
     function save() {

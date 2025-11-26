@@ -3,22 +3,21 @@ include_once('../include/functions.php');
 include_once('../include/config.php');
 include_once('../include/HTML_TopBottom.php');
 
-$db = connect_db();
-
 if(isset($_REQUEST['showLogin'])) {
 	$cfgProgDir = '../auth/';
-	include($cfgProgDir. "secure.php");
-	$db = connect_db();
+	include($cfgProgDir. "secure.php");	
 }
 
-if(!isset($_SESSION['useID'])) {
-	session_start(['cookie_lifetime' => $cookie_lifetime]);
+# Kijk of er een sessie actief is, zo niet start de sessie
+if (session_status() === PHP_SESSION_NONE) {
+    session_start(['cookie_lifetime' => $cookie_lifetime]);
 }
 
 if(isset($_SESSION['useID'])) {
-	$memberData = getMemberDetails($_SESSION['useID']);
-	$agendaURL = $ScriptURL ."ical/".$memberData['username'].'-'. $memberData['hash_short'] .".ics";
-	$agendaNaam = "3GK (". makeName($_SESSION['useID'], 1) .")";
+	$member = new Member($_SESSION['useID']);
+	
+	$agendaURL = $ScriptURL .'/ical/'. $member->hash_long .'.ics';
+	$agendaNaam = "KKD (". $member->getName(1) .")";
 } else {
 	$agendaURL = '';
 	$agendaNaam = '';
@@ -52,7 +51,7 @@ $text[] = "De agenda is nu toegevoegd, mocht je de naam willen wijzigen, kijk da
 $text[] = "<a id='androidChange'></a><h3>Wijzigen</h3>";
 $text[] = "Om de agenda die je in het verleden hebt toegevoegd, te wijzigen, doorloop je de volgende stappen :";
 $text[] = "<ol>";
-$text[] = "<li>Ga naar <a href='https://calendar.google.com/calendar/u/0/r/settings'>deze pagina</a> (mogelijk moet je inloggen op je Google-account) en zoek aan de linkerkant onder het kopje '<i>Instellingen voor andere agenda's</i>' naar je 3GK-agenda". ($agendaNaam != '' ? " [waarschijnlijk bij jouw '$agendaNaam']" : '') .".</li>";
+$text[] = "<li>Ga naar <a href='https://calendar.google.com/calendar/u/0/r/settings'>deze pagina</a> (mogelijk moet je inloggen op je Google-account) en zoek aan de linkerkant onder het kopje '<i>Instellingen voor andere agenda's</i>' naar je KKD-agenda". ($agendaNaam != '' ? " [waarschijnlijk bij jouw '$agendaNaam']" : '') .".</li>";
 $text[] = "<li>Door op de agendanaam te klikken kan de naam gewijzigd worden.</li>";
 $text[] = "<li>Wijzigingen worden vanzelf opgeslagen.</li>";
 $text[] = "</ol>";
@@ -87,14 +86,11 @@ $text[] = "<li>Klik op de agendanaam en scroll helemaal naar beneden, naar de kn
 $text[] = "<li>Er komt nu een pop-up-venster om te bevestigen dat je de agenda wilt verwijderen. Bevestig dit door op '<i>verwijderen account</i>' te klikken.</li>";
 $text[] = "</ol>";
 
-echo $HTMLHeader;
-echo '<table border=0 width=100%>'.NL;
-echo '<tr>'.NL;
-echo "	<td width='15%' valign='top'>&nbsp;</td>".NL;
-echo "	<td width='70%' valign='top'>". showBlock(implode(NL, $text), 100)."</td>".NL;
-echo "	<td width='15%' valign='top'>&nbsp;</td>".NL;
-echo '</tr>'.NL;
-echo '</table>'.NL;
-echo $HTMLFooter;
+
+echo showCSSHeader();
+echo '<div class="content_vert_kolom">'.NL;
+echo "<div class='content_block'>". implode("<br>".NL, $text) ."</div>".NL;
+echo '</div> <!-- end \'content_vert_kolom\' -->'.NL;
+echo showCSSFooter();
 
 ?>

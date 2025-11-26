@@ -14,7 +14,7 @@
  * H = 00 to 23 (%H)
  * i = 00 to 59 (%M)
  *
- * @param mixed $format In welk format moet de datum worden opgemaakt.
+ * @param string $format In welk format moet de datum worden opgemaakt.
  * @param int $time tijd in UNIX-format
  *
  * @return string opgemaakte datum
@@ -607,7 +607,7 @@ function calculateTotals(array $array) {
 	
 	foreach($array as $waarde) {
 		if($waarde > 0) {
-			$price = 100*price2RightFormat($waarde);
+			$price = price2RightFormat($waarde);
 			$totaal = $totaal + $price;
 		}
 	}
@@ -631,4 +631,407 @@ function price2RightFormat(float $price) {
 	
 	return $toClean;
 }
+
+/**
+ * [Description for showDeclaratieDetails]
+ *
+ * @param array $input Data van de declaratie
+ * 
+ * @return array Array met HTML-code voor een opgemaakte tabel met de declaratiegegevens
+ * 
+ */
+//TODO: Lelijke functie, herschrijven
+// function showDeclaratieDetails($input) {
+// 	global $clusters, $declJGPost, $declJGKop;
+	
+// 	# $input['key']
+// 	# $input['user']
+// 	# $input['iban']
+// 	# $input['relatie']
+// 	# $input['cluster']
+// 	# $input['overige']
+// 	# $input['overig_price']
+// 	# $input['reiskosten']
+	
+// 	if(isset($input['key']) AND $input['key'] != '') {
+// 		$page[] = "<tr>";
+// 		$page[] = "		<td colspan='2'>Declaratie:</td>";
+// 		$page[] = "		<td>&nbsp;</td>";
+// 		$page[] = "		<td colspan='3'>". $input['key'] ."</td>";
+// 		$page[] = "</tr>";
+// 	}
+	
+// 	if(isset($input['user']) AND $input['user'] != '') {
+// 		$page[] = "<tr>";
+// 		$page[] = "		<td colspan='2'>Naam:</td>";
+// 		$page[] = "		<td>&nbsp;</td>";
+// 		$page[] = "		<td colspan='3'>". makeName($input['user'], 5) ."</td>";
+// 		$page[] = "</tr>";
+// 		$page[] = "<tr>";
+// 		$page[] = "		<td colspan='2'>Emailadres:</td>";
+// 		$page[] = "		<td>&nbsp;</td>";
+// 		$page[] = "		<td colspan='3'>". getMailAdres($input['user']) ."</td>";
+// 		$page[] = "</tr>";
+// 	}
+	
+// 	if($input['eigen'] == 'Ja') {	
+// 		$page[] = "<tr>";
+// 		$page[] = "		<td colspan='2'>Rekeningnummer:</td>";
+// 		$page[] = "		<td>&nbsp;</td>";
+// 		$page[] = "		<td colspan='3'>". $input['iban'] ."</td>";
+// 		$page[] = "</tr>";
+// 	}
+	
+// 	if($input['eigen'] == 'Nee') {		
+// 		$relatieData = eb_getRelatieDataByCode($input['relatie']);
+		
+// 		$page[] = "<tr>";
+// 		$page[] = "		<td colspan='2'>Begunstigde:</td>";
+// 		$page[] = "		<td>&nbsp;</td>";
+// 		$page[] = "		<td colspan='3'>". $relatieData['naam'] ."<br>". $relatieData['iban'] ."</td>";
+// 		$page[] = "</tr>";
+// 	}
+	
+// 	if(isset($input['cluster']) AND $input['cluster'] != '') {
+// 		$page[] = "<tr>";
+// 		$page[] = "		<td colspan='2'>Cluster onderdeel:</td>";
+// 		$page[] = "		<td>&nbsp;</td>";
+// 		$page[] = "		<td colspan='3'>". $clusters[$input['cluster']] ."</td>";
+// 		$page[] = "</tr>";
+// 	}
+			
+// 	/*
+// 	if(isset($input['post']) AND $input['post'] != '') {		
+// 		# Doorloop alle posten en zoek de bijbehorende naam erbij
+// 		foreach($input['post'] as $post) {
+// 			foreach($declJGPost as $subArray) {
+// 				if(isset($subArray[$post]))	$aPost[] = $subArray[$post];
+// 			}
+// 		}
+		
+// 		$page[] = "<tr>";
+// 		$page[] = "		<td colspan='2'>Post:</td>";
+// 		$page[] = "		<td>&nbsp;</td>";
+// 		$page[] = "		<td colspan='3'>". implode(', ', $aPost) ."</td>";
+// 		$page[] = "</tr>";
+// 		#$page[] = "<tr>";
+// 		#$page[] = "		<td colspan='2'>Post-omschrijving:</td>";
+// 		#$page[] = "		<td>&nbsp;</td>";
+// 		#$page[] = "		<td colspan='3'>Volgt</td>";
+// 		#$page[] = "</tr>";
+// 	}
+// 	*/
+	
+// 	if(isset($input['overige']) AND count($input['overige']) > 0) {
+// 		$page[] = "<tr>";
+// 		$page[] = "		<td colspan='6'>&nbsp;</td>";
+// 		$page[] = "</tr>";
+// 		$page[] = "<tr>";
+// 		$page[] = "		<td colspan='6'><b>Declaraties</b></td>";
+// 		$page[] = "</tr>";
+		
+// 		$totaal = calculateTotals($input['overig_price']);
+	
+// 		foreach($input['overige'] as $key => $value) {
+// 			if($value != "") {
+// 				$page[] = "<tr>";
+// 				$page[] = "		<td>&nbsp;</td>";
+				
+// 				if(isset($input['post'][$key])) {
+// 					$post_nr = $input['post'][$key];
+// 					foreach($declJGPost as $kop => $subArray) {
+// 						if(isset($subArray[$post_nr])) {
+// 							$catagorie = $declJGKop[$kop];
+// 							$post = $subArray[$post_nr];
+// 						}
+// 					}
+									
+// 					$page[] = "		<td>$value</td>";
+// 					$page[] = "		<td>&nbsp;</td>";
+// 					$page[] = "		<td>$catagorie -> $post</td>";
+// 				} else {
+// 					$page[] = "		<td colspan='3'>$value</td>";
+// 				}				
+				
+// 				$page[] = "		<td>&nbsp;</td>";
+// 				$page[] = "		<td align='right'>". formatPrice(price2RightFormat($input['overig_price'][$key])*100) ."</td>";
+// 				$page[] = "</tr>";				
+// 			}
+// 		}			
+// 	}
+	
+// 	if($input['eigen'] == 'Ja' AND isset($input['reiskosten']) AND $input['reiskosten'] > 0) {
+// 		$page[] = "<tr>";
+// 		$page[] = "		<td>&nbsp;</td>";
+// 		$page[] = "		<td colspan='3'>Reiskosten</td>";
+// 		$page[] = "		<td>&nbsp;</td>";
+// 		$page[] = "		<td align='right'>". formatPrice($input['reiskosten']) ."</td>";
+// 		$page[] = "</tr>";	
+		
+// 		$totaal = $totaal + $input['reiskosten'];
+// 	}
+			
+// 	$page[] = "<tr>";
+// 	$page[] = "		<td colspan='6'>&nbsp;</td>";
+// 	$page[] = "</tr>";
+// 	$page[] = "<tr>";
+// 	$page[] = "		<td colspan='4'><b>Totaal</b></td>";
+// 	$page[] = "		<td>&nbsp;</td>";
+// 	$page[] = "		<td align='right'><b>". formatPrice($totaal) ."</b></td>";
+// 	$page[] = "</tr>";
+// 	$page[] = "<tr>";
+// 	$page[] = "		<td colspan='6'>&nbsp;</td>";
+// 	$page[] = "</tr>";
+	
+// 	if(isset($input['bijlage']) AND $input['bijlage'] != '') {
+// 		$page[] = "<tr>";	
+// 		$page[] = "		<td colspan='1' valign='top'><b>Bijlage</b></td>";	
+// 		$page[] = "		<td colspan='5'>";
+		
+// 		foreach($input['bijlage'] as $key => $bestand) {
+// 			$page[] = "<li><a href='$bestand' target='blank'>". substr($input['bijlage_naam'][$key], 0, 40).( strlen($input['bijlage_naam'][$key]) > 40 ? '.....' : '')."</a></li>";
+// 		}
+// 		$page[] = "</td>";	
+// 		$page[] = "</tr>";
+// 	}
+	
+// 	if(isset($input['opmerking_cluco']) AND $input['opmerking_cluco'] != '') {
+// 		$page[] = "<tr>";
+// 		$page[] = "		<td colspan='6'>&nbsp;</td>";
+// 		$page[] = "</tr>";
+// 		$page[] = "<tr>";	
+// 		$page[] = "		<td colspan='6'><b>Opmerking door indiener</b></td>";
+// 		$page[] = "</tr>";	
+// 		$page[] = "<tr>";	
+// 		$page[] = "		<td colspan='6'><i>". $input['opmerking_cluco'] ."</i></td>";
+// 		$page[] = "</tr>";
+// 	}
+	
+// 	if(isset($input['opmerking_penning']) AND $input['opmerking_penning'] != '') {
+// 		$page[] = "<tr>";
+// 		$page[] = "		<td colspan='6'>&nbsp;</td>";
+// 		$page[] = "</tr>";
+// 		$page[] = "<tr>";	
+// 		$page[] = "		<td colspan='6'><b>Opmerking door cluco</b></td>";
+// 		$page[] = "</tr>";	
+// 		$page[] = "<tr>";	
+// 		$page[] = "		<td colspan='6'><i>". $input['opmerking_penning'] ."</i></td>";
+// 		$page[] = "</tr>";
+// 	}
+	
+	
+// 	if(isset($input['toelichting_penning']) AND $input['toelichting_penning'] != '') {
+// 		$page[] = "<tr>";
+// 		$page[] = "		<td colspan='6'>&nbsp;</td>";
+// 		$page[] = "</tr>";
+// 		$page[] = "<tr>";	
+// 		$page[] = "		<td colspan='6'><b>Opmerking door penningmeester</b></td>";
+// 		$page[] = "</tr>";	
+// 		$page[] = "<tr>";	
+// 		$page[] = "		<td colspan='6'><i>". $input['toelichting_penning'] ."</i></td>";
+// 		$page[] = "</tr>";
+// 	}
+	
+// 	$page[] = "<tr>";
+// 	$page[] = "		<td colspan='6'>&nbsp;</td>";
+// 	$page[] = "</tr>";
+	
+// 	return $page;	
+// }
+
+/**
+ * [Description for showDeclaratieDetails]
+ *
+ * @param Declaratie $declaratie
+ * 
+ * @return [type]
+ * 
+ */
+function showDeclaratieDetails(Declaratie $declaratie) {
+
+	#var_dump($declaratie);
+
+	#$ignore = ['type', 'dienst', 'voorganger', 'hash', 'cluster'];
+
+	$user = new Member($declaratie->gebruiker);
+
+	$page[] = "<tr>";
+	$page[] = "		<td><b>Indiener<b></td>";
+	$page[] = "		<td>&nbsp;</td>";
+	$page[] = "		<td colspan='4' align='right'>". $user->getName() ."</td>";
+	$page[] = "</tr>";
+	$page[] = "<tr>";
+	$page[] = "		<td><b>Datum<b></td>";
+	$page[] = "		<td>&nbsp;</td>";
+	$page[] = "		<td colspan='4' align='right'>". date('d-m-Y H:i', $declaratie->tijd) ."</td>";
+	$page[] = "</tr>";
+	$page[] = "<tr>";
+	$page[] = "		<td colspan='6'>&nbsp;</td>";
+	$page[] = "</tr>";
+
+	if(isset($declaratie->reiskosten) && $declaratie->reiskosten > 0) {
+		$page[] = "<tr>";
+		$page[] = "		<td><b>Reiskosten<b></td>";
+		$page[] = "		<td>&nbsp;</td>";
+		$page[] = "		<td colspan='2'>". $declaratie->van .' -> '. $declaratie->naar ."</td>";
+		$page[] = "		<td>". formatPrice($declaratie->reiskosten, true) ."</td>";
+		$page[] = "		<td>&nbsp;</td>";
+		$page[] = "</tr>";	
+	}
+		
+	if(isset($declaratie->overigeKosten) && count($declaratie->overigeKosten) > 0) {
+		$first = true;
+		# Dit is voor oude declaraties
+		# Kan na verloop van tijd eruit gesloopt worden
+		if(isset($declaratie->overigeKosten[0])) {			
+			foreach($declaratie->overigeKosten as $item) {	
+				$page[] = "<tr>";
+				$page[] = "		<td>". ($first ? '<b>Declaratie<b>' : '') ."</td>";
+				$page[] = "		<td>&nbsp;</td>";
+				$page[] = "		<td colspan='2'>". $item['omschrijving'] ."</td>";			
+				$page[] = "		<td align='right'>". formatPrice($item['bedrag'], true) ."</td>";
+				$page[] = "		<td>&nbsp;</td>";
+				$page[] = "</tr>";
+				$first = false;
+			}
+		} else {
+			foreach($declaratie->overigeKosten as $item => $bedrag) {
+				if($bedrag > 0) {
+					$page[] = "<tr>";
+					$page[] = "		<td>". ($first ? '<b>Declaratie<b>' : '') ."</td>";
+					$page[] = "		<td>&nbsp;</td>";
+					$page[] = "		<td colspan='2'>". $item ."</td>";			
+					$page[] = "		<td align='right'>". formatPrice($bedrag, true) ."</td>";
+					$page[] = "		<td>&nbsp;</td>";
+					$page[] = "</tr>";
+					$first = false;
+				}
+			}
+		}
+
+	}
+
+	$page[] = "<tr>";
+	$page[] = "		<td><b>Totaal<b></td>";
+	$page[] = "		<td colspan='4'>&nbsp;</td>";
+	$page[] = "		<td align='right'><b>". formatPrice($declaratie->totaal, true) ."</b></td>";
+	$page[] = "</tr>";
+	$page[] = "<tr>";
+	$page[] = "		<td colspan='6'>&nbsp;</td>";
+	$page[] = "</tr>";
+	
+	if(isset($declaratie->bijlagen) && $declaratie->bijlagen > 0) {
+		$first = true;
+		foreach($declaratie->bijlagen as $file => $name) {
+			$page[] = "<tr>";
+			$page[] = "		<td>". ($first ? '<b>Bijlage<b>' : '') ."</td>";
+			$page[] = "		<td>&nbsp;</td>";
+			$page[] = "		<td colspan='4' align='right'><a href='". $file ."'>". $name  ."</a></b></td>";
+			$page[] = "</tr>";
+			$first = false;
+		}
+	}
+
+	/*
+	foreach($declaratie as $key => $value) {
+		if(!in_array($key, $ignore)) {
+			$page[] = "<tr>";
+			$page[] = "		<td colspan='4'><b>$key</b></td>";
+			$page[] = "		<td>&nbsp;</td>";
+			$page[] = "		<td align='right'><b>". $value ."</b></td>";
+			$page[] = "</tr>";
+		}
+	}
+	*/
+
+	return $page;	
+}
+
+/**
+ * Encodeer een array naar JSON, maar maak het ook schoon.
+ *
+ * Hoewel het idee was dat alles omzetten naar JSON veel problemen verhelpt.
+ * Veroorzaakt het ook wel wat problemen. Daarom deze functie.
+ * Om te beginnen worden alle " vervangen door '. Dat is omdat anders het HTML-formulier in de war raakt.
+ * Vervolgens worden alle velden doorlopen en omgezet in UTF-8, mn van belang voor 'gekke' tekens.
+ * Vervolgens wordt alles omzetten in JSON-formaat
+ * En dan de newlines vervangen door een spatie
+ * @deprecated Met het gebruik van Declaratie-object niet meer in gebruik
+ * 
+ * @param mixed $input Array wat omgezet moet worden
+ * 
+ * @return string Schoongemaakte JSON-string
+ */
+function encode_clean_JSON($input) {
+	$array = $input;
+	$newArray = array();
+	
+	foreach($array as $key => $value) {
+		if(is_array($value)) {
+			foreach($value as $sub_key => $sub_value) {
+				$sub_value = str_replace('"', "'", $sub_value);
+				$sub_value = iconv('Windows-1252', 'UTF-8', $sub_value);
+				
+				$value[$sub_key] = $sub_value;
+			}			
+		} else {
+			$value = str_replace('"', "'", $value);
+			$value = iconv('Windows-1252', 'UTF-8', $value);
+		}
+		
+		$newArray[$key] = $value;
+	}
+	$JSONString = json_encode($newArray);
+	$string = str_replace('\r\n', ' ', $JSONString);
+		
+	return $string;
+}
+
+/**
+ * Resize een afbeelding naar de opgegeven breedte en hoogte.
+ * 
+ * Bij declaraties wil men nog wel eens grote foto's uploaden.
+ * Omdat de meeste gebruikers geen idee hebben hoe ze moeten resizen,
+ * doen we dat hier automatisch.
+ *
+ * @param string $file Pad naar het bestand wat geresized moet worden
+ * @param int $w Breedte van het nieuwe plaatje
+ * @param int $h Hoogte van het nieuwe plaatje
+ * @param bool $crop Moet het nieuwe plaatje exacte de afmeting hebben van $w en $h (true) of moet er geschaald worden op de grootste waarde
+ * 
+ * @return string Pad naar het nieuwe plaatje
+ */
+function resize_image($file, $w, $h, $crop=false) {
+	$newFile = 'uploads/'.generateFilename();
+	
+	list($width, $height) = getimagesize($file);
+	$r = $width / $height;
+	
+	if ($crop) {
+		if ($width > $height) {
+			$width = ceil($width-($width*abs($r-$w/$h)));
+		} else {
+			$height = ceil($height-($height*abs($r-$w/$h)));
+		}
+		
+		$newwidth = $w;
+		$newheight = $h;
+   } else {
+   	if ($w/$h > $r) {
+   		$newwidth = $h*$r;
+   		$newheight = $h;
+   	} else {
+   		$newheight = $w/$r;
+   		$newwidth = $w;
+   	}
+  }
+  
+  $src = imagecreatefromjpeg($file);
+  $dst = imagecreatetruecolor($newwidth, $newheight);
+  imagecopyresampled($dst, $src, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
+  imagejpeg($dst, $newFile, 100);
+  
+  return $newFile;
+}
+
 ?>

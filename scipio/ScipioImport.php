@@ -2,8 +2,9 @@
 /**
  * Script om ledengegevens uit Scipio te importeren.
  * 
- * Dit script wordt 2 keer per dag (4 uur en 16 uur) uitgevoerd via een cronjob.
- * Wijzigingen worden doorgemaild naar de wijkteams.
+ * Op dit moment staat de cronjob zo ingesteld dat het script 2 keer per dag (4 uur en 16 uur) wordt uitgevoerd.
+ * Dit script zorgt dus dat de ledengegevens in het intranet up-to-date blijven met Scipio.
+ * Eventuele wijzigingen in de data worden automatisch doorgevoerd in het intranet.
  * 
  * @package Intranet KKD
  * @author Matthijs Draijer

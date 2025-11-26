@@ -1,4 +1,17 @@
 <?php
+/**
+ * Maak persoonlijke iCal bestanden aan voor alle leden die nu of in de toekomst ergens op in het rooster staan.
+ * 
+ * Deze iCal-bestanden kan men toevoegen als externe agenda in hun Apple of Google Agenda ofzo.
+ * Op die manier staat direct in hun agenda als ze ergens op het rooster staan.
+ * In de vorige versie van dit script bevatte de naam van het bestand ook de inlognaam.
+ * Maar dat betekende dat als je je inlognaam wijzigde, je ook je agenda moest wijzigen.
+ * Daarom is vanaf versie 2 die naam verdwenen uit de bestandsnaam en gebruiken we een lang alfanumerieke reeks.
+ * 
+ * @package Intranet KKD
+ * @author Matthijs Draijer
+ * @version 2.0.0
+ */
 include_once('../include/functions.php');
 include_once('../include/config.php');
 include_once('../Classes/Member.php');

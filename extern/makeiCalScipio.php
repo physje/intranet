@@ -1,4 +1,16 @@
 <?php
+/**
+ * Script om data in de Scipio-agenda te krijgen.
+ * 
+ * Dit script maakt een iCal-bestand aan met alle kerkdiensten, agenda-items en open-kerk-roosters.
+ * Aan de Scipio-kant staat vervolgens ingesteld dat dit iCal-bestand (scipio.ics) regulier moet worden ingelezen.
+ * Omdat het een 2-traps proces is, is er geen directe koppeling tussen Scipio en het intranet, en zit er dus enige 
+ * vertraging tussen wijzigingen op het intranet en dat het zichtbaar is in Scipio.
+ * 
+ * @package Intranet KKD
+ * @author Matthijs Draijer
+ * @version 1.0.0
+ */
 include_once('../include/functions.php');
 include_once('../include/config.php');
 include_once('../Classes/Voorganger.php');

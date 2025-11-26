@@ -1,6 +1,6 @@
 <?php
 /**
- * Script om herinnering-mails te versturen voor de komende kerkdienst.
+ * Script om herinnering-mails te versturen aan leden die op het rooster staan voor het een of ander.
  * 
  * Dit script wordt dagelijks uitgevoerd via een cronjob en kijkt naar diensten over 3 dagen.
  * Zo wordt bv op donderdagochtend mails voor zondag verstuurd.
