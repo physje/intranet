@@ -88,8 +88,23 @@ class Declaratie
 
     /**
      * @var string Opmerking voor Cluster Coordinator
+     * @deprecated Nu algemene propertie $opmerking die algemeen bruikbaar is
      */
     public string $opmerkingCluco;
+
+    /**
+     * Opmerking bij een fase van de declaratie.
+     * De opmerking wordt doorgegeven aan de Cluco/Penningmeester/Gemeentelid
+     * en daarna toegevoegd aan $correspondentie en opnieuw geinitialiseerd
+     * @var string Opmerking bij deze fase van de declaratie
+     */
+    public string $opmerking;
+
+    /**
+     * @var array Array met alle correspondentie.
+     * Elk element is een array ('time', 'user', 'text')
+     */
+    public array $correspondentie;
 
     /**
      * @var int ID van de relatie binnen de eBoekhouden.nl administratie waar de factuur naartoe overgemaakt moet worden
@@ -101,8 +116,34 @@ class Declaratie
      */
     public int $cluster;
 
+    public int $GBR;
+
+    public string $betalingskenmerk;
+
+    public int $begunstigde;
+
     /**
-     * @var array Post van Jeugd & Gezin waar de declaratie onder geboekt moet worden
+     * Status van de declaratie (alleen gebruikt bij gemeenteleden).
+     *      
+     * 0 = 'geen' (nog niet in gebruik)
+     * 1 = 'opgeslagen' (nog niet in gebruik)
+     * 2 = 'bij lid'
+     * 3 = 'bij CluCo'
+     * 4 = 'bij penningmeester'
+     * 5 = 'afgerond'
+     * 6 = 'afgekeurd'
+     * 7 = 'verwijderd'
+     * 8 = 'investering'
+     * 
+     * @see Kerkdienst::$declaratieStatus
+     * Declaratie van voorgangers wordt bijgehouden in Kerkdietst-object (declaratieStatus)
+     *
+     * @var int Status van de declaratie
+     */
+    public int $status;
+
+    /**
+     * @var string Post van Jeugd & Gezin waar de declaratie onder geboekt moet worden
      */
     public array $posten;
 
@@ -133,7 +174,42 @@ class Declaratie
      * @param string $hash hash van de declaratie (alfanumeriek 8 tekens) in de database (optioneel)
      * 
      */
-    public function __construct($hash = '') { 
+    public function __construct($hash = '') {
+        # Initialiseer het object met 'lege' properties
+
+        # Typisch voorganger
+        $this->dienst = 0;
+        $this->voorganger = 0;        
+        $this->oorspronkelijke_IBAN = '';
+
+        #Beide types
+        $this->hash = '';
+        $this->van = '';
+        $this->naar = '';        
+        $this->IBAN = '';        
+        $this->afstand = 0.0;
+        $this->reiskosten = 0.0;
+        $this->overigeKosten = [];
+                    
+        # Typisch gemeentelid
+        $this->id = 0;
+        $this->gebruiker = 0;
+        $this->eigenRekening = true;
+        #$this->opmerkingCluco = '';
+        $this->opmerking = '';
+        $this->betalingskenmerk = '';
+        $this->begunstigde = 0;
+        $this->correspondentie = [];
+        $this->EB_relatie = 0;
+        $this->cluster = 0;
+        $this->status = 0;
+        $this->GBR = 0;
+        $this->totaal = 0.0;
+        $this->tijd = time();
+        $this->lastAction = time();
+        $this->posten = [];
+        $this->bijlagen = [];
+
         if($hash != '') {
             $db = new Mysql();            
             $this->type = 'gemeentelid';
@@ -147,27 +223,27 @@ class Declaratie
             if(isset($data['indiener']))    $this->gebruiker = intval($data['indiener']);
             if(isset($data['tijd']))        $this->tijd = intval($data['tijd']);
             if(isset($data['last_action'])) $this->lastAction = intval($data['last_action']);
-
+            
             $json = json_decode($data['declaratie'], true);
 
             # Bij 'nieuwe' declaraties komen de keys uit de JSON overeen met de properties van het object
             foreach($json as $key => $value) {
                 if(property_exists($this, $key)) {
-                    if(in_array($key, ['overigeKosten', 'posten', 'bijlagen'])) {
+                    if(in_array($key, ['overigeKosten', 'posten', 'bijlagen', 'correspondentie'])) {
                         $this->$key = json_decode($value, true);
                     } else {
                         $this->$key = $value;
                     }
                 }
             }
-
+            
             # Bij oudere declaraties moeten we het handmatig doen
             if(isset($json['eigen']))       $this->eigenRekening = ($json['eigen'] == 'Ja' ? true : false);
             if(isset($json['cluster']))     $this->cluster = intval($json['cluster']);
             if(isset($json['iban']))        $this->IBAN = $json['iban'];
-            if(isset($json['opm_cluco']))   $this->opmerkingCluco = $json['opm_cluco'];
+            if(isset($json['opm_cluco']))   $this->opmerking = $json['opm_cluco'];
             if(isset($json['totaal']))      $this->totaal = floatval($json['totaal']);
-            if(isset($json['EBCode']))         $this->EB_relatie = intval($json['EBCode']);
+            if(isset($json['EBCode']))      $this->EB_relatie = intval($json['EBCode']);
             if(isset($json['post']))        $this->posten = $json['post'];
 
             if(isset($json['overig']) && isset($json['overig_price'])) {
@@ -183,33 +259,6 @@ class Declaratie
                     $this->bijlagen[$json['bijlage'][$i]] = $json['bijlage_naam'][$i];
                 }
             }                      
-        } else {            
-            # Typisch voorganger
-            $this->dienst = 0;
-            $this->voorganger = 0;        
-            $this->oorspronkelijke_IBAN = '';
-
-            #Beide types
-            $this->hash = '';
-            $this->van = '';
-            $this->naar = '';        
-            $this->IBAN = '';        
-            $this->afstand = 0.0;
-            $this->reiskosten = 0.0;
-            $this->overigeKosten = [];
-            
-            # Typisch gemeentelid
-            $this->id = 0;
-            $this->gebruiker = 0;
-            $this->eigenRekening = true;
-            $this->opmerkingCluco = '';
-            $this->EB_relatie = 0;
-            $this->cluster = 0;
-            $this->totaal = 0.0;
-            $this->tijd = time();
-            $this->lastAction = time();
-            $this->posten = [];
-            $this->bijlagen = [];
         }
     }
 
@@ -231,16 +280,27 @@ class Declaratie
         if($this->type == 'gemeentelid') {
             $db = new Mysql();
 
+            # Voeg eventuele opmerking toe aan de correspondentie
+            if($this->opmerking != '') {
+                $this->correspondentie[] = array('time' => time(), 'user' => $_SESSION['useID'], 'text' => cleanDeclaratieString($this->opmerking));
+                $this->opmerking = '';
+            }
+
+            # Stel de indien-tijd in
+			$this->lastAction = time();
+
             foreach($this as $key => $value) {
                 if($value != '' && $value != 0 && $value != [] && $key != '') {
                     $data[$key] = is_array($value) ? addslashes(json_encode($value)) : $value;                    
+                } elseif(is_bool($value) && $value === false) {
+                    $data[$key] = false;                
                 }
             }
 
             if($this->id == 0) {
                 $sql = "INSERT INTO `eb_declaraties` (`hash`, `indiener`, `cluster`, `status`, `declaratie`, `totaal`, `tijd`, `last_action`) VALUES ('". $this->hash ."', ". $this->gebruiker .", ". $this->cluster .", ". $this->status .", '". json_encode($data) ."', ". $this->totaal .", ". $this->tijd .", ". $this->lastAction .")";
             } else {
-                $sql = "UPDATE `eb_declaraties` SET `indiener` = ". $this->gebruiker .", `cluster` = ". $this->cluster .", `declaratie` = '". json_encode($data) ."', `totaal` = ". $this->totaal .", `last_action` = ". $this->lastAction ."  WHERE `id` = ". $this->id;
+                $sql = "UPDATE `eb_declaraties` SET `indiener` = ". $this->gebruiker .", `cluster` = ". $this->cluster .", `status` = ". $this->status .", `declaratie` = '". json_encode($data) ."', `totaal` = ". $this->totaal .", `last_action` = ". $this->lastAction ."  WHERE `id` = ". $this->id;
             }
 
             return $db->query($sql);

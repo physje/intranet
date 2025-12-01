@@ -65,6 +65,16 @@ class Kerkdienst {
     
     /**
      * @var int Declaratie-status van de voorganger van deze kerkdienst
+     * 0 = 'geen';					# standaard status bij nieuwe kerkdienst
+     * 1 = 'open';					# Status wordt op 'open' gezet in mailVoorganger.php (20 dagen van te voren)
+     * 2 = 'link verstuurd';		# Status wordt op 'link verstuurd' gezet na versturen van link op de dag van voorgaan
+     * 3 = 'link bezocht';			# Status wordt op 'link bezocht' gezet als de link uit vorige mail bezocht is
+     * 4 = 'opgeslagen';			# (nog) niet ingebruik
+     * 5 = 'bij CluCo';				# (nog) niet ingebruik
+     * 6 = 'bij lid';				# (nog) niet ingebruik
+     * 7 = 'afgekeurd';				# (nog) niet ingebruik
+     * 8 = 'afgerond';				# Status wordt op 'afgerond' gezet als declaratie is ingediend
+     * 9 = 'afgezien';				# Status wordt op 'afgezien' gezet als voorganger dat aangeeft
      */
     public int $declaratieStatus;
 

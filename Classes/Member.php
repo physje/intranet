@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Class voor een lid in de kerkelijke administratie
  * 
@@ -7,61 +6,250 @@
  * @author Matthijs Draijer
  * @version 1.0.0
  */
-class Member {		
+class Member {
+	/**
+	 * @var Mysql
+	 */
 	public Mysql $db;
+	
+	/**
+	 * @var int ID van het lid, komt overeen met het Scipio-ID
+	 */
 	public int $id;
+	
+	/**
+	 * @var string Status van het lid, denk aan actief, vertrokken, ontrokken, etc.
+	 */
 	public string $status;
+	
+	/**
+	 * @var int ID van het kerkelijk adres. Leden met hetzelfde kerkelijk adres wonen op hetzelfde adres.
+	 * Let-op, volwassen kinderen die nog thuis wonen hebben een ander kerkelijk adres.
+	 */
 	public int $adres;
+	
+	/**
+	 * @var string Type geslacht van het lid, M voor mannen/jongens en V voor vrouwen/meisjes
+	 */
 	public string $geslacht;
+	
+	/**
+	 * @var string Voorletters van het lid
+	 */
 	public string $voorletters;
+	
+	/**
+	 * @var string Voornaam (roepnaam) van het lid
+	 */
 	public string $voornaam;
+	
+	/**
+	 * @var string Tussenvoegsel bij de achternaam van het lid
+	 */
 	public string $tussenvoegsel;
+	
+	/**
+	 * @var string Achternaam van het lid
+	 */
 	public string $achternaam;
+
+	/**
+	 * @var string Geboortenaam van het lid, met name bij getrouwde vrouwen
+	 */
 	public string $meisjesnaam;
+
+	/**
+	 * @var string Straat waar het lid woont
+	 */
 	public string $straat;
+	
+    /**
+	 * @var int Huisnummer waar het lid woont
+	 */
 	public int $huisnummer;
+	
+	/**
+	 * @var string Letter van het huisnummer waar het lid woont
+	 */
 	public string $huisnummer_letter;
+	
+	/**
+	 * @var string Toevoeging bij het huisnummer waar het lid woont
+	 */
 	public string $huisnummer_toevoeging;
+	
+	/**
+	 * @var string Postcode van het lid
+	 */
 	public string $postcode;
+	
+	/**
+	 * @var string Woonplaats van het lid
+	 */
 	public string $woonplaats;
+	
+	/**
+	 * @var string Telefoonnummer van het lid
+	 */
 	public string $telefoon;
+	
+	/**
+	 * @var string Persoonlijke mailadres van het lid
+	 */
 	public string $email;
+	
+	/**
+	 * @var string Formele/Koningskerk-adres van het lid
+	 */
 	public string $email_formeel;
+	
+	/**
+	 * @var string Geboortedatum (YYY-MM-DD) van het lid.
+	 */
 	public string $geboortedatum;
+	
+	/**
+	 * @var string Relationele status van het lid (gezinshoofd, zoon, dochter)
+	 */
 	public string $relatie;
+	
+	/**
+	 * @var string Is het lid doop- of belijdend lid
+	 */
 	public string $doop_belijdenis;
+	
+	/**
+	 * @var string Wat (gehuwd, gescheiden, zelfstandig)
+	 */
 	public string $burgelijk;
+	
+	/**
+	 * @var int UNIX-tijd van tijdstip van vestiging
+	 */
 	public int $tijd_vestiging;
+	
+	/**
+	 * @var int UNIX-tijd van tijdstip van laatste wijziging
+	 */
 	public int $tijd_wijziging;
+	
+	/**
+	 * @var int UNIX-tijd van tijdstip van laatste inlog
+	 */
 	public int $tijd_bezoek;
+	
+	/**
+	 * @var int UNIX-tijd van tijdstip van laatste synchronisatie met Scipio
+	 */
 	public int $tijd_scipipo;
+	
+	/**
+	 * @var int ID in eBoekhouden.nl
+	 */
 	public int $boekhouden;
+	
+	/**
+	 * @var string MFA-code (nog niet in gebruik)
+	 */
 	public string $MFA_code;
+	
+	/**
+	 * @var string Gebruikersnaam van het lid
+	 */
 	public string $username;
+	
+	/**
+	 * @var string Versleutelde password van het lid
+	 */
 	public string $password;
+	
+	/**
+	 * @var string Wijk (A-J, ICF) waarin het lid woont
+	 */
 	public string $wijk;
+	
+	/**
+	 * @var string alfanumerieke reeks van 64-tekens waarmee het lid geïdentificeerd kan worden zonder in te loggen
+	 */
 	public string $hash_long;
+	
+	/**
+	 * @var string alfanumerieke reeks van 16-tekens waarmee het lid geïdentificeerd kan worden zonder in te loggen	 
+	 */
 	public string $hash_short;
 	
+	/**
+	 * @var int Type naamgeving.
+	 * @see Member::getName() voor voorbeelden
+	 */
 	public int $nameType;
+	
+	/**
+	 * @var int Type mailadres.
+	 * 1 = normale adres
+	 * 2 = formele adres
+	 */
 	public int $emailType;
 
+	/**
+	 * @var int Geboortjaar van lid
+	 */
 	public int $geboorte_jaar;
+	
+	/**
+	 * @var int Geboortmeaand van lid
+	 */
 	public int $geboorte_maand;
+	
+	/**
+	 * @var int Geboortedag van lid
+	 */
 	public int $geboorte_dag;
 
+	/**
+	 * @var array ID van teams of groepen waar lid in zit
+	 */
 	public array $teams;
+	
+	/**
+	 * @var array ID van roosters waar lid op staat of op kan staan
+	 */
 	public array $roosters;
+	
+	/**
+	 * @var array ID van teams of groepen die lid beheert
+	 */
 	public array $beheer_teams;
+	
+	/**
+	 * @var array ID van roosters die lid beheert
+	 */
 	public array $beheer_roosters;
+	
+	/**
+	 * @var array ID van roosters die lid plant
+	 */
 	public array $planning_roosters;
+	
+	/**
+	 * @var array Lid-IDS van familieleden van het lid
+	 */
 	public array $familie;
+	
+	/**
+	 * @var int Lid-ID van de ouderling van het lid
+	 */
 	public int $pastor;
+	
+	/**
+	 * @var int Lid-ID van de bezoekbroeder- of zuster van het lid
+	 */
 	public int $bezoeker;
 	
 	## Methods
 	function __construct(int $id = 0) {
 		$db = new Mysql();
+		$this->id = 0;
 		$this->db = $db;
 		$this->nameType = 2;
 		$this->emailType = 1;
@@ -99,8 +287,8 @@ class Member {
 		$this->hash_short = '';
 		
 		if($id > 0) {			
-			$data = $db->select("SELECT * FROM `leden` WHERE `scipio_id` = ". $id);			
-			
+			$data = $db->select("SELECT * FROM `leden` WHERE `scipio_id` = ". $id);
+						
 			$this->id = $id;
 			$this->status = $data['status'];
 			$this->adres = $data['kerk_adres'];
@@ -258,7 +446,8 @@ class Member {
 	}
 
 	/**
-	 * @return int
+	 * Geef ID van de ouderling
+	 * @return int ID van de ouderling
 	 */
 	function getPastor() : int {
 		if(!isset($this->pastor)) {
@@ -275,6 +464,10 @@ class Member {
 		return $this->pastor;
 	}
 
+	/**
+	 * Sla de ouderling en bezoek-broeder of -zuster van het lid op
+	 * @return bool Succesvol of niet
+	 */
 	function setPastor() : bool {
 		$db = $this->db;
 
@@ -292,7 +485,8 @@ class Member {
 	}
 
 	/**
-	 * @return int
+	 * Geef ID van de bezoek-broeder of -zuster
+	 * @return int ID van de bezoek-broeder of -zuster
 	 */
 	function getBezoeker() : int {
 		if(!isset($this->bezoeker)) {
@@ -309,11 +503,20 @@ class Member {
 		return $this->bezoeker;
 	}
 	
+
+	/**
+	 * Geef het opgemaakte woonadres (straat+huisnummer+letter+toevoeging) terug van het lid
+	 * @return string Woonadres
+	 */
 	function getWoonadres() {
 		return $this->straat .' '. $this->huisnummer.($this->huisnummer_letter != '' ? ' '.$this->huisnummer_letter : '').($this->huisnummer_toevoeging != '' ? ' '.$this->huisnummer_toevoeging : '');
 	}
 
 
+	/**
+	 * Geef een array terug met ID's van pastorale bezoeken
+	 * @return array ID van pastorale bezoeken
+	 */
 	function getPastoraleBezoeken() {
 		$db = $this->db;
 		$data = $db->select("SELECT `id` FROM `pastoraat` WHERE `lid` = ". $this->id ." ORDER BY `tijdstip` DESC", true);
@@ -421,47 +624,89 @@ class Member {
 
 	/**
 	 * Geeft de naam van het lid terug (afhankelijk van nameType).
+	 * 1 = voornaam										Alberdien
+	 * 2 = korte achternaam								Jong
+	 * 3 = volledige achternaam (man)					de Jong
+	 * 4 = volledige achternaam (vrouw)					de Jong-van Ginkel
+	 * 5 = voornaam achternaam (man)					Alberdien de Jong
+	 * 6 = voornaam achternaam (vrouw)					Alberdien de Jong-van Ginkel
+	 * 7 = voornaam achternaam (vrouw)					Alberdien van Ginkel	
+	 * 8 = achternaam, voornaam							Jong; de, Alberdien
+	 * 9 = voorletters achternaam (man)					A. de Jong
+	 * 10 = voorletters achternaam (vrouw)				A. de Jong-van Ginkel
+	 * 11 = voorletters achternaam (vrouw)				A. van Ginkel
+	 * 12 = voorletters achternaam (man)				A. (Alberdien) de Jong
+	 * 13 = voorletters achternaam (vrouw)				A. (Alberdien) de Jong-van Ginkel
+	 * 14 = voorletters achternaam (vrouw)				A. (Alberdien) van Ginkel
+	 * 15 = volledige achternaam, voornaam (vrouw)		Jong-van Ginkel; de, Alberdien
+	 * 16 = volledige achternaam, voorletters (vrouw)	Jong-van Ginkel; de, A.
+	
 	 * @return string String met naam
 	 */
 	function getName($type = 0) {
-        if($type == 0) {
-            $type = $this->nameType;
-        }
-
+		if($this->voorletters != '') {
+			$voorletters = $this->voorletters;
+		}
+		
 		if($this->voornaam != '') {
-			$voor = $this->voornaam;
+			$voornaam	= $this->voornaam;		
 		} else {
-			$voor = $this->voorletters;
+			$voornaam = $voorletters;
 		}
 		
 		if($this->tussenvoegsel != '') {
-			$achter = $this->tussenvoegsel .' '. $this->achternaam;
-		} else {
-			$achter = $this->achternaam;
+			$tussen 	= strtolower($this->tussenvoegsel);
+		}
+		
+		if($this->achternaam != '') {
+			$achter 	= ucfirst($this->achternaam);
 		}
 		
 		if($this->meisjesnaam != '') {
-			$achterFull = $achter .'-'. $this->meisjesnaam;
-		} else {
-			$achterFull = $achter;
-		}  		
-		
-		switch ($type) {
-			case 1:
-				return $voor;
-				break;
-			case 2:
-				return $voor .' '. $achter;
-				break;
-			case 3:
-				return $this->voorletters .' ('. $this->voornaam .') '. $achterFull;
-				break;
-			case 4:
-				return $achter;
-				break;
-			default:
-				return $voor .' '. $achterFull;
+			$achter_m = $this->meisjesnaam;
 		}
+
+		if($achter_m != '' AND ($type == 4 OR $type == 6 OR $type == 10 OR $type == 13 OR $type == 15 OR $type == 16)) {
+			$achter .= '-'.$achter_m;
+		} elseif($achter_m != '' AND ($type == 7 OR $type == 11)) {
+			$achter = $achter_m;
+		}
+				
+		if($tussen == '') {			
+			$achternaam	= $achter;
+		} else {					
+			if($type == 2 OR $type == 7) {
+				$achternaam	= $achter;
+			} elseif($type == 8 OR $type == 15 OR $type == 16) {
+				$achternaam	= $achter.'; '.$tussen;
+			} else {
+				$achternaam	= $tussen.' '.$achter;
+			}
+		}
+			
+		if($type == 1) {
+			return urldecode($voornaam);
+		} elseif($type == 2) {
+			return urldecode($achternaam);
+		} elseif($type == 3 OR $type == 4) {
+			return urldecode($achternaam);
+		} elseif($type == 5 OR $type == 6 OR $type == 7) {
+			return urldecode($voornaam.' '.$achternaam);
+		} elseif($type == 8) {
+			return urldecode($achternaam.', '.$voornaam);
+		} elseif($type == 9 OR $type == 10 OR $type == 11) {
+			return urldecode($voorletters .' '. $achternaam);
+		} elseif($type == 12 OR $type == 13 OR $type == 14) {
+			if($voornaam != $voorletters) {
+				return urldecode($voorletters .' ('. $voornaam .') '. $achternaam);
+			} else {
+				return urldecode($voorletters .' '. $achternaam);
+			}
+		} elseif($type == 15) {
+			return urldecode($achternaam.', '. $voornaam);
+		} elseif($type == 16) {
+			return urldecode($achternaam.', '. $voorletters);
+		}		
 	}
 	
 	
@@ -620,9 +865,6 @@ class Member {
 						
 		return array_column($data, 'scipio_id');
 	}
-
-	
-
 }
 
 ?>

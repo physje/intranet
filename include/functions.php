@@ -633,7 +633,7 @@ function price2RightFormat(float $price) {
 }
 
 /**
- * [Description for showDeclaratieDetails]
+ * Geef alle
  *
  * @param array $input Data van de declaratie
  * 
@@ -840,18 +840,15 @@ function price2RightFormat(float $price) {
 // }
 
 /**
- * [Description for showDeclaratieDetails]
- *
- * @param Declaratie $declaratie
+ * Geef alle gegevens van de declaratie weer in een tabel
  * 
- * @return [type]
+ * @param Declaratie Declaratie object
+ * 
+ * @return array Array met HTML-code voor een opgemaakte tabel met de declaratiegegevens
  * 
  */
 function showDeclaratieDetails(Declaratie $declaratie) {
-
-	#var_dump($declaratie);
-
-	#$ignore = ['type', 'dienst', 'voorganger', 'hash', 'cluster'];
+	global $clusters;
 
 	$user = new Member($declaratie->gebruiker);
 
@@ -864,6 +861,11 @@ function showDeclaratieDetails(Declaratie $declaratie) {
 	$page[] = "		<td><b>Datum<b></td>";
 	$page[] = "		<td>&nbsp;</td>";
 	$page[] = "		<td colspan='4' align='right'>". date('d-m-Y H:i', $declaratie->tijd) ."</td>";
+	$page[] = "</tr>";
+	$page[] = "<tr>";
+	$page[] = "		<td><b>Cluster<b></td>";
+	$page[] = "		<td>&nbsp;</td>";
+	$page[] = "		<td colspan='4' align='right'>". $clusters[$declaratie->cluster] ."</td>";
 	$page[] = "</tr>";
 	$page[] = "<tr>";
 	$page[] = "		<td colspan='6'>&nbsp;</td>";
@@ -932,17 +934,30 @@ function showDeclaratieDetails(Declaratie $declaratie) {
 		}
 	}
 
-	/*
-	foreach($declaratie as $key => $value) {
-		if(!in_array($key, $ignore)) {
+	if($declaratie->opmerking != '') {
+		$page[] = "<tr>";
+		$page[] = "		<td colspan='6'>&nbsp;</td>";
+		$page[] = "</tr>";
+		$page[] = "<tr>";
+		$page[] = "		<td><b>Opmerking<b></td>";
+		$page[] = "		<td>&nbsp;</td>";
+		$page[] = "		<td colspan='4'>". $declaratie->opmerking ."</td>";
+	} elseif(count($declaratie->correspondentie) > 0) {
+		$page[] = "<tr>";
+		$page[] = "		<td colspan='6'>&nbsp;</td>";
+		$page[] = "</tr>";
+
+		$first = true;
+		foreach($declaratie->correspondentie as $regel) {
+			$user = new Member($regel['user']);
 			$page[] = "<tr>";
-			$page[] = "		<td colspan='4'><b>$key</b></td>";
-			$page[] = "		<td>&nbsp;</td>";
-			$page[] = "		<td align='right'><b>". $value ."</b></td>";
+			$page[] = "		<td>". ($first ? '<b>Correspondentie<b>' : '') ."</td>";
+			$page[] = "		<td colspan='1'>". $user->getName(2) ."<br>". date('d-m-y H:i', $regel['time']) ."</td>";
+			$page[] = "		<td colspan='4'>". $regel['text'] ."</td>";			
 			$page[] = "</tr>";
+			$first = false;
 		}
 	}
-	*/
 
 	return $page;	
 }
@@ -985,6 +1000,17 @@ function encode_clean_JSON($input) {
 	$string = str_replace('\r\n', ' ', $JSONString);
 		
 	return $string;
+}
+
+
+
+function cleanDeclaratieString($in) {
+	$string = $in;
+
+	$string = str_replace('"', '*', $string);
+	$string = str_replace('\\r\\n', ' ', $string);
+
+	return $string;	
 }
 
 /**

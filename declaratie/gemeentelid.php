@@ -42,12 +42,16 @@ if($declaratie->type != 'gemeentelid') {
 	# Verwijder de oude declaratie en start een nieuwe
 	unset($_SESSION['declaratie']);
 	$declaratie = new Declaratie();
-	$declaratie->type = 'gemeentelid';
-	$_SESSION['declaratie'] = $declaratie;
+	$declaratie->type = 'gemeentelid';	
 }
 
+# Haal gegevens van een bestaande declaratie op
+# Kan gebruikt worden als een declaratie terug gaat naar het gemeentelid
+if(isset($_REQUEST['key'])) {
+	$declaratie = new Declaratie($_REQUEST['key']);
+
 # Reset de declaratie als daar om gevraagd wordt
-if(isset($_REQUEST['reset'])) {
+} elseif(isset($_REQUEST['reset'])) {
 	$declaratie = new Declaratie();
 	$declaratie->type = 'gemeentelid';
 }
@@ -70,13 +74,15 @@ if(isset($_POST['eigen']))			$declaratie->eigenRekening = ($_POST['eigen'] == 'J
 if(isset($_POST['iban']))			$declaratie->IBAN = cleanIBAN($_POST['iban']);
 if(isset($_POST['EB_relatie']))		$declaratie->EB_relatie = intval($_POST['EB_relatie']);
 if(isset($_POST['cluster']))		$declaratie->cluster = intval($_POST['cluster']);
-if(isset($_POST['opm_cluco']))		$declaratie->opmerkingCluco = trim($_POST['opm_cluco']);
+if(isset($_POST['opm_cluco']))		$declaratie->opmerking = trim($_POST['opm_cluco']);
 
 # Overige kosten als array van omschrijving => bedrag
 if(isset($_POST['overig'])) {
 	$declaratie->overigeKosten = array();
-	foreach($_POST['overig'] as $key => $string) {		
-		$declaratie->overigeKosten[$string] = 100*floatval(str_replace(',', '.', $_POST['overig_price'][$key]));
+	foreach($_POST['overig'] as $key => $string) {
+		if($string != '') {
+			$declaratie->overigeKosten[$string] = 100*floatval(str_replace(',', '.', $_POST['overig_price'][$key]));
+		}
 	}
 }
 # Loop ook alle posten door (alleen bij J&G)
@@ -144,10 +150,13 @@ if(isset($_POST['correct'])) {
 	# Als de gebruiker op het laatste scherm op 'refresh' klikt zou in theorie de declaratie 2x ingediend worden.
 	# Na inschieten van de declaratie wordt het object verwijderd, daarom een check of het totaal bedrag groter is dan 0	
 	if($declaratie->totaal > 0) {
-		$declaratie->hash = generateID();  	
+		# Maak key (ook wel hash genoemd) aan als die nog niet bestaat
+		if($declaratie->hash == '')	$declaratie->hash = generateID();
 
+		# Haal het cluster op
 		$cluster = $declaratie->cluster;
 		
+		# En bepaal wie cluster-coordinator is
 		if(isset($clusterCoordinatoren[$cluster]) AND $clusterCoordinatoren[$cluster] <> $_SESSION['useID']) {
 			$clucoID = $clusterCoordinatoren[$cluster];
 		} else {
@@ -177,9 +186,9 @@ if(isset($_POST['correct'])) {
 		$mailCluco[] = "Het betreft een declaratie van <i>". makeOpsomming($onderwerpen, '</i>, <i>', '</i> en <i>') ."</i> ter waarde van ". formatPrice($declaratie->totaal)."<br>";
 		$mailCluco[] = "<br>";
 		
-		if($declaratie->opmerkingCluco != '') {		
+		if($declaratie->opmerking != '') {		
 			$mailCluco[] = "Als toelichting is ingevoerd:<br>";
-			$mailCluco[] = '<i>'. $declaratie->opmerkingCluco .'</i><br>';
+			$mailCluco[] = '<i>'. $declaratie->opmerking .'</i><br>';
 			$mailCluco[] = "<br>";
 		}
 		
@@ -215,9 +224,10 @@ if(isset($_POST['correct'])) {
 			$page[] = "De declaratie is ter goedkeuring voorgelegd aan ". $cluco->getName(5) ." als clustercoordinator";
 		}
 		
-		# Stel de declaratie-status en tijd in en sla object op in de database
+		# Stel de declaratie-status in
 		$declaratie->status = $status;
-		$declaratie->lastAction = time();
+
+		# En sla het object op
 		$declaratie->save();
 				
 		# Alles verwijderen nadat de declaratie is ingeschoten en de mail de deur uit is
@@ -409,7 +419,8 @@ if(isset($_POST['correct'])) {
 			$page[] = "	<td valign='top' colspan='2'>Naar welk bedrijf of kerkelijke instellingen?</td>";	
 			$page[] = "	<td valign='top' colspan='2'><select name='EB_relatie'>";
 			$page[] = "	<option value=''>Selecteer bedrijf/instelling</option>";
-			
+			$page[] = "	<option value='3'>Staat niet in de lijst</option>";
+
 			$relaties = eb_getRelaties();
 	
 			foreach($relaties as $relatieData) {
@@ -569,11 +580,32 @@ if(isset($_POST['correct'])) {
 		$page[] = "<tr>";
 		$page[] = "	<td colspan='4'>&nbsp;</td>";
 		$page[] = "</tr>";
+
+		if(count($declaratie->correspondentie) > 0) {
+			$page[] = "<tr>";
+			$page[] = "	<td colspan='4'><b>Correspondentie</b></td>";
+			$page[] = "</tr>";
+
+			foreach($declaratie->correspondentie as $regel) {
+				$user = new Member($regel['user']);
+
+				$page[] = "<tr>";				
+				$page[] = "		<td>". date('d-m-y H:i', $regel['time']) ."</td>";
+				$page[] = "		<td>". $user->getName(2) ."</td>";				
+				$page[] = "		<td colspan='2'>". $regel['text'] ."</td>";			
+				$page[] = "</tr>";			
+			}
+			$page[] = "<tr>";
+			$page[] = "	<td colspan='4'>&nbsp;</td>";
+			$page[] = "</tr>";
+		}
+
+
 		$page[] = "<tr>";
 		$page[] = "	<td colspan='4'><b>Eventueel korte toelichting voor de clustercoordinator</b><br>Deze toelichting zal <u>niet</u> opgenomen worden in de definitieve declaratie.</td>";
 		$page[] = "</tr>";		
 		$page[] = "<tr>";
-		$page[] = "	<td colspan='4'><textarea name='opm_cluco' cols=75 rows=5>". ($declaratie->opmerkingCluco != '' ? $declaratie->opmerkingCluco : '') ."</textarea></td>";
+		$page[] = "	<td colspan='4'><textarea name='opm_cluco' cols=75 rows=5>". ($declaratie->opmerking != '' ? $declaratie->opmerking : '') ."</textarea></td>";
 		$page[] = "</tr>";		
 		$page[] = "<tr>";
 		$page[] = "	<td colspan='4'>&nbsp;</td>";
