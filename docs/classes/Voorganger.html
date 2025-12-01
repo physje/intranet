@@ -383,7 +383,7 @@
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a href="classes/Voorganger.html#method_save">save()</a>
     <span>
-                        &nbsp;: mixed    </span>
+                        &nbsp;: int|bool    </span>
 </dt>
 <dd>Sla het voorgangers-object op in de database.</dd>
 
@@ -1617,16 +1617,19 @@ type = 8 : Wijk; van, Wim -&gt; Wijk; van, W.M. (bij ontbreken voornaam)</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                <span class="phpdocumentor-signature__name">save</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+                <span class="phpdocumentor-signature__name">save</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">int|bool</span></code>
 
     
     
     
 
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type">mixed</span>
+    <span class="phpdocumentor-signature__response_type">int|bool</span>
             &mdash;
-        
+            <section class="phpdocumentor-description"><p>Bij een nieuwe (=INSERT) voorganger wordt het id teruggegeven
+bij een update true/false al naar gelang query geslaagd is</p>
+</section>
+
     
 </article>
             </section>

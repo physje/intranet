@@ -165,7 +165,7 @@
                         </tr>
                                                                                 <tr>
                             <td class="phpdocumentor-cell"><a href="reports/markers.html#ical/handleiding_ical.php">ical/handleiding_ical.php</a></td>
-                            <td class="phpdocumentor-cell">4</td>
+                            <td class="phpdocumentor-cell">3</td>
                         </tr>
                                                                                 <tr>
                             <td class="phpdocumentor-cell"><a href="reports/markers.html#include/EB_functions.php">include/EB_functions.php</a></td>
@@ -173,7 +173,7 @@
                         </tr>
                                                                                 <tr>
                             <td class="phpdocumentor-cell"><a href="reports/markers.html#include/functions.php">include/functions.php</a></td>
-                            <td class="phpdocumentor-cell">10</td>
+                            <td class="phpdocumentor-cell">182</td>
                         </tr>
                                                                                 <tr>
                             <td class="phpdocumentor-cell"><a href="reports/markers.html#include/LP_functions.php">include/LP_functions.php</a></td>
@@ -226,6 +226,14 @@
                                                                                 <tr>
                             <td class="phpdocumentor-cell"><a href="reports/markers.html#voorganger/mailData.php">voorganger/mailData.php</a></td>
                             <td class="phpdocumentor-cell">1</td>
+                        </tr>
+                                                                                <tr>
+                            <td class="phpdocumentor-cell"><a href="reports/markers.html#declaratie/cluco.php">declaratie/cluco.php</a></td>
+                            <td class="phpdocumentor-cell">5</td>
+                        </tr>
+                                                                                <tr>
+                            <td class="phpdocumentor-cell"><a href="reports/markers.html#declaratie/penningmeester.php">declaratie/penningmeester.php</a></td>
+                            <td class="phpdocumentor-cell">5</td>
                         </tr>
                                                 </table>
         
@@ -723,17 +731,17 @@
                 <tbody>
                                     <tr>
                         <td class="phpdocumentor-cell"></td>
-                        <td class="phpdocumentor-cell">14</td>
+                        <td class="phpdocumentor-cell">26</td>
                         <td class="phpdocumentor-cell">$header[] = &quot;X-WR-CALDESC:3GK-gebedspunten.&quot;;</td>
                     </tr>
                                     <tr>
                         <td class="phpdocumentor-cell"></td>
-                        <td class="phpdocumentor-cell">15</td>
+                        <td class="phpdocumentor-cell">27</td>
                         <td class="phpdocumentor-cell">hacksw/handcal//NONSGML v1.0//EN&quot;;</td>
                     </tr>
                                     <tr>
                         <td class="phpdocumentor-cell"></td>
-                        <td class="phpdocumentor-cell">210</td>
+                        <td class="phpdocumentor-cell">222</td>
                         <td class="phpdocumentor-cell">echo implode(&quot;\r\n&quot;, $ics);</td>
                     </tr>
                                 </tbody>
@@ -774,22 +782,17 @@
                 <tbody>
                                     <tr>
                         <td class="phpdocumentor-cell"></td>
-                        <td class="phpdocumentor-cell">6</td>
-                        <td class="phpdocumentor-cell">FIXME: Oude wijze van MySQL</td>
-                    </tr>
-                                    <tr>
-                        <td class="phpdocumentor-cell"></td>
-                        <td class="phpdocumentor-cell">42</td>
+                        <td class="phpdocumentor-cell">40</td>
                         <td class="phpdocumentor-cell">calendar.google.com/calendar/u/0/r/settings/addbyurl&#039;&gt;deze pagina&lt;/a&gt; (mogelijk moet je inloggen op je Google-account).&lt;/li&gt;&quot;;</td>
                     </tr>
                                     <tr>
                         <td class="phpdocumentor-cell"></td>
-                        <td class="phpdocumentor-cell">56</td>
-                        <td class="phpdocumentor-cell">calendar.google.com/calendar/u/0/r/settings&#039;&gt;deze pagina&lt;/a&gt; (mogelijk moet je inloggen op je Google-account) en zoek aan de linkerkant onder het kopje &#039;&lt;i&gt;Instellingen voor andere agenda&#039;s&lt;/i&gt;&#039; naar je 3GK-agenda&quot;. ($agendaNaam != &#039;&#039; ? &quot; [waarschijnlijk bij jouw &#039;$agendaNaam&#039;]&quot; : &#039;&#039;) .&quot;.&lt;/li&gt;&quot;;</td>
+                        <td class="phpdocumentor-cell">54</td>
+                        <td class="phpdocumentor-cell">calendar.google.com/calendar/u/0/r/settings&#039;&gt;deze pagina&lt;/a&gt; (mogelijk moet je inloggen op je Google-account) en zoek aan de linkerkant onder het kopje &#039;&lt;i&gt;Instellingen voor andere agenda&#039;s&lt;/i&gt;&#039; naar je KKD-agenda&quot;. ($agendaNaam != &#039;&#039; ? &quot; [waarschijnlijk bij jouw &#039;$agendaNaam&#039;]&quot; : &#039;&#039;) .&quot;.&lt;/li&gt;&quot;;</td>
                     </tr>
                                     <tr>
                         <td class="phpdocumentor-cell"></td>
-                        <td class="phpdocumentor-cell">62</td>
+                        <td class="phpdocumentor-cell">60</td>
                         <td class="phpdocumentor-cell">calendar.google.com/calendar/u/0/r/settings&#039;&gt;deze pagina&lt;/a&gt; (mogelijk moet je inloggen op je Google-account) en zoek aan de linkerkant onder het kopje &#039;&lt;i&gt;Instellingen voor andere agenda&#039;s&lt;/i&gt;&#039; naar je 3GK-agenda&quot;. ($agendaNaam != &#039;&#039; ? &quot; [waarschijnlijk bij jouw &#039;$agendaNaam&#039;]&quot; : &#039;&#039;) .&quot;.&lt;/li&gt;&quot;;</td>
                     </tr>
                                 </tbody>
@@ -897,6 +900,866 @@
                         <td class="phpdocumentor-cell"></td>
                         <td class="phpdocumentor-cell">510</td>
                         <td class="phpdocumentor-cell">eu1.locationiq.com/v1/$service/$profile/$coordinates?key=$locationIQkey&amp;sources=0;1&amp;destinations=1;0&amp;annotations=distance&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">643</td>
+                        <td class="phpdocumentor-cell">TODO: Lelijke functie, herschrijven</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">644</td>
+                        <td class="phpdocumentor-cell">function showDeclaratieDetails($input) {</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">645</td>
+                        <td class="phpdocumentor-cell">global $clusters, $declJGPost, $declJGKop;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">647</td>
+                        <td class="phpdocumentor-cell"># $input[&#039;key&#039;]</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">648</td>
+                        <td class="phpdocumentor-cell"># $input[&#039;user&#039;]</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">649</td>
+                        <td class="phpdocumentor-cell"># $input[&#039;iban&#039;]</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">650</td>
+                        <td class="phpdocumentor-cell"># $input[&#039;relatie&#039;]</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">651</td>
+                        <td class="phpdocumentor-cell"># $input[&#039;cluster&#039;]</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">652</td>
+                        <td class="phpdocumentor-cell"># $input[&#039;overige&#039;]</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">653</td>
+                        <td class="phpdocumentor-cell"># $input[&#039;overig_price&#039;]</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">654</td>
+                        <td class="phpdocumentor-cell"># $input[&#039;reiskosten&#039;]</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">656</td>
+                        <td class="phpdocumentor-cell">if(isset($input[&#039;key&#039;]) AND $input[&#039;key&#039;] != &#039;&#039;) {</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">657</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;&lt;tr&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">658</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;		&lt;td colspan=&#039;2&#039;&gt;Declaratie:&lt;/td&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">659</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;		&lt;td&gt;&amp;nbsp;&lt;/td&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">660</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;		&lt;td colspan=&#039;3&#039;&gt;&quot;. $input[&#039;key&#039;] .&quot;&lt;/td&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">661</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;&lt;/tr&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">662</td>
+                        <td class="phpdocumentor-cell">}</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">664</td>
+                        <td class="phpdocumentor-cell">if(isset($input[&#039;user&#039;]) AND $input[&#039;user&#039;] != &#039;&#039;) {</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">665</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;&lt;tr&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">666</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;		&lt;td colspan=&#039;2&#039;&gt;Naam:&lt;/td&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">667</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;		&lt;td&gt;&amp;nbsp;&lt;/td&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">668</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;		&lt;td colspan=&#039;3&#039;&gt;&quot;. makeName($input[&#039;user&#039;], 5) .&quot;&lt;/td&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">669</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;&lt;/tr&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">670</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;&lt;tr&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">671</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;		&lt;td colspan=&#039;2&#039;&gt;Emailadres:&lt;/td&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">672</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;		&lt;td&gt;&amp;nbsp;&lt;/td&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">673</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;		&lt;td colspan=&#039;3&#039;&gt;&quot;. getMailAdres($input[&#039;user&#039;]) .&quot;&lt;/td&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">674</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;&lt;/tr&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">675</td>
+                        <td class="phpdocumentor-cell">}</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">677</td>
+                        <td class="phpdocumentor-cell">if($input[&#039;eigen&#039;] == &#039;Ja&#039;) {	</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">678</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;&lt;tr&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">679</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;		&lt;td colspan=&#039;2&#039;&gt;Rekeningnummer:&lt;/td&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">680</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;		&lt;td&gt;&amp;nbsp;&lt;/td&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">681</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;		&lt;td colspan=&#039;3&#039;&gt;&quot;. $input[&#039;iban&#039;] .&quot;&lt;/td&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">682</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;&lt;/tr&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">683</td>
+                        <td class="phpdocumentor-cell">}</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">685</td>
+                        <td class="phpdocumentor-cell">if($input[&#039;eigen&#039;] == &#039;Nee&#039;) {		</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">686</td>
+                        <td class="phpdocumentor-cell">$relatieData = eb_getRelatieDataByCode($input[&#039;relatie&#039;]);</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">688</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;&lt;tr&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">689</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;		&lt;td colspan=&#039;2&#039;&gt;Begunstigde:&lt;/td&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">690</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;		&lt;td&gt;&amp;nbsp;&lt;/td&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">691</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;		&lt;td colspan=&#039;3&#039;&gt;&quot;. $relatieData[&#039;naam&#039;] .&quot;&lt;br&gt;&quot;. $relatieData[&#039;iban&#039;] .&quot;&lt;/td&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">692</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;&lt;/tr&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">693</td>
+                        <td class="phpdocumentor-cell">}</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">695</td>
+                        <td class="phpdocumentor-cell">if(isset($input[&#039;cluster&#039;]) AND $input[&#039;cluster&#039;] != &#039;&#039;) {</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">696</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;&lt;tr&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">697</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;		&lt;td colspan=&#039;2&#039;&gt;Cluster onderdeel:&lt;/td&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">698</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;		&lt;td&gt;&amp;nbsp;&lt;/td&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">699</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;		&lt;td colspan=&#039;3&#039;&gt;&quot;. $clusters[$input[&#039;cluster&#039;]] .&quot;&lt;/td&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">700</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;&lt;/tr&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">701</td>
+                        <td class="phpdocumentor-cell">}</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">703</td>
+                        <td class="phpdocumentor-cell">/*</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">704</td>
+                        <td class="phpdocumentor-cell">if(isset($input[&#039;post&#039;]) AND $input[&#039;post&#039;] != &#039;&#039;) {		</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">705</td>
+                        <td class="phpdocumentor-cell"># Doorloop alle posten en zoek de bijbehorende naam erbij</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">706</td>
+                        <td class="phpdocumentor-cell">foreach($input[&#039;post&#039;] as $post) {</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">707</td>
+                        <td class="phpdocumentor-cell">foreach($declJGPost as $subArray) {</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">708</td>
+                        <td class="phpdocumentor-cell">if(isset($subArray[$post]))	$aPost[] = $subArray[$post];</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">709</td>
+                        <td class="phpdocumentor-cell">}</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">710</td>
+                        <td class="phpdocumentor-cell">}</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">712</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;&lt;tr&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">713</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;		&lt;td colspan=&#039;2&#039;&gt;Post:&lt;/td&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">714</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;		&lt;td&gt;&amp;nbsp;&lt;/td&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">715</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;		&lt;td colspan=&#039;3&#039;&gt;&quot;. implode(&#039;, &#039;, $aPost) .&quot;&lt;/td&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">716</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;&lt;/tr&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">717</td>
+                        <td class="phpdocumentor-cell">#$page[] = &quot;&lt;tr&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">718</td>
+                        <td class="phpdocumentor-cell">#$page[] = &quot;		&lt;td colspan=&#039;2&#039;&gt;Post-omschrijving:&lt;/td&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">719</td>
+                        <td class="phpdocumentor-cell">#$page[] = &quot;		&lt;td&gt;&amp;nbsp;&lt;/td&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">720</td>
+                        <td class="phpdocumentor-cell">#$page[] = &quot;		&lt;td colspan=&#039;3&#039;&gt;Volgt&lt;/td&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">721</td>
+                        <td class="phpdocumentor-cell">#$page[] = &quot;&lt;/tr&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">722</td>
+                        <td class="phpdocumentor-cell">}</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">723</td>
+                        <td class="phpdocumentor-cell">*/</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">725</td>
+                        <td class="phpdocumentor-cell">if(isset($input[&#039;overige&#039;]) AND count($input[&#039;overige&#039;]) &gt; 0) {</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">726</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;&lt;tr&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">727</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;		&lt;td colspan=&#039;6&#039;&gt;&amp;nbsp;&lt;/td&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">728</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;&lt;/tr&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">729</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;&lt;tr&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">730</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;		&lt;td colspan=&#039;6&#039;&gt;&lt;b&gt;Declaraties&lt;/b&gt;&lt;/td&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">731</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;&lt;/tr&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">733</td>
+                        <td class="phpdocumentor-cell">$totaal = calculateTotals($input[&#039;overig_price&#039;]);</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">735</td>
+                        <td class="phpdocumentor-cell">foreach($input[&#039;overige&#039;] as $key =&gt; $value) {</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">736</td>
+                        <td class="phpdocumentor-cell">if($value != &quot;&quot;) {</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">737</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;&lt;tr&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">738</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;		&lt;td&gt;&amp;nbsp;&lt;/td&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">740</td>
+                        <td class="phpdocumentor-cell">if(isset($input[&#039;post&#039;][$key])) {</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">741</td>
+                        <td class="phpdocumentor-cell">$post_nr = $input[&#039;post&#039;][$key];</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">742</td>
+                        <td class="phpdocumentor-cell">foreach($declJGPost as $kop =&gt; $subArray) {</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">743</td>
+                        <td class="phpdocumentor-cell">if(isset($subArray[$post_nr])) {</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">744</td>
+                        <td class="phpdocumentor-cell">$catagorie = $declJGKop[$kop];</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">745</td>
+                        <td class="phpdocumentor-cell">$post = $subArray[$post_nr];</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">746</td>
+                        <td class="phpdocumentor-cell">}</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">747</td>
+                        <td class="phpdocumentor-cell">}</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">749</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;		&lt;td&gt;$value&lt;/td&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">750</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;		&lt;td&gt;&amp;nbsp;&lt;/td&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">751</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;		&lt;td&gt;$catagorie -&gt; $post&lt;/td&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">752</td>
+                        <td class="phpdocumentor-cell">} else {</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">753</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;		&lt;td colspan=&#039;3&#039;&gt;$value&lt;/td&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">754</td>
+                        <td class="phpdocumentor-cell">}				</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">756</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;		&lt;td&gt;&amp;nbsp;&lt;/td&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">757</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;		&lt;td align=&#039;right&#039;&gt;&quot;. formatPrice(price2RightFormat($input[&#039;overig_price&#039;][$key])*100) .&quot;&lt;/td&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">758</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;&lt;/tr&gt;&quot;;				</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">759</td>
+                        <td class="phpdocumentor-cell">}</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">760</td>
+                        <td class="phpdocumentor-cell">}			</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">761</td>
+                        <td class="phpdocumentor-cell">}</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">763</td>
+                        <td class="phpdocumentor-cell">if($input[&#039;eigen&#039;] == &#039;Ja&#039; AND isset($input[&#039;reiskosten&#039;]) AND $input[&#039;reiskosten&#039;] &gt; 0) {</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">764</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;&lt;tr&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">765</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;		&lt;td&gt;&amp;nbsp;&lt;/td&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">766</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;		&lt;td colspan=&#039;3&#039;&gt;Reiskosten&lt;/td&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">767</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;		&lt;td&gt;&amp;nbsp;&lt;/td&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">768</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;		&lt;td align=&#039;right&#039;&gt;&quot;. formatPrice($input[&#039;reiskosten&#039;]) .&quot;&lt;/td&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">769</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;&lt;/tr&gt;&quot;;	</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">771</td>
+                        <td class="phpdocumentor-cell">$totaal = $totaal + $input[&#039;reiskosten&#039;];</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">772</td>
+                        <td class="phpdocumentor-cell">}</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">774</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;&lt;tr&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">775</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;		&lt;td colspan=&#039;6&#039;&gt;&amp;nbsp;&lt;/td&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">776</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;&lt;/tr&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">777</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;&lt;tr&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">778</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;		&lt;td colspan=&#039;4&#039;&gt;&lt;b&gt;Totaal&lt;/b&gt;&lt;/td&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">779</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;		&lt;td&gt;&amp;nbsp;&lt;/td&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">780</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;		&lt;td align=&#039;right&#039;&gt;&lt;b&gt;&quot;. formatPrice($totaal) .&quot;&lt;/b&gt;&lt;/td&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">781</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;&lt;/tr&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">782</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;&lt;tr&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">783</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;		&lt;td colspan=&#039;6&#039;&gt;&amp;nbsp;&lt;/td&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">784</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;&lt;/tr&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">786</td>
+                        <td class="phpdocumentor-cell">if(isset($input[&#039;bijlage&#039;]) AND $input[&#039;bijlage&#039;] != &#039;&#039;) {</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">787</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;&lt;tr&gt;&quot;;	</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">788</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;		&lt;td colspan=&#039;1&#039; valign=&#039;top&#039;&gt;&lt;b&gt;Bijlage&lt;/b&gt;&lt;/td&gt;&quot;;	</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">789</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;		&lt;td colspan=&#039;5&#039;&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">791</td>
+                        <td class="phpdocumentor-cell">foreach($input[&#039;bijlage&#039;] as $key =&gt; $bestand) {</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">792</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;&lt;li&gt;&lt;a href=&#039;$bestand&#039; target=&#039;blank&#039;&gt;&quot;. substr($input[&#039;bijlage_naam&#039;][$key], 0, 40).( strlen($input[&#039;bijlage_naam&#039;][$key]) &gt; 40 ? &#039;.....&#039; : &#039;&#039;).&quot;&lt;/a&gt;&lt;/li&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">793</td>
+                        <td class="phpdocumentor-cell">}</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">794</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;&lt;/td&gt;&quot;;	</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">795</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;&lt;/tr&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">796</td>
+                        <td class="phpdocumentor-cell">}</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">798</td>
+                        <td class="phpdocumentor-cell">if(isset($input[&#039;opmerking_cluco&#039;]) AND $input[&#039;opmerking_cluco&#039;] != &#039;&#039;) {</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">799</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;&lt;tr&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">800</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;		&lt;td colspan=&#039;6&#039;&gt;&amp;nbsp;&lt;/td&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">801</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;&lt;/tr&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">802</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;&lt;tr&gt;&quot;;	</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">803</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;		&lt;td colspan=&#039;6&#039;&gt;&lt;b&gt;Opmerking door indiener&lt;/b&gt;&lt;/td&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">804</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;&lt;/tr&gt;&quot;;	</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">805</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;&lt;tr&gt;&quot;;	</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">806</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;		&lt;td colspan=&#039;6&#039;&gt;&lt;i&gt;&quot;. $input[&#039;opmerking_cluco&#039;] .&quot;&lt;/i&gt;&lt;/td&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">807</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;&lt;/tr&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">808</td>
+                        <td class="phpdocumentor-cell">}</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">810</td>
+                        <td class="phpdocumentor-cell">if(isset($input[&#039;opmerking_penning&#039;]) AND $input[&#039;opmerking_penning&#039;] != &#039;&#039;) {</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">811</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;&lt;tr&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">812</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;		&lt;td colspan=&#039;6&#039;&gt;&amp;nbsp;&lt;/td&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">813</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;&lt;/tr&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">814</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;&lt;tr&gt;&quot;;	</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">815</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;		&lt;td colspan=&#039;6&#039;&gt;&lt;b&gt;Opmerking door cluco&lt;/b&gt;&lt;/td&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">816</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;&lt;/tr&gt;&quot;;	</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">817</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;&lt;tr&gt;&quot;;	</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">818</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;		&lt;td colspan=&#039;6&#039;&gt;&lt;i&gt;&quot;. $input[&#039;opmerking_penning&#039;] .&quot;&lt;/i&gt;&lt;/td&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">819</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;&lt;/tr&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">820</td>
+                        <td class="phpdocumentor-cell">}</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">823</td>
+                        <td class="phpdocumentor-cell">if(isset($input[&#039;toelichting_penning&#039;]) AND $input[&#039;toelichting_penning&#039;] != &#039;&#039;) {</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">824</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;&lt;tr&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">825</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;		&lt;td colspan=&#039;6&#039;&gt;&amp;nbsp;&lt;/td&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">826</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;&lt;/tr&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">827</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;&lt;tr&gt;&quot;;	</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">828</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;		&lt;td colspan=&#039;6&#039;&gt;&lt;b&gt;Opmerking door penningmeester&lt;/b&gt;&lt;/td&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">829</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;&lt;/tr&gt;&quot;;	</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">830</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;&lt;tr&gt;&quot;;	</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">831</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;		&lt;td colspan=&#039;6&#039;&gt;&lt;i&gt;&quot;. $input[&#039;toelichting_penning&#039;] .&quot;&lt;/i&gt;&lt;/td&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">832</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;&lt;/tr&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">833</td>
+                        <td class="phpdocumentor-cell">}</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">835</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;&lt;tr&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">836</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;		&lt;td colspan=&#039;6&#039;&gt;&amp;nbsp;&lt;/td&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">837</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;&lt;/tr&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">839</td>
+                        <td class="phpdocumentor-cell">return $page;	</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">840</td>
+                        <td class="phpdocumentor-cell">}</td>
                     </tr>
                                 </tbody>
             </table>
@@ -1222,12 +2085,12 @@
                 <tbody>
                                     <tr>
                         <td class="phpdocumentor-cell"></td>
-                        <td class="phpdocumentor-cell">24</td>
+                        <td class="phpdocumentor-cell">25</td>
                         <td class="phpdocumentor-cell">TODO: Voor uploaden runnen en dan na uploaden eerst een keer runnen zonder mailen (om plaatsnamen ed recht te trekken). Daarna mailen aanzetten</td>
                     </tr>
                                     <tr>
                         <td class="phpdocumentor-cell"></td>
-                        <td class="phpdocumentor-cell">370</td>
+                        <td class="phpdocumentor-cell">371</td>
                         <td class="phpdocumentor-cell">TODO: testen uitzetten</td>
                     </tr>
                                 </tbody>
@@ -1316,6 +2179,82 @@
                         <td class="phpdocumentor-cell"></td>
                         <td class="phpdocumentor-cell">75</td>
                         <td class="phpdocumentor-cell">TODO: Testen uitzetten</td>
+                    </tr>
+                                </tbody>
+            </table>
+                    <a id="declaratie/cluco.php"></a>
+            <h3><abbr title="declaratie/cluco.php">cluco.php</abbr></h3>
+            <table>
+                <thead>
+                <tr>
+                    <th class="phpdocumentor-heading">Type</th>
+                    <th class="phpdocumentor-heading">Line</th>
+                    <th class="phpdocumentor-heading">Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">13</td>
+                        <td class="phpdocumentor-cell">include_once(&#039;genereerDeclaratiePdf.php&#039;);</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">95</td>
+                        <td class="phpdocumentor-cell">TODO:Test uitzetten</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">120</td>
+                        <td class="phpdocumentor-cell">TODO:Test uitzetten</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">174</td>
+                        <td class="phpdocumentor-cell">TODO:Test uitzetten</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">231</td>
+                        <td class="phpdocumentor-cell">TODO:Test uitzetten</td>
+                    </tr>
+                                </tbody>
+            </table>
+                    <a id="declaratie/penningmeester.php"></a>
+            <h3><abbr title="declaratie/penningmeester.php">penningmeester.php</abbr></h3>
+            <table>
+                <thead>
+                <tr>
+                    <th class="phpdocumentor-heading">Type</th>
+                    <th class="phpdocumentor-heading">Line</th>
+                    <th class="phpdocumentor-heading">Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">131</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;Gebruiker is al bekend in e-boekhouden: &quot;. $EBCode .&#039;&lt;br&gt;&#039;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">132</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;Heeft daar IBAN: &quot;. $EBIBAN .&#039;&lt;br&gt;&#039;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">138</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;In de declaratie is als IBAN ingevuld: &quot;. $JSON[&#039;iban&#039;] .&#039;&lt;br&gt;&#039;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">194</td>
+                        <td class="phpdocumentor-cell">$page[] = &quot;BESTAANDE BEGUNSTIGDE&lt;br&gt;&quot;;</td>
+                    </tr>
+                                    <tr>
+                        <td class="phpdocumentor-cell"></td>
+                        <td class="phpdocumentor-cell">195</td>
+                        <td class="phpdocumentor-cell">$page[] = $_POST[&#039;begunstigde&#039;] .&quot;&lt;br&gt;&quot;;</td>
                     </tr>
                                 </tbody>
             </table>

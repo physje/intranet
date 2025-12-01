@@ -183,13 +183,28 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Declaratie\u003A\u003A__construct\u0028\u0029",
             "name": "__construct",
-            "summary": "",
+            "summary": "Maak\u0020een\u0020nieuw\u0020Declaratie\u0020object\u0020aan",
             "url": "classes/Declaratie.html#method___construct"
+        },                {
+            "fqsen": "\\Declaratie\u003A\u003AgetDeclaratiesByStatus\u0028\u0029",
+            "name": "getDeclaratiesByStatus",
+            "summary": "",
+            "url": "classes/Declaratie.html#method_getDeclaratiesByStatus"
+        },                {
+            "fqsen": "\\Declaratie\u003A\u003Asave\u0028\u0029",
+            "name": "save",
+            "summary": "",
+            "url": "classes/Declaratie.html#method_save"
         },                {
             "fqsen": "\\Declaratie\u003A\u003A\u0024type",
             "name": "type",
             "summary": "",
             "url": "classes/Declaratie.html#property_type"
+        },                {
+            "fqsen": "\\Declaratie\u003A\u003A\u0024id",
+            "name": "id",
+            "summary": "",
+            "url": "classes/Declaratie.html#property_id"
         },                {
             "fqsen": "\\Declaratie\u003A\u003A\u0024dienst",
             "name": "dienst",
@@ -205,6 +220,11 @@ Search.appendIndex(
             "name": "hash",
             "summary": "",
             "url": "classes/Declaratie.html#property_hash"
+        },                {
+            "fqsen": "\\Declaratie\u003A\u003A\u0024gebruiker",
+            "name": "gebruiker",
+            "summary": "",
+            "url": "classes/Declaratie.html#property_gebruiker"
         },                {
             "fqsen": "\\Declaratie\u003A\u003A\u0024van",
             "name": "van",
@@ -256,6 +276,16 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/Declaratie.html#property_opmerkingCluco"
         },                {
+            "fqsen": "\\Declaratie\u003A\u003A\u0024opmerking",
+            "name": "opmerking",
+            "summary": "Opmerking\u0020bij\u0020een\u0020fase\u0020van\u0020de\u0020declaratie.",
+            "url": "classes/Declaratie.html#property_opmerking"
+        },                {
+            "fqsen": "\\Declaratie\u003A\u003A\u0024correspondentie",
+            "name": "correspondentie",
+            "summary": "",
+            "url": "classes/Declaratie.html#property_correspondentie"
+        },                {
             "fqsen": "\\Declaratie\u003A\u003A\u0024EB_relatie",
             "name": "EB_relatie",
             "summary": "",
@@ -266,6 +296,26 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/Declaratie.html#property_cluster"
         },                {
+            "fqsen": "\\Declaratie\u003A\u003A\u0024GBR",
+            "name": "GBR",
+            "summary": "",
+            "url": "classes/Declaratie.html#property_GBR"
+        },                {
+            "fqsen": "\\Declaratie\u003A\u003A\u0024betalingskenmerk",
+            "name": "betalingskenmerk",
+            "summary": "",
+            "url": "classes/Declaratie.html#property_betalingskenmerk"
+        },                {
+            "fqsen": "\\Declaratie\u003A\u003A\u0024begunstigde",
+            "name": "begunstigde",
+            "summary": "",
+            "url": "classes/Declaratie.html#property_begunstigde"
+        },                {
+            "fqsen": "\\Declaratie\u003A\u003A\u0024status",
+            "name": "status",
+            "summary": "Status\u0020van\u0020de\u0020declaratie\u0020\u0028alleen\u0020gebruikt\u0020bij\u0020gemeenteleden\u0029.",
+            "url": "classes/Declaratie.html#property_status"
+        },                {
             "fqsen": "\\Declaratie\u003A\u003A\u0024posten",
             "name": "posten",
             "summary": "",
@@ -275,6 +325,16 @@ Search.appendIndex(
             "name": "bijlagen",
             "summary": "",
             "url": "classes/Declaratie.html#property_bijlagen"
+        },                {
+            "fqsen": "\\Declaratie\u003A\u003A\u0024tijd",
+            "name": "tijd",
+            "summary": "",
+            "url": "classes/Declaratie.html#property_tijd"
+        },                {
+            "fqsen": "\\Declaratie\u003A\u003A\u0024lastAction",
+            "name": "lastAction",
+            "summary": "",
+            "url": "classes/Declaratie.html#property_lastAction"
         },                {
             "fqsen": "\\Kerkdienst",
             "name": "Kerkdienst",
@@ -618,27 +678,27 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Member\u003A\u003AgetPastor\u0028\u0029",
             "name": "getPastor",
-            "summary": "",
+            "summary": "Geef\u0020ID\u0020van\u0020de\u0020ouderling",
             "url": "classes/Member.html#method_getPastor"
         },                {
             "fqsen": "\\Member\u003A\u003AsetPastor\u0028\u0029",
             "name": "setPastor",
-            "summary": "",
+            "summary": "Sla\u0020de\u0020ouderling\u0020en\u0020bezoek\u002Dbroeder\u0020of\u0020\u002Dzuster\u0020van\u0020het\u0020lid\u0020op",
             "url": "classes/Member.html#method_setPastor"
         },                {
             "fqsen": "\\Member\u003A\u003AgetBezoeker\u0028\u0029",
             "name": "getBezoeker",
-            "summary": "",
+            "summary": "Geef\u0020ID\u0020van\u0020de\u0020bezoek\u002Dbroeder\u0020of\u0020\u002Dzuster",
             "url": "classes/Member.html#method_getBezoeker"
         },                {
             "fqsen": "\\Member\u003A\u003AgetWoonadres\u0028\u0029",
             "name": "getWoonadres",
-            "summary": "",
+            "summary": "Geef\u0020het\u0020opgemaakte\u0020woonadres\u0020\u0028straat\u002Bhuisnummer\u002Bletter\u002Btoevoeging\u0029\u0020terug\u0020van\u0020het\u0020lid",
             "url": "classes/Member.html#method_getWoonadres"
         },                {
             "fqsen": "\\Member\u003A\u003AgetPastoraleBezoeken\u0028\u0029",
             "name": "getPastoraleBezoeken",
-            "summary": "",
+            "summary": "Geef\u0020een\u0020array\u0020terug\u0020met\u0020ID\u0027s\u0020van\u0020pastorale\u0020bezoeken",
             "url": "classes/Member.html#method_getPastoraleBezoeken"
         },                {
             "fqsen": "\\Member\u003A\u003AgetParents\u0028\u0029",
@@ -1770,6 +1830,26 @@ Search.appendIndex(
             "name": "price2RightFormat",
             "summary": "Zet\u0020een\u0020prijs\u0020in\u0020het\u0020juiste\u0020formaat.",
             "url": "namespaces/default.html#function_price2RightFormat"
+        },                {
+            "fqsen": "\\showDeclaratieDetails\u0028\u0029",
+            "name": "showDeclaratieDetails",
+            "summary": "Geef\u0020alle\u0020gegevens\u0020van\u0020de\u0020declaratie\u0020weer\u0020in\u0020een\u0020tabel",
+            "url": "namespaces/default.html#function_showDeclaratieDetails"
+        },                {
+            "fqsen": "\\encode_clean_JSON\u0028\u0029",
+            "name": "encode_clean_JSON",
+            "summary": "Encodeer\u0020een\u0020array\u0020naar\u0020JSON,\u0020maar\u0020maak\u0020het\u0020ook\u0020schoon.",
+            "url": "namespaces/default.html#function_encode_clean_JSON"
+        },                {
+            "fqsen": "\\cleanDeclaratieString\u0028\u0029",
+            "name": "cleanDeclaratieString",
+            "summary": "",
+            "url": "namespaces/default.html#function_cleanDeclaratieString"
+        },                {
+            "fqsen": "\\resize_image\u0028\u0029",
+            "name": "resize_image",
+            "summary": "Resize\u0020een\u0020afbeelding\u0020naar\u0020de\u0020opgegeven\u0020breedte\u0020en\u0020hoogte.",
+            "url": "namespaces/default.html#function_resize_image"
         },                {
             "fqsen": "\\showCSSHeader\u0028\u0029",
             "name": "showCSSHeader",
