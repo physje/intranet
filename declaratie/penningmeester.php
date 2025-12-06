@@ -8,6 +8,7 @@ include_once('../Classes/Team.php');
 include_once('../Classes/Declaratie.php');
 include_once('../Classes/KKDMailer.php');
 include_once('../Classes/Logging.php');
+include_once('../Classes/Boeknummer.php');
 
 $showLogin = true;
 
@@ -85,7 +86,7 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 		#if(isset($_POST['post'])) $JSON['post'] = $data['post'] = $_POST['post'];
 		if(isset($_POST['GBR']) && $_POST['GBR'] != '')								$declaratie->GBR = trim($_POST['GBR']);
 		if(isset($_POST['betalingskenmerk']) && $_POST['betalingskenmerk'] != '')	$declaratie->betalingskenmerk = trim($_POST['betalingskenmerk']);
-		if(isset($_POST['begunstigde']) && $_POST['begunstigde'] != '')				$declaratie->EB_relatie = trim($_POST['begunstigde']);
+		if(isset($_POST['begunstigde']) && $_POST['begunstigde'] != '')				$declaratie->begunstigde = trim($_POST['begunstigde']);
 		if(isset($_POST['toelichting']))											$declaratie->opmerking = trim($_POST['toelichting']);
 				
 		# Als declaratie niet al is afgehandeld (status > 5) mag je doorgaan
@@ -125,22 +126,22 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 				# EIGEN = JA
 				if($declaratie->eigenRekening) {					
 					# Al bekend bij eBoekhouden
-					if($declaratie->EB_relatie > 0) {												
-						$errorResult = eb_getRelatieIbanByCode($declaratie->EB_relatie, $EBIBAN);
+					if($indiener->boekhouden > 0) {												
+						$errorResult = eb_getRelatieIbanByCode($indiener->boekhouden, $EBIBAN);
 													
 						//$page[] = "Gebruiker is al bekend in e-boekhouden: ". $EBCode .'<br>';
 						//$page[] = "Heeft daar IBAN: ". $EBIBAN .'<br>';
 						
 						# Klopt IBAN-nummer nog wat bij eBoekhouden bekend is
 						if(cleanIBAN($EBIBAN) != cleanIBAN($declaratie->IBAN)) {							
-							$errorResult = eb_updateRelatieByCode($EBCode, $data);
+							$errorResult = eb_updateRelatieByCode($indiener->boekhouden, $data);
 							
 							//$page[] = "In de declaratie is als IBAN ingevuld: ". $JSON['iban'] .'<br>';
 							
 							if($errorResult) {
 								toLog($errorResult, 'error', $indiener->id);
 							} else {
-								toLog('IBAN van relatie '. $EBCode .' aangepast van '. cleanIBAN($EBIBAN) .' naar '. cleanIBAN($declaratie->iban), 'debug', $indiener->id);
+								toLog('IBAN van relatie '. $indiener->boekhouden .' aangepast van '. cleanIBAN($EBIBAN) .' naar '. cleanIBAN($declaratie->iban), 'debug', $indiener->id);
 							}					
 						}		
 					
@@ -166,7 +167,13 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 							}
 						}				
 					}
-					$factuurnummer	= $boekstukNummer.'-declaratie-'.time2str('dM-H.i', $declaratie->tijd);
+
+					# EBCode gebruiken we verderop om de declaratie in te schieten
+					# Dit gedeelte van het if-statement is voor als het op de rekening van de indiener gestort moet worden
+					# Ken de waarde van $indiener->boekhouden daarom toe aan $EBCode
+					$EBCode = $indiener->boekhouden;
+
+					$factuurnummer	= $boekstukNummer->nummer.'-declaratie-'.time2str('dM-H.i', $declaratie->tijd);					
 				}		
 				
 				# EIGEN = NEE
@@ -187,20 +194,25 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 								toLog($errorResult, 'error', $indiener->id);
 							} else {
 								toLog($naam .' als nieuwe relatie aangemaakt met als code '. $EBCode, 'debug', $indiener->id);
-							}
-						}
+							}						
+						} else {
+							$EBCode = 9010;
+						}						
 					} else {
 						$EBCode = $_POST['begunstigde'];
 						//$page[] = "BESTAANDE BEGUNSTIGDE<br>";
 						//$page[] = $_POST['begunstigde'] ."<br>";
 					}
-					
+
+					# EBCode gebruiken we verderop om de declaratie in te schieten
+					# Dit gedeelte van het if-statement is voor als het op de rekening van een ander gestort moet worden
+					# Ken daarom de ID van de begunstigde toe aan $EBCode
+
 					$factuurnummer	= str_replace(' ', '-', $_POST['betalingskenmerk']);
 				}
 										
 				$EBData	= eb_getRelatieDataByCode($EBCode);		
-				$totaal	= $declaratie->totaal;
-				
+								
 				# Als het alleen reiskosten zijn (dus geen overige), neem dat dan als omschrijving
 				# Bouw anders de omschrijving op uit de verschillende declaraties
 				if(count($declaratie->overigeKosten) == 0) {
@@ -208,40 +220,40 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 				} elseif(count($declaratie->posten) > 0) {
 					# Als er een post bekend is, voeg dat dan toe aan de omschrijving
 					foreach($declaratie->posten as $index => $post) {
-						$regel[] = $JSON['overig'][$index].' [JG'. substr('0'.$post, -2) .']';
+						$regel[] = $declaratie->overigeKosten[$index]['omschrijving'].' [JG'. substr('0'.$post, -2) .']';
 					}
 					$toelichting		= implode(', ', $regel);					
 				} else {
-					$toelichting		= implode(', ', $JSON['overig']);
+					$toelichting		= implode(', ', array_column($declaratie->overigeKosten, 'omschrijving'));
 				}
 				
 				# eBoekhouden heeft een limiet voor 200 tekens voor de toelichting
 				# Omdat bij de toelichting altijd de key (van 8 tekens) met haakjes wordt getoond
 				# moet de grens op 188 tekens komen te liggen.
 				if(strlen($toelichting) > 188) {
-					$toelichting = 'declaratie '. time2str('%e %B %Y', $row[$EBDeclaratieTijd]);
+					$toelichting = 'declaratie '. time2str('j F Y', $declaratie->tijd);
 				}
 							
 				if($write2EB)	{					
-					$errorResult = eb_verstuurDeclaratie ($EBCode, $boekstukNummer, $factuurnummer, $totaal, $_POST['GBR'], $toelichting.' ('.$_REQUEST['key'].')', $mutatieId);
+					$errorResult = eb_verstuurDeclaratie ($EBCode, $boekstukNummer->nummer, $factuurnummer, $declaratie->totaal, $_POST['GBR'], $toelichting.' ('.$declaratie->hash.')', $mutatieId);
 					if($errorResult) {
-						toLog('error', $indiener, $errorResult);
-						$page[] = 'Probleem met toevoegen van declaratie ter waarde van '. formatPrice($totaal) .' aan '. $EBData['naam'] .' ('. $EBCode .')<br>';
+						toLog($errorResult, 'error', $indiener->id);
+						$page[] = 'Probleem met toevoegen van declaratie ter waarde van '. formatPrice($declaratie->totaal) .' aan '. $EBData['naam'] .' ('. $EBCode .')<br>';
 						$addSucces = false;
 					} else {
-						toLog('info', $indiener, 'Declaratie ['. $_REQUEST['key'] .'] van '. formatPrice($totaal) .' toegevoegd voor '. $EBData['naam'] .' ('. $EBCode .')');
+						toLog('Declaratie ['. $declaratie->hash .'] van '. formatPrice($declaratie->totaal) .' toegevoegd voor '. $EBData['naam'] .' ('. $EBCode .')', 'info', $indiener->id);
 						$page[] = 'Declaratie van '. formatPrice($totaal) .' ingediend tnv '. $EBData['naam'] .'<br>';
 						$addSucces = true;
 					}
 				} else {
 					$page[] = "DECLARATIE<br>";
 					$page[] = "EBCode: ". $EBCode .'<br>';
-					$page[] = "BoekstukNummer: ". $boekstukNummer .'<br>';
+					$page[] = "BoekstukNummer: ". $boekstukNummer->nummer .'<br>';
 					$page[] = "Factuurnummer: ". $factuurnummer .'<br>';
-					$page[] = "Totaal: ". $totaal .'<br>';
+					$page[] = "Totaal: ". $declaratie->totaal .'<br>';
 					$page[] = "GBR: ". $_POST['GBR'] .'<br>';
 					$page[] = "Toelichting: ". $toelichting .'<br>';		
-					$addSucces = false;
+					$addSucces = true;
 				}						
 				
 				# Als de declaratie succesvol is ingeschreven in eBoekhouden kunnen er mails verstuurd worden
@@ -251,67 +263,60 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 					$MailFinAdmin = array();
 					$MailFinAdmin[] = $indiener->getName(5) .' heeft een declaratie ingediend.<br>';
 					$MailFinAdmin[] = "<br>";
-					$MailFinAdmin[] = "Het betreft een declaratie ter waarde van ". formatPrice($totaal)." voor cluster ". $clusters[$cluster] ." tnv ". $EBData['naam'] .' ('. $EBCode .')';
-							
-					$param_finAdmin['to'][]					= array($EBDeclaratieAddress);
-					$param_finAdmin['subject'] 			= "Declaratie ". makeName($indiener, 5) ." voor cluster ". $clusters[$cluster];
-								
-					foreach($JSON['bijlage'] as $key => $bestand) {
-						$param_finAdmin['attachment'][$key]['file'] = $bestand;
-						$param_finAdmin['attachment'][$key]['name'] = $boekstukNummer.'_'.$JSON['bijlage_naam'][$key];
+					$MailFinAdmin[] = "Het betreft een declaratie ter waarde van ". formatPrice($declaratie->totaal)." voor cluster ". $clusters[$cluster] ." tnv ". $EBData['naam'] .' ('. $EBCode .')';
+					
+					$FAMail = new KKDMailer();
+					$FAMail->ontvangers[]	= array($EBDeclaratieAddress);
+					$FAMail->Subject		= "Declaratie ". $indiener->getName(5) ." voor cluster ". $clusters[$cluster];
+					$FAMail->Body			= implode("\n", $MailFinAdmin);
+
+					foreach($declaratie->bijlagen as $path => $name) {
+						$FAMail->addAttachment($path, $boekstukNummer->nummer.'_'.$name);
 					}
 					
-					$param_finAdmin['message'] 			= implode("\n", $MailFinAdmin);
-					
-					if(!$sendMail)	$param_finAdmin['testen'] = 1;				
+					if(!$sendMail)	$FAMail->testen = true;
 								
-					if(!sendMail_new($param_finAdmin)) {
-						toLog('error', $indiener, "Problemen met versturen van mail naar financiële administratie");
+					if(!$FAMail->sendMail()) {
+						toLog("Problemen met versturen van mail naar financiële administratie", 'error', $indiener->id);
 						$page[] = "Er zijn problemen met het versturen van mail naar de financiële administratie";
 					} else {
-						toLog('debug', $indiener, "Declaratie-notificatie naar financiële administratie");
-						setDeclaratieStatus(5, $row[$EBDeclaratieID], $data['user']);
-						setDeclaratieActionDate($_REQUEST['key']);
+						toLog("Declaratie-notificatie naar financiële administratie", 'debug', $indiener->id);
 					}
+
+					$onderwerpen = array();		
+					if(count($declaratie->overigeKosten) > 0)	$onderwerpen = array_merge($onderwerpen, array_keys($declaratie->overigeKosten));		
+					if($declaratie->reiskosten > 0)				$onderwerpen = array_merge($onderwerpen, array('reiskosten'));
 								
 					$MailIndiener = array();
-					$MailIndiener[] = "Beste ". makeName($indiener, 1) .",<br>";
+					$MailIndiener[] = "Beste ". $indiener->getName(1) .",<br>";
 					$MailIndiener[] = "<br>";
-					$MailIndiener[] = "Onderstaande declaratie van ".time2str('%e %B', $row[$EBDeclaratieTijd]) ." is goedgekeurd en zal worden uitbetaald.<br>";
-					$MailIndiener[] = '<table border=0>';
-					$MailIndiener[] = "<tr>";
-					$MailIndiener[] = "		<td colspan='6' height=50><hr></td>";
-					$MailIndiener[] = "</tr>";			
-					$MailIndiener = array_merge($MailIndiener, showDeclaratieDetails($data));			
-					$MailIndiener[] = "</table>";
+					$MailIndiener[] = "Je declaratie van ".time2str('j F', $declaratie->tijd) ." voor <i>". makeOpsomming($onderwerpen, '</i>, <i>', '</i> en <i>') ."</i> ter waarde van ". formatPrice($declaratie->totaal)." is goedgekeurd en zal worden uitbetaald.<br>";
 					
-					$param_indiener['to'][]			= array($data['user']);
-					$param_indiener['subject']	= 'Uitbetaling declaratie';
-					$param_indiener['message'] 	= implode("\n", $MailIndiener);
+					$IndMail = new KKDMailer();
+					$IndMail->aan = $indiener->id;
+					$IndMail->Subject	= 'Uitbetaling declaratie';
+					$IndMail->Body		= implode("\n", $MailIndiener);
 					
-					if($data['cluster'] == 2) {
-						$param_indiener['from']			= $penningmeesterJGAddress;
-						$param_indiener['fromName']	= $penningmeesterJGNaam;
+					if($cluster == 2) {
+						$IndMail->From		= $penningmeesterJGAddress;
+						$IndMail->FromName	= $penningmeesterJGNaam;
 					} else {
-						$param_indiener['from']			= $declaratieReplyAddress;
-						$param_indiener['fromName']	= $declaratieReplyName;
+						$IndMail->From		= $declaratieReplyAddress;
+						$IndMail->FromName	= $declaratieReplyName;
 					}
 					
-					if(!$sendMail)	$param_indiener['testen'] = 1;
+					if(!$sendMail)	$IndMail->testen = true;
 					
-					if(!sendMail_new($param_indiener)) {
-						toLog('error', $indiener, "Problemen met versturen declaratie-goedkeuring [". $_REQUEST['key'] ."] door penningmeester");
+					if(!$IndMail->sendMail()) {
+						toLog("Problemen met versturen declaratie-goedkeuring [". $declaratie->hash ."] door penningmeester", 'error', $indiener->id);
 						$page[] = "Er zijn problemen met het versturen van de goedkeuringsmail.<br>\n";
 					} else {
-						toLog('info', $indiener, "Declaratie-goedkeuring [". $_REQUEST['key'] ."] door penningmeester");
-						$page[] = "Er is een mail met goedkeuring verstuurd naar ". makeName($indiener, 5) ."<br>\n";
+						toLog("Declaratie-goedkeuring [". $declaratie->hash ."] door penningmeester", '', $indiener->id);
+						$page[] = "Er is een mail met goedkeuring verstuurd naar ". $indiener->getName(5) ."<br>\n";
 					}
 				}
 				
-				# JSON-string terug in database			
-				$JSONtoDatabase = encode_clean_JSON($JSON);
-				$sql = "UPDATE $TableEBDeclaratie SET $EBDeclaratieDeclaratie = '". $JSONtoDatabase ."' WHERE $EBDeclaratieID like ". $row[$EBDeclaratieID];
-				mysqli_query($db, $sql);		
+				$declaratie->status = 5;				
 				
 				$page[] = "<br>Ga terug naar <a href='". $_SERVER['PHP_SELF']."'>het overzicht</a>.";
 			#
@@ -511,7 +516,7 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 						$page[] = "<input type='hidden' name='post[$key]' value='$waarde'>";
 					}					
 				}
-				$page[] = "<table border=1 width='100%'>";
+				$page[] = "<table border=0 width='100%'>";
 							
 				$page = array_merge($page, showDeclaratieDetails($declaratie));
 						
@@ -591,7 +596,7 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 					$relaties = eb_getRelaties();
 			
 					foreach($relaties as $relatieData) {
-						$page[] = "	<option value='". $relatieData['code'] ."'". ($declaratie->EB_relatie == $relatieData['code'] ? ' selected' : '') .">". $relatieData['naam'] ."</option>";
+						$page[] = "	<option value='". $relatieData['code'] ."'". ($declaratie->begunstigde == $relatieData['code'] ? ' selected' : '') .">". $relatieData['naam'] ."</option>";
 					}
 					
 					$page[] = "	</select></td>";
@@ -601,35 +606,38 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 						$page[] = "	<td valign='top' colspan='2'>&nbsp;</td>";
 						$page[] = "	<td valign='top' colspan='4' class='melding'>$meldingBegunstigde</td>";
 						$page[] = "</tr>";
-					}				
-					$page[] = "<tr>";
-					$page[] = "		<td colspan='6'><b>Let wel</b>: om een nieuwe begunstigde toe te voegen dient bij '<i>Bedrijf / kerkelijke instellingen</i>' 'diversen' geselecteerd te worden.</td>";
-					$page[] = "</tr>";
-					$page[] = "<tr>";
-					$page[] = "	<td valign='top' colspan='2'>Naam</td>";	
-					$page[] = "	<td valign='top' colspan='4'><input type='text' name='name_new' size='40'></td>";
-					$page[] = "</tr>";
-					$page[] = "<tr>";
-					$page[] = "	<td valign='top' colspan='2'>Adres</td>";	
-					$page[] = "	<td valign='top' colspan='4'><input type='text' name='adres_new' size='40'></td>";
-					$page[] = "</tr>";
-					$page[] = "<tr>";
-					$page[] = "	<td valign='top' colspan='2'>Postcode</td>";	
-					$page[] = "	<td valign='top' colspan='4'><input type='text' name='PC_new' size='40'></td>";
-					$page[] = "</tr>";
-					$page[] = "<tr>";
-					$page[] = "	<td valign='top' colspan='2'>Plaats</td>";	
-					$page[] = "	<td valign='top' colspan='4'><input type='text' name='plaats_new' size='40'></td>";
-					$page[] = "</tr>";
-					$page[] = "<tr>";
-					$page[] = "	<td valign='top' colspan='2'>IBAN</td>";	
-					$page[] = "	<td valign='top' colspan='4'><input type='text' name='iban_new' size='40'></td>";
-					$page[] = "</tr>";
-					if(isset($meldingNewBegunstigde)) {
+					}
+
+					if($declaratie->begunstigde == 3) {
 						$page[] = "<tr>";
-						$page[] = "	<td valign='top' colspan='2'>&nbsp;</td>";
-						$page[] = "	<td valign='top' colspan='4' class='melding'>$meldingNewBegunstigde</td>";
+						$page[] = "		<td colspan='6'><b>Let wel</b>: om een nieuwe begunstigde toe te voegen dient bij '<i>Bedrijf / kerkelijke instellingen</i>' 'diversen' geselecteerd te worden.</td>";
 						$page[] = "</tr>";
+						$page[] = "<tr>";
+						$page[] = "	<td valign='top' colspan='2'>Naam</td>";	
+						$page[] = "	<td valign='top' colspan='4'><input type='text' name='name_new' size='40'></td>";
+						$page[] = "</tr>";
+						$page[] = "<tr>";
+						$page[] = "	<td valign='top' colspan='2'>Adres</td>";	
+						$page[] = "	<td valign='top' colspan='4'><input type='text' name='adres_new' size='40'></td>";
+						$page[] = "</tr>";
+						$page[] = "<tr>";
+						$page[] = "	<td valign='top' colspan='2'>Postcode</td>";	
+						$page[] = "	<td valign='top' colspan='4'><input type='text' name='PC_new' size='40'></td>";
+						$page[] = "</tr>";
+						$page[] = "<tr>";
+						$page[] = "	<td valign='top' colspan='2'>Plaats</td>";	
+						$page[] = "	<td valign='top' colspan='4'><input type='text' name='plaats_new' size='40'></td>";
+						$page[] = "</tr>";
+						$page[] = "<tr>";
+						$page[] = "	<td valign='top' colspan='2'>IBAN</td>";	
+						$page[] = "	<td valign='top' colspan='4'><input type='text' name='iban_new' size='40'></td>";
+						$page[] = "</tr>";
+						if(isset($meldingNewBegunstigde)) {
+							$page[] = "<tr>";
+							$page[] = "	<td valign='top' colspan='2'>&nbsp;</td>";
+							$page[] = "	<td valign='top' colspan='4' class='melding'>$meldingNewBegunstigde</td>";
+							$page[] = "</tr>";
+						}
 					}
 				}
 				
@@ -711,12 +719,12 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 	$page[] = "U bent geen penningsmeester";
 }
 
-if(isset($_REQUEST['send_reject']) || isset($_POST['dump']) || isset($_REQUEST['send_reroute'])) {	
+if(isset($_REQUEST['send_reject']) || isset($_POST['dump']) || isset($_REQUEST['send_reroute']) || (isset($_POST['accept']) && $veldenCorrect)) {	
 	# En sla het object op
 	$declaratie->save();
 				
 	# Alles verwijderen nadat de declaratie is ingeschoten en de mail de deur uit is
-	$declaratie = null;	
+	$declaratie = null;
 }
 
 # Pagina tonen
@@ -729,4 +737,6 @@ echo "<div class='content_block'>".NL. implode(NL, $page).NL."</div>".NL;
 echo '</div> <!-- end \'content_vert_kolom_full\' -->'.NL;
 echo showCSSFooter();
 
+# Sla de declaratie-gegevens op in de sessie
+$_SESSION['declaratie'] = $declaratie;
 ?>

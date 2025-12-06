@@ -108,6 +108,7 @@ class Declaratie
 
     /**
      * @var int ID van de relatie binnen de eBoekhouden.nl administratie waar de factuur naartoe overgemaakt moet worden
+     * @deprecated
      */
     public int $EB_relatie;
 
@@ -116,10 +117,22 @@ class Declaratie
      */
     public int $cluster;
 
+    /**
+     * @var int Grootboekrekening-nummer waar declaratie op geboekt moet worden.
+     * Deze nummers komen uit eBoekhouden.nl
+     */
     public int $GBR;
 
+    /**
+     * @var string Het betalingskenmerk wat opgenomen moet worden in de overschrijving
+     */
     public string $betalingskenmerk;
 
+    /**
+     * @var int ID uit eBoekhouden waar de betaling naar toe moet.
+     * Alleen van belang als geld niet op eigen rekening overgemaakt moet worden.
+     * @see Declaratie::$eigenRekening
+     */
     public int $begunstigde;
 
     /**
@@ -199,8 +212,7 @@ class Declaratie
         $this->opmerking = '';
         $this->betalingskenmerk = '';
         $this->begunstigde = 0;
-        $this->correspondentie = [];
-        $this->EB_relatie = 0;
+        $this->correspondentie = [];        
         $this->cluster = 0;
         $this->status = 0;
         $this->GBR = 0;
@@ -243,8 +255,11 @@ class Declaratie
             if(isset($json['iban']))        $this->IBAN = $json['iban'];
             if(isset($json['opm_cluco']))   $this->opmerking = $json['opm_cluco'];
             if(isset($json['totaal']))      $this->totaal = floatval($json['totaal']);
-            if(isset($json['EBCode']))      $this->EB_relatie = intval($json['EBCode']);
+            if(isset($json['EBCode']))      $this->begunstigde = intval($json['EBCode']);
             if(isset($json['post']))        $this->posten = $json['post'];
+            if(isset($json['reis_van']))    $this->van = $json['reis_van'];
+            if(isset($json['reis_naar']))   $this->naar = $json['reis_naar'];
+            if(isset($json['km']))          $this->afstand = $json['km'];
 
             if(isset($json['overig']) && isset($json['overig_price'])) {
                 for($i=0; $i < count($json['overig']); $i++) {

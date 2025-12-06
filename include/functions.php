@@ -855,7 +855,7 @@ function showDeclaratieDetails(Declaratie $declaratie) {
 	$page[] = "<tr>";
 	$page[] = "		<td><b>Indiener<b></td>";
 	$page[] = "		<td>&nbsp;</td>";
-	$page[] = "		<td colspan='4' align='right'>". $user->getName() ."</td>";
+	$page[] = "		<td colspan='4' align='right'>". $user->getName(5) ."</td>";
 	$page[] = "</tr>";
 	$page[] = "<tr>";
 	$page[] = "		<td><b>Datum<b></td>";
@@ -867,15 +867,26 @@ function showDeclaratieDetails(Declaratie $declaratie) {
 	$page[] = "		<td>&nbsp;</td>";
 	$page[] = "		<td colspan='4' align='right'>". $clusters[$declaratie->cluster] ."</td>";
 	$page[] = "</tr>";
+	
+	if($declaratie->begunstigde > 0) {
+		$data = eb_getRelatieDataByCode($declaratie->begunstigde);
+
+		$page[] = "<tr>";
+		$page[] = "		<td><b>Begunstigde<b></td>";
+		$page[] = "		<td>&nbsp;</td>";
+		$page[] = "		<td colspan='4' align='right'>".$data['naam'] ."</td>";
+		$page[] = "</tr>";
+	}
+
 	$page[] = "<tr>";
 	$page[] = "		<td colspan='6'>&nbsp;</td>";
 	$page[] = "</tr>";
 
-	if(isset($declaratie->reiskosten) && $declaratie->reiskosten > 0) {
+	if($declaratie->reiskosten > 0) {
 		$page[] = "<tr>";
 		$page[] = "		<td><b>Reiskosten<b></td>";
 		$page[] = "		<td>&nbsp;</td>";
-		$page[] = "		<td colspan='2'>". $declaratie->van .' -> '. $declaratie->naar ."</td>";
+		$page[] = "		<td colspan='2'>". $declaratie->van .' <-> '. $declaratie->naar ." (". round($declaratie->afstand, 1) ." km)</td>";
 		$page[] = "		<td>". formatPrice($declaratie->reiskosten, true) ."</td>";
 		$page[] = "		<td>&nbsp;</td>";
 		$page[] = "</tr>";	
@@ -952,8 +963,8 @@ function showDeclaratieDetails(Declaratie $declaratie) {
 			$user = new Member($regel['user']);
 			$page[] = "<tr>";
 			$page[] = "		<td>". ($first ? '<b>Correspondentie<b>' : '') ."</td>";
-			$page[] = "		<td colspan='1'>". $user->getName(2) ."<br>". date('d-m-y H:i', $regel['time']) ."</td>";
-			$page[] = "		<td colspan='4'>". $regel['text'] ."</td>";			
+			$page[] = "		<td colspan='1' valign='top'>". $user->getName(5) ."<br>". date('d-m-y H:i', $regel['time']) ."</td>";
+			$page[] = "		<td colspan='4' valign='top'>". $regel['text'] ."</td>";			
 			$page[] = "</tr>";
 			$first = false;
 		}

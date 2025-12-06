@@ -90,7 +90,11 @@ class KKDMailer extends PHPMailer\PHPMailer\PHPMailer implements KKDConfig {
             # Ontvangers (text)
             if(isset($this->ontvangers)) {
                 foreach($this->ontvangers as $recipient) {
-                    $this->addAddress($recipient[0], $recipient[1]);
+                    if(isset($recipient[1])) {
+                        $this->addAddress($recipient[0], $recipient[1]);
+                    } else {
+                        $this->addAddress($recipient[0]);
+                    }                    
                 }
             }
 

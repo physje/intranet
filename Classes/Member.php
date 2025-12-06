@@ -643,7 +643,9 @@ class Member {
 	
 	 * @return string String met naam
 	 */
-	function getName($type = 0) {
+	function getName($type = 5) {
+		$voorletters = $voornaam = $tussen = $achter = $achter_m = '';
+
 		if($this->voorletters != '') {
 			$voorletters = $this->voorletters;
 		}

@@ -72,7 +72,7 @@ if(isset($_POST['reis_van']))		$declaratie->van = urldecode($_POST['reis_van']);
 if(isset($_POST['reis_naar']))		$declaratie->naar = urldecode($_POST['reis_naar']);
 if(isset($_POST['eigen']))			$declaratie->eigenRekening = ($_POST['eigen'] == 'Ja' ? true : false);	
 if(isset($_POST['iban']))			$declaratie->IBAN = cleanIBAN($_POST['iban']);
-if(isset($_POST['EB_relatie']))		$declaratie->EB_relatie = intval($_POST['EB_relatie']);
+if(isset($_POST['EB_relatie']))		$declaratie->begunstigde = intval($_POST['EB_relatie']);
 if(isset($_POST['cluster']))		$declaratie->cluster = intval($_POST['cluster']);
 if(isset($_POST['opm_cluco']))		$declaratie->opmerking = trim($_POST['opm_cluco']);
 
@@ -342,7 +342,7 @@ if(isset($_POST['correct'])) {
 		# Cluster Jeugd & Gezin moet een tussenscherm hebben
 		if($declaratie->cluster != 2 OR ($_POST['page'] == 4 AND $declaratie->posten > 0)) {			
 			$page[] = "<input type='hidden' name='page' value='3'>";
-			$page[] = "<table border=1>";
+			$page[] = "<table border=0>";
 			$page[] = "<tr>";
 			$page[] = "		<td colspan='6'>U staat op het punt de volgende declaratie in te dienen:</td>";
 			$page[] = "</tr>";
@@ -424,7 +424,7 @@ if(isset($_POST['correct'])) {
 			$relaties = eb_getRelaties();
 	
 			foreach($relaties as $relatieData) {
-				$page[] = "	<option value='". $relatieData['code'] ."'". ($declaratie->EB_relatie == $relatieData['code'] ? ' selected' : '') .">". substr($relatieData['naam'], 0, 35) ."</option>";
+				$page[] = "	<option value='". $relatieData['code'] ."'". ($declaratie->begunstigde == $relatieData['code'] ? ' selected' : '') .">". substr($relatieData['naam'], 0, 35) ."</option>";
 			}
 			
 			$page[] = "	</select></td>";
