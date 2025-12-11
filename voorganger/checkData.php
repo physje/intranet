@@ -36,7 +36,8 @@ if(isset($_REQUEST['hash'])) {
 						
 			if(isset($_REQUEST['save_data'])) {				
 				$opslaan = true;
-				
+				$melding = array();
+
 				if($_POST['init'] == '' AND $_POST['voor'] == '') {
 					$opslaan = false;
 					$melding[] = 'Voornaam of initialen moet zijn ingevuld';
@@ -94,7 +95,7 @@ if(isset($_REQUEST['hash'])) {
 			} else {
 				# Als er meldingen zijn (lees, check van gegevens is niet succesvol)
 				# deze meldingen laten zien
-				if(isset($melding)) {
+				if(count($melding) > 0) {
 					foreach($melding as $melding_text) {
 						$inCorrect[] = '<b>'. $melding_text .'</b><br>';
 					}

@@ -109,7 +109,7 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 				$mail[] = "<br>";
 				$mail[] = "De declaratie van ". $indiener->getName(2)." voor <i>". makeOpsomming($onderwerpen, '</i>, <i>', '</i> en <i>') ."</i> ter waarde van ". formatPrice($declaratie->totaal) ." is door ". $cluco->getName(5) ." als cluster-coordinator goedgekeurd.";
 				$mail[] = "<br>";
-				$mail[] = "Details en mogelijkheid tot goed- of afkeuren zijn zichtbaar <a href='". $ScriptURL ."declaratie/penningmeester.php?key=". $declaratie->hash ."'>online</a> (inloggen vereist)";
+				$mail[] = "Details en mogelijkheid tot goed- of afkeuren zijn zichtbaar <a href='". $ScriptURL ."declaratie/penningmeester.php?key=". $declaratie->hash ."&reset'>online</a> (inloggen vereist)";
 				
 				$pen = new KKDMailer();
 				$pen->ontvangers[]	= array($declaratieReplyAddress, $declaratieReplyName);
@@ -216,7 +216,7 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 				$mail[] = "<br>";
 				$mail[] = "<i>". $declaratie->opmerking ."</i><br>";
 				$mail[] = "<br>";
-				$mail[] = "Je kan je declaratie aanvullen door middel van <a href='". $ScriptURL ."declaratie/gemeentelid.php?key=". $declaratie->hash ."'>deze link</a> (inloggen vereist).";
+				$mail[] = "Je kan je declaratie aanvullen door middel van <a href='". $ScriptURL ."declaratie/gemeentelid.php?key=". $declaratie->hash ."&reset'>deze link</a> (inloggen vereist).";
 				
 				$gem = new KKDMailer();
 				$gem->aan = $indiener->id;
@@ -268,7 +268,7 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 			if($declaratie->id > 0) {		
 				$page[] = "<form method='post' action='". $_SERVER['PHP_SELF']."'>";
 				$page[] = "<input type='hidden' name='key' value='". $_REQUEST['key'] ."'>";				
-				$page[] = '<table border=1>';
+				$page[] = '<table border=0>';
 								
 				$page = array_merge($page, showDeclaratieDetails($declaratie));
 			
@@ -292,7 +292,7 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 			$cluster = array_search($_SESSION['useID'], $clusterCoordinatoren);			
 		}
 
-		$declaraties = Declaratie::getDeclaratiesByStatus(3, $cluster);
+		$declaraties = Declaratie::getDeclaraties(3, $cluster);
 		
 		if(count($declaraties) > 0)	{					
 			$page[] = "<table>";

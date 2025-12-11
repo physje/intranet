@@ -9,10 +9,10 @@ include_once('Classes/Member.php');
 $cfgProgDir = 'auth/';
 include($cfgProgDir. "secure.php");
 
-// Get search term
+# Get search term
 $searchTerm = $_GET['term'];
 
-// Fetch matched data from the database
+# Fetch matched data from the database
 $db = new Mysql();
 $query = $db->select("SELECT `scipio_id` FROM `leden` WHERE (`achternaam` LIKE '".$searchTerm."%' OR `meisjesnaam` LIKE '".$searchTerm."%' OR `tussenvoegsel` LIKE '".$searchTerm."%' OR `voornaam` LIKE '".$searchTerm."%') AND `status` like 'actief' ORDER BY `achternaam` ASC", true);
 $data = array_column($query, "scipio_id");

@@ -256,20 +256,23 @@ if(in_array(1, $myGroups)) {
 	$adminDeel[] = "<b>Admin</b>";
 	
 	$adminLinks['admin/generateUsernames.php'] = 'Gebruikersnamen aanmaken';
-	$adminLinks['admin/generateDiensten.php'] = 'Kerkdiensten aanmaken';
-	#$adminLinks['editDiensten.php'] = 'Kerkdiensten wijzigen';	
+	$adminLinks['admin/generateDiensten.php'] = 'Kerkdiensten aanmaken';	
 	$adminLinks['team/admin.php'] = 'Groepen wijzigen';	
 	$adminLinks['rooster/admin.php'] = 'Roosters wijzigen';	
 	$adminLinks['admin/editWijkteams.php'] = 'Wijkteams wijzigen';	
 	#$adminLinks['admin/crossCheck.php'] = 'Check databases';
 	$adminLinks['admin/log.php'] = 'Bekijk logfiles';
 	#$adminLinks['admin/mailLog.php'] = 'Bekijk mail-files';
+	//TODO: Schrijf script om eenvoudige een mail in KKD-layout te sturen
 	#$adminLinks['admin/sendMail.php'] = 'Verstuur mail';
-	$adminLinks['admin/logins.php'] = 'Zoek binnen logins';
+	//TODO: Logins zoeken
+	#$adminLinks['admin/logins.php'] = 'Zoek binnen logins';
+	//TODO: Schrijf script om alle rechten overzichtelijk inzichttelijk te hebben
 	#$adminLinks['admin/reviewRechten.php'] = 'Bekijk groepen en rechten';
 	$adminLinks['admin/configuration.php'] = 'Configuratie-variabelen';
 	$adminLinks['admin/vermommen.php'] = 'Vermommen';
-	$adminLinks['onderhoud/cleanUpDb.php'] = 'Verwijder oude diensten';
+	//FIXME: Oude diensten verwijderen
+	#$adminLinks['onderhoud/cleanUpDb.php'] = 'Verwijder oude diensten';
 	$adminLinks['../dumper/'] = 'Dumper';
 	
 	foreach($adminLinks as $link => $naam) {
@@ -289,16 +292,20 @@ $EBLinks['declaratie/'] = 'Dien declaratie in';
 if(in_array($_SESSION['useID'], $clusterCoordinatoren)) {
 	$EBLinks['declaratie/cluco.php'] = 'Overzicht ingediende declaraties';	
 } elseif(in_array(1, $myGroups) OR in_array(38, $myGroups)) {
-	$EBLinks['declaratie/overzichtDeclaraties.php'] = 'Status declaraties';	
-	$EBLinks['declaratie/opschonenOudeBijlages.php'] = 'Verwijder oude bijlages';
+	$EBLinks['declaratie/overzicht.php'] = 'Status declaraties';	
+	//TODO: Schrijf script om oude bijlages te verwijderen
+	#$EBLinks['declaratie/opschonenOudeBijlages.php'] = 'Verwijder oude bijlages';
 }
 
 if(in_array(1, $myGroups)) {
-	$EBLinks['declaratie/relatieOverview.php'] = 'Toon alle relaties';
-	$EBLinks['declaratie/mutatieOverview.php'] = 'Toon alle mutaties';	
-	$EBLinks['declaratie/zoekWeesBijlages.php'] = 'Koppel wees-bijlages';
+	//TODO: Schrijf script om alle relaties te zien
+	#$EBLinks['declaratie/relatieOverview.php'] = 'Toon alle relaties';
+	//TODO: Schrijf script om alle mutaties  te zien
+	#$EBLinks['declaratie/mutatieOverview.php'] = 'Toon alle mutaties';	
+	#$EBLinks['declaratie/zoekWeesBijlages.php'] = 'Koppel wees-bijlages';
 	//$EBLinks['declaratie/syncRelaties.php'] = 'Synchroniseer relaties naar lokale database';
-	$EBLinks['declaratie/editRelatie.php'] = 'Wijzig relaties';
+	//TODO: Schrijf script om relaties te bewerken
+	#$EBLinks['declaratie/editRelatie.php'] = 'Wijzig relaties';
 	#$EBLinks['https://secure.e-boekhouden.nl/handleiding/Documentatie_soap.pdf'] = 'SOAP documenatie PDF';
 }
 
@@ -315,10 +322,10 @@ if(in_array(1, $myGroups) OR in_array(52, $myGroups)) {
 	$koppelLinks['extern/makeiCalScipio.php'] = 'Data klaar zetten voor Scipio';	
 
 	if(in_array(1, $myGroups)) {	
-		$koppelLinks['extern/makeiCal.php'] = 'Persoonlijke iCals aanmaken';	
-		#$koppelLinks['onderhoud/importOuderlingen.php'] = 'Importeer ambtsdragers';
-		$koppelLinks['scipio/ScipioImport.php'] = 'Scipio-data inladen';
-		$koppelLinks['scipio/exportCollectes.php'] = 'Collectes exporteren voor in Scipio';
+		$koppelLinks['extern/makePersonaliCals.php'] = 'Persoonlijke iCals aanmaken';
+		$koppelLinks['scipio/import.php'] = 'Scipio-data inladen';
+		//FIXME: Collectes exporteren
+		$koppelLinks['scipio/collectes.php'] = 'Collectes exporteren voor in Scipio';
 	}
 	
 	foreach($koppelLinks as $link => $naam) {
@@ -335,6 +342,7 @@ $gebedsLinks['gebedskalender/overzicht.php#'. date('d')] = 'Gebedskalender';
 if(in_array(1, $myGroups) OR in_array(36, $myGroups)) {	
 	$gebedsLinks['gebedskalender/import.php'] = 'Import';
 	$gebedsLinks['gebedskalender/edit.php'] = 'Wijzig';
+	//FIXME: Mailadressen overzicht gebedskalender
 	$gebedsLinks['gebedskalender/mailadressenOverzicht.php'] = 'Mailadressen overzicht';
 }
 	
@@ -364,10 +372,12 @@ if(isset($_SESSION['fakeID'])) {
 }
 $site[] = "<a href='account.php' target='_blank'>Account</a>";
 $site[] = "<a href='profiel.php' target='_blank'>Profiel</a>";
+//FIXME: Ledenlijst maken
 $site[] = "<a href='ledenlijst.php' target='_blank'>Ledenlijst</a>";
 $site[] = "<a href='admin/stats.php' target='_blank'>Statistieken</a>";
 $site[] = "<a href='admin/leeftijdsOpbouw.php' target='_blank'>Leeftijds-opbouw</a>";
 if(in_array(1, $myGroups)) {
+	//FIXME: zoeken maken
 	$site[] = "<a href='search.php' target='_blank'>Zoeken</a>";
 }
 $site[] = "<a href='auth/objects/logout.php' target='_blank'>Uitloggen</a>";

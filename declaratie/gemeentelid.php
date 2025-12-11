@@ -195,14 +195,14 @@ if(isset($_POST['correct'])) {
 		# J&G heeft geen cluco die het goedkeurd maar direct naar de penningmeester
 		# Don't ask me why
 		if($cluster == 2) {
-			$mailCluco[] = "Details en mogelijkheid tot goed- of afkeuren zijn zichtbaar <a href='". $ScriptURL ."declaratie/penningmeester.php?key=". $declaratie->hash ."'>online</a> (inloggen vereist)";
+			$mailCluco[] = "Details en mogelijkheid tot goed- of afkeuren zijn zichtbaar <a href='". $ScriptURL ."declaratie/penningmeester.php?key=". $declaratie->hash ."&reset'>online</a> (inloggen vereist)";
 			$status = 4;
 		} else {			
 			$status = 3;			
-			$mailCluco[] = "<a href='". $ScriptURL ."declaratie/cluco.php?key=". $declaratie->hash ."&hash=". $cluco->hash_long ."&accept'>Goedkeuren</a><br>";
-			$mailCluco[] = "<a href='". $ScriptURL ."declaratie/cluco.php?key=". $declaratie->hash ."&reject'>Afkeuren</a> (inloggen vereist)<br>";
+			$mailCluco[] = "<a href='". $ScriptURL ."declaratie/cluco.php?key=". $declaratie->hash ."&hash=". $cluco->hash_long ."&accept&reset'>Goedkeuren</a><br>";
+			$mailCluco[] = "<a href='". $ScriptURL ."declaratie/cluco.php?key=". $declaratie->hash ."&reject&reset'>Afkeuren</a> (inloggen vereist)<br>";
 			$mailCluco[] = "<br>";
-			$mailCluco[] = "Details zijn zichtbaar in de bijlage of <a href='". $ScriptURL ."declaratie/cluco.php?key=". $declaratie->hash ."'>online</a> (inloggen vereist)<br>";
+			$mailCluco[] = "Details zijn zichtbaar in de bijlage of <a href='". $ScriptURL ."declaratie/cluco.php?key=". $declaratie->hash ."&reset'>online</a> (inloggen vereist)<br>";
 		}
 
 		$cMail = new KKDMailer();

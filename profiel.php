@@ -67,7 +67,7 @@ $aToon['EB_relatie'] = false;
 $aToon['vestiging'] = false;
 $aToon['change'] = false;
 $aToon['visit'] = false;
-$aToon['familie'] = false;
+$aToon['familie'] = true;
 
 $wijk = new Wijk();
 $wijk->wijk = $person->wijk;
@@ -115,8 +115,6 @@ elseif(array_key_exists ($_SESSION['useID'], $wijkteam)) {
 	$aToon['geboorte'] = true;
 	$aToon['familie'] = true;
 }
-
-
 
 # Als je als admin bent ingelogd zie je alle leden, anders alleen de actieve
 #$familie = getFamilieleden($id, in_array(1, getMyGroups($_SESSION['useID'])));
@@ -278,16 +276,22 @@ if(in_array(1, $myGroups))	$blok[] = "</form>";
 if($aToon['familie'] AND count($familie) > 1) {
 	foreach($familie as $lid) {
 		if($lid != $id) {
-			$familieLid = new Member($lid);
+			$familieLid = new Member($lid);			
 			
 			if(in_array($familieLid->status, array('afgemeld', 'afgevoerd', 'onttrokken'))) {
 				$class = 'ontrokken';
+				$show = false;
 			} elseif(in_array($familieLid->status, array('overleden', 'vertrokken'))) {
 				$class = 'inactief';
+				$show = false;
 			} else {
 				$class = '';
+				$show = true;
 			}
-			$blok_2[] = "<a href='?id=$lid' class='$class'>". $familieLid->getName() ."</a> ('". substr($familieLid->geboorte_jaar, -2) .")<br>";
+
+			if($show || in_array(1, $myGroups)) {
+				$blok_2[] = "<a href='?id=$lid' class='$class'>". $familieLid->getName() ."</a> ('". substr($familieLid->geboorte_jaar, -2) .")<br>";
+			}			
 		}
 	}
 } else {
@@ -299,7 +303,7 @@ echo '<div class="content_vert_kolom">'.NL;
 echo '<h1>'. $person->getName() .'</h1>'.NL;
 #echo '<h2>Profiel</h2>'.NL;
 echo "<div class='content_block'>".NL. implode(NL, $blok).NL."</div>".NL;
-echo '<h2>Familieleden</h2>'.NL;
+echo NL. '<h2>Familieleden</h2>'.NL;
 echo "<div class='content_block'>".NL. implode(NL, $blok_2).NL."</div>".NL;
 echo '</div> <!-- end \'content_vert_kolom_full\' -->'.NL;
 echo showCSSFooter();

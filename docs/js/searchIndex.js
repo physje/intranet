@@ -191,6 +191,11 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/Declaratie.html#method_getDeclaratiesByStatus"
         },                {
+            "fqsen": "\\Declaratie\u003A\u003AgetDeclaraties\u0028\u0029",
+            "name": "getDeclaraties",
+            "summary": "Geef\u0020een\u0020array\u0020met\u0020hashes\u0020van\u0020alle\u0020declaraties\u0020die\u0020aan\u0020het\u0020filter\u0020voldoen",
+            "url": "classes/Declaratie.html#method_getDeclaraties"
+        },                {
             "fqsen": "\\Declaratie\u003A\u003Asave\u0028\u0029",
             "name": "save",
             "summary": "",
@@ -1935,6 +1940,76 @@ Search.appendIndex(
             "name": "lp_addFieldToList",
             "summary": "",
             "url": "namespaces/default.html#function_lp_addFieldToList"
+        },                {
+            "fqsen": "\\guessDate\u0028\u0029",
+            "name": "guessDate",
+            "summary": "",
+            "url": "namespaces/default.html#function_guessDate"
+        },                {
+            "fqsen": "\\columnArray\u0028\u0029",
+            "name": "columnArray",
+            "summary": "",
+            "url": "namespaces/default.html#function_columnArray"
+        },                {
+            "fqsen": "\\isDatum\u0028\u0029",
+            "name": "isDatum",
+            "summary": "",
+            "url": "namespaces/default.html#function_isDatum"
+        },                {
+            "fqsen": "\\Gebedspunt",
+            "name": "Gebedspunt",
+            "summary": "Class\u0020voor\u0020het\u0020beheren\u0020van\u0020gebedspunten.",
+            "url": "classes/Gebedspunt.html"
+        },                {
+            "fqsen": "\\Gebedspunt\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "Maak\u0020een\u0020gebedspunt\u0020aan.",
+            "url": "classes/Gebedspunt.html#method___construct"
+        },                {
+            "fqsen": "\\Gebedspunt\u003A\u003AgetPunten\u0028\u0029",
+            "name": "getPunten",
+            "summary": "Vraag\u0020gebedspunten\u0020op.",
+            "url": "classes/Gebedspunt.html#method_getPunten"
+        },                {
+            "fqsen": "\\Gebedspunt\u003A\u003Asave\u0028\u0029",
+            "name": "save",
+            "summary": "Sla\u0020het\u0020gebedspunt\u0020op\u0020in\u0020de\u0020databaee",
+            "url": "classes/Gebedspunt.html#method_save"
+        },                {
+            "fqsen": "\\Gebedspunt\u003A\u003A\u0024id",
+            "name": "id",
+            "summary": "",
+            "url": "classes/Gebedspunt.html#property_id"
+        },                {
+            "fqsen": "\\Gebedspunt\u003A\u003A\u0024datum",
+            "name": "datum",
+            "summary": "",
+            "url": "classes/Gebedspunt.html#property_datum"
+        },                {
+            "fqsen": "\\Gebedspunt\u003A\u003A\u0024dag",
+            "name": "dag",
+            "summary": "",
+            "url": "classes/Gebedspunt.html#property_dag"
+        },                {
+            "fqsen": "\\Gebedspunt\u003A\u003A\u0024maand",
+            "name": "maand",
+            "summary": "",
+            "url": "classes/Gebedspunt.html#property_maand"
+        },                {
+            "fqsen": "\\Gebedspunt\u003A\u003A\u0024jaar",
+            "name": "jaar",
+            "summary": "",
+            "url": "classes/Gebedspunt.html#property_jaar"
+        },                {
+            "fqsen": "\\Gebedspunt\u003A\u003A\u0024unix",
+            "name": "unix",
+            "summary": "",
+            "url": "classes/Gebedspunt.html#property_unix"
+        },                {
+            "fqsen": "\\Gebedspunt\u003A\u003A\u0024gebedspunt",
+            "name": "gebedspunt",
+            "summary": "",
+            "url": "classes/Gebedspunt.html#property_gebedspunt"
         },                {
             "fqsen": "\\",
             "name": "\\",

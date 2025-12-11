@@ -54,7 +54,7 @@ $block_1[] = "<input type='hidden' name='id' value='". $_REQUEST['id'] ."'>";
 
 foreach($GroupMembers as $lid) {
 	$person = new Member($lid);
-	$block_1[] = "<input type='checkbox' name='ids[]' value='$lid' checked> <a href='profiel.php?id=$lid'>". $person->getName() ."</a><br>";
+	$block_1[] = "<input type='checkbox' name='ids[]' value='$lid' checked> <a href='../profiel.php?id=$lid'>". $person->getName() ."</a><br>";
 }
 
 $block_1[] = "<br>";
@@ -89,7 +89,7 @@ $header[] = "	<script>";
 $header[] = "		$(function() {";
 $header[] = "		    $(\"#namen_input\").autocomplete({";
 $header[] = "		    	minLength: 3,";
-$header[] = "		    	source: \"autocomplete_namen.php\",";
+$header[] = "		    	source: \"../autocomplete_namen.php\",";
 $header[] = "		    	select: function( event, ui ) {";
 $header[] = "		    		event.preventDefault();";
 $header[] = "		    		$(\"#namen_input\").val(ui.item.selector);";

@@ -62,14 +62,19 @@ class Agenda {
 
 	/**
      * Geef alle startijden terug
-     * @param mixed $start UNIX-timestamp van starttijd
-     * @param mixed $eind UNIX-timestamp van eindtijd
+     * @param int $start UNIX-timestamp van starttijd
+     * @param int $eind UNIX-timestamp van eindtijd
+	 * @param int $user ID van de eigenaar van het agenda-item (optioneel). 0 is alle eigenaren.
      * 
      * @return Array array met agenda ID's. Deze zijn te gebruiken om agenda-objects aan te maken
      */
-    public static function getAgendaItems($start, $eind) {
+    public static function getAgendaItems($start, $eind, $user = 0) {
         $db = new Mysql();
-        $data = $db->select("SELECT `id` FROM `agenda` WHERE `start` BETWEEN ". $start ." AND ". $eind ." ORDER BY `start` ASC");
+
+		if($user > 0)	$where[] = "`eigenaar` = $user";
+		$where[] = "`start` BETWEEN ". $start ." AND ". $eind;
+
+        $data = $db->select("SELECT `id` FROM `agenda` WHERE ". implode(' AND ', $where) ." ORDER BY `start` ASC");
 
         return array_column($data, 'id');
     }
@@ -92,12 +97,12 @@ class Agenda {
 				$set[] = "`$key` = '$value'";
 			}
 			$sql = "UPDATE `agenda` SET ". implode(', ', $set) ." WHERE `id` = ". $this->id;
+			return $db -> query($sql);
 		} else {
-			$sql = "INSERT INTO `agenda` (`". implode('`, `', array_keys($data)) ."`) VALUES ('". implode("', '", array_values($data)) ."')";
+			$sql = "INSERT INTO `agenda` (`". implode('`, `', array_keys($data)) ."`) VALUES ('". implode("', '", array_values($data)) ."')";			
 			$db -> query($sql);
-
-		}
-		return $db -> query($sql);
+            return mysqli_insert_id($db->connection);
+		}		
 	}
 }
 ?>

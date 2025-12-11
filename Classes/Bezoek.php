@@ -91,7 +91,7 @@ class Bezoek {
             $this->zichtbaarOuderling = ($data['zicht_oud'] == 1 ? true : false);
             $this->zichtbaarPredikant = ($data['zicht_pred'] == 1 ? true : false);
             $this->zichtbaarPastoraal = ($data['zicht_pas'] == 1 ? true : false);
-            $this->aantekening = urldecode($data['aantekening']);
+            $this->aantekening = str_rot13(urldecode($data['aantekening']));
         } else {
             $this->werker = 0;
             $this->tijdstip = 0;
@@ -124,7 +124,7 @@ class Bezoek {
         $data['zicht_oud'] = ($this->zichtbaarOuderling ? '1' : '0');
         $data['zicht_pred'] = ($this->zichtbaarPredikant ? '1' : '0');
         $data['zicht_pas'] = ($this->zichtbaarPastoraal ? '1' : '0');
-        $data['aantekening'] = urlencode($this->aantekening);
+        $data['aantekening'] = urlencode(str_rot13(trim($this->aantekening)));
 
         if($this->new) {
             $sql = "INSERT INTO `pastoraat` (`". implode('`, `', array_keys($data)) ."`) VALUES ('". implode("', '", array_values($data)) ."')";

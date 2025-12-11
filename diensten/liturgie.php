@@ -14,9 +14,6 @@ $aantalMaanden = 1;
 
 if(isset($_REQUEST['dienstID'])) {
     if(isset($_REQUEST['save'])) {
-    	#$sql = "UPDATE $TableDiensten SET ";
-    	#$sql .= "$DienstLiturgie = '". urlencode($_REQUEST['liturgieTekst']) ."' ";
-    	#$sql .= "WHERE $DienstID = '". $_REQUEST['dienstID'] ."'";
         $dienst = new Kerkdienst($_REQUEST['dienstID']);
         $dienst->liturgie = $_REQUEST['liturgieTekst'];
 		

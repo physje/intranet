@@ -82,7 +82,7 @@ foreach($diensten as $dienst) {
 			
 				foreach($vulling->leden as $lid) {
 					$person = new Member($lid);
-					$string = "<a href='profiel.php?id=$lid'>". $person->getName() ."</a>";
+					$string = "<a href='../profiel.php?id=$lid'>". $person->getName() ."</a>";
 					$namen[] = $string;
 				}
 				$string = implode('<br>', $namen);

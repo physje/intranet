@@ -210,9 +210,9 @@ class Rooster {
 			foreach($data as $key => $value) {
 				$set[] = "`$key` = '$value'";
 			}
-			$query = "UPDATE `rooster` SET ". implode(', ', $set) ." WHERE `id` = ". $this->id;			
+			$query = "UPDATE `roosters` SET ". implode(', ', $set) ." WHERE `id` = ". $this->id;			
         } else {
-			$query = "INSERT INTO `rooster` (`". implode('`, `', array_keys($data)) ."`) VALUES ('". implode("', '", array_values($data)) ."')";
+			$query = "INSERT INTO `roosters` (`". implode('`, `', array_keys($data)) ."`) VALUES ('". implode("', '", array_values($data)) ."')";
         }
 
         return $db->query($query);

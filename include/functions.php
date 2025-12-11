@@ -632,212 +632,6 @@ function price2RightFormat(float $price) {
 	return $toClean;
 }
 
-/**
- * Geef alle
- *
- * @param array $input Data van de declaratie
- * 
- * @return array Array met HTML-code voor een opgemaakte tabel met de declaratiegegevens
- * 
- */
-//TODO: Lelijke functie, herschrijven
-// function showDeclaratieDetails($input) {
-// 	global $clusters, $declJGPost, $declJGKop;
-	
-// 	# $input['key']
-// 	# $input['user']
-// 	# $input['iban']
-// 	# $input['relatie']
-// 	# $input['cluster']
-// 	# $input['overige']
-// 	# $input['overig_price']
-// 	# $input['reiskosten']
-	
-// 	if(isset($input['key']) AND $input['key'] != '') {
-// 		$page[] = "<tr>";
-// 		$page[] = "		<td colspan='2'>Declaratie:</td>";
-// 		$page[] = "		<td>&nbsp;</td>";
-// 		$page[] = "		<td colspan='3'>". $input['key'] ."</td>";
-// 		$page[] = "</tr>";
-// 	}
-	
-// 	if(isset($input['user']) AND $input['user'] != '') {
-// 		$page[] = "<tr>";
-// 		$page[] = "		<td colspan='2'>Naam:</td>";
-// 		$page[] = "		<td>&nbsp;</td>";
-// 		$page[] = "		<td colspan='3'>". makeName($input['user'], 5) ."</td>";
-// 		$page[] = "</tr>";
-// 		$page[] = "<tr>";
-// 		$page[] = "		<td colspan='2'>Emailadres:</td>";
-// 		$page[] = "		<td>&nbsp;</td>";
-// 		$page[] = "		<td colspan='3'>". getMailAdres($input['user']) ."</td>";
-// 		$page[] = "</tr>";
-// 	}
-	
-// 	if($input['eigen'] == 'Ja') {	
-// 		$page[] = "<tr>";
-// 		$page[] = "		<td colspan='2'>Rekeningnummer:</td>";
-// 		$page[] = "		<td>&nbsp;</td>";
-// 		$page[] = "		<td colspan='3'>". $input['iban'] ."</td>";
-// 		$page[] = "</tr>";
-// 	}
-	
-// 	if($input['eigen'] == 'Nee') {		
-// 		$relatieData = eb_getRelatieDataByCode($input['relatie']);
-		
-// 		$page[] = "<tr>";
-// 		$page[] = "		<td colspan='2'>Begunstigde:</td>";
-// 		$page[] = "		<td>&nbsp;</td>";
-// 		$page[] = "		<td colspan='3'>". $relatieData['naam'] ."<br>". $relatieData['iban'] ."</td>";
-// 		$page[] = "</tr>";
-// 	}
-	
-// 	if(isset($input['cluster']) AND $input['cluster'] != '') {
-// 		$page[] = "<tr>";
-// 		$page[] = "		<td colspan='2'>Cluster onderdeel:</td>";
-// 		$page[] = "		<td>&nbsp;</td>";
-// 		$page[] = "		<td colspan='3'>". $clusters[$input['cluster']] ."</td>";
-// 		$page[] = "</tr>";
-// 	}
-			
-// 	/*
-// 	if(isset($input['post']) AND $input['post'] != '') {		
-// 		# Doorloop alle posten en zoek de bijbehorende naam erbij
-// 		foreach($input['post'] as $post) {
-// 			foreach($declJGPost as $subArray) {
-// 				if(isset($subArray[$post]))	$aPost[] = $subArray[$post];
-// 			}
-// 		}
-		
-// 		$page[] = "<tr>";
-// 		$page[] = "		<td colspan='2'>Post:</td>";
-// 		$page[] = "		<td>&nbsp;</td>";
-// 		$page[] = "		<td colspan='3'>". implode(', ', $aPost) ."</td>";
-// 		$page[] = "</tr>";
-// 		#$page[] = "<tr>";
-// 		#$page[] = "		<td colspan='2'>Post-omschrijving:</td>";
-// 		#$page[] = "		<td>&nbsp;</td>";
-// 		#$page[] = "		<td colspan='3'>Volgt</td>";
-// 		#$page[] = "</tr>";
-// 	}
-// 	*/
-	
-// 	if(isset($input['overige']) AND count($input['overige']) > 0) {
-// 		$page[] = "<tr>";
-// 		$page[] = "		<td colspan='6'>&nbsp;</td>";
-// 		$page[] = "</tr>";
-// 		$page[] = "<tr>";
-// 		$page[] = "		<td colspan='6'><b>Declaraties</b></td>";
-// 		$page[] = "</tr>";
-		
-// 		$totaal = calculateTotals($input['overig_price']);
-	
-// 		foreach($input['overige'] as $key => $value) {
-// 			if($value != "") {
-// 				$page[] = "<tr>";
-// 				$page[] = "		<td>&nbsp;</td>";
-				
-// 				if(isset($input['post'][$key])) {
-// 					$post_nr = $input['post'][$key];
-// 					foreach($declJGPost as $kop => $subArray) {
-// 						if(isset($subArray[$post_nr])) {
-// 							$catagorie = $declJGKop[$kop];
-// 							$post = $subArray[$post_nr];
-// 						}
-// 					}
-									
-// 					$page[] = "		<td>$value</td>";
-// 					$page[] = "		<td>&nbsp;</td>";
-// 					$page[] = "		<td>$catagorie -> $post</td>";
-// 				} else {
-// 					$page[] = "		<td colspan='3'>$value</td>";
-// 				}				
-				
-// 				$page[] = "		<td>&nbsp;</td>";
-// 				$page[] = "		<td align='right'>". formatPrice(price2RightFormat($input['overig_price'][$key])*100) ."</td>";
-// 				$page[] = "</tr>";				
-// 			}
-// 		}			
-// 	}
-	
-// 	if($input['eigen'] == 'Ja' AND isset($input['reiskosten']) AND $input['reiskosten'] > 0) {
-// 		$page[] = "<tr>";
-// 		$page[] = "		<td>&nbsp;</td>";
-// 		$page[] = "		<td colspan='3'>Reiskosten</td>";
-// 		$page[] = "		<td>&nbsp;</td>";
-// 		$page[] = "		<td align='right'>". formatPrice($input['reiskosten']) ."</td>";
-// 		$page[] = "</tr>";	
-		
-// 		$totaal = $totaal + $input['reiskosten'];
-// 	}
-			
-// 	$page[] = "<tr>";
-// 	$page[] = "		<td colspan='6'>&nbsp;</td>";
-// 	$page[] = "</tr>";
-// 	$page[] = "<tr>";
-// 	$page[] = "		<td colspan='4'><b>Totaal</b></td>";
-// 	$page[] = "		<td>&nbsp;</td>";
-// 	$page[] = "		<td align='right'><b>". formatPrice($totaal) ."</b></td>";
-// 	$page[] = "</tr>";
-// 	$page[] = "<tr>";
-// 	$page[] = "		<td colspan='6'>&nbsp;</td>";
-// 	$page[] = "</tr>";
-	
-// 	if(isset($input['bijlage']) AND $input['bijlage'] != '') {
-// 		$page[] = "<tr>";	
-// 		$page[] = "		<td colspan='1' valign='top'><b>Bijlage</b></td>";	
-// 		$page[] = "		<td colspan='5'>";
-		
-// 		foreach($input['bijlage'] as $key => $bestand) {
-// 			$page[] = "<li><a href='$bestand' target='blank'>". substr($input['bijlage_naam'][$key], 0, 40).( strlen($input['bijlage_naam'][$key]) > 40 ? '.....' : '')."</a></li>";
-// 		}
-// 		$page[] = "</td>";	
-// 		$page[] = "</tr>";
-// 	}
-	
-// 	if(isset($input['opmerking_cluco']) AND $input['opmerking_cluco'] != '') {
-// 		$page[] = "<tr>";
-// 		$page[] = "		<td colspan='6'>&nbsp;</td>";
-// 		$page[] = "</tr>";
-// 		$page[] = "<tr>";	
-// 		$page[] = "		<td colspan='6'><b>Opmerking door indiener</b></td>";
-// 		$page[] = "</tr>";	
-// 		$page[] = "<tr>";	
-// 		$page[] = "		<td colspan='6'><i>". $input['opmerking_cluco'] ."</i></td>";
-// 		$page[] = "</tr>";
-// 	}
-	
-// 	if(isset($input['opmerking_penning']) AND $input['opmerking_penning'] != '') {
-// 		$page[] = "<tr>";
-// 		$page[] = "		<td colspan='6'>&nbsp;</td>";
-// 		$page[] = "</tr>";
-// 		$page[] = "<tr>";	
-// 		$page[] = "		<td colspan='6'><b>Opmerking door cluco</b></td>";
-// 		$page[] = "</tr>";	
-// 		$page[] = "<tr>";	
-// 		$page[] = "		<td colspan='6'><i>". $input['opmerking_penning'] ."</i></td>";
-// 		$page[] = "</tr>";
-// 	}
-	
-	
-// 	if(isset($input['toelichting_penning']) AND $input['toelichting_penning'] != '') {
-// 		$page[] = "<tr>";
-// 		$page[] = "		<td colspan='6'>&nbsp;</td>";
-// 		$page[] = "</tr>";
-// 		$page[] = "<tr>";	
-// 		$page[] = "		<td colspan='6'><b>Opmerking door penningmeester</b></td>";
-// 		$page[] = "</tr>";	
-// 		$page[] = "<tr>";	
-// 		$page[] = "		<td colspan='6'><i>". $input['toelichting_penning'] ."</i></td>";
-// 		$page[] = "</tr>";
-// 	}
-	
-// 	$page[] = "<tr>";
-// 	$page[] = "		<td colspan='6'>&nbsp;</td>";
-// 	$page[] = "</tr>";
-	
-// 	return $page;	
-// }
 
 /**
  * Geef alle gegevens van de declaratie weer in een tabel
@@ -894,34 +688,18 @@ function showDeclaratieDetails(Declaratie $declaratie) {
 		
 	if(isset($declaratie->overigeKosten) && count($declaratie->overigeKosten) > 0) {
 		$first = true;
-		# Dit is voor oude declaraties
-		# Kan na verloop van tijd eruit gesloopt worden
-		if(isset($declaratie->overigeKosten[0])) {			
-			foreach($declaratie->overigeKosten as $item) {	
+		foreach($declaratie->overigeKosten as $item => $bedrag) {
+			if($bedrag > 0) {
 				$page[] = "<tr>";
 				$page[] = "		<td>". ($first ? '<b>Declaratie<b>' : '') ."</td>";
 				$page[] = "		<td>&nbsp;</td>";
-				$page[] = "		<td colspan='2'>". $item['omschrijving'] ."</td>";			
-				$page[] = "		<td align='right'>". formatPrice($item['bedrag'], true) ."</td>";
+				$page[] = "		<td colspan='2'>". $item ."</td>";			
+				$page[] = "		<td align='right'>". formatPrice($bedrag, true) ."</td>";
 				$page[] = "		<td>&nbsp;</td>";
 				$page[] = "</tr>";
 				$first = false;
 			}
-		} else {
-			foreach($declaratie->overigeKosten as $item => $bedrag) {
-				if($bedrag > 0) {
-					$page[] = "<tr>";
-					$page[] = "		<td>". ($first ? '<b>Declaratie<b>' : '') ."</td>";
-					$page[] = "		<td>&nbsp;</td>";
-					$page[] = "		<td colspan='2'>". $item ."</td>";			
-					$page[] = "		<td align='right'>". formatPrice($bedrag, true) ."</td>";
-					$page[] = "		<td>&nbsp;</td>";
-					$page[] = "</tr>";
-					$first = false;
-				}
-			}
-		}
-
+		}		
 	}
 
 	$page[] = "<tr>";

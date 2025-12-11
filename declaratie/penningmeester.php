@@ -682,9 +682,9 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 		$_SESSION['declaratie'] = $declaratie;
 	} else {
 		if(in_array($_SESSION['useID'], $penningJG->leden)) {			
-			$hashes = Declaratie::getDeclaratiesByStatus(4, 2);
+			$hashes = Declaratie::getDeclaraties(4, 2);
 		} else {
-			$hashes = Declaratie::getDeclaratiesByStatus(4);
+			$hashes = Declaratie::getDeclaraties(4);
 		}
 					
 		if(count($hashes) > 0) {

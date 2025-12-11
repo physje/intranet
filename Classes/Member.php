@@ -827,10 +827,10 @@ class Member {
 	
 	
 	/**
-	 * Vraag alle leden met een mailadres op
+	 * Vraag alle leden met een mailadres op.
+	 * Mailadres is daarbij alles met een @-teken erin	
 	 * @return array Array met key = scipio-ID, value = mailadres
 	 */
-	# Mailadres is daarbij alles met een @-teken erin	
 	static function getMailadressen() {
 		$db = new Mysql();
 

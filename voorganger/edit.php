@@ -1,5 +1,6 @@
 <?php
 include_once('../include/functions.php');
+include_once('../include/EB_functions.php');
 include_once('../include/config.php');
 include_once('../include/HTML_TopBottom.php');
 include_once('../Classes/Member.php');
@@ -89,6 +90,7 @@ if(isset($_REQUEST['delete_data'])) {
 		$voorganger->honorarium			= $_POST['honorarium'];
 		$voorganger->honorarium_special = $_POST['honorarium_spec'];
 		$voorganger->km_vergoeding		= $_POST['km_vergoeding'];
+		$voorganger->boekhoud_id		= $_POST['EB_relatie'];
 
 		if($voorganger->save()) {
 			$top_right[] = "Gegevens opgeslagen";
@@ -199,13 +201,11 @@ if(isset($_REQUEST['delete_data'])) {
 		$right[] = "	<td><select name='EB_relatie'>";
 		$right[] = "	<option value=''>Selecteer relatie</option>";
 		
-		/*
 		$relaties = eb_getRelaties();	
 		foreach($relaties as $relatieData) {
-			$right[] = "	<option value='". $relatieData['code'] ."'". ($voorgangerData['EB-relatie'] == $relatieData['code'] ? ' selected' : '') .">". substr($relatieData['naam'], 0, 35) ."</option>";
+			$right[] = "	<option value='". $relatieData['code'] ."'". ($voorganger->boekhoud_id == $relatieData['code'] ? ' selected' : '') .">". substr($relatieData['naam'], 0, 40) ."</option>";
 		}
-		*/		
-				
+						
 		$right[] = "	</select></td>";
 		$right[] = "</tr>";
 		$right[] = "<tr>";

@@ -50,6 +50,7 @@ class Boeknummer {
     }
 
     /**
+     * Sla het boeknummer op.
      * @return bool Resultaat van de save actie
      */
     public function save() {

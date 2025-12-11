@@ -234,6 +234,7 @@ class Declaratie
             if(isset($data['hash']))        $this->hash = $data['hash'];
             if(isset($data['indiener']))    $this->gebruiker = intval($data['indiener']);
             if(isset($data['tijd']))        $this->tijd = intval($data['tijd']);
+            if(isset($data['status']))      $this->status = intval($data['status']);
             if(isset($data['last_action'])) $this->lastAction = intval($data['last_action']);
             
             $json = json_decode($data['declaratie'], true);
@@ -249,6 +250,7 @@ class Declaratie
                 }
             }
             
+            //FIXME: Zijn er nog oudere declaraties of kan dit weg
             # Bij oudere declaraties moeten we het handmatig doen
             if(isset($json['eigen']))       $this->eigenRekening = ($json['eigen'] == 'Ja' ? true : false);
             if(isset($json['cluster']))     $this->cluster = intval($json['cluster']);
@@ -263,10 +265,10 @@ class Declaratie
 
             if(isset($json['overig']) && isset($json['overig_price'])) {
                 for($i=0; $i < count($json['overig']); $i++) {
-                    $this->overigeKosten[] = [
-                        'omschrijving'   => $json['overig'][$i],
-                        'bedrag'        => floatval(100*$json['overig_price'][$i])
-                    ];
+                    $key    = $json['overig'][$i];
+                    $value  = floatval(100*$json['overig_price'][$i]);
+
+                    $this->overigeKosten[$key] = $value;
                 }
             }
             if(isset($json['bijlage']) && isset($json['bijlage_naam'])) {
@@ -277,6 +279,16 @@ class Declaratie
         }
     }
 
+    
+
+   /**
+    * @param int $status
+    * @param int $cluster
+    * @deprecated Gebruik in plaats daarvan Declaratie::getDeclaraties
+    * @see Declaratie::getDeclaraties()
+    *
+    * @return array
+    */
     static function getDeclaratiesByStatus(int $status, int $cluster = 0) {
         $db = new Mysql();
         $sql = "SELECT `hash` FROM `eb_declaraties` WHERE `status` = ". $status;
@@ -290,6 +302,36 @@ class Declaratie
         return array_column($data, 'hash');
     }
 
+   /**
+    * Geef een array met hashes van alle declaraties die aan het filter voldoen
+    * @param int $status Status waar op gezocht moet worden
+    * @param int $cluster Cluster waar op gezocht moet worden
+    * 
+    * @return array Array met hashes
+    */
+    static function getDeclaraties(int $status = 0, int $cluster = 0) {
+        $db = new Mysql();
+        $where = array();
+                
+        if($status > 0)     $where[] = "`status` = ". $status;
+        if($cluster > 0)    $where[] = "`cluster` = ". $cluster;
+
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            $where[] = "`indiener` NOT like '". $_SESSION['useID'] ."'";
+        }
+
+        $sql = "SELECT `hash` FROM `eb_declaraties` WHERE ". implode(' AND ', $where) ." ORDER BY `tijd` DESC LIMIT 0, 100";
+  
+        $data = $db->select($sql, true);
+
+        return array_column($data, 'hash');
+    }
+
+    /**
+     * Sla de declaratie op.
+     * Geldt alleen voor declaraties van gemeenteleden. Declaraties van gastpredikanten worden niet opgeslagen.
+     * @return bool Succesvol of niet
+     */
     public function save() {
         # Sla de declaratie op in de database, maar alleen voor declaraties van gemeenteleden
         if($this->type == 'gemeentelid') {

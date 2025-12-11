@@ -349,6 +349,13 @@ Dit kan zowel van een gastpredikant als voor een gemeentelid zijn.</p>
 <dd>Maak een nieuw Declaratie object aan</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a href="classes/Declaratie.html#method_getDeclaraties">getDeclaraties()</a>
+    <span>
+                        &nbsp;: array&lt;string|int, mixed&gt;    </span>
+</dt>
+<dd>Geef een array met hashes van alle declaraties die aan het filter voldoen</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a href="classes/Declaratie.html#method_getDeclaratiesByStatus">getDeclaratiesByStatus()</a>
     <span>
                         &nbsp;: mixed    </span>
@@ -424,7 +431,7 @@ Dit kan zowel van een gastpredikant als voor een gemeentelid zijn.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Classes/Declaratie.php"><a href="files/classes-declaratie.html"><abbr title="Classes/Declaratie.php">Declaratie.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">123</span>
+    <span class="phpdocumentor-element-found-in__line">136</span>
 
     </aside>
 
@@ -435,11 +442,26 @@ Dit kan zowel van een gastpredikant als voor een gemeentelid zijn.</p>
     <span class="phpdocumentor-signature__name">$begunstigde</span>
     </code>
 
-        <section class="phpdocumentor-description"></section>
-
-        <section class="phpdocumentor-description"></section>
+    
+        <section class="phpdocumentor-description"><p>ID uit eBoekhouden waar de betaling naar toe moet.
+Alleen van belang als geld niet op eigen rekening overgemaakt moet worden.</p>
+</section>
 
     
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="#tags" class="headerlink"><i class="fas fa-link"></i></a>
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">see</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                                                                    <span class="phpdocumentor-tag-link"><a href="classes/Declaratie.html#property_eigenRekening"><abbr title="\Declaratie::$eigenRekening">Declaratie::$eigenRekening</abbr></a></span>
+                                        
+                                             
+                                    </dd>
+                        </dl>
 
 </article>
                     <article
@@ -458,7 +480,7 @@ Dit kan zowel van een gastpredikant als voor een gemeentelid zijn.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Classes/Declaratie.php"><a href="files/classes-declaratie.html"><abbr title="Classes/Declaratie.php">Declaratie.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">121</span>
+    <span class="phpdocumentor-element-found-in__line">129</span>
 
     </aside>
 
@@ -469,9 +491,9 @@ Dit kan zowel van een gastpredikant als voor een gemeentelid zijn.</p>
     <span class="phpdocumentor-signature__name">$betalingskenmerk</span>
     </code>
 
-        <section class="phpdocumentor-description"></section>
-
-        <section class="phpdocumentor-description"></section>
+    
+        <section class="phpdocumentor-description"><p>Het betalingskenmerk wat opgenomen moet worden in de overschrijving</p>
+</section>
 
     
 
@@ -492,7 +514,7 @@ Dit kan zowel van een gastpredikant als voor een gemeentelid zijn.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Classes/Declaratie.php"><a href="files/classes-declaratie.html"><abbr title="Classes/Declaratie.php">Declaratie.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">153</span>
+    <span class="phpdocumentor-element-found-in__line">166</span>
 
     </aside>
 
@@ -526,7 +548,7 @@ Dit kan zowel van een gastpredikant als voor een gemeentelid zijn.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Classes/Declaratie.php"><a href="files/classes-declaratie.html"><abbr title="Classes/Declaratie.php">Declaratie.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">117</span>
+    <span class="phpdocumentor-element-found-in__line">118</span>
 
     </aside>
 
@@ -618,7 +640,7 @@ Elk element is een array ('time', 'user', 'text')</p>
             phpdocumentor-element
             -property
             -public
-                                                        "
+                        -deprecated                                "
 >
     <h4 class="phpdocumentor-element__name" id="property_EB_relatie">
         $EB_relatie
@@ -629,12 +651,12 @@ Elk element is een array ('time', 'user', 'text')</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Classes/Declaratie.php"><a href="files/classes-declaratie.html"><abbr title="Classes/Declaratie.php">Declaratie.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">112</span>
+    <span class="phpdocumentor-element-found-in__line">113</span>
 
     </aside>
 
     
-    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <code class="phpdocumentor-code phpdocumentor-signature -deprecated">
     <span class="phpdocumentor-signature__visibility">public</span>
         <span class="phpdocumentor-signature__type">int</span>
     <span class="phpdocumentor-signature__name">$EB_relatie</span>
@@ -645,6 +667,19 @@ Elk element is een array ('time', 'user', 'text')</p>
 </section>
 
     
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="#tags" class="headerlink"><i class="fas fa-link"></i></a>
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">deprecated</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                                                                
+                                             
+                                    </dd>
+                        </dl>
 
 </article>
                     <article
@@ -697,7 +732,7 @@ Elk element is een array ('time', 'user', 'text')</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Classes/Declaratie.php"><a href="files/classes-declaratie.html"><abbr title="Classes/Declaratie.php">Declaratie.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">119</span>
+    <span class="phpdocumentor-element-found-in__line">124</span>
 
     </aside>
 
@@ -708,9 +743,10 @@ Elk element is een array ('time', 'user', 'text')</p>
     <span class="phpdocumentor-signature__name">$GBR</span>
     </code>
 
-        <section class="phpdocumentor-description"></section>
-
-        <section class="phpdocumentor-description"></section>
+    
+        <section class="phpdocumentor-description"><p>Grootboekrekening-nummer waar declaratie op geboekt moet worden.
+Deze nummers komen uit eBoekhouden.nl</p>
+</section>
 
     
 
@@ -867,7 +903,7 @@ Elk element is een array ('time', 'user', 'text')</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Classes/Declaratie.php"><a href="files/classes-declaratie.html"><abbr title="Classes/Declaratie.php">Declaratie.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">163</span>
+    <span class="phpdocumentor-element-found-in__line">176</span>
 
     </aside>
 
@@ -1090,7 +1126,7 @@ en daarna toegevoegd aan $correspondentie en opnieuw geinitialiseerd</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Classes/Declaratie.php"><a href="files/classes-declaratie.html"><abbr title="Classes/Declaratie.php">Declaratie.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">148</span>
+    <span class="phpdocumentor-element-found-in__line">161</span>
 
     </aside>
 
@@ -1158,7 +1194,7 @@ en daarna toegevoegd aan $correspondentie en opnieuw geinitialiseerd</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Classes/Declaratie.php"><a href="files/classes-declaratie.html"><abbr title="Classes/Declaratie.php">Declaratie.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">143</span>
+    <span class="phpdocumentor-element-found-in__line">156</span>
 
     </aside>
 
@@ -1219,7 +1255,7 @@ en daarna toegevoegd aan $correspondentie en opnieuw geinitialiseerd</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Classes/Declaratie.php"><a href="files/classes-declaratie.html"><abbr title="Classes/Declaratie.php">Declaratie.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">158</span>
+    <span class="phpdocumentor-element-found-in__line">171</span>
 
     </aside>
 
@@ -1393,7 +1429,7 @@ en daarna toegevoegd aan $correspondentie en opnieuw geinitialiseerd</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Classes/Declaratie.php"><a href="files/classes-declaratie.html"><abbr title="Classes/Declaratie.php">Declaratie.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">177</span>
+    <span class="phpdocumentor-element-found-in__line">190</span>
 
     </aside>
 
@@ -1436,24 +1472,24 @@ Vanuit backwards compatibiliteit moeten er sommige keys uit de JSON-string in de
             -public
                                     -static                    "
 >
-    <h4 class="phpdocumentor-element__name" id="method_getDeclaratiesByStatus">
-        getDeclaratiesByStatus()
-        <a href="classes/Declaratie.html#method_getDeclaratiesByStatus" class="headerlink"><i class="fas fa-link"></i></a>
+    <h4 class="phpdocumentor-element__name" id="method_getDeclaraties">
+        getDeclaraties()
+        <a href="classes/Declaratie.html#method_getDeclaraties" class="headerlink"><i class="fas fa-link"></i></a>
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Classes/Declaratie.php"><a href="files/classes-declaratie.html"><abbr title="Classes/Declaratie.php">Declaratie.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">265</span>
+    <span class="phpdocumentor-element-found-in__line">312</span>
 
     </aside>
 
-    
+        <p class="phpdocumentor-summary">Geef een array met hashes van alle declaraties die aan het filter voldoen</p>
+
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-            <span class="phpdocumentor-signature__static">static</span>    <span class="phpdocumentor-signature__name">getDeclaratiesByStatus</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$status</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$cluster</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+            <span class="phpdocumentor-signature__static">static</span>    <span class="phpdocumentor-signature__name">getDeclaraties</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$status</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$cluster</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span></code>
 
-        <section class="phpdocumentor-description"></section>
-
+    
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
@@ -1461,7 +1497,8 @@ Vanuit backwards compatibiliteit moeten er sommige keys uit de JSON-string in de
                 : <span class="phpdocumentor-signature__argument__return-type">int</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"></section>
+                    <section class="phpdocumentor-description"><p>Status waar op gezocht moet worden</p>
+</section>
 
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
@@ -1469,12 +1506,87 @@ Vanuit backwards compatibiliteit moeten er sommige keys uit de JSON-string in de
                 : <span class="phpdocumentor-signature__argument__return-type">int</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"></section>
+                    <section class="phpdocumentor-description"><p>Cluster waar op gezocht moet worden</p>
+</section>
 
             </dd>
             </dl>
 
     
+
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+    <span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span>
+            &mdash;
+            <section class="phpdocumentor-description"><p>Array met hashes</p>
+</section>
+
+    
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+            -deprecated                        -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_getDeclaratiesByStatus">
+        getDeclaratiesByStatus()
+        <a href="classes/Declaratie.html#method_getDeclaratiesByStatus" class="headerlink"><i class="fas fa-link"></i></a>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Classes/Declaratie.php"><a href="files/classes-declaratie.html"><abbr title="Classes/Declaratie.php">Declaratie.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">292</span>
+
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature -deprecated">
+    <span class="phpdocumentor-signature__visibility">public</span>
+            <span class="phpdocumentor-signature__static">static</span>    <span class="phpdocumentor-signature__name">getDeclaratiesByStatus</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$status</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$cluster</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$status</span>
+                : <span class="phpdocumentor-signature__argument__return-type">int</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$cluster</span>
+                : <span class="phpdocumentor-signature__argument__return-type">int</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="#tags" class="headerlink"><i class="fas fa-link"></i></a>
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">deprecated</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                                                                
+                                                 <section class="phpdocumentor-description"><p>Gebruik in plaats daarvan Declaratie::getDeclaraties</p>
+</section>
+
+                                    </dd>
+                                                <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">see</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                                                                    <span class="phpdocumentor-tag-link"><a href="classes/Declaratie.html#method_getDeclaraties"><abbr title="\Declaratie::getDeclaraties()">Declaratie::getDeclaraties()</abbr></a></span>
+                                        
+                                             
+                                    </dd>
+                        </dl>
 
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
     <span class="phpdocumentor-signature__response_type">mixed</span>
@@ -1495,7 +1607,7 @@ Vanuit backwards compatibiliteit moeten er sommige keys uit de JSON-string in de
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Classes/Declaratie.php"><a href="files/classes-declaratie.html"><abbr title="Classes/Declaratie.php">Declaratie.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">278</span>
+    <span class="phpdocumentor-element-found-in__line">333</span>
 
     </aside>
 
@@ -1504,8 +1616,7 @@ Vanuit backwards compatibiliteit moeten er sommige keys uit de JSON-string in de
     <span class="phpdocumentor-signature__visibility">public</span>
                 <span class="phpdocumentor-signature__name">save</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
 
-        <section class="phpdocumentor-description"></section>
-
+    
     
     
 
