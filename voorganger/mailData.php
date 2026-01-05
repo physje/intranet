@@ -71,9 +71,8 @@ if((in_array($_SERVER['REMOTE_ADDR'], $allowedIP) AND date('j') <= 7) OR $test) 
 		$mail->From		= $noReplyAdress;
 		$mail->FromName	= "Webmaster Koningskerk";
 		$mail->addReplyTo($ScriptMailAdress);
-		$mail->testen = true;
-		//TODO: Testen uitzetten
-
+		if(!$productieOmgeving) $mail->testen = true;
+		
 		if($mail->sendMail()) {
 			toLog('Voorgangerscheck naar '. $voorganger->id .' gestuurd', 'debug');
 		} else {

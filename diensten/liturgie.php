@@ -79,7 +79,7 @@ if(isset($_REQUEST['dienstID'])) {
 
 echo showCSSHeader(array('default', 'table_default'));
 echo '<div class="content_vert_kolom_full">'.NL;
-echo '<h1>Kerkdiensten</h1>'.NL;
+echo '<h1>Liturgie</h1>'.NL;
 echo "<div class='content_block'>".NL. implode(NL, $text).NL."</div>".NL;
 echo '</div> <!-- end \'content_vert_kolom_full\' -->'.NL;
 echo showCSSFooter();

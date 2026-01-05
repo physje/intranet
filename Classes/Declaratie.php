@@ -250,7 +250,7 @@ class Declaratie
                 }
             }
             
-            //FIXME: Zijn er nog oudere declaraties of kan dit weg
+            //TODO: Zijn er nog oudere declaraties of kan dit weg
             # Bij oudere declaraties moeten we het handmatig doen
             if(isset($json['eigen']))       $this->eigenRekening = ($json['eigen'] == 'Ja' ? true : false);
             if(isset($json['cluster']))     $this->cluster = intval($json['cluster']);
@@ -287,7 +287,7 @@ class Declaratie
     * @deprecated Gebruik in plaats daarvan Declaratie::getDeclaraties
     * @see Declaratie::getDeclaraties()
     *
-    * @return array
+    * @return array Array met hashes
     */
     static function getDeclaratiesByStatus(int $status, int $cluster = 0) {
         $db = new Mysql();

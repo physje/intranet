@@ -1,6 +1,10 @@
 <?php
 /**
  * Class met configuration-parameters
+ * 
+ * @package Intranet KKD
+ * @author Matthijs Draijer
+ * @version 1.0.0
  */
 interface KKDConfig {
     # MySQL

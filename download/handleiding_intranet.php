@@ -3,6 +3,7 @@ include_once('../include/functions.php');
 include_once('../include/config.php');
 include_once('../include/HTML_TopBottom.php');
 
+//FIXME: Oude wijze van MySQL
 $db = connect_db();
 $cfgProgDir = '../auth/';
 include($cfgProgDir. "secure.php");

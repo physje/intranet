@@ -316,11 +316,9 @@ if(isset($declaratie->hash) && $declaratie->hash != '') {
 				$voorganger->save();
 								
 				# -------
-				# Zet de status op afgerond
-
-				//TODO: Weer op 8 zetten
-				#$dienst->declaratieStatus = 8;
-				#$dienst->save();
+				# Zet de status op afgerond				
+				$dienst->declaratieStatus = 8;
+				$dienst->save();
 
 				# En verwijder het huidige declaratie-object
 				$declaratie = null;

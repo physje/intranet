@@ -100,8 +100,7 @@ if(isset($_POST['remove'])) {
 		$mail->aan = $gebruiker->id;
 		$mail->Body = implode("<br>\n", $body);
 		$mail->Subject = "De afspraak '". $_POST['titel'] ."'";
-		//TODO: verwijderen
-		$mail->testen = true;
+		if(!$productieOmgeving)	$mail->testen = true;
 
 		if($mail->sendMail()) {
 			$text[] = "Je hebt een bevestigingsmail ontvangen.";

@@ -61,8 +61,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 			$mail->From		= $declaratieReplyAddress;
 			$mail->FromName	= $declaratieReplyName;
 			$mail->Body		= implode("<br>\n", $mailText);
-			//TODO: Testen uitzetten
-			$mail->testen	= true;
+			if(!$productieOmgeving) $mail->testen	= true;
 			
 			# Mail versturen
 			if($mail->sendMail()) {

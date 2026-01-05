@@ -34,9 +34,8 @@ if(isset($_POST['opvragen']) AND isset($_POST['invoer']) AND trim($_POST['invoer
 		$mail->aan		= $user->id;
 		$mail->Body 	= implode("\n", $Mail);
 		$mail->Subject	= "Nieuw wachtwoord voor $ScriptTitle";
-		$mail->testen	= true;
-		//TODO: testen uitzetten
-				
+		if(!$productieOmgeving)	$mail->testen	= true;
+						
 		if(!$mail->Sendmail()) {
 			toLog('Problemen met wachtwoord-mail versturen', 'error', $user->id);
 			$text[] = "Inloggegevens konden helaas niet verstuurd worden";			

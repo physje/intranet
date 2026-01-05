@@ -58,9 +58,8 @@ if(isset($dader) AND isset($slachtoffer)) {
 	$mail_dader->aan 		= $slachtoffer->id;
 	$mail_dader->Body		= implode("<br>\n", $mail_d);
 	$mail_dader->Subject	= "Er is met jou geruild voor '". $rooster->naam ."'";
-	$mail_dader->testen		= true;
-	//TODO: testen uitzetten
-	
+	if(!$productieOmgeving)	$mail_dader->testen		= true;
+		
 	if($mail_dader->sendMail()) {
 		toLog($dader->getName() .' verplaatst van dienst '. $dienst_d->dienst.' naar '. $dienst_s->dienst, 'debug', $slachtoffer->id);
 	}
@@ -80,8 +79,7 @@ if(isset($dader) AND isset($slachtoffer)) {
 	$mail_slachtoffer->aan = $dader->id;
 	$mail_slachtoffer->Body		= implode("<br>\n", $mail_d);
 	$mail_slachtoffer->Subject	= "Je hebt geruild voor '". $rooster->naam ."'";
-	$mail_slachtoffer->testen		= true;
-	//TODO: testen uitzetten
+	if(!$productieOmgeving)	$mail_slachtoffer->testen		= true;
 
 	if($mail_slachtoffer->sendMail()) {
 		toLog($slachtoffer->getName() .' verplaatst van dienst '. $dienst_s->dienst.' naar '. $dienst_d->dienst, 'debug');

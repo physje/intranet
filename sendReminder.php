@@ -146,6 +146,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 						$mail->Subject		= $FinalSubject;
 						$mail->partnerTo	= $rooster->partner;
 						$mail->ouderCC		= $rooster->ouder;
+						if(!$productieOmgeving)	$mail->testen = true;
 
 						if($rooster->van != '') {
 							if($rooster->vanNaam != '') {
@@ -154,10 +155,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 								$mail->AddReplyTo($rooster->van);
 							}
 						}
-
-						$mail->testen = true;
-						//TODO: testen uitzetten
-									
+															
 						if($mail->sendMail()) {
 							toLog('Herinnering-mail '. $rooster->naam .' verstuurd', 'info', $lid);
 						} else {

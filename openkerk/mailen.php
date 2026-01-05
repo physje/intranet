@@ -103,9 +103,8 @@ if(isset($_POST['versturen'])) {
 		$OKMail->setFrom($ScriptMailAdress, $ScriptTitle);
 		$OKMail->addReplyTo('maartendejonge55@gmail.com', 'Maarten de Jonge');
 		$OKMail->addAttachment($filename.'.pdf', 'Rooster_Open_Kerk_'. time2str("d_M", $first) .'-tm-'. time2str("d_M", $last) .'.pdf');
-		$OKMail->testen = true;
-		//TODO: testen uitzetten
-		
+		if(!$productieOmgeving)	$OKMail->testen = true;
+				
 		if($OKMail->Sendmail()) {
 			$text[] = 'Mail naar '. $voornaam .' gestuurd<br>';
 		} else {

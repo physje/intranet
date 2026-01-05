@@ -49,8 +49,8 @@ foreach($clusterCoordinatoren as $cluster => $clucoID) {
 		$mail->aan = $clucoID;
 		$mail->Subject	= count($declaraties) ." openstaande ". (count($declaraties) == 1 ? 'declaratie wacht' : 'declaraties wachten')." op reactie";	
 		$mail->Body		= implode("\n", $reminderMail);
-		//TODO: Testen uitzetten
-		$mail->testen	= true;
+		if(!$productieOmgeving)	$mail->testen	= true;
+
 		if($mail->sendMail()) {
 			toLog("Reminder-mail aan Cluco gestuurd", '', $clucoID);
 		} else {
@@ -114,8 +114,8 @@ if(count($declaraties) > 0) {
 			}			
 			$mail->Subject	= count($lijst) ." openstaande ". (count($lijst) == 1 ? 'declaratie wacht' : 'declaraties wachten')." op reactie";	
 			$mail->Body		= implode("\n", $reminderMail);
-			//TODO: Testen uitzetten
-			$mail->testen	= true;
+			if(!$productieOmgeving)	$mail->testen	= true;
+			
 			if($mail->sendMail()) {
 				toLog("Reminder-mail aan penningmeester gestuurd");
 			} else {

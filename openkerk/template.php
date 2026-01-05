@@ -67,8 +67,7 @@ if(isset($_POST['enroll'])) {
 			$nieuweDag	= mktime(0,0,0,date('n', $start),(date('j', $start)+$offset));
 			$week				= fmod(time2str('W', $nieuweDag), 2);
 			$dag				= time2str('N', $nieuweDag);
-			//TODO: Check of dagen juiste start en einde hebben
-									
+												
 			# Als er een leeg rooster moet worden uitgerold, alleen op vakantie dagen
 			# anders alle dagen van de week
 			foreach($uren as $slotID => $slot) {

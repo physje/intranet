@@ -367,9 +367,8 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) || $test) {
 					$KKDMail->Body		= $replacedBericht;
 					$KKDMail->Subject	= implode(' en ', $subject);
 					$KKDMail->addReplyTo('kerkelijkbureau@koningskerkdeventer.nl', 'Kerkelijk Bureau');
-					$KKDMail->testen	= true;
-					//TODO: testen uitzetten
-															
+					if(!$productieOmgeving)	$KKDMail->testen	= true;
+																				
 					if($KKDMail->sendMail()) {
 						toLog("Wijzigingsmail wijkteam wijk $wijk verstuurd", '', $ontvanger->id);
 						echo "Mail verstuurd naar ". $ontvanger->getName(1) ." (wijkteam wijk $wijk)<br>\n";

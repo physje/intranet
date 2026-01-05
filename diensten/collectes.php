@@ -54,8 +54,7 @@ if(isset($_POST['save']) || isset($_POST['maanden'])) {
 		$KKD->addAddress('scipiobeheer@koningskerkdeventer.nl', 'Scipio beheer');
 		$KKD->Subject	= count($bericht).' '.(count($bericht) > 1 ? 'gewijzigde collectedoelen' : 'gewijzigd collectedoel');
 		$KKD->Body		= implode('<br>', $bericht);
-		$KKD->testen = true;
-		//TODO: testen uitzetten
+		if(!$productieOmgeving)	$KKD->testen = true;
 				
 		if($KKD->sendMail()) {
 			toLog('Mail gestuurd naar Scipio-beheer voor gewijzigde collectes', 'debug');			

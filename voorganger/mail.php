@@ -59,9 +59,8 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 			$KKD = new KKDMailer();
 			$KKD->FromName = 'Preekvoorziening Koningskerk Deventer';
 			$KKD->addReplyTo($voorgangerReplyAddress, $voorgangerReplyName);
-			$KKD->testen = true;
-			//TODO: testen uitzetten
-			
+			if(!$productieOmgeving) $KKD->testen = true;
+						
 			# Als er niet getest wordt
 			if(!$sendTestMail) {
 				# Alle geadresseerden toevoegen

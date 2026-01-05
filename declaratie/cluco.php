@@ -92,8 +92,7 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 				# Daarom voor de zekerheid het formele van de cluco
 				$gem->From	= $cluco->getMail(2);
 				$gem->FromName = $cluco->getName(5);
-				//TODO:Test uitzetten
-				$gem->testen = true;
+				if(!$productieOmgeving)	$gem->testen = true;
 
 				if(!$gem->sendMail()) {
 					toLog("Problemen met versturen declaratie-goedkeuring [". $declaratie->hash ."] door cluco", 'error', $indiener->id);
@@ -117,8 +116,7 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 				$pen->Body			= implode("\n", $mail);
 				$pen->From			= $indiener->getMail(1);
 				$pen->FromName		= $indiener->getName(5);
-				//TODO:Test uitzetten
-				$pen->testen = true;
+				if(!$productieOmgeving)	$pen->testen = true;
 								
 				if(!$pen->sendMail()) {
 					toLog("Problemen met versturen declaratie-goedkeuring naar penningmeester [". $declaratie->hash ."]", 'error', $indiener->id);
@@ -171,8 +169,7 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 				# Daarom voor de zekerheid het formele van de cluco
 				$gem->From	= $cluco->getMail(2);
 				$gem->FromName = $cluco->getName(5);
-				//TODO:Test uitzetten
-				$gem->testen = true;
+				if(!$productieOmgeving)	$gem->testen = true;
 
 				if(!$gem->sendMail()) {
 					toLog("Problemen met versturen declaratie-afwijzing [". $declaratie->hash ."]", 'error', $indiener->id);
@@ -228,8 +225,7 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 				# Daarom voor de zekerheid het formele van de cluco
 				$gem->From	= $cluco->getMail(2);
 				$gem->FromName = $cluco->getName(5);
-				//TODO:Test uitzetten
-				$gem->testen = true;
+				if(!$productieOmgeving)	$gem->testen = true;
 
 				if(!$gem->sendMail()) {
 					toLog("Problemen met versturen aanvullende vraag declaratie [". $declaratie->hash ."]", 'error', $indiener->id);

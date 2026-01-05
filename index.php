@@ -156,7 +156,7 @@ if(in_array(1, $myGroups) OR in_array(8, $myGroups) OR in_array(9, $myGroups) OR
 		$w = new Wijk();
 		$w->wijk = $wijk;
 		$wijkteam = $w->getWijkteam();
-		if(array_key_exists($_SESSION['useID'], $wijkteam))	$hit[] = $wijk;
+		if(array_key_exists($gebruiker->id, $wijkteam))	$hit[] = $wijk;
 	}
 	$BezoekLinks['pastoraat/index.php'. ((count($hit) == 1) ? '?wijk='. $hit[0] : '')] = 'Registratie bezoeken'. ((count($hit) == 1) ? ' wijk '. $hit[0] : '');
 	
@@ -271,7 +271,7 @@ if(in_array(1, $myGroups)) {
 	#$adminLinks['admin/reviewRechten.php'] = 'Bekijk groepen en rechten';
 	$adminLinks['admin/configuration.php'] = 'Configuratie-variabelen';
 	$adminLinks['admin/vermommen.php'] = 'Vermommen';
-	//FIXME: Oude diensten verwijderen
+	//TODO: Oude diensten verwijderen
 	#$adminLinks['onderhoud/cleanUpDb.php'] = 'Verwijder oude diensten';
 	$adminLinks['../dumper/'] = 'Dumper';
 	
@@ -289,9 +289,11 @@ $EBDeel[] = "<b>Declaraties</b>";
 
 $EBLinks['declaratie/'] = 'Dien declaratie in';
 
-if(in_array($_SESSION['useID'], $clusterCoordinatoren)) {
+if(in_array($gebruiker->id, $clusterCoordinatoren)) {
 	$EBLinks['declaratie/cluco.php'] = 'Overzicht ingediende declaraties';	
-} elseif(in_array(1, $myGroups) OR in_array(38, $myGroups)) {
+} elseif(in_array(38, $myGroups)) {
+	$EBLinks['declaratie/penningmeester.php'] = 'Overzicht ingediende declaraties';	
+} elseif(in_array(1, $myGroups)) {
 	$EBLinks['declaratie/overzicht.php'] = 'Status declaraties';	
 	//TODO: Schrijf script om oude bijlages te verwijderen
 	#$EBLinks['declaratie/opschonenOudeBijlages.php'] = 'Verwijder oude bijlages';
@@ -324,8 +326,8 @@ if(in_array(1, $myGroups) OR in_array(52, $myGroups)) {
 	if(in_array(1, $myGroups)) {	
 		$koppelLinks['extern/makePersonaliCals.php'] = 'Persoonlijke iCals aanmaken';
 		$koppelLinks['scipio/import.php'] = 'Scipio-data inladen';
-		//FIXME: Collectes exporteren
-		$koppelLinks['scipio/collectes.php'] = 'Collectes exporteren voor in Scipio';
+		//TODO: Collectes exporteren
+		#$koppelLinks['scipio/collectes.php'] = 'Collectes exporteren voor in Scipio';
 	}
 	
 	foreach($koppelLinks as $link => $naam) {
@@ -342,8 +344,8 @@ $gebedsLinks['gebedskalender/overzicht.php#'. date('d')] = 'Gebedskalender';
 if(in_array(1, $myGroups) OR in_array(36, $myGroups)) {	
 	$gebedsLinks['gebedskalender/import.php'] = 'Import';
 	$gebedsLinks['gebedskalender/edit.php'] = 'Wijzig';
-	//FIXME: Mailadressen overzicht gebedskalender
-	$gebedsLinks['gebedskalender/mailadressenOverzicht.php'] = 'Mailadressen overzicht';
+	//TODO: Mailadressen overzicht gebedskalender
+	#$gebedsLinks['gebedskalender/mailadressenOverzicht.php'] = 'Mailadressen overzicht';
 }
 	
 foreach($gebedsLinks as $link => $naam) {
@@ -372,13 +374,13 @@ if(isset($_SESSION['fakeID'])) {
 }
 $site[] = "<a href='account.php' target='_blank'>Account</a>";
 $site[] = "<a href='profiel.php' target='_blank'>Profiel</a>";
-//FIXME: Ledenlijst maken
-$site[] = "<a href='ledenlijst.php' target='_blank'>Ledenlijst</a>";
+//TODO: Ledenlijst maken
+#$site[] = "<a href='ledenlijst.php' target='_blank'>Ledenlijst</a>";
 $site[] = "<a href='admin/stats.php' target='_blank'>Statistieken</a>";
 $site[] = "<a href='admin/leeftijdsOpbouw.php' target='_blank'>Leeftijds-opbouw</a>";
 if(in_array(1, $myGroups)) {
-	//FIXME: zoeken maken
-	$site[] = "<a href='search.php' target='_blank'>Zoeken</a>";
+	//TODO: zoeken maken
+	#$site[] = "<a href='search.php' target='_blank'>Zoeken</a>";
 }
 $site[] = "<a href='auth/objects/logout.php' target='_blank'>Uitloggen</a>";
 $blocks[] = $site;

@@ -75,8 +75,8 @@ class Gebedspunt {
 
    /**
     * Vraag gebedspunten op.
-    * @param mixed $start Begindatum (YYYY-MM-DD) vanaf waar gezocht moet worden
-    * @param mixed $eind Einddatum (YYYY-MM-DD) tot wanneer gezocht moet worden
+    * @param int $start Begindatum (YYYY-MM-DD) vanaf waar gezocht moet worden
+    * @param int $eind Einddatum (YYYY-MM-DD) tot wanneer gezocht moet worden
     * 
     * @return array Array met ID's die gebruikt kunnen worden om een Gebedspunt-object aan te maken
     */
@@ -90,7 +90,7 @@ class Gebedspunt {
     }
 
     /**
-     * Sla het gebedspunt op in de databaee
+     * Sla het gebedspunt op in de database
      * @return bool Succesvol opslaan of niet
      */
     public function save() {
