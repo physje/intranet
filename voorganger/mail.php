@@ -32,7 +32,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 		$aSchriftlezer	= new Vulling($dienstID, 12);
 		$aKoster		= new Vulling($dienstID, 13);		
 		$aBandleider	= new Vulling($dienstID, 22);
-		$aJeugd			= new Vulling($dienstID, 25);
+		#$aJeugd			= new Vulling($dienstID, 25);
 
 		$bandleider		= new Member($aBandleider->leden[0]);
 		$ouderling		= new Member($aOuderling->leden[0]);		
@@ -43,9 +43,9 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 			$schriftlezer	= new Member($aSchriftlezer->leden[0]);
 		}	
 		
-		if(count($aJeugd->leden) > 0) {
-			$jeugdmoment	= new Member($aJeugd->leden[0]);
-		}
+		#if(count($aJeugd->leden) > 0) {
+		#	$jeugdmoment	= new Member($aJeugd->leden[0]);
+		#}
 		
 		$dagdeel 		= formatDagdeel($dienst->start);
 		
@@ -72,9 +72,9 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 				}				
 								
 				# Als Reinier geen voorganger is, gemeentelid voor jeugdmoment in de CC
-				if($dienst->voorganger != 91) {					
-					$KKD->addCC($jeugdmoment->getMail(), $jeugdmoment->getName());
-				}
+				#if($dienst->voorganger != 91) {					
+				#	$KKD->addCC($jeugdmoment->getMail(), $jeugdmoment->getName());
+				#}
 								
 				# CC toevoegen
 				foreach($voorgangerCC as $adres => $naam) {
@@ -133,12 +133,12 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 			$opsomming[] = "<li>Aankondiging/toelichting op de collecte en het collectegebed, wordt gedaan door de diaken van dienst.</li>";
 			$opsomming[] = "<li>". (isset($ouderling->id) ? $ouderling->getName() : "De ouderling van dienst"). " verzorgt het dankgebed en de voorbeden (meestal aansluitend aan het collectegebed)</li>";
 			$opsomming[] = "<li>De dienst wordt live vertaald door het vertaalteam voor gemeenteleden die de Nederlandse taal nog niet machtig zijn. Het helpt het vertaalteam als bij het verzenden van de liturgie ook de preek of een preekschets wordt toegevoegd zodat men zich kan voorbereiden.</li>";
-			$opsomming[] = "</ul>";
-			
+						
 			# Reinier heeft ID 91
-			if($dienst->voorganger != 91 AND $jeugdmoment->id > 0) {
-				$opsomming[] = "Voorafgaand aan de schriftlezing gaat een gedeelte van de basisschoolkinderen naar de bijbelklas of basiscatechese. Wij zijn gewend dat er in de Eredienst vaak een moment speciaal aandacht is voor kinderen of jeugd. Dit kan een kindermoment zijn voor de schriftlezing en voordat een deel van de kinderen naar bijbelklas of basiscatechese gaan. Dit kan ook in de vorm van een jeugdmoment zijn. Bij een gastpredikant is hier standaard een gemeentelid voor ingeroosterd die in de week voorafgaand contact met ".($voorganger->vousvoyeren ? 'u' : 'je')." zal opnemen over vorm en onderwerp. Voor deze dienst is ". $jeugdmoment->getName() ." daarvoor als gemeentelid ingeroosterd.";
+			if($dienst->voorganger != 91) {
+				$opsomming[] = "<li>Buiten de vakanties om gaan kinderen van groep 3 tot en met groep 8 voor de schriftlezing naar de bijbelklas of basiscatechese. Voordat de kinderen gaan is er een kindermoment. Dit mag ".($voorganger->vousvoyeren ? 'u' : 'je')." zelf verzorgen maar hiervoor ".($voorganger->vousvoyeren ? 'kan u' : 'kun je')." ook Henrike Nijman (<a href='mailto:henrike.nijman@koningskerkdeventer.nl'>henrike.nijman@koningskerkdeventer.nl</a>) of Pieter Wierenga (<a href='mailto:pietwierenga@kpnplanet.nl'>pietwierenga@kpnplanet.nl</a>) vragen.</li>";
 			}
+			$opsomming[] = "</ul>";
 			
 			$mailText[] = implode("\n", $opsomming);			
 			$mailText[] = "";
@@ -174,8 +174,8 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 			$mailText[] = "";
 			$mailText[] = "Vriendelijke groeten";
 			$mailText[] = "";
-			$mailText[] = "Jenny van der Vegt-Huzen";
-			$mailText[] = "Tel.: 06-10638291";
+			$mailText[] = "Paula Lieffijn-Joosse";
+			$mailText[] = "Tel.: 06-29052411";
 			$mailText[] = $voorgangerReplyAddress;		
 			
 			# Onderwerp maken			
