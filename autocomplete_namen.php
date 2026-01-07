@@ -1,32 +1,46 @@
 <?php
+/**
+ * Op een aantal plekken op de site kunnen namen worden ingevoerd met autocomplete.
+ * Daar wordt bijna altijd verwezen naar dit script om de namen uit de database te halen.
+ * 
+ * Als input wordt een zoekterm meegegeven via de 'term' parameter.
+ * Vervolgens wordt hier op gezocht en wordt een lijst met namen teruggegeven in JSON formaat.
+ * 
+ * @package Intranet KKD
+ * @author Matthijs Draijer
+ * @version 1.0.0
+ */
+
 # https://www.codexworld.com/autocomplete-textbox-using-jquery-php-mysql/
 
-$VersionCount = 1;
 include_once('include/functions.php');
 include_once('include/config.php');
-
-$db = connect_db();
+include_once('Classes/Mysql.php');
+include_once('Classes/Member.php');
 
 $cfgProgDir = 'auth/';
-include($cfgProgDir. "secure.php"); 
- 
-// Get search term 
-$searchTerm = $_GET['term']; 
- 
-// Fetch matched data from the database 
-$query = $db->query("SELECT * FROM $TableUsers WHERE ($UserAchternaam LIKE '".$searchTerm."%' OR $UserMeisjesnaam LIKE '".$searchTerm."%' OR $UserTussenvoegsel LIKE '".$searchTerm."%' OR $UserVoornaam LIKE '".$searchTerm."%') AND $UserStatus like 'actief' ORDER BY $UserAchternaam ASC"); 
- 
-// Generate array with skills data 
-$namenData = array(); 
-if($query->num_rows > 0){ 
-    while($row = $query->fetch_assoc()){ 
-        #$data['id'] = $row[$UserID];
-        $data['value'] = makeName($row[$UserID], 6).seniorJunior($row[$UserID]);
-        $data['selector'] = makeName($row[$UserID], 5) .'|'. $row[$UserID];
-        array_push($namenData, $data); 
-    } 
-} 
- 
-// Return results as json encoded array 
-echo json_encode($namenData); 
+include($cfgProgDir. "secure.php");
+
+# Get search term
+$searchTerm = $_GET['term'];
+
+# Fetch matched data from the database
+$db = new Mysql();
+//TODO: Ook volledige voor- en achternaam meenemen
+$query = $db->select("SELECT `scipio_id` FROM `leden` WHERE (`achternaam` LIKE '".$searchTerm."%' OR `meisjesnaam` LIKE '".$searchTerm."%' OR `tussenvoegsel` LIKE '".$searchTerm."%' OR `voornaam` LIKE '".$searchTerm."%') AND `status` like 'actief' ORDER BY `achternaam` ASC", true);
+$data = array_column($query, "scipio_id");
+
+// Generate array with skills data
+$namenData = array();
+foreach($data as $lid) {
+    $person = new Member($lid);
+    $dataArray = array();
+    $dataArray['value'] = $person->getName();
+    $person->nameType = 3;
+    $dataArray['selector'] = $person->getName() .'|'. $lid;
+    array_push($namenData, $dataArray);
+}
+
+// Return results as json encoded array
+echo json_encode($namenData);
 ?>

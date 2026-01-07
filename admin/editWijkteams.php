@@ -1,44 +1,62 @@
 <?php
+/**
+ * Op deze pagina kan je wijkteams beheren en rollen toekennen.
+ * 
+ * Die rollen worden oa gebruikt om te bepalen welke rechten iemand heeft binnen een wijkteam.
+ * Ouderlingen, diakenen en predikanten hebben bv rechten om de bezoekregistratie (@see /pastoraat/index.php) te bekijken terwijl wijcoordinatoren dat niet hebben.
+ *  
+ * @package Intranet KKD
+ * @author Matthijs Draijer
+ * @version 1.0.0
+ */
 include_once('../include/functions.php');
 include_once('../include/config.php');
 include_once('../include/HTML_TopBottom.php');
+include_once('../Classes/Wijk.php');
+include_once('../Classes/Team.php');
+include_once('../Classes/Member.php');
+include_once('../Classes/Voorganger.php');
+include_once('../Classes/Logging.php');
+
 $requiredUserGroups = array(1);
 $cfgProgDir = '../auth/';
 include($cfgProgDir. "secure.php");
-$db = connect_db();
 
 if(isset($_POST['opslaan'])) {
-	$wijk = $_REQUEST['wijk'];
-	$sql = "DELETE FROM $TableWijkteam WHERE $WijkteamWijk like '$wijk'";
-	$result = mysqli_query($db, $sql);
-	
-	foreach($_POST['lid'] as $id => $lid) {
-		if($lid > 0) {
-			$rol = $_POST['rol'][$id];
-						
-			$sql = "INSERT INTO $TableWijkteam ($WijkteamWijk, $WijkteamLid, $WijkteamRol) VALUES ('$wijk', $lid, $rol)";
-			$result = mysqli_query($db, $sql);
-		}
+	$wijk = new Wijk();
+	$wijk->wijk	= $_REQUEST['wijk'];
+	foreach($_POST['lid'] as $key => $lid) {		
+		$values[$lid] = $_POST['rol'][$key];
+	}
+	$wijk->wijkteam = $values;
+	if($wijk->save()) {
+		toLog('Wijkteam wijk '. $wijk->wijk .' aangepast');
+	} else {
+		toLog('Kon wijkteam wijk '. $wijk->wijk .' niet aanpassen', 'error');
 	}
 }
 
 if(isset($_REQUEST['wijk'])) {
-	$wijk = $_REQUEST['wijk'];
-	$wijkLeden = getWijkMembers($wijk);
-	$ouderlingen = getGroupMembers(8);
-	$diakenen = getGroupMembers(9);
-	$predikanten = getGroupMembers(34);
-	$leden = getWijkteamLeden($wijk);
-	$aantal = count($leden);
+	$wijk = new Wijk();
+	$wijk->wijk	= $_REQUEST['wijk'];
+	$wijk->type = 2;
+	$wijkLeden	= $wijk->getWijkleden();
+	$wijkTeam	= $wijk->getWijkteam();
+
+	$ouderlingen	= new Team(8);	
+	$diakenen		= new Team(9);
+	$predikanten	= new Team(34);
+	
+	$aantal = count($wijkTeam);
 	
 	$text[] = "<form method='post'>";
-	$text[] = "<input type='hidden' name='wijk' value='$wijk'>";
+	$text[] = "<input type='hidden' name='wijk' value='". $wijk->wijk ."'>";
 	$text[] = "<table>";
 	$text[] = "<tr>";
-	$text[] = "	<td colspan='2'><h1>Wijkteam wijk $wijk</h1></td>";
+	$text[] = "	<td colspan='2'><h1>Wijkteam wijk ". $wijk->wijk ."</h1></td>";
 	$text[] = "</tr>";
 	
-	if($aantal > 0) {
+	if($wijkTeam > 0) {
 		$text[] = "<tr>";
 		$text[] = "	<td colspan='2'>Dit zijn de mensen die nu in het wijkteam zitten.<br>Door het vinkje voor de naam weg te halen<br>verdwijnt de persoon uit het wijkteam.</td>";
 		$text[] = "</tr>";
@@ -51,15 +69,17 @@ if(isset($_REQUEST['wijk'])) {
 		$text[] = "</tr>";
 		
 		for($i =0 ; $i < $aantal ; $i++) {
-			$lid = key($leden);
-			$rol = current($leden);
+			$lid = key($wijkTeam);
+			$rol = current($wijkTeam);
+
+			$wijkteamLid = new Member($lid);
 		
 			$text[] = "<tr>";
-			$text[] = "	<td><input type='checkbox' name='lid[$i]' value='$lid' checked>". makeName($lid, 5) ."</td>";
+			$text[] = "	<td><input type='checkbox' name='lid[$i]' value='". $wijkteamLid->id ."' checked>". $wijkteamLid->getName() ."</td>";
 			$text[] = "	<td>". $teamRollen[$rol] ."</td>";
 			$text[] = "</tr>";
 			$text[] = "<input type='hidden' name='rol[$i]' value='$rol'>";
-			next($leden);
+			next($wijkTeam);
 		}		
 		
 		$text[] = "<tr>";
@@ -73,18 +93,31 @@ if(isset($_REQUEST['wijk'])) {
 	$i++;
 	$text[] = "<tr>";
 	$text[] = "	<td><select name='lid[$i]'>";	
-	$text[] = "<option valu=''></option>";
+	$text[] = "<option value=''></option>";
 	$text[] = "<optgroup label='Predikanten'>";
-	foreach($predikanten as $id)	$text[] = "		<option value='$id'>".makeName($id, 5)."</option>";
+	foreach($predikanten->leden as $id) {
+		$predikant = new Member($id);
+		$text[] = "		<option value='". $predikant->id ."'>". $predikant->getName() ."</option>";
+	}
 	$text[] = "	</optgroup>";
 	$text[] = "<optgroup label='Ouderlingen'>";
-	foreach($ouderlingen as $id)	$text[] = "		<option value='$id'>".makeName($id, 5)."</option>";
+	foreach($ouderlingen->leden as $id) {
+		$ouderling = new Member($id);
+		$text[] = "		<option value='". $ouderling->id ."'>". $ouderling->getName() ."</option>";
+	}
+
 	$text[] = "	</optgroup>";
 	$text[] = "	<optgroup label='Diakenen'>";
-	foreach($diakenen as $id)			$text[] = "		<option value='$id'>".makeName($id, 5)."</option>";
+	foreach($diakenen->leden as $id) {
+		$diaken = new Member(($id));
+		$text[] = "		<option value='". $diaken->id ."'>". $diaken->getName() ."</option>";
+	}
 	$text[] = "	</optgroup>";
 	$text[] = "	<optgroup label='Wijkleden'>";	
-	foreach($wijkLeden as $id)		$text[] = "		<option value='$id'>".makeName($id, 5)."</option>";
+	foreach($wijkLeden as $id) {
+		$wijklid = new Member($id);
+		$text[] = "		<option value='". $wijklid->id ."'>". $wijklid->getName() ."</option>";
+	}		
 	$text[] = "	</optgroup>";	
 	$text[] = "	</select></td>";
 	$text[] = "	<td><select name='rol[$i]'>";	

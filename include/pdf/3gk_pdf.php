@@ -39,7 +39,7 @@ class PDF_3GK extends FPDF {
     $this->SetFont('Arial','',6);
 
     # Printdatum, titel en paginanummers
-    $this->Cell(30,10,strftime("%A %d %B %Y"),0,0,'L');
+    $this->Cell(30,10,date("l d F Y"),0,0,'L');
     $this->Cell(($breedte-(2*(30+$cfgMarge))),10,'KONINGSKERK DEVENTER',0,0,'C');
 		$this->Cell(30,10,'Pagina '.$this->PageNo().' van {nb}',0,0,'R');
 

@@ -1,10 +1,25 @@
 <?php
+/**
+ * Script om herinnering-mails te versturen aan leden die op het rooster staan voor het een of ander.
+ * 
+ * Dit script wordt dagelijks uitgevoerd via een cronjob en kijkt naar diensten over 3 dagen.
+ * Zo wordt bv op donderdagochtend mails voor zondag verstuurd.
+ * Het script kijkt per rooster of er een herinnering verstuurd moet worden en kan ook overweg met roosters waar enkel tekst staat.
+ * 
+ * @package Intranet KKD
+ * @author Matthijs Draijer
+ * @version 1.0.0
+ */
 include_once('include/functions.php');
 include_once('include/config.php');
 include_once('include/config_mails.php');
-include_once('include/HTML_HeaderFooter.php');
-
-$db = connect_db();
+include_once('Classes/Kerkdienst.php');
+include_once('Classes/Rooster.php');
+include_once('Classes/Vulling.php');
+include_once('Classes/Member.php');
+include_once('Classes/Voorganger.php');
+include_once('Classes/KKDMailer.php');
+include_once('Classes/Logging.php');
 
 # Omdat de server deze dagelijks moet draaien wordt toegang niet gedaan op basis
 # van naam+wachtwoord maar op basis van IP-adres
@@ -12,20 +27,22 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 	$startTijd = mktime(0, 0, 0, date("n"), (date("j")+3), date("Y"));
 	$eindTijd = mktime(23, 59, 59, date("n"), (date("j")+3), date("Y"));
 
-	$diensten = getKerkdiensten($startTijd, $eindTijd);
-	$roosters = getRoosters(0);
+	$diensten = Kerkdienst::getDiensten($startTijd, $eindTijd);
+	$roosters = Rooster::getAllRoosters();
 		
 	# Mochten er diensten zijn, dan even alle teams opvragen
 	# Van deze teamID's een naam-array maken ($teamVulling).
 	# Deze $teamVulling wegschrijven in een array met alle team-vullingen per rooster ($teams)
 	foreach($diensten as $d) {
 		foreach($roosters as $r) {
-			$vulling = getRoosterVulling($r, $d);
+			$rooster = new Rooster($r);
+			$vulling = new Vulling($d, $r);
 			
-			if(is_array($vulling)) {
+			if(!$rooster->tekst && count($vulling->leden)>0) {
 				$teamVulling = array();
-				foreach($vulling as $lid) {
-					$teamVulling[$lid] = makeName($lid, 5);
+				foreach($vulling->leden as $lid) {
+					$gebruiker = new Member($lid);
+					$teamVulling[$lid] = $gebruiker->getName();
 				}
 				
 				$teams[$d][$r] = $teamVulling;
@@ -36,22 +53,25 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 	}
 	
 	# Alle diensten doorlopen
-	foreach($diensten as $dienst) {
-		$dienstData = getKerkdienstDetails($dienst);
-		foreach($roosters as $rooster) {
-			$vulling = $teams[$dienst][$rooster];
+	foreach($diensten as $d) {
+		$dienst = new Kerkdienst($d);		
+		$voorganger = new Voorganger($dienst->voorganger);
+
+		foreach($roosters as $r) {
+			$vulling = $teams[$d][$r];
 		
 			if(is_array($vulling) AND count($vulling) > 0) {
-				$roosterData			= getRoosterDetails($rooster);			
+				$rooster = new Rooster($r);
 				
 				# Alleen als is aangegeven dat er remindermails verstuurd moeten worden
 				# moet deze hele loop doorlopen worden
-				if($roosterData['reminder'] == 1) {
-					$positie					= 0;
-					$HTMLMail					= $roosterData['text_mail'];
-					$onderwerp				= $roosterData['onderwerp_mail'];
+				if($rooster->reminder) {
+					$positie	= 0;
+					$HTMLMail	= $rooster->mail;
+					$onderwerp	= $rooster->onderwerp;
 																	
 					foreach($vulling as $lid => $naam) {
+						$gebruiker = new Member($lid);
 						$team = excludeID($vulling, $lid);
 						$positie++;
 						
@@ -62,15 +82,15 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 								$ReplacedBericht = $onderwerp;
 							}
 							
-							$dagdeel					= formatDagdeel($dienstData['start'], false);
+							$dagdeel					= formatDagdeel($dienst->start, false);
 							
-							$ReplacedBericht = str_replace ('[[voornaam]]', makeName($lid, 1), $ReplacedBericht);
-							$ReplacedBericht = str_replace ('[[achternaam]]', makeName($lid, 4), $ReplacedBericht);
-							$ReplacedBericht = str_replace ('[[dag]]', time2str ("%A", $dienstData['start']), $ReplacedBericht);
+							$gebruiker->nameType = 1;	$ReplacedBericht = str_replace ('[[voornaam]]', $gebruiker->getName(), $ReplacedBericht);
+							$gebruiker->nameType = 4;	$ReplacedBericht = str_replace ('[[achternaam]]', $gebruiker->getName(), $ReplacedBericht);
+							$ReplacedBericht = str_replace ('[[dag]]', time2str ("l", $dienst->start), $ReplacedBericht);
 							$ReplacedBericht = str_replace ('[[dagdeel]]', $dagdeel, $ReplacedBericht);
-							$ReplacedBericht = str_replace ('[[voorganger]]', $dienstData['voorganger'], $ReplacedBericht);
-							$ReplacedBericht = str_replace ('[[collecte1]]', $dienstData['collecte_1'], $ReplacedBericht);
-							$ReplacedBericht = str_replace ('[[collecte2]]', $dienstData['collecte_2'], $ReplacedBericht);
+							$ReplacedBericht = str_replace ('[[voorganger]]', $voorganger->getName(), $ReplacedBericht);
+							$ReplacedBericht = str_replace ('[[collecte1]]', $dienst->collecte_1, $ReplacedBericht);
+							$ReplacedBericht = str_replace ('[[collecte2]]', $dienst->collecte_2, $ReplacedBericht);
 							$ReplacedBericht = str_replace ('[[n]]', $positie, $ReplacedBericht);
 							$ReplacedBericht = str_replace ('[[n+1]]', ($positie+1), $ReplacedBericht);
 												
@@ -84,11 +104,11 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 							}
 							
 							# Als [[team|X]] voorkomt moeten deze vervangen worden
-							# Daarvoor worden alle roosters doorlopen en team erbij zoeken ($anderTeam)
+							# Daarvoor worden alle roosters doorlopen en gezocht naar andere teams ($anderTeam)
 							# Als [[team|$roos]] voorkomt wordt dat vervangen door dat team
 							if(strpos($ReplacedBericht, '[[team|')) {
 								foreach($roosters as $roos) {
-									$anderTeam = $teams[$dienst][$roos];												
+									$anderTeam = $teams[$d][$roos];												
 									
 									if(count($anderTeam) == 1) {
 										$ReplacedBericht = str_replace ("[[team|$roos]]", current($anderTeam), $ReplacedBericht);
@@ -100,19 +120,18 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 								}
 							}
 												
-							if($i==0) {
-								$memberData = getMemberDetails($lid);
+							if($i==0) {								
 								$ReplacedBericht .= "<p>";
-								$ReplacedBericht .= "Ps 1. : je kan je persoonlijke 3GK-rooster opnemen in je digitale agenda door eenmalig <a href='". $ScriptURL ."ical/".$memberData['username'].'-'. $memberData['hash_short'] .".ics'>deze link</a> toe te voegen (<a href='". $ScriptURL ."ical/handleiding_ical.php'>handleiding</a>).<br>";
+								$ReplacedBericht .= "Ps 1. : je kan je persoonlijke 3GK-rooster opnemen in je digitale agenda door eenmalig <a href='". $ScriptURL ."ical/". $gebruiker->username .'-'. $gebruiker->hash_short .".ics'>deze link</a> toe te voegen (<a href='". $ScriptURL ."ical/handleiding_ical.php'>handleiding</a>).<br>";
 								$ReplacedBericht .= "Ps 2. : mocht je onderling geruild hebben, wil je deze mail dan doorsturen naar de betreffende persoon?<br>";
 								//$ReplacedBericht .= "Ps 3. : <i>recent is de site verplaatst. Mocht je een bladwijzer hebben gemaakt voor de oude site, dan dien je deze aan te passen. Dit geldt ook voor bovenstaande digitale agenda</i><br>";
 								
 								# Sommige rooster worden automatisch geimporteerd.
 								# Ruilen moet dus niet via de site
-								if(in_array($rooster, $importRoosters)) {
+								if(in_array($r, $importRoosters)) {
 									$ReplacedBericht .= "Als je een volgende keer de ruiling doorgeeft aan de roostermaker, zorgt die dat het op deze site ook wordt aangepast.";	
 								} else {
-									$ReplacedBericht .= "In het vervolg kan je die ruiling ook doorgeven via <a href='". $ScriptURL ."showRooster.php?rooster=$rooster'>het rooster</a> zelf, dan komt de mail direct goed terecht.";	
+									$ReplacedBericht .= "In het vervolg kan je die ruiling ook doorgeven via <a href='". $ScriptURL ."showRooster.php?id=$r'>het rooster</a> zelf, dan komt de mail direct goed terecht.";	
 								}
 														
 								$FinalHTMLMail = $ReplacedBericht;
@@ -121,19 +140,26 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 							}					
 						}
 						
-						unset($param);
-						$param['to'][]				= array($lid);
-						$param['message']			= $FinalHTMLMail;
-						$param['subject']			= $FinalSubject;
-						$param['ReplyToName']	= $roosterData['naam_afzender'];
-						$param['ReplyTo']			= $roosterData['mail_afzender'];
-						if($roosterData['partnerMail'] == '1')	$param['partnerTo']		= true;
-						if($roosterData['ouderMail'] == '1')		$param['ouderCC']		= true;
-									
-						if(sendMail_new($param)) {
-							toLog('info', $lid, 'herinnering-mail '. $roosterData['naam'] .' verstuurd');
+						$mail = new KKDMailer();
+						$mail->aan			= $lid;
+						$mail->Body			= $FinalHTMLMail;
+						$mail->Subject		= $FinalSubject;
+						$mail->partnerTo	= $rooster->partner;
+						$mail->ouderCC		= $rooster->ouder;
+						if(!$productieOmgeving)	$mail->testen = true;
+
+						if($rooster->van != '') {
+							if($rooster->vanNaam != '') {
+								$mail->AddReplyTo($rooster->van, $rooster->vanNaam);
+							} else {
+								$mail->AddReplyTo($rooster->van);
+							}
+						}
+															
+						if($mail->sendMail()) {
+							toLog('Herinnering-mail '. $rooster->naam .' verstuurd', 'info', $lid);
 						} else {
-							toLog('error', $lid, 'problemen met herinnering-mail '. $roosterData['naam'] .' versturen');
+							toLog('Problemen met herinnering-mail '. $rooster->naam .' versturen', 'error', $lid);
 						}
 					}
 				}
@@ -141,7 +167,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 		}
 	}
 } else {
-	toLog('error', '', 'Poging handmatige run herinneringmail, IP:'.$_SERVER['REMOTE_ADDR']);
+	toLog('Poging handmatige run herinneringmail, IP:'.$_SERVER['REMOTE_ADDR'], 'error');
 }
 
 ?>

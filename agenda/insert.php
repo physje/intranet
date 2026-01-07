@@ -2,11 +2,12 @@
 include_once('../include/functions.php');
 include_once('../include/config.php');
 include_once('../include/HTML_TopBottom.php');
-$db = connect_db();
+include_once('../Classes/Member.php');
+include_once('../Classes/Agenda.php');
+include_once('../Classes/Logging.php');
 
 $cfgProgDir = '../auth/';
 include($cfgProgDir. "secure.php");
-
 
 $onderdelen[0] = 'Startdatum';
 $onderdelen[1] = 'Starttijd';
@@ -17,7 +18,7 @@ $onderdelen[4] = 'Onderwerp';
 $onderdelen[6] = 'Beschrijving';
 $onderdelen[10] = 'Dummy';
 
-if(isset($_POST['screen']) AND $_POST['screen'] == '1') {
+if(isset($_POST['screen']) && $_POST['screen'] == '1') {
 	foreach($onderdelen as $id => $onderdeel) {
 		$k_id = array_search($id, $_POST['kolom']);
 		if(is_numeric($k_id)) {
@@ -26,13 +27,15 @@ if(isset($_POST['screen']) AND $_POST['screen'] == '1') {
 	}
 		
 	foreach($_POST['veld'] as $rij) {
-		$Startdatum = $rij[$kolommen[0]];
-		$Starttijd = $rij[$kolommen[1]];
-		$Einddatum = $rij[$kolommen[2]];
-		$Eindtijd = $rij[$kolommen[3]];
-		$Onderwerp = $rij[$kolommen[4]];
+		$Beschrijving = $Eindtijd = $Einddatum = $Starttijd = $Startdatum = $Onderwerp = '';
+
+		if(isset($kolommen[0]))	$Startdatum = $rij[$kolommen[0]];
+		if(isset($kolommen[1]))	$Starttijd = $rij[$kolommen[1]];
+		if(isset($kolommen[2]))	$Einddatum = $rij[$kolommen[2]];
+		if(isset($kolommen[3]))	$Eindtijd = $rij[$kolommen[3]];
+		if(isset($kolommen[4]))	$Onderwerp = $rij[$kolommen[4]];
 		//$Lokatie = $rij[$kolommen[5]];
-		$Beschrijving = $rij[$kolommen[6]];
+		if(isset($kolommen[6]))	$Beschrijving = $rij[$kolommen[6]];
 		
 		if($Startdatum == '') {
 			$text[] = "Kan niet; Startdatum onbekend";
@@ -43,35 +46,41 @@ if(isset($_POST['screen']) AND $_POST['screen'] == '1') {
 		} else {
 			$sDatumArray = explode($_POST['datum'], $Startdatum);
 					
-			if($Starttijd != '') {
+			if(isset($Starttijd) && $Starttijd != '') {
+				var_dump($_POST['tijd'], $Starttijd);
 				$sTijdArray = explode($_POST['tijd'], $Starttijd);
 				$start = mktime($sTijdArray[0], $sTijdArray[1], 0, $sDatumArray[1], $sDatumArray[0], $sDatumArray[2]);
 			} else {
 				$start = mktime(0, 0, 0, $sDatumArray[1], $sDatumArray[0], $sDatumArray[2]);
 			}
 			
-			if($Einddatum == '' AND $Eindtijd == '') {
+			if((!isset($Einddatum) || $Einddatum == '') && (!isset($Eindtijd) || $Eindtijd== '')) {
 				$eind = mktime(0, 0, 0, $sDatumArray[1], $sDatumArray[0]+1, $sDatumArray[2]);
-			} elseif($Einddatum != '' AND $Eindtijd == '') {
-				$eDatumArray = explode($_POST['datum'], $Einddatum);
+			} elseif(isset($Einddatum) && $Einddatum != '' && (!isset($Eindtijd) || $Eindtijd== '')) {
+				$eDatumArray = explode($_POST['datum'], $Einddatum);				
 				$eind = mktime(0, 0, 0, $eDatumArray[1], $eDatumArray[0]+1, $eDatumArray[2]);
-			} elseif($Einddatum == '' AND $Eindtijd != '') {
+			} elseif((!isset($Einddatum) || $Einddatum == '') && isset($Eindtijd) && $Eindtijd != '') {
 				$eTijdArray = explode($_POST['tijd'], $Eindtijd);
 				$eind = mktime($eTijdArray[0], $eTijdArray[1], 0, $sDatumArray[1], $sDatumArray[0], $sDatumArray[2]);
-			} elseif($Einddatum != '' AND $Eindtijd != '') {
+			} elseif(isset($Einddatum) && $Einddatum != '' && isset($Eindtijd) && $Eindtijd != '') {
 				$eDatumArray = explode($_POST['datum'], $Einddatum);
 				$eTijdArray = explode($_POST['tijd'], $Eindtijd);
 				$eind = mktime($eTijdArray[0], $eTijdArray[1], 0, $eDatumArray[1], $eDatumArray[0], $eDatumArray[2]);
 			}
 			
-			$query = "INSERT INTO $TableAgenda ($AgendaStart, $AgendaEind, $AgendaTitel, $AgendaDescr, $AgendaOwner) VALUES ('$start', '$eind', '". urlencode($Onderwerp) ."', '". urlencode($Beschrijving) ."', ". $_SESSION['useID'] .")";
+			$item = new Agenda();
+			$item->eigenaar		= $_SESSION['useID'];
+			$item->start		= $start;
+			$item->eind			= $eind;
+			$item->titel		= $Onderwerp;
+			$item->beschrijving	= $Beschrijving;
 
-			if(mysqli_query($db, $query)) {
-				$text[] = $Onderwerp .' van '. time2str('%e %B %Y', $start) .' is opgeslagen<br>';
+			if($item->save()) {
+				$text[] = $Onderwerp .' van '. time2str('j F Y', $start) .' is opgeslagen<br>';
 			}
 		}		
 	}
-} elseif(isset($_POST['screen']) AND $_POST['screen'] == '0') {
+} elseif(isset($_POST['screen']) && $_POST['screen'] == '0') {
 	$afspraken	= explode("\n", $_POST['afspraken']);
 	foreach($afspraken as $a_id => $afspraak) {
 		$velden = explode(";", $afspraak);
@@ -80,7 +89,9 @@ if(isset($_POST['screen']) AND $_POST['screen'] == '1') {
 	
 	$max = max($maxVelden);
 
-	$text[] = "Geef bovenaan elke kolom aan welke informatie van de afspraak er in die kolom staat.";
+	$text[] = "Geef bovenaan elke kolom aan welke informatie van de afspraak er in die kolom staat.<br>";
+	$text[] = "Er moet iig een kolom zijn met de startdatum en een kolom met het onderwerp.<br>";
+	$text[] = "Voor kolommen die niet gebruikt worden, kies 'Dummy'.<br>";
 	$text[] = "<p>";
 	$text[] = "<form method='post'>";
 	$text[] = "<input type='hidden' name='screen' value='1'>";
@@ -125,7 +136,8 @@ if(isset($_POST['screen']) AND $_POST['screen'] == '1') {
 	$text[] = "</form>";
 } else {
 	$text[] = "Geef je afspraken in.<br>";
-	$text[] = "Elke afspraak op een rij, en de verschillende onderdelen van de afspraak (datum, tijd, onderwerp, etc.) gescheiden door <b>;</b>";
+	$text[] = "Per afspraak een rij, en de verschillende onderdelen van de afspraak (datum, tijd, onderwerp, etc.) gescheiden door <b>;</b>";
+	$text[] = "Vergeet in het rechtervak ook niet aan te geven welk scheidingsteken is gebruikt voor de datum, en welke voor de tijd.</b>";
 	$text[] = "<p>";
 	$text[] = "<form method='post'>";
 	$text[] = "<input type='hidden' name='screen' value='0'>";
@@ -160,124 +172,14 @@ if(isset($_POST['screen']) AND $_POST['screen'] == '1') {
 	$text[] = "</form>";
 }
 
-echo $HTMLHeader;
-echo implode("\n", $text);
-echo $HTMLFooter;
 
+echo showCSSHeader();
+echo '<div class="content_vert_kolom_full">'.NL;
+echo "<div class='content_block'>". implode(NL, $text) ."</div>".NL;
+echo '</div> <!-- end \'content_vert_kolom_full\' -->'.NL;
+echo showCSSFooter();
 
-function guessDate($string, $scheiding) {	
-	$string = trim($string);
-	$string = str_ireplace('zondag ', '', $string);
-	$string = str_ireplace('maandag ', '', $string);
-	$string = str_ireplace('dinsdag ', '', $string);
-	$string = str_ireplace('woensdag ', '', $string);
-	$string = str_ireplace('donderdag ', '', $string);
-	$string = str_ireplace('vrijdag ', '', $string);
-	$string = str_ireplace('zaterdag ', '', $string);		
-	$string = str_ireplace('januari', $scheiding.'01'.$scheiding, $string);
-	$string = str_ireplace('februari', $scheiding.'02'.$scheiding, $string);
-	$string = str_ireplace('maart', $scheiding.'03'.$scheiding, $string);
-	$string = str_ireplace('april', $scheiding.'04'.$scheiding, $string);
-	$string = str_ireplace('mei', $scheiding.'05'.$scheiding, $string);
-	$string = str_ireplace('juni', $scheiding.'06'.$scheiding, $string);
-	$string = str_ireplace('juli', $scheiding.'07'.$scheiding, $string);
-	$string = str_ireplace('augustus', $scheiding.'08'.$scheiding, $string);
-	$string = str_ireplace('september', $scheiding.'09'.$scheiding, $string);
-	$string = str_ireplace('oktober', $scheiding.'10'.$scheiding, $string);
-	$string = str_ireplace('november', $scheiding.'11'.$scheiding, $string);
-	$string = str_ireplace('december', $scheiding.'12'.$scheiding, $string);
-	$string = str_ireplace('sept.', $scheiding.'09'.$scheiding, $string);
-	$string = str_ireplace('jan.', $scheiding.'01'.$scheiding, $string);
-	$string = str_ireplace('feb.', $scheiding.'02'.$scheiding, $string);
-	$string = str_ireplace('mrt.', $scheiding.'03'.$scheiding, $string);
-	$string = str_ireplace('apr.', $scheiding.'04'.$scheiding, $string);
-	$string = str_ireplace('mei.', $scheiding.'05'.$scheiding, $string);
-	$string = str_ireplace('jun.', $scheiding.'06'.$scheiding, $string);
-	$string = str_ireplace('jul.', $scheiding.'07'.$scheiding, $string);
-	$string = str_ireplace('aug.', $scheiding.'08'.$scheiding, $string);
-	$string = str_ireplace('sep.', $scheiding.'09'.$scheiding, $string);
-	$string = str_ireplace('okt.', $scheiding.'10'.$scheiding, $string);
-	$string = str_ireplace('nov.', $scheiding.'11'.$scheiding, $string);
-	$string = str_ireplace('dec.', $scheiding.'12'.$scheiding, $string);
-	$string = str_ireplace('sept', $scheiding.'09'.$scheiding, $string);
-	$string = str_ireplace('jan', $scheiding.'01'.$scheiding, $string);
-	$string = str_ireplace('feb', $scheiding.'02'.$scheiding, $string);
-	$string = str_ireplace('mrt', $scheiding.'03'.$scheiding, $string);
-	$string = str_ireplace('apr', $scheiding.'04'.$scheiding, $string);
-	$string = str_ireplace('mei', $scheiding.'05'.$scheiding, $string);
-	$string = str_ireplace('jun', $scheiding.'06'.$scheiding, $string);
-	$string = str_ireplace('jul', $scheiding.'07'.$scheiding, $string);
-	$string = str_ireplace('aug', $scheiding.'08'.$scheiding, $string);
-	$string = str_ireplace('sep', $scheiding.'09'.$scheiding, $string);
-	$string = str_ireplace('okt', $scheiding.'10'.$scheiding, $string);
-	$string = str_ireplace('nov', $scheiding.'11'.$scheiding, $string);
-	$string = str_ireplace('dec', $scheiding.'12'.$scheiding, $string);
-	
-	$string = str_replace(' '.$scheiding, $scheiding, $string);
-	$string = str_replace($scheiding.' ', $scheiding, $string);
-	$string = str_replace(' ', '', $string);
-	
-	$delen = explode($scheiding, $string);
-	if(count($delen) == 3) {
-		if($delen[2] == '') {
-			if(mktime(0,0,0,$delen[1],$delen[0],date('Y')) < time()){
-				$delen[2] = date('Y')+1;
-			} else {
-				$delen[2] = date('Y');
-			}
-		}		
-		$string = implode('-', $delen);
-	}
-	
-	return $string;
-}
-
-function columnArray($array, $column) {
-	foreach($array as $key => $sub_array) {
-		$output[$key] = $sub_array[$column];
-	}
-
-	return $output;
-}
-
-function isDatum($string) {
-	/*
-	if(strpos($string, 'zondag')) return true;
-	if(strpos($string, 'maandag')) return true;
-	if(strpos($string, 'dinsdag')) return true;
-	if(strpos($string, 'woensdag')) return true;
-	if(strpos($string, 'donderdag')) return true;
-	if(strpos($string, 'vrijdag')) return true;
-	if(strpos($string, 'zaterdag')) return true;
-	*/
-	if(strpos($string, 'januari')) return true;
-	if(strpos($string, 'februari')) return true;
-	if(strpos($string, 'maart')) return true;
-	if(strpos($string, 'april')) return true;
-	if(strpos($string, 'mei')) return true;
-	if(strpos($string, 'juni')) return true;
-	if(strpos($string, 'juli')) return true;
-	if(strpos($string, 'augustus')) return true;
-	if(strpos($string, 'september')) return true;
-	if(strpos($string, 'oktober')) return true;
-	if(strpos($string, 'november')) return true;
-	if(strpos($string, 'december')) return true;
-	if(strpos($string, 'sept')) return true;
-	if(strpos($string, 'jan')) return true;
-	if(strpos($string, 'feb')) return true;
-	if(strpos($string, 'mrt')) return true;
-	if(strpos($string, 'apr')) return true;
-	if(strpos($string, 'mei')) return true;
-	if(strpos($string, 'jun')) return true;
-	if(strpos($string, 'jul')) return true;
-	if(strpos($string, 'aug')) return true;
-	if(strpos($string, 'sep')) return true;
-	if(strpos($string, 'okt')) return true;
-	if(strpos($string, 'nov')) return true;
-	if(strpos($string, 'dec')) return true;
-	
-	return false;
-}
+?>
 
 
 

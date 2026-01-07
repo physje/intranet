@@ -39,7 +39,7 @@ if (!isset($entered_login) && !isset($entered_password)) {
 	$password = trim($entered_password);
 		
 	$_SESSION['login'] = $login;
-  $_SESSION['password'] = $password;
+	$_SESSION['password'] = $password;
 }
 
 if (!isset($login)) {

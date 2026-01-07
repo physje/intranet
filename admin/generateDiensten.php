@@ -1,36 +1,59 @@
 <?php
+/**
+ * Met dit script kunnen kerkdiensten voor een heel jaar automatisch worden gegenereerd.
+ *  
+ * Hierbij kan worden gekozen om alleen ochtend- en/of middagdiensten aan te maken.
+ * Daarnaast kunnen ook speciale diensten worden toegevoegd zoals Biddag, Dankdag, Kerst, Oud & Nieuw, Goede Vrijdag en Hemelvaart.
+ * 
+ * @package Intranet KKD
+ * @author Matthijs Draijer
+ * @version 1.0.0
+ */
 include_once('../include/functions.php');
 include_once('../include/config.php');
 include_once('../include/HTML_TopBottom.php');
+include_once('../Classes/Kerkdienst.php');
+include_once('../Classes/Logging.php');
+include_once('../Classes/Member.php');
+
 $requiredUserGroups = array(1);
 $cfgProgDir = '../auth/';
 include($cfgProgDir. "secure.php");
-$db = connect_db();
 
 $querys = array();
 
 if(isset($_POST['save'])) {	
-	$startTijd = mktime(0, 0, 1, 1, 1, $_POST['jaar']);
-	$eindTijd = mktime(23, 59, 59, 12, 31, $_POST['jaar']);
-	$i = 0;
+	$startTijd	= mktime(0, 0, 1, 1, 1, $_POST['jaar']);
+	$eindTijd	= mktime(23, 59, 59, 12, 31, $_POST['jaar']);
+	$i = $eind = 0;
 	$doorgaan = true;
 		
 	while($doorgaan) {
-		$offset = (7-date("N", $startTijd)) + (7*$i);
+		$offset		= (7-date("N", $startTijd)) + (7*$i);
 		
-		$start_1	= mktime(10,0,0,date("n", $startTijd),(date("j", $startTijd)+$offset), date("Y", $startTijd));
-		$eind_1		= mktime(11,30,0,date("n", $startTijd),(date("j", $startTijd)+$offset), date("Y", $startTijd));
-		
-		$start_2	= mktime(16,30,0,date("n", $startTijd),(date("j", $startTijd)+$offset), date("Y", $startTijd));
-		$eind_2		= mktime(18,00,0,date("n", $startTijd),(date("j", $startTijd)+$offset), date("Y", $startTijd));
-		
-		if($eind_2 < $eindTijd) {
-			if(isset($_POST['ochtend']))	$querys[] = "INSERT INTO $TableDiensten ($DienstStart, $DienstEind) VALUES ('$start_1', '$eind_1')";
-			if(isset($_POST['middag']))		$querys[] = "INSERT INTO $TableDiensten ($DienstStart, $DienstEind) VALUES ('$start_2', '$eind_2')";
+		if($eind < $eindTijd) {
+			# Ochtenddienst
+			if(isset($_POST['ochtend'])) {				
+				$dienst = new Kerkdienst();
+				$dienst->start	= mktime(10,0,0,date("n", $startTijd),(date("j", $startTijd)+$offset), date("Y", $startTijd));
+				$dienst->eind	= mktime(11,30,0,date("n", $startTijd),(date("j", $startTijd)+$offset), date("Y", $startTijd));
+				$dienst->save();
+			}
+
+			# Middagdienst
+			if(isset($_POST['middag'])) {
+				$dienst = new Kerkdienst();
+				$dienst->start	= mktime(16,30,0,date("n", $startTijd),(date("j", $startTijd)+$offset), date("Y", $startTijd));
+				$dienst->eind	= mktime(18,0,0,date("n", $startTijd),(date("j", $startTijd)+$offset), date("Y", $startTijd));
+				$dienst->save();
+			}
+
+			$eind = $dienst->eind;
 			$i++;
 		} else {
 			$doorgaan = false;
 		}
+		toLog('Diensten aangemaakt');
 	}
 	
 	# Mocht Goede Vrijdag, Hemelvaart of omschrijvingen moeten worden toegevoegd
@@ -56,27 +79,33 @@ if(isset($_POST['save'])) {
 		
 		# Als $marker > 4 (lees 1 maart is na woensdag), dan week erbij op
 		if($marker > 3)	$offset = 7;
-		
-		$start_biddag = mktime(19, 30, 0, 3, (11-$marker+$offset), $_POST['jaar']);
-		$eind_biddag = mktime(21, 00, 0, 3, (11-$marker+$offset), $_POST['jaar']);
-				
-		$querys[] = "INSERT INTO $TableDiensten ($DienstStart, $DienstEind, $DienstOpmerking) VALUES ('$start_biddag', '$eind_biddag', 'Biddag')";
+						
+		$dienst = new Kerkdienst();
+		$dienst->start	= mktime(19, 30, 0, 3, (11-$marker+$offset), $_POST['jaar']);
+		$dienst->eind	= mktime(21, 00, 0, 3, (11-$marker+$offset), $_POST['jaar']);
+		$dienst->opmerking = 'Biddag';
+		$dienst->save();
+		toLog('Biddag aangemaakt', 'debug');
 	}
 		
 	# Goede vrijdag (Goede vrijdag is de vrijdag voor Pasen = Eerste Paasdag min 2 dagen)
-	if(isset($_POST['vrijdag']) AND count($DataPasen) > 1) {
-		$start_vrijdag = mktime(19, 30, 0, $DataPasen['maand'], ($DataPasen['dag']-2), $_POST['jaar']);
-		$eind_vrijdag = mktime(21, 00, 0, $DataPasen['maand'], ($DataPasen['dag']-2), $_POST['jaar']);
-				
-		$querys[] = "INSERT INTO $TableDiensten ($DienstStart, $DienstEind, $DienstOpmerking) VALUES ('$start_vrijdag', '$eind_vrijdag', 'Goede+Vrijdag')";
+	if(isset($_POST['vrijdag']) AND count($DataPasen) > 1) {				
+		$dienst = new Kerkdienst();
+		$dienst->start		= mktime(19, 30, 0, $DataPasen['maand'], ($DataPasen['dag']-2), $_POST['jaar']);
+		$dienst->eind		= mktime(21, 00, 0, $DataPasen['maand'], ($DataPasen['dag']-2), $_POST['jaar']);
+		$dienst->opmerking	= 'Goede vrijdag';
+		$dienst->save();
+		toLog('Goede vrijdag aangemaakt', 'debug');
 	}
 	
 	# Hemelvaart (Hemelvaart is 39 dagen na Eerste Paasdag)
-	if(isset($_POST['vrijdag']) AND count($DataPasen) > 1) {
-		$start_hemelvaart = mktime(10, 00, 0, $DataPasen['maand'], ($DataPasen['dag']+39), $_POST['jaar']);
-		$eind_hemelvaart = mktime(11, 30, 0, $DataPasen['maand'], ($DataPasen['dag']+39), $_POST['jaar']);
-				
-		$querys[] = "INSERT INTO $TableDiensten ($DienstStart, $DienstEind, $DienstOpmerking) VALUES ('$start_hemelvaart', '$eind_hemelvaart', 'Hemelvaart')";
+	if(isset($_POST['vrijdag']) AND count($DataPasen) > 1) {				
+		$dienst = new Kerkdienst();
+		$dienst->start		= mktime(10, 00, 0, $DataPasen['maand'], ($DataPasen['dag']+39), $_POST['jaar']);
+		$dienst->eind		= mktime(11, 30, 0, $DataPasen['maand'], ($DataPasen['dag']+39), $_POST['jaar']);
+		$dienst->opmerking	= 'Hemelvaart';
+		$dienst->save();
+		toLog('Hemelvaart aangemaakt', 'debug');
 	}
 	
 	# Dankdag (wordt iedere eerste woensdag van november gehouden)
@@ -94,13 +123,15 @@ if(isset($_POST['save'])) {
 		# $marker = 6 (zaterdag)	=> 5-11
 		# $marker = 7 (zondag)		=> 4-11
 
-		# Als $marker > 4 (lees 1 maart is na woensdag), dan week bij $marker erop
+		# Als $marker > 4 (lees 1 november is na woensdag), dan week bij $marker erop
 		if($marker > 3)	$offset = 7;
 
-		$start_dankdag = mktime(19, 30, 0, 11, (4-$marker+$offset), $_POST['jaar']);
-		$eind_dankdag = mktime(21, 00, 0, 11, (4-$marker+$offset), $_POST['jaar']);
-
-		$querys[] = "INSERT INTO $TableDiensten ($DienstStart, $DienstEind, $DienstOpmerking) VALUES ('$start_dankdag', '$eind_dankdag', 'Dankdag')";
+		$dienst = new Kerkdienst();
+		$dienst->start	= mktime(19, 30, 0, 11, (4-$marker+$offset), $_POST['jaar']);
+		$dienst->eind	= mktime(21, 00, 0, 11, (4-$marker+$offset), $_POST['jaar']);
+		$dienst->opmerking = 'Dankdag';
+		$dienst->save();
+		toLog('Dankdag aangemaakt', 'debug');
 	}
 	
 	# Dienst van 1ste kerstdag inplannen
@@ -110,10 +141,12 @@ if(isset($_POST['save'])) {
 		
 		# Als 1ste Kerstdag op zondag valt, hoeft er geen extra dienst toegevoegd te worden
 		if($marker < 7) {
-			$start_kerst = mktime(10, 00, 0, 12, 25, $_POST['jaar']);
-			$eind_kerst = mktime(11, 30, 0, 12, 25, $_POST['jaar']);
-
-			$querys[] = "INSERT INTO $TableDiensten ($DienstStart, $DienstEind, $DienstOpmerking) VALUES ('$start_kerst', '$eind_kerst', '1ste+Kerstdag')";
+			$dienst = new Kerkdienst();
+			$dienst->start	= mktime(10, 00, 0, 12, 25, $_POST['jaar']);
+			$dienst->eind	= mktime(11, 30, 0, 12, 25, $_POST['jaar']);
+			$dienst->opmerking = '1ste Kerstdag';
+			$dienst->save();
+			toLog('Kerst aangemaakt', 'debug');
 		}
 	}
 	
@@ -124,19 +157,21 @@ if(isset($_POST['save'])) {
 		
 		# Als Oud & Nieuw op zondag valt, hoeft er geen extra dienst toegevoegd te worden
 		if($marker < 7) {
-			$start_oudjaar = mktime(19, 30, 0, 12, 31, $_POST['jaar']);
-			$eind_oudjaar = mktime(21, 00, 0, 12, 31, $_POST['jaar']);
-			
-			$querys[] = "INSERT INTO $TableDiensten ($DienstStart, $DienstEind, $DienstOpmerking) VALUES ('$start_oudjaar', '$eind_oudjaar', 'Oudjaar')";
+			$dienst = new Kerkdienst();
+			$dienst->start	= mktime(19, 30, 0, 12, 31, $_POST['jaar']);
+			$dienst->eind	= mktime(21, 30, 0, 12, 31, $_POST['jaar']);
+			$dienst->opmerking = 'Oudjaar';
+			$dienst->save();
+			toLog('Oudjaar aangemaakt', 'debug');
 		}
 	}
-} else {	
-	$sql = "SELECT * FROM $TableDiensten ORDER BY $DienstEind DESC LIMIT 0,1";
-	$result = mysqli_query($db, $sql);
-	$row = mysqli_fetch_array($result);
-	$offset = 24*60*60;
+} else {
+	$future = time()+(10*365*24*60*60);
+	$diensten	= Kerkdienst::getDiensten(0,$future);
+	$dienst		= new Kerkdienst(end($diensten));
+	$offset		= 24*60*60;
 	
-	$Jaar	= getParam('Jaar', date("Y", $row[$DienstEind]+$offset));
+	$Jaar	= getParam('Jaar', date("Y", $dienst->eind+$offset));
 			
 	$text[] = "<form action='". htmlspecialchars($_SERVER['PHP_SELF']) ."' method='post'>";
 	$text[] = "<table>";
@@ -145,11 +180,8 @@ if(isset($_POST['save'])) {
 	for($j=date("Y"); $j<=(date("Y")+10) ; $j++) {
 		$text[] = "	<option value='$j'". ($j == $Jaar ? ' selected' : '') .">$j</option>";
 	}
-	$text[] = "	</select></td>";
-	#$text[] = "	<td rowspan='6'></td>";
-	$text[] = "</tr>";
-	
-	
+	$text[] = "	</select></td>";	
+	$text[] = "</tr>";	
 	$text[] = "<tr>";
 	$text[] = "	<td><input type='checkbox' name='ochtend' value='1' checked> Ochtenddiensten</td>";
 	$text[] = "	<td><input type='checkbox' name='middag' value='1' checked> Middagdiensten</td>";
@@ -176,17 +208,8 @@ if(isset($_POST['save'])) {
 	$text[] = "</form>";
 	
 	# Pasen en Pinksteren rekenen is een ramp; Die moeten dus even handmatig gecontroleerd worden
-	# Pasen (zoek de eerste volle maan op of na 21 maart | zoek de eerstvolgende zondag na deze volle maan. Voilà, je hebt Eerste Paasdag te pakken)
+	# Pasen (zoek de eerste volle maan op of na 21 maart | zoek de eerstvolgende zondag na deze volle maan. Voila, je hebt Eerste Paasdag te pakken)
 	# Pinksteren (Eerste Pinksterdag is dus tien dagen na Hemelvaart)	
-}
-
-if(count($querys) > 0) {
-	foreach($querys as $query) {
-		$result = mysqli_query($db, $query);
-	}
-	
-	$text[] = "Diensten toegevoegd<br>";
-	toLog('info', '', 'nieuwe diensten aangemaakt');
 }
 
 # Dit kan pas doorlopen worden als hierboven de diensten zijn ingevoerd
@@ -231,27 +254,27 @@ if(isset($_POST['omschrijving'])) {
 		$startTijd = mktime(0, 0, 1, $dag[1], $dag[0], $_POST['jaar']);
 		$eindTijd = mktime(23, 59, 59, $dag[3], $dag[2], $_POST['jaar']);
 		
-		$diensten = getKerkdiensten($startTijd, $eindTijd);
+		#$diensten = getKerkdiensten($startTijd, $eindTijd);
+		$diensten = Kerkdienst::getDiensten($startTijd, $eindTijd);
 		
-		foreach($diensten as $dienst) {
-			$dienstDetails = getKerkdienstDetails($dienst);
+		foreach($diensten as $dienstID) {
+			$dienst = new Kerkdienst($dienstID);
 			
 			# Alleen als een dienst op zondag valt de omschrijving toevoegen
 			# Als Kerst en Oud & Nieuw niet op een zondag valt, is hierboven de dienst al toegevoegd 
 			# en valt hij hier terecht eruit
-			if(date("N", $dienstDetails['start']) == 7) {
-				$opmerking = '';
-				if($dienstDetails['bijzonderheden'] != '') {
-					$opmerking = $dienstDetails['bijzonderheden'] .' - ';
-				}
+			if(date("N", $dienst->start) == 7) {				
+				if($dienst->opmerking != '') {
+					$dienst->opmerking .' - '. $dag[4];
+				} else {
+					$dienst->opmerking = $dag[4];
+				}				
 				
-				$opmerking .= $dag[4];
-				
-				$query = "UPDATE $TableDiensten SET $DienstOpmerking = '". urlencode($opmerking) ."' WHERE $DienstID = $dienst";
-				mysqli_query($db, $query);
+				$dienst->save();
 			}
-		}					
+		}
 	}
+	toLog('Omschrijvingen toegevoegd', 'debug');
 }
 
 echo showCSSHeader();

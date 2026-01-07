@@ -53,7 +53,7 @@ textarea {
 .middenstuk {
 	width: 1024px;
 	background-color:#ffffff;
-  margin: auto; 
+  margin: auto;
 }
 
 .bredebalk {
@@ -211,8 +211,8 @@ a.ontrokken {
 
 /* Bij nog kleinere schermen het aantal kolommen verminderen */
 /* En het logo iets kleiner maken*/	
-@media screen and (max-width:700px) {  
+@media screen and (max-width:700px) {
   .content_vert_kolom {
   	column-count: 1;
-  }  
+  }
 }

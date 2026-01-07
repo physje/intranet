@@ -24,54 +24,43 @@ if (!defined("LOADED_PROPERLY") || isset($_GET['cfgProgDir']) || isset($_POST['c
 }
 
 # contact database
-if (empty($cfgServerPort)) {
-	$db = mysqli_connect($cfgServerHost, $cfgServerUser, $cfgServerPassword) or die($strNoConnection);
-} else {
-	$db = mysqli_connect($cfgServerHost, $cfgServerUser, $cfgServerPassword, $cfgServerPort) or die($strNoConnection);
-}
+$db = new Mysql();
+$data = $db->select("SELECT `scipio_id`, `username`, `password_new` FROM `leden` WHERE `username` = '$login'");
 
-mysqli_select_db($db, $cfgDbDatabase) or die(mysqli_error());
-
-$login = mysqli_real_escape_string($db, $login);
-$userQuery = mysqli_query($db, "SELECT * FROM $cfgDbTableUsers WHERE $cfgDbLoginfield = '$login'") or die($strNoDatabase);
-
-# check user and password
-if(mysqli_num_rows($userQuery) != 0) {
+if(count($data) != 0) {	
 	# user exist --> continue
-	$userArray = mysqli_fetch_array($userQuery);
-	
-	if ($login != $userArray[$cfgDbLoginfield]) {
-		toLog('debug', '', 'Inlogpoging vanaf '. $_SERVER['REMOTE_ADDR'] .', verkeerd getypte username |'. $login .'|');
+	if ($login != $data['username']) {		
+		toLog('Inlogpoging vanaf '. $_SERVER['REMOTE_ADDR'] .', verkeerd getypte username |'. $login .'|', 'debug');
 		# Case sensative user not present in database
 		$phpSP_message = $strUserNotExist;
-    		include($cfgProgDir . "interface.php");
-    		exit;
+    	include($cfgProgDir . "interface.php");
+    	exit;
 	}
 } else {
-	toLog('debug', '', 'Inlogpoging vanaf '. $_SERVER['REMOTE_ADDR'] .', onbekende username |'. $login .'|');
+	toLog('Inlogpoging vanaf '. $_SERVER['REMOTE_ADDR'] .', onbekende username |'. $login .'|', 'debug');
 	# user not present in database
 	$phpSP_message = $strUserNotExist;
-  include($cfgProgDir . "interface.php");
-  exit;
+  	include($cfgProgDir . "interface.php");
+  	exit;
 }
 
-if(!$userArray[$cfgDbPasswordfield]) {
+if(!isset($data['password_new']) OR $data['password_new'] == '') {
 	# password not present in database for this user
 	$phpSP_message = $strPwNotFound;
 	include($cfgProgDir . "interface.php");
 	exit;
 }
 
-if(!password_verify($password, $userArray["$cfgDbPasswordfield"])) {
-	toLog('debug', '', 'Inlogpoging vanaf '. $_SERVER['REMOTE_ADDR'] .', verkeerd wachtwoord |'. $password .'|, username |'. $login .'|');
+if(!password_verify($password, $data['password_new'])) {
+	toLog('Inlogpoging vanaf '. $_SERVER['REMOTE_ADDR'] .', verkeerd wachtwoord |'. $password .'|, username |'. $login .'|', 'debug');
 	# password is wrong
 	$phpSP_message = $strPwFalse;
 	include($cfgProgDir . "interface.php");
 	exit;
 }
 
-if(isset($userArray["$cfgDbUserIDfield"]) && !empty($cfgDbUserIDfield)) {
-	$_SESSION['realID'] = stripslashes($userArray["$cfgDbUserIDfield"]);	
+if(isset($data["scipio_id"])) {
+	$_SESSION['realID'] = stripslashes($data["scipio_id"]);	
 }
 
 # Om te kunnen vermommen als een ander lid
@@ -82,12 +71,13 @@ if(isset($_SESSION['fakeID'])) {
 }
 
 if(isset($requiredUserGroups)) {
-	$authorisatieArray = getMyGroups($_SESSION['useID']);
+	$gebruiker = new Member($_SESSION['useID']);	
+	$authorisatieArray = $gebruiker->getTeams();
 	$overlap = array_intersect ($requiredUserGroups, $authorisatieArray);
 	
 	if(count($overlap) == 0) {
-		# this user does not have the required user level
-		toLog('info', '', 'Ingelogd maar onvoldoende rechten voor '. $_SERVER['PHP_SELF']);		
+		# this user does not have the required user level		
+		toLog('Ingelogd maar onvoldoende rechten voor '. $_SERVER['PHP_SELF']);
 		$phpSP_message = $strUserNotAllowed;
 		include($cfgProgDir . "interface.php");
 		exit;
@@ -100,6 +90,7 @@ if(isset($requiredUserGroups)) {
 # moet gecheckt worden of je een 2FA moet invoeren
 # en moet de administratie worden bijgewerkt
 if(!$_SESSION['logged']) {
+	/*
 	$secret_key = get2FACode($_SESSION['realID']);
 	
 	# Alleen als er een secret-key bekend is, en 2FA dus aan staat
@@ -109,8 +100,8 @@ if(!$_SESSION['logged']) {
 			include_once($cfgProgDir.'../include/google2fa/2FA.php');
   		$google2fa = new \PragmaRX\Google2FA\Google2FA();
   		
-			if(!$google2fa->verifyKey($secret_key, $_POST['entered_2FA'])) {			
-				toLog('debug', '', 'Foutieve 2FA-code');
+			if(!$google2fa->verifyKey($secret_key, $_POST['entered_2FA'])) {				
+				toLog('Foutieve 2FA-code', 'debug')
 				$phpSP_message = 'Onjuiste code';
 				include($cfgProgDir . "2FA.php");
 				exit;
@@ -120,12 +111,13 @@ if(!$_SESSION['logged']) {
 			exit;
 		}
 	}
+	*/
 		
 	# Long-term store
-	storeLogin($_SESSION['realID'], $_SERVER['REMOTE_ADDR'], $_SERVER['HTTP_USER_AGENT']);
+	#storeLogin($_SESSION['realID'], $_SERVER['REMOTE_ADDR'], $_SERVER['HTTP_USER_AGENT']);
 	
 	# Schrijf inlog in logfiles weg
-	toLog('info', '', 'Inlogpoging vanaf '. $_SERVER['REMOTE_ADDR']);
+	toLog('Inlogpoging vanaf '. $_SERVER['REMOTE_ADDR']);
 }
 
 

@@ -38,7 +38,7 @@ class Laposta_Resource {
 		}
 
 		return Laposta_Request::connect(array(
-			'url' => $url, 
+			'url' => $url,
 			'post' => $post,
 			'method' => $method
 			)

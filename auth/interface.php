@@ -1,25 +1,8 @@
 <?php
-/**************************************************************/
-/*         phpSecurePages version 0.44 beta (04/02/15)        */
-/*              Copyright 2015 Circlex.com, Inc.              */
-/*                                                            */
-/*          ALWAYS CHECK FOR THE LATEST RELEASE AT            */
-/*              http://www.phpSecurePages.com                 */
-/*                                                            */
-/*              Free for non-commercial use only.             */
-/*               If you are using commercially,               */
-/*         or using to secure your clients' web sites,        */
-/*   please purchase a license at http://phpsecurepages.com   */
-/*                                                            */
-/**************************************************************/
-/*    This is the login page that is shown when your users    */
-/*      try to access protected pages. Change logo to your    */
-/*                  logo on line 77 below.                    */
-/**************************************************************/
-
 # Als de interface getoond wordt, is deze gebruiker nieuw en is het bezoek nog niet gelogd.
 $_SESSION['logged'] = false;
 ?>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -84,10 +67,7 @@ body{font-family:arial;background:#FFFFFF;text-align:center;}
 
 </head>
 <body>
-
-<!-- Place your logo here -->
-        <P><IMG SRC="<?php echo $cfgProgDir ?>../images/logoKoningsKerk.png" height='200' ALT="phpSecurePages logo"></P>
-<!-- Place your logo here -->
+<P><IMG SRC="<?php echo $cfgProgDir ?>../images/logoKoningsKerk.png" height='200' ALT="KKD logo"></P>
 
 <?php
 // check for error messages
@@ -95,12 +75,6 @@ if ($phpSP_message) {
         echo '<div id="error">'.$phpSP_message.'</div>';
         }
 ?>
-
-<!-- ------ Have you set up phpSP with no users?  ------ -->
-        <?php if ($useDatabase == false AND $useData == true AND $cfgLogin[1] == "") echo '<p style="font-family:arial;font-size:22px;color:red;font-weight:bold;">WEBMASTER: It looks like you have no users or passwords set up! <br>
-        <br><span style="font-size:18px;">If you are not using a database, make sure you have configured<br>at least one user in config.php (around line 85).</span></p>'; ?>
-<!-- ------ Initial Setup (No Users) check ends here ------ -->
-
 
 <form id="entry" action="<?php echo $_SERVER['REQUEST_URI'] ?>" METHOD="post" onSubmit="return checkData()">
 

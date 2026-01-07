@@ -1,22 +1,38 @@
 <?php
+/**
+ * De index-pagina van het intranet.
+ * Hier worden alle blokken getoond met links naar de verschillende onderdelen van het intranet.
+ * Welke blokken worden getoond is afhankelijk van de rechten van de ingelogde gebruiker en in welke teams hij of zij zit.
+ * 
+ * @package Intranet KKD
+ * @author Matthijs Draijer
+ * @version 1.0.0
+ */
+include_once('Classes/Member.php');
+include_once('Classes/Team.php');
+include_once('Classes/Rooster.php');
+include_once('Classes/Mysql.php');
+include_once('Classes/Logging.php');
+include_once('Classes/Wijk.php');
 include_once('include/functions.php');
 include_once('include/config.php');
 include_once('include/HTML_TopBottom.php');
+
 $cfgProgDir = 'auth/';
 include($cfgProgDir. "secure.php");
-$db = connect_db();
 
-$memberData = getMemberDetails($_SESSION['useID']);
+$gebruiker = new Member($_SESSION['useID']);
 
 # Data over gebruiker icm roosters opvragen
-$allRoosters = getRoosters(0);
-$myRoosters = getRoosters($_SESSION['useID']);
-$myRoosterBeheer = getMyRoostersBeheer($_SESSION['useID']);
+$allRoosters = Rooster::getAllRoosters();
+$myRoosters = $gebruiker->getRoosters();
+$myRoosterBeheer = $gebruiker->getBeheerRooster();
+$myRoosterPlanner = $gebruiker->getPlannerRooster();
 
 # Data over gebruiker icm groepen opvragen
-$allGroups = getAllGroups();	
-$myGroups = getMyGroups($_SESSION['useID']);
-$myGroepBeheer = getMyGroupsBeheer($_SESSION['useID']);
+$allGroups = Team::getAllTeams();
+$myGroups = $gebruiker->getTeams();
+$myGroepBeheer = $gebruiker->getBeheerTeams();
 
 $blocks = array();
 
@@ -25,27 +41,34 @@ if(count($allRoosters) > 0) {
 	$txtRooster[] = "<b>Roosters</b>";
 	
 	foreach($allRoosters as $rooster) {
-		$data = getRoosterDetails($rooster);
+		$data = new Rooster($rooster);
 		if(in_array($rooster, $myRoosters)) {
 			$class = "own";
 		} else {
 			$class = "general";
 		}
-		$txtRooster[] = "<a class='$class' href='showRooster.php?rooster=$rooster' target='_blank'>".$data['naam']."</a>";
+		$txtRooster[] = "<a class='$class' href='rooster/index.php?id=$rooster' target='_blank'>". $data->naam ."</a>";
 	}	
-	$txtRooster[] = "<a class='$class' href='showCombineRooster.php' target='_blank'>Toon combinatie-rooster</a>";
-	$txtRooster[] = "<a class='$class' href='roosterKomendeWeek.php' target='_blank'>Toon rooster komende week</a>";
+	$txtRooster[] = "<a class='$class' href='rooster/combinatieRooster.php' target='_blank'>Toon combinatie-rooster</a>";
+	$txtRooster[] = "<a class='$class' href='rooster/komendeWeek.php' target='_blank'>Toon rooster komende week</a>";
 	$blocks[] = $txtRooster;	
 }
 
 
 
 # Rooster-beheer
-if(count($myRoosterBeheer) > 0) {
+if(count($myRoosterBeheer) > 0 || count($myRoosterPlanner) > 0) {
 	$txtRoosterBeheer[] = "<b>Roosters die ik kan wijzigen</b>";
-	foreach($myRoosterBeheer as $rooster) {
-		$data = getRoosterDetails($rooster);
-		$txtRoosterBeheer[] = "<a href='makeRooster.php?rooster=$rooster' target='_blank'>".$data['naam']."</a>";
+
+	foreach($allRoosters as $rooster) {
+		if(in_array($rooster, $myRoosterBeheer) || in_array($rooster, $myRoosterPlanner)) {
+			$data = new Rooster($rooster);
+			$subLink = array();
+			if(in_array($rooster, $myRoosterBeheer))	$subLink[] = "<a href='rooster/details.php?id=$rooster' target='_blank'>details</a>";
+			if(in_array($rooster, $myRoosterPlanner))	$subLink[] = "<a href='rooster/edit.php?id=$rooster' target='_blank'>planning</a>";
+
+			$txtRoosterBeheer[] = $data->naam ." (". implode(' | ', $subLink) .")";
+		}
 	}
 	$blocks[] = $txtRoosterBeheer;
 }
@@ -57,8 +80,8 @@ if(in_array(1, $myGroups)) {
 	$adminRoosters[] = "<b>Beheer roosters</b> (Admin)";
 	
 	foreach($allRoosters as $rooster) {
-		$data = getRoosterDetails($rooster);
-		$adminRoosters[] = "<a href='makeRooster.php?rooster=$rooster' target='_blank'>".$data['naam']."</a>";
+		$data = new Rooster($rooster);		
+		$adminRoosters[] = $data->naam ." (<a href='rooster/edit.php?id=$rooster' target='_blank'>planning</a> | <a href='rooster/details.php?id=$rooster' target='_blank'>details</a>)";
 	}
 	$blocks[] = $adminRoosters;
 }
@@ -66,37 +89,37 @@ if(in_array(1, $myGroups)) {
 
 
 # Groepen
-$showGroupsClass = array();
+// $showGroupsClass = array();
 
-foreach($allGroups as $groep) {
-	$tonen = false;	
-	$data = getGroupDetails($groep);
-	if(in_array($groep, $myGroups)) {
-		$class = "own";
-		if($data['html-int'] != "") {
-			$tonen = true;
-		}
-	} else {
-		$class = "general";
-		if($data['html-ext'] != "") {
-			$tonen = true;
-		}
-	}
+// foreach($allGroups as $groep) {
+// 	$tonen = false;	
+// 	$data = new Team($groep);
+// 	if(in_array($groep, $myGroups)) {
+// 		$class = "own";
+// 		if($data['html-int'] != "") {
+// 			$tonen = true;
+// 		}
+// 	} else {
+// 		$class = "general";
+// 		if($data['html-ext'] != "") {
+// 			$tonen = true;
+// 		}
+// 	}
 	
-	if($tonen) {
-		$showGroupsClass[$groep] = $class;		
-	}	
-}
+// 	if($tonen) {
+// 		$showGroupsClass[$groep] = $class;		
+// 	}	
+// }
 
-if(count($showGroupsClass) > 0) {
-	$txtGroepen[] = "<b>Pagina's van teams</b>";
+// if(count($showGroupsClass) > 0) {
+// 	$txtGroepen[] = "<b>Pagina's van teams</b>";
 	
-	foreach($showGroupsClass as $groep => $class) {
-		$data = getGroupDetails($groep);
-		$txtGroepen[] = "<a class='$class' href='group.php?groep=$groep' target='_blank'>".$data['naam']."</a>";
-	}	
-	$blocks[] = $txtGroepen;
-}
+// 	foreach($showGroupsClass as $groep => $class) {
+// 		$data = getGroupDetails($groep);
+// 		$txtGroepen[] = "<a class='$class' href='group.php?groep=$groep' target='_blank'>".$data['naam']."</a>";
+// 	}	
+// 	$blocks[] = $txtGroepen;
+// }
 
 
 
@@ -104,8 +127,8 @@ if(count($showGroupsClass) > 0) {
 if(count($myGroepBeheer) > 0) {
 	$txtGroepBeheer[] = "<b>Teams die ik beheer</b>";
 	foreach($myGroepBeheer as $groep) {
-		$data = getGroupDetails($groep);
-		$txtGroepBeheer[] = "<a href='editGroup.php?groep=$groep' target='_blank'>".$data['naam']."</a>";
+		$data = new Team($groep);
+		$txtGroepBeheer[] = "<a href='team/edit.php?id=$groep' target='_blank'>". $data->name ."</a>";
 	}
 	$blocks[] = $txtGroepBeheer;
 }
@@ -116,11 +139,12 @@ if(count($myGroepBeheer) > 0) {
 if(in_array(1, $myGroups)) {	
 	$txtGroepAdmin[] = "<b>Beheer teams</b> (Admin)";
 	foreach($allGroups as $groep) {
-		$data = getGroupDetails($groep);
-		$txtGroepAdmin[] = "<a href='editGroup.php?groep=$groep' target='_blank'>".$data['naam']."</a>";
+		$data = new Team($groep);
+		$txtGroepAdmin[] = "<a href='team/edit.php?id=$groep' target='_blank'>". $data->name ."</a>";
 	}
 	$blocks[] = $txtGroepAdmin;
 }
+
 
 
 
@@ -138,8 +162,10 @@ if(in_array(1, $myGroups) OR in_array(8, $myGroups) OR in_array(9, $myGroups) OR
 	# Link dan direct door naar die wijk
 	$hit = array();	
 	foreach($wijkArray as $wijk) {
-		$wijkteam = getWijkteamLeden($wijk);		
-		if(array_key_exists($_SESSION['useID'], $wijkteam))	$hit[] = $wijk;
+		$w = new Wijk();
+		$w->wijk = $wijk;
+		$wijkteam = $w->getWijkteam();
+		if(array_key_exists($gebruiker->id, $wijkteam))	$hit[] = $wijk;
 	}
 	$BezoekLinks['pastoraat/index.php'. ((count($hit) == 1) ? '?wijk='. $hit[0] : '')] = 'Registratie bezoeken'. ((count($hit) == 1) ? ' wijk '. $hit[0] : '');
 	
@@ -157,7 +183,6 @@ if(in_array(1, $myGroups) OR in_array(8, $myGroups) OR in_array(9, $myGroups) OR
 }
 
 
-
 # Gegevens wijzigen-deel
 # 1 = Admin
 # 11 = Beamteam
@@ -169,20 +194,20 @@ if(in_array(1, $myGroups) OR in_array(11, $myGroups) OR in_array(20, $myGroups) 
 }
 
 if(in_array(1, $myGroups) OR in_array(20, $myGroups)) {
-	$wijzigLinks['voorganger/editVoorganger.php'] = 'Gegevens van voorgangers wijzigen';	
-	$wijzigLinks['voorganger/voorgangerRooster.php'] = 'Preekrooster invoeren';	
+	$wijzigLinks['voorganger/edit.php'] = 'Gegevens van voorgangers wijzigen';	
+	$wijzigLinks['voorganger/rooster.php'] = 'Preekrooster invoeren';	
 }
 
 if(in_array(1, $myGroups) OR in_array(11, $myGroups) OR in_array(52, $myGroups)) {
-	$wijzigLinks['editLiturgie.php'] = 'Liturgie invoeren of aanpassen';
+	$wijzigLinks['diensten/liturgie.php'] = 'Liturgie invoeren of aanpassen';
 }
 
 if(in_array(1, $myGroups) OR in_array(22, $myGroups) OR in_array(52, $myGroups)) {
-	$wijzigLinks['editCollectes.php'] = 'Collecte-doelen invoeren';	
+	$wijzigLinks['diensten/collectes.php'] = 'Collecte-doelen invoeren';	
 }
 
 if(in_array(1, $myGroups) OR in_array(28, $myGroups) OR in_array(52, $myGroups)) {
-	$wijzigLinks['editDiensten.php'] = 'Kerkdiensten wijzigen';	
+	$wijzigLinks['diensten/edit.php'] = 'Kerkdiensten wijzigen';	
 }
 
 if(isset($wijzigLinks) AND is_array($wijzigLinks)) {	
@@ -221,10 +246,10 @@ if(in_array(1, $myGroups) OR in_array(43, $myGroups) OR in_array(44, $myGroups))
 	}
 	
 	if(in_array(1, $myGroups) OR in_array(43, $myGroups)) {
-		$OpenKerkLinks['openkerk/editRooster.php'] = 'Rooster wijzigen';
+		$OpenKerkLinks['openkerk/edit.php'] = 'Rooster wijzigen';
 	}
 		
-	$OpenKerkLinks['openkerk/showRooster.php'] = 'Rooster tonen';
+	$OpenKerkLinks['openkerk/'] = 'Rooster tonen';
 	
 	foreach($OpenKerkLinks as $link => $naam) {
 		$OpenKerkDeel[] = "<a href='$link' target='_blank'>$naam</a>";
@@ -240,20 +265,23 @@ if(in_array(1, $myGroups)) {
 	$adminDeel[] = "<b>Admin</b>";
 	
 	$adminLinks['admin/generateUsernames.php'] = 'Gebruikersnamen aanmaken';
-	$adminLinks['admin/generateDiensten.php'] = 'Kerkdiensten aanmaken';
-	$adminLinks['editDiensten.php'] = 'Kerkdiensten wijzigen';	
-	$adminLinks['admin/editGroepen.php'] = 'Groepen wijzigen';	
-	$adminLinks['admin/editRoosters.php'] = 'Roosters wijzigen';	
+	$adminLinks['admin/generateDiensten.php'] = 'Kerkdiensten aanmaken';	
+	$adminLinks['team/admin.php'] = 'Groepen wijzigen';	
+	$adminLinks['rooster/admin.php'] = 'Roosters wijzigen';	
 	$adminLinks['admin/editWijkteams.php'] = 'Wijkteams wijzigen';	
-	$adminLinks['admin/crossCheck.php'] = 'Check databases';
+	#$adminLinks['admin/crossCheck.php'] = 'Check databases';
 	$adminLinks['admin/log.php'] = 'Bekijk logfiles';
-	$adminLinks['admin/mailLog.php'] = 'Bekijk mail-files';
-	$adminLinks['admin/sendMail.php'] = 'Verstuur mail';
-	$adminLinks['admin/logins.php'] = 'Zoek binnen logins';
-	$adminLinks['admin/reviewRechten.php'] = 'Bekijk groepen en rechten';
+	#$adminLinks['admin/mailLog.php'] = 'Bekijk mail-files';
+	//TODO: Schrijf script om eenvoudige een mail in KKD-layout te sturen
+	#$adminLinks['admin/sendMail.php'] = 'Verstuur mail';
+	//TODO: Logins zoeken
+	#$adminLinks['admin/logins.php'] = 'Zoek binnen logins';
+	//TODO: Schrijf script om alle rechten overzichtelijk inzichttelijk te hebben
+	#$adminLinks['admin/reviewRechten.php'] = 'Bekijk groepen en rechten';
 	$adminLinks['admin/configuration.php'] = 'Configuratie-variabelen';
 	$adminLinks['admin/vermommen.php'] = 'Vermommen';
-	$adminLinks['onderhoud/cleanUpDb.php'] = 'Verwijder oude diensten';
+	//TODO: Oude diensten verwijderen
+	#$adminLinks['onderhoud/cleanUpDb.php'] = 'Verwijder oude diensten';
 	$adminLinks['../dumper/'] = 'Dumper';
 	
 	foreach($adminLinks as $link => $naam) {
@@ -270,19 +298,25 @@ $EBDeel[] = "<b>Declaraties</b>";
 
 $EBLinks['declaratie/'] = 'Dien declaratie in';
 
-if(in_array($_SESSION['useID'], $clusterCoordinatoren)) {
+if(in_array($gebruiker->id, $clusterCoordinatoren)) {
 	$EBLinks['declaratie/cluco.php'] = 'Overzicht ingediende declaraties';	
-} elseif(in_array(1, $myGroups) OR in_array(38, $myGroups)) {
-	$EBLinks['declaratie/overzichtDeclaraties.php'] = 'Status declaraties';	
-	$EBLinks['declaratie/opschonenOudeBijlages.php'] = 'Verwijder oude bijlages';
+} elseif(in_array(38, $myGroups)) {
+	$EBLinks['declaratie/penningmeester.php'] = 'Overzicht ingediende declaraties';	
+} elseif(in_array(1, $myGroups)) {
+	$EBLinks['declaratie/overzicht.php'] = 'Status declaraties';	
+	//TODO: Schrijf script om oude bijlages te verwijderen
+	#$EBLinks['declaratie/opschonenOudeBijlages.php'] = 'Verwijder oude bijlages';
 }
 
 if(in_array(1, $myGroups)) {
-	$EBLinks['declaratie/relatieOverview.php'] = 'Toon alle relaties';
-	$EBLinks['declaratie/mutatieOverview.php'] = 'Toon alle mutaties';	
-	$EBLinks['declaratie/zoekWeesBijlages.php'] = 'Koppel wees-bijlages';
+	//TODO: Schrijf script om alle relaties te zien
+	#$EBLinks['declaratie/relatieOverview.php'] = 'Toon alle relaties';
+	//TODO: Schrijf script om alle mutaties  te zien
+	#$EBLinks['declaratie/mutatieOverview.php'] = 'Toon alle mutaties';	
+	#$EBLinks['declaratie/zoekWeesBijlages.php'] = 'Koppel wees-bijlages';
 	//$EBLinks['declaratie/syncRelaties.php'] = 'Synchroniseer relaties naar lokale database';
-	$EBLinks['declaratie/editRelatie.php'] = 'Wijzig relaties';
+	//TODO: Schrijf script om relaties te bewerken
+	#$EBLinks['declaratie/editRelatie.php'] = 'Wijzig relaties';
 	#$EBLinks['https://secure.e-boekhouden.nl/handleiding/Documentatie_soap.pdf'] = 'SOAP documenatie PDF';
 }
 
@@ -299,10 +333,10 @@ if(in_array(1, $myGroups) OR in_array(52, $myGroups)) {
 	$koppelLinks['extern/makeiCalScipio.php'] = 'Data klaar zetten voor Scipio';	
 
 	if(in_array(1, $myGroups)) {	
-		$koppelLinks['extern/makeiCal.php'] = 'Persoonlijke iCals aanmaken';	
-		#$koppelLinks['onderhoud/importOuderlingen.php'] = 'Importeer ambtsdragers';
-		$koppelLinks['scipio/ScipioImport.php'] = 'Scipio-data inladen';
-		$koppelLinks['scipio/exportCollectes.php'] = 'Collectes exporteren voor in Scipio';
+		$koppelLinks['extern/makePersonaliCals.php'] = 'Persoonlijke iCals aanmaken';
+		$koppelLinks['scipio/import.php'] = 'Scipio-data inladen';
+		//TODO: Collectes exporteren
+		#$koppelLinks['scipio/collectes.php'] = 'Collectes exporteren voor in Scipio';
 	}
 	
 	foreach($koppelLinks as $link => $naam) {
@@ -319,7 +353,8 @@ $gebedsLinks['gebedskalender/overzicht.php#'. date('d')] = 'Gebedskalender';
 if(in_array(1, $myGroups) OR in_array(36, $myGroups)) {	
 	$gebedsLinks['gebedskalender/import.php'] = 'Import';
 	$gebedsLinks['gebedskalender/edit.php'] = 'Wijzig';
-	$gebedsLinks['gebedskalender/mailadressenOverzicht.php'] = 'Mailadressen overzicht';
+	//TODO: Mailadressen overzicht gebedskalender
+	#$gebedsLinks['gebedskalender/mailadressenOverzicht.php'] = 'Mailadressen overzicht';
 }
 	
 foreach($gebedsLinks as $link => $naam) {
@@ -334,28 +369,30 @@ $blocks[] = $gebedsDeel;
 $links[] = "<b>Links</b>";
 $links[] = "<a href='http://www.koningskerkdeventer.nl/' target='_blank'>koningskerkdeventer.nl</a>";
 $links[] = "<a href='agenda/agenda.php' target='_blank'>Agenda voor Scipio</a>";
-$links[] = "<a href='ical/".$memberData['username'].'-'. $memberData['hash_short'] .".ics' target='_blank'>Persoonlijke digitale agenda</a>";
+#$links[] = "<a href='ical/".$gebruiker->username.'-'. $gebruiker->hash_short .".ics' target='_blank'>Persoonlijke digitale agenda</a>";
 $blocks[] = $links;
 
 
 
 # Site
 if(isset($_SESSION['fakeID'])) {
-	$site[] = "<b>Ingelogd als ". makeName($_SESSION['realID'], 5)."</b> (vermomd als ". makeName($_SESSION['fakeID'], 5) .")";
+	$realUser = new Member($_SESSION['realID']);
+	$site[] = "<b>Ingelogd als ". $realUser->getName() ."</b> (vermomd als ". $gebruiker->getName() .")";
 } else {
-	$site[] = "<b>Ingelogd als ". makeName($_SESSION['useID'], 5)."</b>";
+	$site[] = "<b>Ingelogd als ". $gebruiker->getName() ."</b>";
 }
 $site[] = "<a href='account.php' target='_blank'>Account</a>";
 $site[] = "<a href='profiel.php' target='_blank'>Profiel</a>";
-$site[] = "<a href='ledenlijst.php' target='_blank'>Ledenlijst</a>";
+//TODO: Ledenlijst maken
+#$site[] = "<a href='ledenlijst.php' target='_blank'>Ledenlijst</a>";
 $site[] = "<a href='admin/stats.php' target='_blank'>Statistieken</a>";
 $site[] = "<a href='admin/leeftijdsOpbouw.php' target='_blank'>Leeftijds-opbouw</a>";
 if(in_array(1, $myGroups)) {
-	$site[] = "<a href='search.php' target='_blank'>Zoeken</a>";
+	//TODO: zoeken maken
+	#$site[] = "<a href='search.php' target='_blank'>Zoeken</a>";
 }
 $site[] = "<a href='auth/objects/logout.php' target='_blank'>Uitloggen</a>";
 $blocks[] = $site;
-
 
 echo showCSSHeader();
 echo '<div class="content_vert_kolom">'.NL;

@@ -1,24 +1,35 @@
 <?php
+/**
+ * Dit is de pagina waar het profiel van een lid wordt getoond.
+ * Vanuit verschillende delen van het intranet kan hiernaar worden gelinkt.
+ * 
+ * Afhanjkelijk van de rechten van de ingelogde gebruiker worden bepaalde velden wel of niet getoond.
+ * 
+ * @package Intranet KKD
+ * @author Matthijs Draijer
+ * @version 1.0.0
+ */
 include_once('include/functions.php');
 include_once('include/EB_functions.php');
 include_once('include/config.php');
+include_once('Classes/Member.php');
+include_once('Classes/Wijk.php');
+include_once('Classes/Logging.php');
 include_once('include/HTML_TopBottom.php');
-$db = connect_db();
 $showLogin = true;
-
 
 if(isset($_REQUEST['hash'])) {
 	$dader = isValidHash($_REQUEST['hash']);
 	
 	if(!is_numeric($dader)) {
-		toLog('error', '', 'ongeldige hash (profiel)');
+		toLog('ongeldige hash (profiel)', 'error');
 		$showLogin = true;
 	} else {
 		$showLogin = false;
 		session_start(['cookie_lifetime' => $cookie_lifetime]);
 		$_SESSION['useID'] = $dader;
 		$_SESSION['realID'] = $dader;
-		toLog('info', $_REQUEST['id'], 'profiel mbv hash');
+		toLog('profiel mbv hash');
 	}
 }
 
@@ -28,14 +39,23 @@ if($showLogin) {
 }
 
 if(isset($_POST['save_data'])) {
-	$sql_update = "UPDATE $TableUsers SET $UserFormeelMail = '". $_POST['form_mail'] ."', $UserEBRelatie = '". $_POST['EB_relatie'] ."' WHERE $UserID like ". $_POST['id'];
-	mysqli_query($db, $sql_update);
+	$user = new Member($_POST['id']);
+	$user->email_formeel = $_POST['form_mail'];
+	$user->boekhouden = $_POST['EB_relatie'];
+	if($user->save()) {
+		toLog('Problemen met aanpassen profielgegevens', 'error');
+	} else {
+		toLog('Profielgegevens aangepast');
+	}
 }
 
 # Welk profiel wordt opgevraagd
 # Indien dat niet bekend is, dan het eigen profiel
 $id = getParam('id', $_SESSION['useID']);
-$personData = getMemberDetails($id);
+$person = new Member($id);
+
+$gebruiker = new Member($_SESSION['useID']);
+$myGroups = $gebruiker->getTeams();
 
 # Wie mag wat zien
 # Om te beginnen wordt bijna niks getoond
@@ -57,32 +77,14 @@ $aToon['EB_relatie'] = false;
 $aToon['vestiging'] = false;
 $aToon['change'] = false;
 $aToon['visit'] = false;
-$aToon['familie'] = false;
+$aToon['familie'] = true;
 
-# Wijkteam mag alleen details van eigen wijk zien
-$wijkteam = getWijkteamLeden($personData['wijk']);
-if(in_array($_SESSION['useID'], $wijkteam)) {
-	$aToon['adres'] = true;
-	$aToon['PC'] = true;
-	$aToon['tel'] = true;
-	$aToon['mail'] = true;
-	$aToon['geboorte'] = true;
-	$aToon['familie'] = true;
-}
-
-# Van je eigen profiel mag je weer meer zien
-if($_SESSION['useID'] == $id) {
-	$aToon['adres'] = true;
-	$aToon['PC'] = true;
-	$aToon['tel'] = true;
-	$aToon['mail'] = true;
-	$aToon['geboorte'] = true;
-	$aToon['username'] = true;
-	$aToon['familie'] = true;
-}
+$wijk = new Wijk();
+$wijk->wijk = $person->wijk;
+$wijkteam = $wijk->getWijkteam();
 
 # Admin mag alles zien
-if(in_array(1, getMyGroups($_SESSION['useID']))) {
+if(in_array(1, $myGroups)) {
 	$aToon['adres'] = true;
 	$aToon['PC'] = true;
 	$aToon['tel'] = true;
@@ -103,14 +105,35 @@ if(in_array(1, getMyGroups($_SESSION['useID']))) {
 	$aToon['familie'] = true;
 }
 
+# Van je eigen profiel mag je weer meer zien
+elseif($_SESSION['useID'] == $id) {
+	$aToon['adres'] = true;
+	$aToon['PC'] = true;
+	$aToon['tel'] = true;
+	$aToon['mail'] = true;
+	$aToon['geboorte'] = true;
+	$aToon['username'] = true;
+	$aToon['familie'] = true;
+}
+
+# Wijkteam mag alleen details van eigen wijk zien
+elseif(array_key_exists ($_SESSION['useID'], $wijkteam)) {
+	$aToon['adres'] = true;
+	$aToon['PC'] = true;
+	$aToon['tel'] = true;
+	$aToon['mail'] = true;
+	$aToon['geboorte'] = true;
+	$aToon['familie'] = true;
+}
+
 # Als je als admin bent ingelogd zie je alle leden, anders alleen de actieve
-$familie = getFamilieleden($id, in_array(1, getMyGroups($_SESSION['useID'])));
+#$familie = getFamilieleden($id, in_array(1, getMyGroups($_SESSION['useID'])));
+$familie = $person->getFamilieLeden();
 
-toLog('debug', $id, 'profiel bekeken');
-
+toLog('profiel bekeken', 'debug', $id);
 
 # De admin kan hier zaken wijzigen, dus even een formulier aanmaken
-if(in_array(1, getMyGroups($_SESSION['useID']))) {
+if(in_array(1, $myGroups)) {
 	$blok[] = "	<form method='post' action='$_SERVER[PHP_SELF]'>";	
 	$blok[] = "	<input type='hidden' name='id' value='$id'>";	
 }
@@ -121,10 +144,9 @@ $blok[] = "	<table>";
 if($aToon['adres']) {
 	$blok[] = "	<tr>";
 	$blok[] = "		<td><b>Adres</b></td>";
-	$blok[] = "		<td><a href='https://www.google.nl/maps/place/". urlencode($personData['straat'] .' '. $personData['huisnummer'].$personData['huisletter'] .', '. $personData['PC'] .' '. $personData['plaats']) ."' target='_blank'>". $personData['straat'] .' '. $personData['huisnummer'].$personData['huisletter'].($personData['toevoeging'] != '' ? '-'.$personData['toevoeging'] : '')."</a>";
-	if(!in_array($_SESSION['useID'], $familie)) {
-		$ownData = getMemberDetails($_SESSION['useID']);
-		$blok[] = " <a href='https://www.google.nl/maps/dir/". urlencode($ownData['straat'] .' '. $ownData['huisnummer'].$ownData['huisletter'] .', '. $ownData['PC'] .' '. $ownData['plaats']) ."/". urlencode($personData['straat'] .' '. $personData['huisnummer'].$personData['huisletter'] .', '. $personData['PC'] .' '. $personData['plaats']) ."' title='klik hier om de route te tonen' target='_blank'><img src='images/GoogleMaps.png'></a>";
+	$blok[] = "		<td><a href='https://www.google.nl/maps/place/". urlencode($person->straat .' '. $person->huisnummer . $person->huisnummer_letter .', '. $person->postcode .' '. $person->woonplaats) ."' target='_blank'>". $person->straat .' '. $person->huisnummer . $person->huisnummer_letter . ($person->huisnummer_toevoeging != '' ? '-'.$person->huisnummer_toevoeging : '')."</a>";
+	if(!in_array($_SESSION['useID'], $familie)) {		
+		$blok[] = " <a href='https://www.google.nl/maps/dir/". urlencode($gebruiker->straat .' '. $gebruiker->huisnummer . $gebruiker->huisnummer_letter .', '. $gebruiker->postcode .' '. $gebruiker->woonplaats) ."/". urlencode($person->straat .' '. $person->huisnummer . $person->huisnummer_letter .', '. $person->postcode .' '. $person->woonplaats) ."' title='klik hier om de route te tonen' target='_blank'><img src='images/GoogleMaps.png'></a>";
 	}
 	$blok[] = "	</td>";
 	$blok[] = "	</tr>";
@@ -133,35 +155,35 @@ if($aToon['adres']) {
 if($aToon['PC']) {
 	$blok[] = "	<tr>";
 	$blok[] = "		<td><b>Postcode</b></td>";
-	$blok[] = "		<td>". $personData['PC'] .' '. $personData['plaats'] ."</td>";
+	$blok[] = "		<td>". $person->postcode .' '. $person->woonplaats ."</td>";
 	$blok[] = "	</tr>";
 }
 
-if($aToon['tel'] AND $personData['tel'] != '') {
+if($aToon['tel'] AND $person->telefoon != '') {
 	$blok[] = "	<tr>";
 	$blok[] = "		<td><b>Telefoon</b></td>";
-	$blok[] = "		<td><a href='tel:". str_replace('-', '', $personData['tel']) ."'>". $personData['tel'] ."</a></td>";
+	$blok[] = "		<td><a href='tel:". str_replace('-', '', $person->telefoon) ."'>". $person->telefoon ."</a></td>";
 	$blok[] = "	</tr>";
 }
 
-if($aToon['mail'] AND $personData['mail'] != '') {
+if($aToon['mail'] AND $person->email != '') {
 	$blok[] = "	<tr>";	
 	$blok[] = "		<td><b>Mailadres</b></td>";
-	$blok[] = "		<td><a href='mailto:". makeName($id, 5) ." <".$personData['mail'] .">'>". $personData['mail'] ."</td>";
+	$blok[] = "		<td><a href='mailto:". $person->getName() ." <". $person->email .">'>". $person->email ."</td>";
 	$blok[] = "	</tr>";
 }
 
 if($aToon['form_mail']) {
 	$blok[] = "	<tr>";
 	$blok[] = "		<td><b>Formeel mailadres</b></td>";
-	$blok[] = "		<td><input type='text' name='form_mail' value='". $personData['form_mail'] ."'></td>";
+	$blok[] = "		<td><input type='text' name='form_mail' value='". $person->email_formeel ."'></td>";
 	$blok[] = "	</tr>";
 }
 
 if($aToon['wijk']) {
 	$blok[] = "	<tr>";
 	$blok[] = "		<td><b>Wijk</b></td>";
-	$blok[] = "		<td><a href='ledenlijst.php?wijk=". $personData['wijk'] ."'>".$personData['wijk'] ."</a></td>";
+	$blok[] = "		<td><a href='ledenlijst.php?wijk=". $person->wijk ."'>".$person->wijk ."</a></td>";
 	$blok[] = "	</tr>";
 }
 
@@ -169,21 +191,21 @@ if($aToon['geboorte']) {
 	$blok[] = "	<tr>";
 	$blok[] = "		<td><b>Geboortemaand</b></td>";
 	//echo "		<td>". time2str("%d %B '%y", $personData['geb_unix']) ."</td>";
-	$blok[] = "		<td>". time2str("%B '%y", $personData['geb_unix']) ."</td>";
+	$blok[] = "		<td>". time2str("F Y", mktime(0,0,0,$person->geboorte_maand, $person->geboorte_dag, $person->geboorte_jaar)) ."</td>";
 	$blok[] = "	</tr>";
 }
 
 if($aToon['kerk_staat']) {
 	$blok[] = "	<tr>";
 	$blok[] = "		<td><b>Kerkelijke staat</b></td>";
-	$blok[] = "		<td>". $personData['belijdenis'] ."</td>";
+	$blok[] = "		<td>". $person->doop_belijdenis ."</td>";
 	$blok[] = "	</tr>";
 }
 
 if($aToon['status']) {
 	$blok[] = "	<tr>";
 	$blok[] = "		<td><b>Status</b></td>";
-	$blok[] = "		<td>". $personData['status'] ."</td>";
+	$blok[] = "		<td>". $person->status ."</td>";
 	$blok[] = "	</tr>";
 }
 
@@ -197,21 +219,21 @@ if($aToon['status']) {
 if($aToon['burgelijk']) {
 	$blok[] = "	<tr>";
 	$blok[] = "		<td><b>Burgerlijk</b></td>";
-	$blok[] = "		<td>". $personData['burgelijk'] ."</td>";
+	$blok[] = "		<td>". $person->burgelijk ."</td>";
 	$blok[] = "	</tr>";
 }
 
 if($aToon['relatie']) {
 	$blok[] = "	<tr>";
 	$blok[] = "		<td><b>Relatie</b></td>";
-	$blok[] = "		<td>". $personData['relatie'] ."</td>";
+	$blok[] = "		<td>". $person->relatie ."</td>";
 	$blok[] = "	</tr>";
 }
 
 if($aToon['username']) {
 	$blok[] = "	<tr>";
 	$blok[] = "		<td><b>Gebruikersnaam</b></td>";
-	$blok[] = "		<td><a href='account.php?id=$id'>". $personData['username'] ."</a></td>";
+	$blok[] = "		<td><a href='account.php?id=$id'>". $person->username ."</a></td>";
 	$blok[] = "	</tr>";
 }
 
@@ -221,60 +243,65 @@ if($aToon['EB_relatie']) {
 	$blok[] = "	<td><select name='EB_relatie'>";
 	$blok[] = "	<option value=''>Selecteer relatie</option>";
 	
-	$relaties = eb_getRelaties();
-	
+	$relaties = eb_getRelaties();	
 	foreach($relaties as $relatieData) {
-		$blok[] = "	<option value='". $relatieData['code'] ."'". ($personData['eb_code'] == $relatieData['code'] ? ' selected' : '') .">". substr($relatieData['naam'], 0, 35) ."</option>";
+		$blok[] = "	<option value='". $relatieData['code'] ."'". ($person->boekhouden == $relatieData['code'] ? ' selected' : '') .">". substr($relatieData['naam'], 0, 35) ."</option>";
 	}
 			
 	$blok[] = "	</select></td>";
 	$blok[] = "	</tr>";	
 }
 
-if($aToon['vestiging'] AND $personData['vestiging'] > 0) {
+if($aToon['vestiging'] AND $person->tijd_vestiging > 0) {
 	$blok[] = "	<tr>";
 	$blok[] = "		<td><b>Vestingsdatum</b></td>";
-	$blok[] = "		<td>". time2str("%d %B '%y", $personData['vestiging']) ."</td>";
+	$blok[] = "		<td>". time2str("d F 'y", $person->tijd_vestiging) ."</td>";
 	$blok[] = "	</tr>";
 }
 	
-if($aToon['change'] AND $personData['change'] > 0) {
+if($aToon['change'] AND $person->tijd_wijziging > 0) {
 	$blok[] = "	<tr>";
 	$blok[] = "		<td><b>Laatste wijziging</b></td>";
-	$blok[] = "		<td>". time2str("%d %B '%y", $personData['change']) ."</td>";
+	$blok[] = "		<td>". time2str("d F 'y", $person->tijd_wijziging) ."</td>";
 	$blok[] = "	</tr>";
 }
 
-if($aToon['visit'] AND $personData['visit'] > 0) {
+if($aToon['visit'] AND $person->tijd_bezoek > 0) {
 	$blok[] = "	<tr>";
 	$blok[] = "		<td><b>Laatste login</b></td>";
-	$blok[] = "		<td>". time2str("%d %B '%y", $personData['visit']) ."</td>";
+	$blok[] = "		<td>". time2str("d F 'y", $person->tijd_bezoek) ."</td>";
 	$blok[] = "	</tr>";	
 }
 
 $blok[] = "	</table>".NL;
 
-if(in_array(1, getMyGroups($_SESSION['useID']))) {	
+if(in_array(1, $myGroups)) {	
 	$blok[] = "<p class='after_table'><input type='submit' name='save_data' value='Opslaan'></p>";
 }
 
 # De admin kan hier zaken wijzigen, dus even een formulier aangemaakt
-if(in_array(1, getMyGroups($_SESSION['useID'])))	$blok[] = "</form>";
+if(in_array(1, $myGroups))	$blok[] = "</form>";
 
-# Familie alleen tonen indien dat nodig is en er familie is 
+# Familie alleen tonen indien dat nodig is en er familie is
 if($aToon['familie'] AND count($familie) > 1) {
-	foreach($familie as $leden) {
-		if($leden != $id) {
-			$famData = getMemberDetails($leden);
+	foreach($familie as $lid) {
+		if($lid != $id) {
+			$familieLid = new Member($lid);			
 			
-			if($famData['status'] == 'afgemeld' OR $famData['status'] == 'afgevoerd' OR $famData['status'] == 'onttrokken') {
+			if(in_array($familieLid->status, array('afgemeld', 'afgevoerd', 'onttrokken'))) {
 				$class = 'ontrokken';
-			} elseif($famData['status'] == 'overleden' OR $famData['status'] == 'vertrokken') {
+				$show = false;
+			} elseif(in_array($familieLid->status, array('overleden', 'vertrokken'))) {
 				$class = 'inactief';
+				$show = false;
 			} else {
 				$class = '';
+				$show = true;
 			}
-			$blok_2[] = "<a href='?id=$leden' class='$class'>". makeName($leden, 5) ."</a> ('". substr($famData['jaar'], -2) .")<br>";
+
+			if($show || in_array(1, $myGroups)) {
+				$blok_2[] = "<a href='?id=$lid' class='$class'>". $familieLid->getName() ."</a> ('". substr($familieLid->geboorte_jaar, -2) .")<br>";
+			}			
 		}
 	}
 } else {
@@ -283,10 +310,10 @@ if($aToon['familie'] AND count($familie) > 1) {
 
 echo showCSSHeader(array('default', 'table_default'));
 echo '<div class="content_vert_kolom">'.NL;
-echo '<h1>'. makeName($id, 6) .'</h1>'.NL;
+echo '<h1>'. $person->getName() .'</h1>'.NL;
 #echo '<h2>Profiel</h2>'.NL;
 echo "<div class='content_block'>".NL. implode(NL, $blok).NL."</div>".NL;
-#echo '<h2>Familieleden</h2>'.NL;
+echo NL. '<h2>Familieleden</h2>'.NL;
 echo "<div class='content_block'>".NL. implode(NL, $blok_2).NL."</div>".NL;
 echo '</div> <!-- end \'content_vert_kolom_full\' -->'.NL;
 echo showCSSFooter();

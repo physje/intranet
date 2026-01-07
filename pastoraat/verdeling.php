@@ -2,17 +2,20 @@
 include_once('../include/functions.php');
 include_once('../include/config.php');
 include_once('../include/HTML_TopBottom.php');
-include_once('../include/HTML_HeaderFooter.php');
+include_once('../Classes/Member.php');
+include_once('../Classes/Bezoek.php');
+include_once('../Classes/Wijk.php');
+include_once('../Classes/Logging.php');
 
-$db = connect_db();
 $cfgProgDir = '../auth/';
 include($cfgProgDir. "secure.php");
 
 # Als bekend is welke wijk
 # Dan checken wie er in het wijkteam zitten van die wijk
 if(isset($_REQUEST['wijk'])) {
-	$wijk			= $_REQUEST['wijk'];
-	$wijkteam = getWijkteamLeden($wijk);
+	$w			= new Wijk;
+	$w->wijk	= $_REQUEST['wijk'];
+	$wijkteam	= $w->getWijkteam();
 	
 	$inWijkteam = false;
 	
@@ -26,30 +29,39 @@ if(isset($_REQUEST['wijk'])) {
 		# Verdeling opslaan	
 		if(isset($_POST['save'])) {
 			foreach($_POST['ouderling'] as $lid => $pastor) {
+				$user = new Member();
+				$user->id = $lid;
+				$user->pastor = $pastor;
 				
-				$bezoeker = 0;
-				if(isset($_POST['bezoeker'][$lid])) $bezoeker = $_POST['bezoeker'][$lid];
-				
-				$sql_delete = "DELETE FROM $TablePastorVerdeling WHERE $PastorVerdelingLid = $lid";
-				if(mysqli_query($db, $sql_delete) AND ($pastor > 0 OR $bezoeker > 0)) {
-					$sql_insert = "INSERT INTO $TablePastorVerdeling ($PastorVerdelingLid, $PastorVerdelingPastor, $PastorVerdelingBezoeker) VALUES ($lid, $pastor, $bezoeker)";
-					mysqli_query($db, $sql_insert);
+				if(isset($_POST['bezoeker'][$lid])) {
+					$user->bezoeker = $_POST['bezoeker'][$lid];
+				} else {
+					$user->bezoeker = $user->getBezoeker();
 				}
+				
+				$user->setPastor();				
 			}
 			
-			toLog('info', '', 'Verdeling ouderlingen/pastoraal bezoekers wijk '. $wijk .' aangepast');
+			toLog('Verdeling ouderlingen/pastoraal bezoekers wijk '. $w->wijk .' aangepast');
 			
 			$text[] = "<b>Wijzigingen opgeslagen</b><br><br>Je kan dit venster sluiten om terug te gaan naar het wijk-overzicht.<p>&nbsp;</p>";
 		}
 
 		# Leden opvragen
-		$wijkLeden = getWijkledenByAdres($wijk, 0);
+		$wijkLeden = $w->getWijkleden();
 
 		$masterSelectPastor = $masterSelectBezoeker = array();
 		
 		foreach($wijkteam as $id => $rol) {
-			if($rol == 1) $masterSelectPastor[$id] = '';
-			if($rol == 4 OR $rol == 5) $masterSelectBezoeker[$id] = '';
+			if($rol == 1) {
+				$pas = new Member($id);
+				$masterSelectPastor[$id] = $pas->getName();
+			} 
+
+			if($rol == 4 OR $rol == 5) {
+				$bez = new Member($id);
+				$masterSelectBezoeker[$id] = $bez->getName();
+			} 
 		}
 								
 		$text[] = "<form method='post'>";		
@@ -64,31 +76,46 @@ if(isset($_REQUEST['wijk'])) {
 		$text[] = "</thead>";
 				
 		foreach($wijkLeden as $adres => $leden) {
-			$lid = $leden[0];
+			if(is_array($leden)) {
+				$lid = new Member($leden[0]);
+			} else {
+				$lid = new Member($leden);
+			}
 			
 			$selectPastor = $masterSelectPastor;
 			$selectBezoeker = $masterSelectBezoeker;
 						
-			$pastor = getPastor($lid);
-			$bezoeker = getBezoeker($lid);
+			$p = $lid->getPastor();
+			$b = $lid->getBezoeker();
 			
-			if($pastor > 0 AND !array_key_exists($pastor, $wijkteam))	$selectPastor[$pastor] = 'gast';
-			if($bezoeker > 0 AND !array_key_exists($bezoeker, $wijkteam))	$selectBezoeker[$bezoeker] = 'gast';
+			# Als er een ouderling bekend is, die niet in het wijkteam zit
+			# voeg die naam dan toe aan de selectie-lijst
+			if($p > 0 && !array_key_exists($p, $wijkteam)) {
+				$pastor		= new Member($p);
+				$selectPastor[$p] = $pastor->getName();
+			}
+
+			# Als er een pastoraal bezoek bekend is, die niet in het wijkteam zit
+			# voeg die naam dan toe aan de selectie-lijst
+			if($b > 0 && !array_key_exists($b, $wijkteam)) {
+				$bezoeker	= new Member($b);
+				$selectBezoeker[$b] = $bezoeker->getName();
+			}	
 							
 			$text[] = '<tr>';				
-			$text[] = "	<td>". makeName($lid, 5) ."</td>";
+			$text[] = "	<td>". $lid->getName(5) ."</td>";
 			$text[] = "	<td>";
-			$text[] = "	<select name='ouderling[$lid]'>";
-			$text[] = "	<option value='0'". ($pastor == 0 ? ' selected' : '') ."></option>";
-			foreach($selectPastor as $teamLid => $rol)	$text[] = "	<option value='$teamLid'". ($pastor == $teamLid ? ' selected' : '') .">". makeName($teamLid, 5) ."</option>";	
+			$text[] = "	<select name='ouderling[". $lid->id ."]'>";
+			$text[] = "	<option value='0'". ($p == 0 ? ' selected' : '') ."></option>";
+			foreach($selectPastor as $teamLid => $naam)	$text[] = "	<option value='$teamLid'". ($p == $teamLid ? ' selected' : '') .">". $naam ."</option>";	
 			$text[] = "	</select>";
 			$text[] = "	</td>";
 			$text[] = "	<td>";
 			
 			if(count($selectBezoeker) > 0) {
-				$text[] = "	<select name='bezoeker[$lid]'>";
-				$text[] = "	<option value='0'". ($bezoeker == 0 ? ' selected' : '') ."></option>";
-				foreach($selectBezoeker as $teamLid => $rol)	$text[] = "	<option value='$teamLid'". ($bezoeker == $teamLid ? ' selected' : '') .">". makeName($teamLid, 5) ."</option>";	
+				$text[] = "	<select name='bezoeker[". $lid->id ."]'>";
+				$text[] = "	<option value='0'". ($b == 0 ? ' selected' : '') ."></option>";
+				foreach($selectBezoeker as $teamLid => $naam)	$text[] = "	<option value='$teamLid'". ($b == $teamLid ? ' selected' : '') .">". $naam ."</option>";	
 				$text[] = "	</select>";
 			} else {
 				$text[] = "&nbsp;";
@@ -101,9 +128,9 @@ if(isset($_REQUEST['wijk'])) {
 		$text[] = "<p class='after_table'><input type='submit' name='save' value='Opslaan'></p>";	
 		$text[] = "</form>";
 	} elseif($inWijkteam) {
-		$text[] = "Helaas, als ". strtolower($teamRollen[$rol]) ." van wijk $wijk heb je geen toegang";
+		$text[] = "Helaas, als ". strtolower($teamRollen[$rol]) ." van wijk ". $w->wijk ." heb je geen toegang";
 	} else {		
-		$text[] = "Je bent niet bekend als lid van het wijkteam van wijk $wijk";
+		$text[] = "Je bent niet bekend als lid van het wijkteam van wijk ". $w->wijk;
 	}
 } else {
 	$text[] = "Geen wijk bekend";

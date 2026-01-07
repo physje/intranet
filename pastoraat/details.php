@@ -2,19 +2,24 @@
 include_once('../include/functions.php');
 include_once('../include/config.php');
 include_once('../include/HTML_TopBottom.php');
-include_once('../include/HTML_HeaderFooter.php');
+include_once('../Classes/Member.php');
+include_once('../Classes/Bezoek.php');
+include_once('../Classes/Wijk.php');
+include_once('../Classes/Logging.php');
 
-$db = connect_db();
 $cfgProgDir = '../auth/';
 include($cfgProgDir. "secure.php");
 
 # Als bekend is welke wijk
 # Dan checken wie er in het wijkteam zitten van die wijk
 if(isset($_REQUEST['ID'])) {
-	$data			= getMemberDetails($_REQUEST['ID']);
-	$wijk			= $data['wijk'];
-	$wijkteam = getWijkteamLeden($wijk);
-	$pastor		= getPastor($_REQUEST['ID']);
+	$user		= new Member($_REQUEST['ID']);	
+	$pastor		= $user->getPastor();
+	$myGroups	= $user->getTeams();
+
+	$w			= new Wijk;
+	$w->wijk	= $user->wijk;
+	$wijkteam	= $w->getWijkteam();
 		
 	$inWijkteam = false;	
 	
@@ -23,14 +28,14 @@ if(isset($_REQUEST['ID'])) {
 		$inWijkteam = true;		
 	}
 	
-	if(in_array(49, getMyGroups($_SESSION['useID']))) {	
+	if(in_array(49, $myGroups)) {	
 		$inWijkteam = true;
 		$rol = 1;
 	}
 	
 	# Zit je in het wijkteam, dan mag je verder
-	if(($inWijkteam AND $rol <> 3 AND $rol <> 6) OR $_SESSION['useID'] == $pastor) {		
-		$bezoeken = getPastoraleBezoeken($_REQUEST['ID'], $_SESSION['useID']);
+	if(($inWijkteam && $rol <> 3 && $rol <> 6) || $_SESSION['useID'] == $pastor) {		
+		$bezoeken	= $user->getPastoraleBezoeken();
 		
 		if(count($bezoeken) > 0) {
 			$text[] = "<table>";
@@ -47,24 +52,25 @@ if(isset($_REQUEST['ID'])) {
 			$text[] = "	<td><b>Aantekening</b></td>";
 			$text[] = "</tr>";
 			
-			foreach($bezoeken as $bezoek) {
-				$details = getPastoraalbezoekDetails($bezoek);
+			foreach($bezoeken as $bezoekID) {
+				$bezoek = new Bezoek($bezoekID);
+				$indiener = new Member($bezoek->werker);
 				
 				$text[] = "<tr>";
-				if($details['indiener'] == $_SESSION['useID']) {
-					$text[] = "	<td><a href='edit.php?id=$bezoek'><img src='../images/wisselen.png' height='16' title='Wijzig dit bezoek'></a></td>";
+				if($bezoek->werker == $_SESSION['useID']) {
+					$text[] = "	<td><a href='edit.php?id=". $bezoek->id ."'><img src='../images/wisselen.png' height='16' title='Wijzig dit bezoek'></a></td>";
 				} else {
 					$text[] = "	<td>&nbsp;</td>";
 				}
-				$text[] = "	<td>". time2str("%e %B %Y", $details['datum']) ."</td>";
+				$text[] = "	<td>". time2str("j F Y", $bezoek->tijdstip) ."</td>";
 				$text[] = "	<td>&nbsp;</td>";
-				$text[] = "	<td>". makeName($details['indiener'], 5) ."</td>";
+				$text[] = "	<td>". $indiener->getName() ."</td>";
 				$text[] = "	<td>&nbsp;</td>";
-				$text[] = "	<td>". $typePastoraat[$details['type']] ."</td>";
+				$text[] = "	<td>". $typePastoraat[$bezoek->type] ."</td>";
 				$text[] = "	<td>&nbsp;</td>";
-				$text[] = "	<td>". $locatiePastoraat[$details['locatie']] ."</td>";
+				$text[] = "	<td>". $locatiePastoraat[$bezoek->locatie] ."</td>";
 				$text[] = "	<td>&nbsp;</td>";
-				$text[] = "	<td>". str_rot13(urldecode($details['note'])) ."</td>";
+				$text[] = "	<td>". $bezoek->aantekening ."</td>";
 				$text[] = "</tr>";
 			}
 			$text[] = "</table>";

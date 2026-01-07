@@ -3,16 +3,19 @@ include_once('../include/functions.php');
 include_once('../include/config.php');
 include_once('../include/config_mails.php');
 include_once('../include/HTML_TopBottom.php');
+include_once('../Classes/Member.php');
+include_once('../Classes/Logging.php');
 
 $cfgProgDir = '../auth/';
 include($cfgProgDir. "secure.php");
 
 $left = $right = array();
-$myGroups = getMyGroups($_SESSION['realID']);
+$ik = new Member($_SESSION['realID']);
+$myGroups = $ik->getTeams();
 
 if(in_array(1, $myGroups)) {	
 	if(isset($_POST['unmask'])) {
-		toLog('info', $_SESSION['fakeID'], 'Vermomming afgedaan');
+		toLog('Vermomming afgedaan');
 		unset($_SESSION['fakeID']);		
 	}
 	
@@ -21,9 +24,11 @@ if(in_array(1, $myGroups)) {
 		$fake_lid = $delen[1];
 		
 		$_SESSION['fakeID'] = $fake_lid;
-		toLog('info', $_SESSION['fakeID'], 'Vermomd aangetrokken');
+		toLog('Vermomming aangetrokken');
+
+		$fakePerson = new Member($fake_lid);
 		
-		$right[] = "Vermomd als ". makeName($fake_lid, 5) .".<br>";	
+		$right[] = "Vermomd als ". $fakePerson->getName() .".<br>";	
 		$right[] = "<form method='post' action='$_SERVER[PHP_SELF]'>";
 		$right[] = "<p class='after_table'><input type='submit' name='unmask' value='Vermomming afdoen'></p>";
 		$right[] = "</form>";

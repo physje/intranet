@@ -3,37 +3,46 @@ include_once('../include/functions.php');
 include_once('../include/config.php');
 include_once('../include/config_mails.php');
 include_once('../include/HTML_TopBottom.php');
-include_once('../include/HTML_HeaderFooter.php');
+include_once('../Classes/DeclaratieVoorganger.php');
+include_once('../Classes/Kerkdienst.php');
+include_once('../Classes/Voorganger.php');
 
-$db = connect_db();
+# Start de sessie en kijk of er een declaratie-object in de sessie staat
+# Laad die dan
+session_start();
+if(!isset($_SESSION['declaratie'])) {	
+	$declaratie = new Declaratie();
+	$declaratie->type = 'voorganger';
+	$_SESSION['declaratie'] = $declaratie;
+}
+$declaratie = $_SESSION['declaratie'];
 
-if(isset($_REQUEST['hash'])) {
-	$hash = urldecode($_REQUEST['hash']);
-	$dienst = $_REQUEST['d'];
-	$voorganger = $_REQUEST['v'];
+if(isset($_REQUEST['hash']))		$declaratie->hash = urldecode($_REQUEST['hash']);
+if(isset($_REQUEST['d']))			$declaratie->dienst = $_REQUEST['d'];
+if(isset($_REQUEST['v']))			$declaratie->voorganger = $_REQUEST['v'];
+
+if(isset($declaratie->hash) && $declaratie->hash != '') {
+	$dienst		= new Kerkdienst($declaratie->dienst);
+	$voorganger	= new Voorganger($declaratie->voorganger);
 
 	# De hash klopt
-	if(password_verify($dienst.'$'.$randomCodeDeclaratie.'$'.$voorganger,$hash)) {
-		$dienstData = getKerkdienstDetails($dienst);
-		//$firstData = getVoorgangerData($voorganger);
-		//$secondData = getDeclaratieData($voorganger, $dienstData['start']);		
-		//$voorgangerData = array_merge($firstData, $secondData);
-		
-		$dagdeel 				= formatDagdeel($dienstData['start']);
+	if(password_verify($dienst->dienst.'$'.$randomCodeDeclaratie.'$'.$voorganger->id,$declaratie->hash)) {			
+		$dagdeel  = formatDagdeel($dienst->start);
 				
 		if(isset($_POST['zeker_weten'])) {
 			$page[] = "Uw declaratie staat geregistreed als 'afgezien' en is daarmee afgehandeld.";
-			setVoorgangerDeclaratieStatus(9, $dienst);
+			$dienst->declaratieStatus = 9;
+			$dienst->save();
+
+			toLog('Afgezien van declaratie door '. $voorganger->getName().' voor dienst op '. date('d-M-Y', $dienst->start));
 		} elseif(isset($_POST['toch_niet'])) {
-			$declaratieLink = generateDeclaratieLink($dienst, $voorganger);
+			$declaratieLink = generateDeclaratieLink($dienst->dienst, $voorganger->id);
 						
-			$page[] = "U ziet <u>niet</u> af van declaratie<br>";
+			$page[] = "U ziet <b>niet</b> af van declaratie<br>";
 			$page[] = "Klik <a href='$declaratieLink'>hier</a> om door te gaan naar de declaratie-omgeving";
+			toLog('Toch niet afgezien van declaratie door '. $voorganger->getName().' voor dienst op '. date('d-M-Y', $dienst->start), 'debug');
 		} else {
 			$page[] = "<form method='post' action='$_SERVER[PHP_SELF]'>";			
-			$page[] = "<input type='hidden' name='d' value='$dienst'>";
-			$page[] = "<input type='hidden' name='v' value='$voorganger'>";
-			$page[] = "<input type='hidden' name='hash' value='". trim($_REQUEST['hash']) ."'>";
 			$page[] = "<table border=0>";
 			$page[] = "	<tr>";
 			$page[] = "		<td colspan='2'><b>Afzien declaratie</b></td>";
@@ -42,7 +51,7 @@ if(isset($_REQUEST['hash'])) {
 			$page[] = "		<td colspan='2'>&nbsp;</td>";
 			$page[] = "	</tr>";
 			$page[] = "	<tr>";
-			$page[] = "		<td colspan='2'>U staat op het punt af te zien van het indienen van een declaratie voor de $dagdeel.<br>Weet u dat zeker?</td>";
+			$page[] = "		<td colspan='2'>U staat op het punt af te zien van het indienen van een declaratie voor de $dagdeel van ". date('d-M-Y', $dienst->start).".<br>Weet u dat zeker?</td>";
 			$page[] = "	</tr>";
 			$page[] = "	<tr>";
 			$page[] = "		<td colspan='2'>&nbsp;</td>";
@@ -64,15 +73,12 @@ if(isset($_REQUEST['hash'])) {
 }
 
 # Pagina tonen
-echo $HTMLHeader;
-echo '<table border=0 width=100%>'.NL;
-echo '<tr>'.NL;
-echo '	<td valign="top" width="25%">&nbsp;</td>'.NL;
-echo '	<td valign="top">'. showBlock(implode("\n", $page), 100). '</td>'.NL;
-echo '	<td valign="top" width="25%">&nbsp;</td>'.NL;
-echo '</tr>'.NL;
-echo '</table>'.NL;
-echo $HTMLFooter;
+echo showCSSHeader();
+echo '<div class="content_vert_kolom_full">'.NL;
+echo "<div class='content_block'>".NL. implode(NL, $page).NL."</div>".NL;
+echo '</div> <!-- end \'content_vert_kolom_full\' -->'.NL;
+echo showCSSFooter();
 
-# Aantekeningen zijn verplaatst naar aantekeningen.txt
+# Sla de declaratie-gegevens op in de sessie
+$_SESSION['declaratie'] = $declaratie;
 ?>

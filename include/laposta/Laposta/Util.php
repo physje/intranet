@@ -23,7 +23,7 @@ Class Laposta_Util {
 		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
 		curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
 		curl_setopt($ch, CURLOPT_FORBID_REUSE, true);
-		curl_setopt($ch, CURLOPT_FRESH_CONNECT, true); 
+		curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
 		curl_setopt($ch, CURLOPT_USERPWD, $api_key . ':');
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
@@ -37,7 +37,7 @@ Class Laposta_Util {
 		}
 
 		if ($method == 'DELETE') {
-			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');  
+			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
 		}
 
 		$body = curl_exec($ch);

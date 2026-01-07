@@ -4,10 +4,13 @@ include_once('../include/functions.php');
 include_once('../include/config.php');
 include_once('../include/config_mails.php');
 include_once('../include/HTML_TopBottom.php');
+include_once('../Classes/Member.php');
+include_once('../Classes/OpenKerkRooster.php');
+include_once('../Classes/Team.php');
+include_once('../Classes/KKDMailer.php');
 include_once('../include/pdf/config.php');
 include_once('../include/pdf/3gk_table.php');
 
-$db = connect_db();
 $cfgProgDir = '../auth/';
 $requiredUserGroups = array(1, 44);
 include($cfgProgDir. "secure.php");
@@ -19,48 +22,40 @@ if(isset($_POST['versturen'])) {
 	$header = array('Datum', 'Personen', 'Opmerking');
 	$data = array();
 
-	$sql		= "SELECT * FROM $TableOpenKerkRooster WHERE $OKRoosterStart > ". time() ." GROUP BY $OKRoosterStart ORDER BY $OKRoosterStart ASC";
-	$result	= mysqli_query($db, $sql);
+	$startTijden = OpenKerkRooster::getAllStarts();
 
-	if($row		= mysqli_fetch_array($result)) {
-		do {
-			# Eerste datum opslaan voor bestandsnaam
-			if(!isset($first)) $first = $row[$OKRoosterStart];
+	foreach($startTijden as $startTijd) {
+		# Eerste datum opslaan voor bestandsnaam
+		if(!isset($first)) $first = $startTijd;
+
+		$rooster = new OpenKerkRooster($startTijd);
+		$start = $rooster->start;
+		$eind = $rooster->eind;
 			
-			$datum = $row[$OKRoosterStart];
-			$eindTijd = $row[$OKRoosterEind];
+		# Genereer regel	
+		$rij = $people = array();
+		$rij[] = time2str("D j M H:i", $rooster->start) .'-'. time2str("H:i", $rooster->eind);
 			
-			# Genereer regel	
-			$rij = $people = array();
-			$rij[] = time2str("%a %d %b %H:%M", $datum) .'-'. time2str("%H:%M", $eindTijd);
-					
-			$sql_datum		= "SELECT * FROM $TableOpenKerkRooster WHERE $OKRoosterStart = ". $datum;
-			$result_datum	= mysqli_query($db, $sql_datum);
-			$row_datum = mysqli_fetch_array($result_datum);
-		
-			do {
-				$key = $row_datum[$OKRoosterPersoon];
-					
-				if(is_numeric($key)) {
-					$people[] = makeName($key, 5);
-				} else {
-					$people[] = $extern[$key]['naam'];
-				}
-			} while($row_datum = mysqli_fetch_array($result_datum));
-		
-			$rij[] = implode("\n\r", $people);
-			
-			$sql_opmerking = "SELECT * FROM $TableOpenKerkOpmerking WHERE $OKOpmerkingTijd = ". $datum;
-			$result_opmerking	= mysqli_query($db, $sql_opmerking);
-			if($row_opmerking = mysqli_fetch_array($result_opmerking)) {
-				$rij[] = urldecode($row_opmerking[$OKOpmerkingOpmerking]);
-			} else {
-				$rij[] = '';
+		foreach($rooster->personen as $key) {					
+			if(is_numeric($key) && $key > 0) {
+				$person = new Member($key);
+				$people[] = $person->getName();
+			} elseif($key != '' && $key > 0) {				
+				$people[] = $extern[$key]['naam'];
 			}
+		}
 			
-			$data[] = $rij;
-		} while($row = mysqli_fetch_array($result));
-		$last = $datum;
+		
+		$rij[] = implode("\n\r", $people);
+						
+		if($rooster->opmerking != '') {
+			$rij[] = $rooster->opmerking;
+		} else {
+			$rij[] = '';
+		}
+			
+		$data[] = $rij;
+		$last = $startTijd;
 	}
 	
 	$title = 'Rooster Open Kerk';
@@ -82,17 +77,20 @@ if(isset($_POST['versturen'])) {
 	
 	# Doorloop alle ontvangers om ze een persoonlijke mail te sturen met het rooster als bijlage
 	foreach($ontvangers as $ontvanger) {		
-		$parameter = array();
+		$OKMail = new KKDMailer();
 		
-		if(is_numeric($ontvanger)) {
-			$voornaam = makeName($ontvanger, 1);
-			$parameter['to'][] = array($ontvanger);
-			$memberData = getMemberDetails($ontvanger);			
-			$AgendaURL = $ScriptURL ."ical/".$memberData['username'].'-'. $memberData['hash_short'] .".ics";
-		} else {
-			$voornaam = $extern[$ontvanger]['voornaam'];
-			$parameter['to'][] = array($extern[$ontvanger]['mail'], $extern[$ontvanger]['naam']);
+		if(is_numeric($ontvanger)) {			
+			$person = new Member($ontvanger);
+			$person->nameType = 1;
+			$voornaam = $person->getName();
+			$AgendaURL = $ScriptURL ."ical/". $person->hash_long .".ics";
+
+			$OKMail->aan = $ontvanger;
+		} else {			
+			$extern[$ontvanger]['voornaam'];
 			$AgendaURL = '';
+
+			$OKMail->ontvangers = array($extern[$ontvanger]['mail'], $extern[$ontvanger]['naam']);
 		}
 		
 		$message = $_POST['begeleidendeTekst'];
@@ -100,15 +98,14 @@ if(isset($_POST['versturen'])) {
 		$message = str_replace('[[url-agenda]]', $AgendaURL, $message);
 		$message = nl2br($message);
 						
-		$parameter['subject']				= 'Nieuw rooster Open Kerk';
-		$parameter['message'] 			= $message;
-		$parameter['from']					= $ScriptMailAdress;
-		$parameter['fromName']			= $ScriptTitle;
-		$parameter['ReplyTo']				= 'maartendejonge55@gmail.com';
-		$parameter['ReplyToName']		= 'Maarten de Jonge';
-		$parameter['attachment'][]	= array('file' => $filename.'.pdf', 'name' => 'Rooster_Open_Kerk_'. time2str("%d_%b", $first) .'-tm-'. time2str("%d_%b", $last) .'.pdf');	
-		
-		if(sendMail_new($parameter)) {
+		$OKMail->Subject	= 'Nieuw rooster Open Kerk';
+		$OKMail->Body		= $message;		
+		$OKMail->setFrom($ScriptMailAdress, $ScriptTitle);
+		$OKMail->addReplyTo('maartendejonge55@gmail.com', 'Maarten de Jonge');
+		$OKMail->addAttachment($filename.'.pdf', 'Rooster_Open_Kerk_'. time2str("d_M", $first) .'-tm-'. time2str("d_M", $last) .'.pdf');
+		if(!$productieOmgeving)	$OKMail->testen = true;
+				
+		if($OKMail->Sendmail()) {
 			$text[] = 'Mail naar '. $voornaam .' gestuurd<br>';
 		} else {
 			$text[] = 'Geen mail naar '. $voornaam .' gestuurd<br>';
@@ -121,13 +118,11 @@ if(isset($_POST['versturen'])) {
 	if(isset($_POST['begeleidendeTekst'])) {
 		$begeleidendeTekst = $_POST['begeleidendeTekst'];
 	} else {
-		$sql_last 		= "SELECT * FROM $TableOpenKerkRooster ORDER BY $OKRoosterStart DESC LIMIT 0,1";
-		$result_last	= mysqli_query($db, $sql_last);
-		$row_last			= mysqli_fetch_array($result_last);
+		$last = OpenKerkRooster::getLastStart();
 	
 		$standaardTekst[] = "Beste [[voornaam]],";
 		$standaardTekst[] = "";
-		$standaardTekst[] = "Hierbij krijg je als bijlage bij het rooster \"Open Kerk\" voor de periode tot en met ". time2str("%A %e %B", $row_last[$OKRoosterStart]) .".";
+		$standaardTekst[] = "Hierbij krijg je als bijlage bij het rooster \"Open Kerk\" voor de periode tot en met ". time2str("D j M", $last) .".";
 		$standaardTekst[] = "";
 		$standaardTekst[] = "Je kan je persoonlijke open-kerk-rooster opnemen in je digitale agenda door eenmalig <a href='[[url-agenda]]'>deze link</a> toe te voegen.";
 		$standaardTekst[] = "";
@@ -172,17 +167,9 @@ if(isset($_POST['versturen'])) {
 	$text[] = "</table>";
 	$text[] = "</form>";	
 } else {
-	$sql		= "SELECT * FROM $TableOpenKerkRooster WHERE $OKRoosterStart > ". time() ." GROUP BY $OKRoosterPersoon";
-	$result	= mysqli_query($db, $sql);
-
-	if($row		= mysqli_fetch_array($result)) {
-		do {
-			$roosterLeden[] = $row[$OKRoosterPersoon];
-		} while($row = mysqli_fetch_array($result));
-	}
-	
-	$leden = getGroupMembers(43);
-	$groepLeden = array_merge($leden, $extern);
+	$roosterLeden	= OpenKerkRooster::getAllUsers();	
+	$leden			= new Team(43);
+	$groepLeden		= array_merge($leden->leden, $extern);
 	
 	$text[] = "<form action='". htmlspecialchars($_SERVER['PHP_SELF']) ."' method='post'>";
 	$text[] = "<table>";
@@ -194,7 +181,8 @@ if(isset($_POST['versturen'])) {
 		$text[] = "<tr>";
 		$text[] = "		<td><input type='checkbox' name='ontvangers[]' value='". (is_numeric($value) ? $value : $key)."'". ((in_array($value, $roosterLeden) OR in_array($key, $roosterLeden)) ? ' checked' : '') ."></td>";
 		if(is_numeric($value)) {
-			$text[] = "		<td>". makeName($value, 5) ."</td>";	
+			$lid = new Member($value);
+			$text[] = "		<td>". $lid->getName() ."</td>";	
 		} else {
 			$text[] = "		<td>". $value['naam'] ."</td>";	
 		}
@@ -212,8 +200,11 @@ if(isset($_POST['versturen'])) {
 }
 
 
-echo $HTMLHeader;
-echo implode("\n", $text);
-echo $HTMLFooter;
+echo showCSSHeader();
+echo '<div class="content_vert_kolom_full">'.NL;
+echo "<div class='content_block'>". implode(NL, $text) ."</div>".NL;
+echo '</div> <!-- end \'content_vert_kolom_full\' -->'.NL;
+echo showCSSFooter();
+
 
 ?>

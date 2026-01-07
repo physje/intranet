@@ -1,17 +1,18 @@
 <?php
+include_once('../Classes/Mysql.php');
+include_once('../Classes/Member.php');
 include_once('../include/functions.php');
 include_once('../include/config.php');
 include_once('../include/LP_functions.php');
 include_once('../include/HTML_TopBottom.php');
 
-$db = connect_db();
-
 $cfgProgDir = '../auth/';
 include($cfgProgDir. "secure.php");
 
-$lijst = getParam('lijst', '');
+$person = new Member($_SESSION['useID']);
+$email = $person->getMail();
 
-$email = getMailAdres($_SESSION['useID']);
+$lijst = getParam('lijst', '');
 
 if(isset($lijst) AND $lijst != '') {
 	if(lp_onList($lijst, $email)) {

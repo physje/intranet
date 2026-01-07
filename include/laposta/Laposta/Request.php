@@ -5,10 +5,10 @@ Class Laposta_Request {
 
 		// result from server
 		$response = Laposta_Util::connect(array(
-			'url' => $data['url'], 
-			'headers' => self::getHeaders(), 
-			'api_key' => Laposta::getApiKey(), 
-			'post' => $data['post'], 
+			'url' => $data['url'],
+			'headers' => self::getHeaders(),
+			'api_key' => Laposta::getApiKey(),
+			'post' => $data['post'],
 			'method' => $data['method'],
 			'httpsDisableVerifyPeer' => Laposta::getHttpsDisableVerifyPeer()
 		));
@@ -34,12 +34,12 @@ Class Laposta_Request {
 		$ua = array(
 			'bindings_version' => Laposta::VERSION,
 			'lang' => 'php',
-			'lang_version' => phpversion(), 
+			'lang_version' => phpversion(),
 			'uname' => php_uname()
 		);
 
 		$headers = array(
-			'X-Laposta-Client-User-Agent: ' . json_encode($ua), 
+			'X-Laposta-Client-User-Agent: ' . json_encode($ua),
 			'User-Agent: laposta-php-' . Laposta::VERSION
 		);
 

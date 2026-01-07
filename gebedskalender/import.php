@@ -2,32 +2,33 @@
 include_once('../include/functions.php');
 include_once('../include/config.php');
 include_once('../include/HTML_TopBottom.php');
+include_once('../Classes/Member.php');
+include_once('../Classes/Gebedspunt.php');
+include_once('../Classes/Logging.php');
 
-$db = connect_db();
 $cfgProgDir = '../auth/';
 $requiredUserGroups = array(1, 36);
 include($cfgProgDir. "secure.php");
 
 if(isset($_POST['text']) AND $_POST['text'] != '') {	
 	$regels = explode("\n", $_POST['text']);
-	
-	$maand = $_POST['maand'];
-	$jaar = $_POST['jaar'];
-	
+		
 	foreach($regels as $regel) {
 		$delen = explode("|", $regel);
 		
 		if($regel != '') {
-			$sql_delete = "DELETE FROM $TablePunten WHERE $PuntenDatum like '". $jaar.'-'.$maand.'-'.$delen[0] ."'";
-			mysqli_query($db, $sql_delete);
-			
-			$sql = "INSERT INTO $TablePunten ($PuntenDatum, $PuntenPunt) VALUES ('". $jaar.'-'.$maand.'-'.$delen[0] ."', '". urlencode(trim($delen[1])) ."')";
-			mysqli_query($db, $sql);
+			$gebedspunt = new Gebedspunt();
+			$gebedspunt->dag 		= $delen[0];
+			$gebedspunt->maand 		= $_POST['maand'];
+			$gebedspunt->jaar 		= $_POST['jaar'];
+			$gebedspunt->gebedspunt	= $delen[1];
+
+			$gebedspunt->save();
 		}
 	}
 	$blockLinks = "Punten zijn opgeslagen";
 	
-	toLog('info', '', "Gebedspunten van ". $maandArray[$maand] ." $jaar geimporteerd");	
+	toLog("Gebedspunten van ". $maandArray[$_POST['maand']] ." ". $_POST['jaar'] ." geimporteerd", 'info');	
 } else {
 	$volgendeMaand = mktime (1, 1, 1, (date("n")+1), 1);
 	

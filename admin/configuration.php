@@ -1,17 +1,29 @@
 <?php
+/**
+ * Met deze pagina kan je configuratie-instellingen van het intranet beheren.
+ * 
+ * include/config.php leest de configuratie-instellingen uit de database en maakt de variabelen aan die beschikbaar zijn in de rest van de site.
+ * Deze pagina maakt het mogelijk om deze instellingen te wijzigen via een grafische inteface.
+ * 
+ * @package Intranet KKD
+ * @author Matthijs Draijer
+ * @version 1.0.0
+ */
 include_once('../include/functions.php');
 include_once('../include/config.php');
+include_once('../Classes/Member.php');
 include_once('../include/HTML_TopBottom.php');
 $requiredUserGroups = array(1);
 $cfgProgDir = '../auth/';
 include($cfgProgDir. "secure.php");
-$db = connect_db();
+
+$db = new Mysql();
 
 if(isset($_POST['save'])) {
 	if(isset($_POST['delete'])) {
 		foreach($_POST['delete'] as $id => $value) {
-			$sql_delete = "DELETE FROM $TableConfig WHERE $ConfigID = $id";
-			if(mysqli_query($db, $sql_delete)) {
+			$sql_delete = "DELETE FROM `config` WHERE `id` = $id";
+			if($db->query($sql_delete)) {
 				$text[] = $id. ' verwijderd';
 			}
 		}
@@ -39,8 +51,8 @@ if(isset($_POST['save'])) {
 		}
 		
 		if($id == 999 AND $value != '') {
-			$sql_insert = "INSERT INTO $TableConfig ($ConfigGroep, $ConfigName, $ConfigKey, $ConfigValue, $ConfigOpmerking, $ConfigAdded) VALUES ($groep, '". urlencode($name) ."', '". urlencode($key) ."', '". urlencode($value) ."', '". urlencode($comment) ."', '". time() ."')";
-			if(mysqli_query($db, $sql_insert)) {
+			$sql_insert = "INSERT INTO `config` (`groep`, `name`, `key`, `value`, `comment`, `added`) VALUES ($groep, '". urlencode($name) ."', '". urlencode($key) ."', '". urlencode($value) ."', '". urlencode($comment) ."', '". time() ."')";
+			if($db->query($sql_insert)) {
 				$text[] = $name. ' toegevoegd';
 			} else {
 				$text[] = $sql_insert;
@@ -48,8 +60,8 @@ if(isset($_POST['save'])) {
 		}
 		
 		if($id != 999) {
-			$sql_update = "UPDATE $TableConfig SET $ConfigGroep = '$groep', $ConfigName = '". urlencode($name) ."', $ConfigKey = '". urlencode($key) ."', $ConfigValue = '". urlencode($value) ."', $ConfigOpmerking = '". urlencode($comment) ."' WHERE $ConfigID = '$id'";
-			if(!mysqli_query($db, $sql_update)) {
+			$sql_update = "UPDATE `config` SET `groep` = '$groep', `name` = '". urlencode($name) ."', `sleutel` = '". urlencode($key) ."', `value` = '". urlencode($value) ."', `comment` = '". urlencode($comment) ."' WHERE `id` = '$id'";
+			if(!$db->query($sql_update)) {
 			$text[] = "$name niet kunnen updaten";
 				echo $sql_update .'<br>';
 			}
@@ -77,56 +89,57 @@ $tfooter[] = "</table>";
 #$configGroups = array_merge(array(0 => 'Onbekend'), $configGroups);
 
 foreach($configGroups as $groepID => $groepNaam) {
-	$sql = "SELECT $ConfigName, COUNT(*) as aantal FROM $TableConfig WHERE $ConfigGroep = $groepID GROUP BY $ConfigName ORDER BY $ConfigName";
-	$result = mysqli_query($db, $sql);
-		
-	if($row = mysqli_fetch_array($result)) {
+	$sql = "SELECT `name`, COUNT(*) as aantal FROM `config` WHERE `groep` = $groepID GROUP BY `name` ORDER BY `name`";
+	$data = $db->select($sql, true);
+
+	if(count($data) > 0) {
 		$text = array();
 		
-		do {
-			$name = $row[$ConfigName];
-			$groep = $groepID;
-			$aantal = $row['aantal'];
-			$sql_name = "SELECT * FROM $TableConfig WHERE $ConfigName like '$name' AND $ConfigGroep = $groepID ORDER BY $ConfigKey";
-			$result_name = mysqli_query($db, $sql_name);
-			$row_name = mysqli_fetch_array($result_name);
+		foreach($data as $data_rij) {
+			#$name	= $data['name'];
+			#$groep	= $groepID;
+			$aantal	= $data_rij['aantal'];
+
+			$sql_name = "SELECT * FROM `config` WHERE `name` like '". $data_rij['name'] ."' AND `groep` = $groepID ORDER BY `sleutel`";
+			$data_name = $db->select($sql_name, true);
+
 			$first = true;
 			
-			do {
-				$id = $row_name[$ConfigID];
+			foreach($data_name as $name_rij) {
+				$id = $name_rij['id'];
 											
 				$text[] = "<tr>";
 				$text[] = "	<td><input type='checkbox' name='delete[$id]' value='1'></td>";
 				
 				if($configMoveGroups) {
 					$text[] = "	<td><select name='groep[$id]'>";
-					foreach($configGroups as $groupID => $groupName) {
-						$text[] = "	<option value='$groupID'". ($groep == $groupID ? ' selected' : '') .">$groupName</option>";
+					foreach($configGroups as $key => $GroepNaam) {						
+						$text[] = "	<option value='$key'". ($key == $groepID ? ' selected' : '') .">$GroepNaam</option>";
 					}					
 					$text[] = "	</select></td>";
 				} else {
-					$text[] = "	<input type='hidden' name='groep[$id]' value='$groep'>";
+					$text[] = "	<input type='hidden' name='groep[$id]' value='$groepID'>";
 				}
 				
 				if($first) {
 					#$text[] = "	<td". ($aantal == 1 ? '' : " rowspan='$aantal' valign='top'") ."><input type='text' name='name[$id]' value='". urldecode($name) ."'></td>";
-					$text[] = "	<td><input type='text' name='name[$id]' value='". urldecode($name) ."'></td>";
+					$text[] = "	<td><input type='text' name='name[$id]' value='". urldecode($name_rij['name']) ."'></td>";
 					$first = false;	
 				} else {					
 					$text[] = "	<td>&nbsp;</td>";
-					$text[] = "	<input type='hidden' name='name[$id]' value='$name'>";
+					$text[] = "	<input type='hidden' name='name[$id]' value='".$name_rij['name']."'>";
 				}
 						
-				if($row_name[$ConfigKey] != '') {
-					$text[] = "	<td><input type='text' name='key[$id]' value='". urldecode($row_name[$ConfigKey]) ."' size='25'></td>";	
-					$text[] = "	<td><input type='text' name='value[$id]' value='". urldecode($row_name[$ConfigValue]) ."' size='25'></td>";	
+				if($name_rij['sleutel'] != '') {
+					$text[] = "	<td><input type='text' name='key[$id]' value='". urldecode($name_rij['sleutel']) ."' size='25'></td>";	
+					$text[] = "	<td><input type='text' name='value[$id]' value='". urldecode($name_rij['value']) ."' size='25'></td>";	
 				} else {
-					$text[] = "	<td colspan='2'><input type='text' name='value[$id]' value='". urldecode($row_name[$ConfigValue]) ."' size='55'></td>";
+					$text[] = "	<td colspan='2'><input type='text' name='value[$id]' value='". urldecode($name_rij['value']) ."' size='55'></td>";
 				}
-				$text[] = "	<td><input type='text' name='comment[$id]' value='". urldecode($row_name[$ConfigOpmerking]) ."' size='45'></td>";
+				$text[] = "	<td><input type='text' name='comment[$id]' value='". urldecode($name_rij['comment']) ."' size='45'></td>";
 				$text[] = "</tr>";
-			} while($row_name = mysqli_fetch_array($result_name));	
-		} while($row = mysqli_fetch_array($result));
+			}
+		}
 		
 		$block[$groepID] = array_merge($thead, $text, $tfooter);
 	}

@@ -46,6 +46,7 @@ Network Trash Folder
 Temporary Items
 .apdisk
 include/config_db.php
+Classes/KKDConfig.php
 *.ics
 *.xlsx
 *.csv

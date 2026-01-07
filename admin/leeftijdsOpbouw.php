@@ -4,24 +4,34 @@ include_once('../include/config.php');
 include_once('../include/HTML_TopBottom.php');
 $cfgProgDir = '../auth/';
 include($cfgProgDir. "secure.php");
-$db = connect_db();
 
+$db = new Mysql();
 $geslacht = array('M', 'V');
 $jongens = $meisjes = $max = 0;
+$data = array();
+
+$query = "SELECT `geboortedatum` FROM `leden` WHERE `geboortedatum` NOT LIKE '0000-00-00' AND `status` like 'actief' ORDER BY `geboortedatum` ASC LIMIT 0,1";
+$oldest = $db->select($query);
 
 $group = getParam('group', 'l');
 
 # Groepeer op leeftijd
 if($group == 'l') {
-	$l_min = 0;
-	$l_max = 100;
+	# Reken de leeftijd van het oudste gemeentelid uit; is hij/zij al jarig geweest of niet
+	if(time() < mktime(0,0,0,substr($oldest['geboortedatum'], 5, 2), substr($oldest['geboortedatum'], 8, 2), date("Y"))) {
+		$l_max = date("Y") - substr($oldest['geboortedatum'], 0, 4) - 1;
+	} else {
+		$l_max = date("Y") - substr($oldest['geboortedatum'], 0, 4);
+	}
+	$l_min = 0;	
 	$l_stap = 1;
 # of op geboortejaar
 } else {
-	$l_min = date('Y')-100;
+	$l_min = substr($oldest['geboortedatum'], 0, 4);
 	$l_max = date('Y');
 	$l_stap = 1;
 }
+
 
 for($l = $l_min ; $l <= $l_max ; $l=$l + $l_stap) {
 	if($group == 'l') {
@@ -32,17 +42,16 @@ for($l = $l_min ; $l <= $l_max ; $l=$l + $l_stap) {
 		$eind = mktime(23,59,59,12,31,$l);
 	}		
 	
-	$sql_all = "SELECT count(*) FROM $TableUsers WHERE $UserGeboorte BETWEEN '". date("Y-m-d", $start) ."' AND '". date("Y-m-d", $eind) ."' AND $UserStatus like 'actief'";
+	$sql_all = "SELECT count(*) as `aantal` FROM `leden` WHERE `geboortedatum` BETWEEN '". date("Y-m-d", $start) ."' AND '". date("Y-m-d", $eind) ."' AND `status` like 'actief'";
 		
 	foreach($geslacht as $g) {
-		$sql_g = $sql_all . " AND $UserGeslacht like '$g'";
+		$sql_g = $sql_all . " AND `geslacht` like '$g'";
 
-		$result_all = mysqli_query($db, $sql_g);
-		$row_all	= mysqli_fetch_array($result_all);
+		$row = $db->select($sql_g);
+			
+		$data[$l][$g] = $row['aantal'];
 		
-		$data[$l][$g] = $row_all[0];
-		
-		if($row_all[0] > $max)	$max = $row_all[0];
+		if($row['aantal'] > $max)	$max = $row['aantal'];
 	}	
 }
 

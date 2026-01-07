@@ -37,6 +37,8 @@ function bereken_betaal_datum($datum, $betaalDag, $betaalDagMarge)
     return $betaalDatum;
 }
 
+
+
 /**
  * Genereer pdf met declaratie gegevens ter administratie
  * @param  string $mutatieNr        mutatie nummer

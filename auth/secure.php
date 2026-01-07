@@ -1,20 +1,4 @@
 <?php
-/**************************************************************/
-/*         phpSecurePages version 0.44 beta (04/02/15)        */
-/*              Copyright 2015 Circlex.com, Inc.              */
-/*                                                            */
-/*          ALWAYS CHECK FOR THE LATEST RELEASE AT            */
-/*              http://www.phpSecurePages.com                 */
-/*                                                            */
-/*              Free for non-commercial use only.             */
-/*               If you are using commercially,               */
-/*         or using to secure your clients' web sites,        */
-/*   please purchase a license at http://phpsecurepages.com   */
-/*                                                            */
-/**************************************************************/
-/*      There are no user-configurable items on this page     */
-/**************************************************************/
-
 error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
 
 # Create a constant that can be checked inside the files to be included.
@@ -23,7 +7,7 @@ define('LOADED_PROPERLY', true);
 
 # Check if secure.php has been loaded correctly
 if (isset($_GET['cfgProgDir']) || isset($_POST['cfgProgDir']) || isset($_GET['languageFile']) || isset($_POST['languageFile'])) {
-	echo "Parsing of phpSecurePages has been halted!";
+    echo "Parsing of phpSecurePages has been halted!";
 	exit();
 }
 
@@ -53,27 +37,20 @@ if (isset($logout) && !(isset($_GET['logout']) || isset($_POST['logout']))) {
 	# logout
 	include($cfgProgDir . 'objects/logout.php');
 } else {
-  # starting login check
-  if ($noDetailedMessages == true) {
-  	$strUserNotExist = $strUserNotAllowed = $strPwNotFound = $strPwFalse = $strNoPassword = $strNoAccess;
-  }
+    # starting login check
+    if ($noDetailedMessages == true) {
+        $strUserNotExist = $strUserNotAllowed = $strPwNotFound = $strPwFalse = $strNoPassword = $strNoAccess;
+    }
 
-  # make post variables global
-  if (isset($_POST['entered_login'])) $entered_login = $_POST['entered_login'];
-  if (isset($_POST['entered_password'])) $entered_password = $_POST['entered_password'];
+    # make post variables global
+    if (isset($_POST['entered_login']))       $entered_login = $_POST['entered_login'];
+    if (isset($_POST['entered_password']))    $entered_password = $_POST['entered_password'];
 
-  # check if login is necessary
-  include($cfgProgDir . "objects/checklogin.php");
+    # check if login is necessary
+    include($cfgProgDir . "objects/checklogin.php");
 
-  # check login with Database
-  if ($useDatabase == true) {
-  	include($cfgProgDir . 'objects/checklogin_db.php');
-	} else {
-		# neither of the two data checks was chosen
-		$phpSP_message = $strNoDataMethod;
-		include($cfgProgDir . "interface.php");
-		exit;
-	}
+    # check login with Database
+    include($cfgProgDir . 'objects/checklogin_db.php');
 }
 
 ?>
