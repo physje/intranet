@@ -1,4 +1,14 @@
 <?php
+/**
+ * Met dit script kunnen kerkdiensten voor een heel jaar automatisch worden gegenereerd.
+ *  
+ * Hierbij kan worden gekozen om alleen ochtend- en/of middagdiensten aan te maken.
+ * Daarnaast kunnen ook speciale diensten worden toegevoegd zoals Biddag, Dankdag, Kerst, Oud & Nieuw, Goede Vrijdag en Hemelvaart.
+ * 
+ * @package Intranet KKD
+ * @author Matthijs Draijer
+ * @version 1.0.0
+ */
 include_once('../include/functions.php');
 include_once('../include/config.php');
 include_once('../include/HTML_TopBottom.php');

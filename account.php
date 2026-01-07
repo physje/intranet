@@ -1,4 +1,14 @@
 <?php
+/**
+ * Pagina voor het beheren van accountgegevens.
+ * 
+ * Als iemand aangeeft zijn wachtwoord vergeten te zijn, krijgt hij/zij via de mail een link naar deze pagina met een unieke hash in de URL.
+ * Daarmee kan vervolgens het wachtwoord worden aangepast.
+ * 
+ * @package Intranet KKD
+ * @author Matthijs Draijer
+ * @version 1.0.0
+ */
 include_once('include/functions.php');
 include_once('include/config.php');
 include_once('include/HTML_TopBottom.php');
@@ -89,7 +99,7 @@ if(isset($_POST['data_opslaan']) AND $unique) {
 	$account[] = "</table>";
 	$account[] = "<p class='after_table'><input type='submit' name='data_opslaan' value='Opslaan'>";
 	
-	
+	//TODO: 2FA weer aanzetten
 	$twoFactor[] = "<h2>2 factor toegang (2FA)</h2>";
 	#$twoFactor[] = "<table>";
 	#$twoFactor[] = "<tr>";

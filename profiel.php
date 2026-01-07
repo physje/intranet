@@ -1,4 +1,14 @@
 <?php
+/**
+ * Dit is de pagina waar het profiel van een lid wordt getoond.
+ * Vanuit verschillende delen van het intranet kan hiernaar worden gelinkt.
+ * 
+ * Afhanjkelijk van de rechten van de ingelogde gebruiker worden bepaalde velden wel of niet getoond.
+ * 
+ * @package Intranet KKD
+ * @author Matthijs Draijer
+ * @version 1.0.0
+ */
 include_once('include/functions.php');
 include_once('include/EB_functions.php');
 include_once('include/config.php');

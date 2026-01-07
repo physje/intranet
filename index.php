@@ -1,4 +1,13 @@
 <?php
+/**
+ * De index-pagina van het intranet.
+ * Hier worden alle blokken getoond met links naar de verschillende onderdelen van het intranet.
+ * Welke blokken worden getoond is afhankelijk van de rechten van de ingelogde gebruiker en in welke teams hij of zij zit.
+ * 
+ * @package Intranet KKD
+ * @author Matthijs Draijer
+ * @version 1.0.0
+ */
 include_once('Classes/Member.php');
 include_once('Classes/Team.php');
 include_once('Classes/Rooster.php');

@@ -1,4 +1,14 @@
 <?php
+/**
+ * Met deze pagina kan je configuratie-instellingen van het intranet beheren.
+ * 
+ * include/config.php leest de configuratie-instellingen uit de database en maakt de variabelen aan die beschikbaar zijn in de rest van de site.
+ * Deze pagina maakt het mogelijk om deze instellingen te wijzigen via een grafische inteface.
+ * 
+ * @package Intranet KKD
+ * @author Matthijs Draijer
+ * @version 1.0.0
+ */
 include_once('../include/functions.php');
 include_once('../include/config.php');
 include_once('../Classes/Member.php');

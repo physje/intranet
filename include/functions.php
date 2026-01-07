@@ -762,11 +762,11 @@ function showDeclaratieDetails(Declaratie $declaratie) {
  * En dan de newlines vervangen door een spatie
  * @deprecated Met het gebruik van Declaratie-object niet meer in gebruik
  * 
- * @param mixed $input Array wat omgezet moet worden
+ * @param array $input Array wat omgezet moet worden
  * 
  * @return string Schoongemaakte JSON-string
  */
-function encode_clean_JSON($input) {
+function encode_clean_JSON(array $input) {
 	$array = $input;
 	$newArray = array();
 	
@@ -793,7 +793,12 @@ function encode_clean_JSON($input) {
 
 
 
-function cleanDeclaratieString($in) {
+/**
+ * @param string String die opgeschoond moet worden
+ * 
+ * @return string Opgeschoonde string
+ */
+function cleanDeclaratieString(string $in) {
 	$string = $in;
 
 	$string = str_replace('"', '*', $string);
@@ -847,6 +852,118 @@ function resize_image($file, $w, $h, $crop=false) {
   imagejpeg($dst, $newFile, 100);
   
   return $newFile;
+}
+
+
+/**
+ * Probeer op basis van een datum-string deze om te zetten naar dd-mm-jjjj formaat
+ * @param string $string Datum-string
+ * @param string $scheiding Scheidingsteken (tussen dag, maand, jaar)
+ * 
+ * @return string Datum in formaat dd-mm-jjjj
+ */
+function guessDate(string $string, string $scheiding) {	
+	$string = trim($string);
+	$string = str_ireplace('zondag ', '', $string);
+	$string = str_ireplace('maandag ', '', $string);
+	$string = str_ireplace('dinsdag ', '', $string);
+	$string = str_ireplace('woensdag ', '', $string);
+	$string = str_ireplace('donderdag ', '', $string);
+	$string = str_ireplace('vrijdag ', '', $string);
+	$string = str_ireplace('zaterdag ', '', $string);		
+	$string = str_ireplace('januari', $scheiding.'01'.$scheiding, $string);
+	$string = str_ireplace('februari', $scheiding.'02'.$scheiding, $string);
+	$string = str_ireplace('maart', $scheiding.'03'.$scheiding, $string);
+	$string = str_ireplace('april', $scheiding.'04'.$scheiding, $string);
+	$string = str_ireplace('mei', $scheiding.'05'.$scheiding, $string);
+	$string = str_ireplace('juni', $scheiding.'06'.$scheiding, $string);
+	$string = str_ireplace('juli', $scheiding.'07'.$scheiding, $string);
+	$string = str_ireplace('augustus', $scheiding.'08'.$scheiding, $string);
+	$string = str_ireplace('september', $scheiding.'09'.$scheiding, $string);
+	$string = str_ireplace('oktober', $scheiding.'10'.$scheiding, $string);
+	$string = str_ireplace('november', $scheiding.'11'.$scheiding, $string);
+	$string = str_ireplace('december', $scheiding.'12'.$scheiding, $string);
+	$string = str_ireplace('sept.', $scheiding.'09'.$scheiding, $string);
+	$string = str_ireplace('jan.', $scheiding.'01'.$scheiding, $string);
+	$string = str_ireplace('feb.', $scheiding.'02'.$scheiding, $string);
+	$string = str_ireplace('mrt.', $scheiding.'03'.$scheiding, $string);
+	$string = str_ireplace('apr.', $scheiding.'04'.$scheiding, $string);
+	$string = str_ireplace('mei.', $scheiding.'05'.$scheiding, $string);
+	$string = str_ireplace('jun.', $scheiding.'06'.$scheiding, $string);
+	$string = str_ireplace('jul.', $scheiding.'07'.$scheiding, $string);
+	$string = str_ireplace('aug.', $scheiding.'08'.$scheiding, $string);
+	$string = str_ireplace('sep.', $scheiding.'09'.$scheiding, $string);
+	$string = str_ireplace('okt.', $scheiding.'10'.$scheiding, $string);
+	$string = str_ireplace('nov.', $scheiding.'11'.$scheiding, $string);
+	$string = str_ireplace('dec.', $scheiding.'12'.$scheiding, $string);
+	$string = str_ireplace('sept', $scheiding.'09'.$scheiding, $string);
+	$string = str_ireplace('jan', $scheiding.'01'.$scheiding, $string);
+	$string = str_ireplace('feb', $scheiding.'02'.$scheiding, $string);
+	$string = str_ireplace('mrt', $scheiding.'03'.$scheiding, $string);
+	$string = str_ireplace('apr', $scheiding.'04'.$scheiding, $string);
+	$string = str_ireplace('mei', $scheiding.'05'.$scheiding, $string);
+	$string = str_ireplace('jun', $scheiding.'06'.$scheiding, $string);
+	$string = str_ireplace('jul', $scheiding.'07'.$scheiding, $string);
+	$string = str_ireplace('aug', $scheiding.'08'.$scheiding, $string);
+	$string = str_ireplace('sep', $scheiding.'09'.$scheiding, $string);
+	$string = str_ireplace('okt', $scheiding.'10'.$scheiding, $string);
+	$string = str_ireplace('nov', $scheiding.'11'.$scheiding, $string);
+	$string = str_ireplace('dec', $scheiding.'12'.$scheiding, $string);
+	
+	$string = str_replace(' '.$scheiding, $scheiding, $string);
+	$string = str_replace($scheiding.' ', $scheiding, $string);
+	$string = str_replace(' ', '', $string);
+	
+	$delen = explode($scheiding, $string);
+	if(count($delen) == 3) {
+		if($delen[2] == '') {
+			if(mktime(0,0,0,$delen[1],$delen[0],date('Y')) < time()){
+				$delen[2] = date('Y')+1;
+			} else {
+				$delen[2] = date('Y');
+			}
+		}		
+		$string = implode('-', $delen);
+	}
+	
+	return $string;
+}
+
+
+/**
+ * Controleer of een string een datum is
+ * @param string $string Te controleren datum
+ * 
+ * @return bool Is de string een datum of niet
+ */
+function isDatum(string $string) {
+	if(strpos($string, 'januari')) return true;
+	if(strpos($string, 'februari')) return true;
+	if(strpos($string, 'maart')) return true;
+	if(strpos($string, 'april')) return true;
+	if(strpos($string, 'mei')) return true;
+	if(strpos($string, 'juni')) return true;
+	if(strpos($string, 'juli')) return true;
+	if(strpos($string, 'augustus')) return true;
+	if(strpos($string, 'september')) return true;
+	if(strpos($string, 'oktober')) return true;
+	if(strpos($string, 'november')) return true;
+	if(strpos($string, 'december')) return true;
+	if(strpos($string, 'sept')) return true;
+	if(strpos($string, 'jan')) return true;
+	if(strpos($string, 'feb')) return true;
+	if(strpos($string, 'mrt')) return true;
+	if(strpos($string, 'apr')) return true;
+	if(strpos($string, 'mei')) return true;
+	if(strpos($string, 'jun')) return true;
+	if(strpos($string, 'jul')) return true;
+	if(strpos($string, 'aug')) return true;
+	if(strpos($string, 'sep')) return true;
+	if(strpos($string, 'okt')) return true;
+	if(strpos($string, 'nov')) return true;
+	if(strpos($string, 'dec')) return true;
+	
+	return false;
 }
 
 ?>

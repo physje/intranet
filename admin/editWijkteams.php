@@ -1,4 +1,14 @@
 <?php
+/**
+ * Op deze pagina kan je wijkteams beheren en rollen toekennen.
+ * 
+ * Die rollen worden oa gebruikt om te bepalen welke rechten iemand heeft binnen een wijkteam.
+ * Ouderlingen, diakenen en predikanten hebben bv rechten om de bezoekregistratie (@see /pastoraat/index.php) te bekijken terwijl wijcoordinatoren dat niet hebben.
+ *  
+ * @package Intranet KKD
+ * @author Matthijs Draijer
+ * @version 1.0.0
+ */
 include_once('../include/functions.php');
 include_once('../include/config.php');
 include_once('../include/HTML_TopBottom.php');

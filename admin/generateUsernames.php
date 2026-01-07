@@ -1,4 +1,12 @@
 <?php
+/**
+ * Dit script genereert gebruikersnamen en wachtwoorden voor alle actieve leden die dat nog niet hebben (lees : nieuwe leden).
+ * En zorgt verder dat van inactieve leden het account op inactief wordt gezet.
+ *  
+ * @package Intranet KKD
+ * @author Matthijs Draijer
+ * @version 1.0.0
+ */
 include_once('../include/functions.php');
 include_once('../include/config.php');
 include_once('../include/HTML_TopBottom.php');
@@ -7,8 +15,7 @@ include_once('../Classes/Logging.php');
 
 # Omdat de server deze dagelijks moet draaien wordt toegang niet gedaan op basis
 # van naam+wachtwoord maar op basis van IP-adres
-#if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
-if(true) {
+if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 	# Eerst de inactieve verwijderen
 	Member::setUsersInactive();
 	$text[] = 'Gebruikers inactief gezet';

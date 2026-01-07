@@ -1,4 +1,16 @@
 <?php
+/**
+ * Op een aantal plekken op de site kunnen namen worden ingevoerd met autocomplete.
+ * Daar wordt bijna altijd verwezen naar dit script om de namen uit de database te halen.
+ * 
+ * Als input wordt een zoekterm meegegeven via de 'term' parameter.
+ * Vervolgens wordt hier op gezocht en wordt een lijst met namen teruggegeven in JSON formaat.
+ * 
+ * @package Intranet KKD
+ * @author Matthijs Draijer
+ * @version 1.0.0
+ */
+
 # https://www.codexworld.com/autocomplete-textbox-using-jquery-php-mysql/
 
 include_once('include/functions.php');
@@ -14,6 +26,7 @@ $searchTerm = $_GET['term'];
 
 # Fetch matched data from the database
 $db = new Mysql();
+//TODO: Ook volledige voor- en achternaam meenemen
 $query = $db->select("SELECT `scipio_id` FROM `leden` WHERE (`achternaam` LIKE '".$searchTerm."%' OR `meisjesnaam` LIKE '".$searchTerm."%' OR `tussenvoegsel` LIKE '".$searchTerm."%' OR `voornaam` LIKE '".$searchTerm."%') AND `status` like 'actief' ORDER BY `achternaam` ASC", true);
 $data = array_column($query, "scipio_id");
 
