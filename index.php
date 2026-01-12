@@ -271,9 +271,8 @@ if(in_array(1, $myGroups)) {
 	$adminLinks['admin/editWijkteams.php'] = 'Wijkteams wijzigen';	
 	#$adminLinks['admin/crossCheck.php'] = 'Check databases';
 	$adminLinks['admin/log.php'] = 'Bekijk logfiles';
-	#$adminLinks['admin/mailLog.php'] = 'Bekijk mail-files';
-	//TODO: Schrijf script om eenvoudige een mail in KKD-layout te sturen
-	#$adminLinks['admin/sendMail.php'] = 'Verstuur mail';
+	#$adminLinks['admin/mailLog.php'] = 'Bekijk mail-files';	
+	$adminLinks['admin/sendMail.php'] = 'Verstuur mail';
 	//TODO: Logins zoeken
 	#$adminLinks['admin/logins.php'] = 'Zoek binnen logins';
 	//TODO: Schrijf script om alle rechten overzichtelijk inzichttelijk te hebben
