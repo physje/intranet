@@ -92,7 +92,7 @@ foreach($ids as $id) {
 			$ics_temp[] = "DTEND;TZID=Europe/Amsterdam:". date("Ymd\THis", $kerkdienst->eind);	
 			$ics_temp[] = "LAST-MODIFIED:". date("Ymd\THis", time());
 			$ics_temp[] = "SUMMARY:URL is aangepast, zie beschrijving";
-			$ics_temp[] = "DESCRIPTION:De bestandsnaam is aangepast, de juiste URL is : ". $ScriptURL .'ical/'. $member->hash_long .'.ics';
+			$ics_temp[] = "DESCRIPTION:De bestandsnaam is aangepast, de juiste URL is : ". $ScriptURL .'ical/'. $member->hash_long .'.ics. Zie '. $ScriptURL .'ical/handleiding_ical.php voor een handleiding hoe dit aan te passen';
 			$ics_temp[] = "STATUS:CONFIRMED";	
 			$ics_temp[] = "TRANSP:TRANSPARENT";
 			$ics_temp[] = "END:VEVENT";
@@ -121,7 +121,7 @@ foreach($ids as $id) {
 		$ics_temp[] = "DTEND;TZID=Europe/Amsterdam:". date("Ymd\THis", $openkerk->eind);	
 		$ics_temp[] = "LAST-MODIFIED:". date("Ymd\THis", time());
 		$ics_temp[] = "SUMMARY:URL is aangepast, zie beschrijving";
-		$ics_temp[] = "DESCRIPTION:De bestandsnaam is aangepast, de juiste URL is : ". $ScriptURL .'ical/'. $member->hash_long .'.ics';
+		$ics_temp[] = "DESCRIPTION:De bestandsnaam is aangepast, de juiste URL is : ". $ScriptURL .'ical/'. $member->hash_long .'.ics. Zie '. $ScriptURL .'ical/handleiding_ical.php voor een handleiding hoe dit aan te passen';
 		$ics_temp[] = "STATUS:CONFIRMED";	
 		$ics_temp[] = "TRANSP:TRANSPARENT";
 		$ics_temp[] = "END:VEVENT";
