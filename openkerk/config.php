@@ -36,14 +36,12 @@ $extern['extern02'] = array(
 	'voornaam' => 'Daniel'
 	);	
 
-/*
 $extern['extern03'] = array(
-	'geslacht' => '',
+	'geslacht' => 'M',
 	'mail' => '',
-	'naam' => 'Leeg',
-	'voornaam' => ''
+	'naam' => 'Arjo Kuipers',
+	'voornaam' => 'Arjo'
 	);	
-*/
 
 $extern['externTG'] = array(
 	'geslacht' => 'M',

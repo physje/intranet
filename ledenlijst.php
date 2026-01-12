@@ -1,6 +1,9 @@
 <?php
 include_once('include/functions.php');
 include_once('include/config.php');
+include_once('Classes/Member.php');
+include_once('Classes/Wijk.php');
+include_once('Classes/Logging.php');
 include_once('include/HTML_TopBottom.php');
 $cfgProgDir = 'auth/';
 include($cfgProgDir. "secure.php");
