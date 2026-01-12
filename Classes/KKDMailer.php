@@ -9,6 +9,8 @@
  * @version 1.0.0
  */
 class KKDMailer extends PHPMailer\PHPMailer\PHPMailer implements KKDConfig {
+    const SCRIPTURL = 'localhost';
+
     /**
      * @var array Array met [adres, naam] van de ontvangers
      */
@@ -144,6 +146,7 @@ class KKDMailer extends PHPMailer\PHPMailer\PHPMailer implements KKDConfig {
                     echo 'Bijlage : '. implode('|', $this->attachment[0]) .'<br>';
                 }
             } else {
+                $this->Body = $this->getKKDHeader().$this->Body.$this->getKKDFooter();                
                 $this->send();
             }
 
@@ -153,6 +156,48 @@ class KKDMailer extends PHPMailer\PHPMailer\PHPMailer implements KKDConfig {
             echo $this->ErrorInfo;
             return false;
         }
+    }
+
+    function getKKDHeader() {
+        $Header  = "<html>".NL;
+        $Header .= "<head>".NL;
+        $Header .= '		<style>'.NL;
+        $Header .= '			* { box-sizing: border-box;}'.NL;
+        $Header .= '			body { background-color:#F2F2F2; font-family: Arial, Helvetica, sans-serif; color:#34383D; }'.NL;
+        $Header .= '			a { color: #2B153B; text-decoration: underline; }'.NL;
+        $Header .= '			a:hover { color: #8C1974; font-weight: bold; text-decoration: none; }'.NL;
+        $Header .= '			.middenstuk { width: 700px; background-color:#ffffff; margin: auto; }'.NL;
+        $Header .= '			.bredebalk { background-color:#8C1974; height:20px; }'.NL;
+        $Header .= '			.dunnebalk { background-color: #2B153B; height: 1px; margin-bottom: 20px; }'.NL;
+        $Header .= '			.content_kolom { width: 95%; margin: auto; margin-bottom:20px; }'.NL;
+        $Header .= '			.content { padding: 10px; margin-bottom: 15px; }'.NL;
+        $Header .= '			.top_logo { margin-top: 10px; margin-left: 50px; overflow: auto; height: auto; }'.NL;
+        $Header .= '			img.logo { float: left; width: 600px; height: auto; }'.NL;
+        $Header .= '			@media screen and (max-width:700px) { .middenstuk { width: 100%; } img.logo { width: 400px; } }'.NL;
+        $Header .= '		</style>'.NL;
+        $Header .= "		<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>".NL;
+        $Header .= "		<meta name='viewport' content='width=device-width, initial-scale=1'>".NL;
+        $Header .= "	</head>".NL;
+        $Header .= "	<body>".NL;
+        $Header .= "	<div class='middenstuk'>".NL;
+        $Header .= "		<div class='bredebalk'>&nbsp;</div>".NL;
+        $Header .= "		<div class='content_kolom'>".NL;
+        $Header .= "			<div class='top_logo'><a href='". KKDMailer::SCRIPTURL ."'><img class='logo' src='". KKDMailer::SCRIPTURL ."images/logoKoningsKerk.png'></a></div>".NL;
+        $Header .= "			<div class='dunnebalk'>&nbsp;</div>".NL;
+        $Header .= "			<div class='content'>".NL;
+
+        return $Header;
+    }
+
+    function getKKDFooter() {
+        $Footer = "			</div>".NL;
+        $Footer .= "		<div class='dunnebalk'>&nbsp;</div>".NL;
+        $Footer .= "	</div>".NL;
+        $Footer .= "	<div class='bredebalk'>&nbsp;</div>".NL;
+        $Footer .= "</body>".NL;
+        $Footer .= "</html>".NL;
+
+        return $Footer;
     }
 }
 ?>

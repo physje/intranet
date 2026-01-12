@@ -77,6 +77,7 @@ if(isset($_POST['screen']) && $_POST['screen'] == '1') {
 
 			if($item->save()) {
 				$text[] = $Onderwerp .' van '. time2str('j F Y', $start) .' is opgeslagen<br>';
+				toLog('Agenda-item '. $Onderwerp .' opgeslagen', 'debug');
 			}
 		}		
 	}

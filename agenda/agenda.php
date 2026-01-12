@@ -35,14 +35,14 @@ $gebruiker = new Member($_SESSION['useID']);
 $myTeams = $gebruiker->getTeams();
 
 if(isset($_POST['remove'])) {
-	$query = "DELETE FROM $TableAgenda WHERE $AgendaID like ". $_POST['id'];
+	$agenda = new Agenda($_POST['id']);
 	
-	if(mysqli_query($db, $query)) {
+	if($agenda->delete()) {
 		$text[] = "De afspraak '". $_POST['titel'] ."' is verwijderd";
-		toLog('info', '', "Agenda-item '". $_POST['titel'] ."' [". $_POST['id'] ."] verwijderd");
+		toLog("Agenda-item '". $_POST['titel'] ."' [". $_POST['id'] ."] verwijderd");
 	} else {
 		$text[] = "Het verwijderen van '". $_POST['titel'] ."' is niet gelukt.";
-		toLog('error', '', "Kan agenda-item '". $_POST['titel'] ."' [". $_POST['id'] ."] niet verwijderen");
+		toLog("Kan agenda-item '". $_POST['titel'] ."' [". $_POST['id'] ."] niet verwijderen", 'error');
 	}
 } elseif(isset($_POST['save'])) {
 	if(isset($_POST['id'])) {

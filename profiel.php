@@ -3,7 +3,7 @@
  * Dit is de pagina waar het profiel van een lid wordt getoond.
  * Vanuit verschillende delen van het intranet kan hiernaar worden gelinkt.
  * 
- * Afhanjkelijk van de rechten van de ingelogde gebruiker worden bepaalde velden wel of niet getoond.
+ * Afhankelijk van de rechten van de ingelogde gebruiker worden bepaalde velden wel of niet getoond.
  * 
  * @package Intranet KKD
  * @author Matthijs Draijer
