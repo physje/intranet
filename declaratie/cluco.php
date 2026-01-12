@@ -280,7 +280,8 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 				$page[] = "</form>";
 			} else {
 				$page[] = "Deze declaratie bestaat niet";
-			}		
+				toLog('Niet bestaande declaratie geopend', 'error');
+			}
 		}
 	} else {		
 		$cluster = 0;			
@@ -329,6 +330,7 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 	}
 } else {
 	$page[] = "U bent geen cluster-coordinator";
+	toLog('Probeert als niet CluCo de cluco-pagina te opnenen', 'error');
 }
 
 if(isset($_REQUEST['send_accept']) || isset($_REQUEST['send_reject']) || isset($_REQUEST['send_question'])) {	

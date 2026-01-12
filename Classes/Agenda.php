@@ -104,5 +104,17 @@ class Agenda {
             return mysqli_insert_id($db->connection);
 		}		
 	}
+
+
+	/**
+	 * Verwijder een agenda-item
+	 * @return bool True als succesvol, False indien niet-succesvol
+	 */
+	function delete() {
+		$db = new Mysql;
+
+		$sql = "DELETE FROM `agenda` WHERE `id` = ". $this->id;
+		return $db -> query($sql);
+	}
 }
 ?>

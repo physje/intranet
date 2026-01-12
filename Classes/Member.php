@@ -867,6 +867,25 @@ class Member {
 						
 		return array_column($data, 'scipio_id');
 	}
+
+	/**
+	 * Vraag leden op op basis van wijk of eerste letter van de achternaam
+ 	* @param string $letter Beginletter of wijk waarop gezocht moet worden
+ 	* @param bool $wijk Zoeken in wijk (True) of op eerste letter van achternaam (False)
+ 	* 
+ 	* @return array Array met scipio-IDs
+ 	*/
+	static function getMembersByLetter(string $letter, $wijk = false) {
+		$db = new Mysql();
+
+		if($wijk) {
+			$data = $db->select("SELECT `scipio_id` FROM `leden` WHERE `status` like 'actief' AND `wijk` like '$letter' ORDER BY `achternaam`", true);
+		} else {
+			$data = $db->select("SELECT `scipio_id` FROM `leden` WHERE `status` like 'actief' AND `achternaam` like '". $letter ."%' ORDER BY `achternaam`", true);
+		}
+				
+		return array_column($data, 'scipio_id');
+	}
 }
 
 ?>
