@@ -104,51 +104,54 @@ class Rooster {
     public string $lastChange;
 
     function __construct($rooster = 0) {
+        $this->id = 0;
+        $this->naam = '';
+        $this->groep = 0;
+        $this->beheerder = 0;
+        $this->planner = 0;
+        $this->velden = 1;
+        $this->reminder = true;
+        $this->gelijk = 1;
+        $this->voorganger = false;
+        $this->opmerking = false;
+        $this->ouder = false;
+        $this->partner = false;
+        $this->tekst = false;
+        $this->alert = 0;
+        $this->mail = '';
+        $this->onderwerp = '';
+        $this->van = '';
+        $this->vanNaam = '';
+        $this->lastChange = '';
+
+        $data = array();
+
         if($rooster > 0) {
 			$db = new Mysql();
 			$data = $db->select("SELECT * FROM `roosters` WHERE `id` = ". $rooster);
 
-            $this->id = $rooster;
-            $this->naam = urldecode($data['naam']);
-            $this->groep = $data['groep'];
-            $this->beheerder = $data['beheerder'];
-            $this->planner = $data['planner'];
-            $this->velden = $data['aantal'];
-            $this->reminder = ($data['reminder'] == 1 ? true : false);
-            $this->gelijk = $data['gelijke_diensten'];
-            $this->voorganger = ($data['voorganger'] == 1 ? true : false);
-            $this->opmerking = ($data['opmerking'] == 1 ? true : false);
-            $this->ouder = ($data['ouder'] == 1 ? true : false);
-            $this->partner = ($data['partner'] == 1 ? true : false);
-            $this->tekst = ($data['text_only'] == 1 ? true : false);
-            $this->alert = $data['alert'];
-            $this->mail = urldecode($data['mail']);
-            $this->onderwerp = urldecode($data['onderwerp']);
-            $this->van = urldecode($data['mail_afzender']);
-            $this->vanNaam = urldecode($data['naam_afzender']);
-            $this->lastChange = $data['last_change'];
-        } else {
-            $this->id = 0;
-            $this->naam = '';
-            $this->groep = 0;
-            $this->beheerder = 0;
-            $this->planner = 0;
-            $this->velden = 1;
-            $this->reminder = true;
-            $this->gelijk = 1;
-            $this->voorganger = false;
-            $this->opmerking = false;
-            $this->ouder = false;
-            $this->partner = false;
-            $this->tekst = false;
-            $this->alert = 0;
-            $this->mail = '';
-            $this->onderwerp = '';
-            $this->van = '';
-            $this->vanNaam = '';
-            $this->lastChange = '';
+            if(count($data) > 0) {
+                $this->id = $rooster;
+                $this->naam = urldecode($data['naam']);
+                $this->groep = $data['groep'];
+                $this->beheerder = $data['beheerder'];
+                $this->planner = $data['planner'];
+                $this->velden = $data['aantal'];
+                $this->reminder = ($data['reminder'] == 1 ? true : false);
+                $this->gelijk = $data['gelijke_diensten'];
+                $this->voorganger = ($data['voorganger'] == 1 ? true : false);
+                $this->opmerking = ($data['opmerking'] == 1 ? true : false);
+                $this->ouder = ($data['ouder'] == 1 ? true : false);
+                $this->partner = ($data['partner'] == 1 ? true : false);
+                $this->tekst = ($data['text_only'] == 1 ? true : false);
+                $this->alert = $data['alert'];
+                $this->mail = urldecode($data['mail']);
+                $this->onderwerp = urldecode($data['onderwerp']);
+                $this->van = urldecode($data['mail_afzender']);
+                $this->vanNaam = urldecode($data['naam_afzender']);
+                $this->lastChange = $data['last_change'];
+            }
         }
-
     }
 
 
