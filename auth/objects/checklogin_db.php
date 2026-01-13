@@ -25,11 +25,12 @@ if (!defined("LOADED_PROPERLY") || isset($_GET['cfgProgDir']) || isset($_POST['c
 
 # contact database
 $db = new Mysql();
-$data = $db->select("SELECT `scipio_id`, `username`, `password_new` FROM `leden` WHERE `username` = '$login'");
+$sql = "SELECT `scipio_id`, `username`, `password_new` FROM `leden` WHERE `username` like '". urlencode($login) ."'";
+$data = $db->select($sql);
 
 if(count($data) != 0) {	
 	# user exist --> continue
-	if ($login != $data['username']) {		
+	if (urlencode($login) != $data['username']) {			
 		toLog('Inlogpoging vanaf '. $_SERVER['REMOTE_ADDR'] .', verkeerd getypte username |'. $login .'|', 'debug');
 		# Case sensative user not present in database
 		$phpSP_message = $strUserNotExist;
