@@ -152,7 +152,7 @@ class Vulling {
     * @return array met dienst-IDs als key, en welk rooster-ID als value
     */
     static function getPlannedTimes4Member($member) {
-        $sql = "SELECT `dienst`, `commissie` FROM `planning` WHERE `lid` = ". $member;
+        $sql = "SELECT `planning`.`dienst`, `planning`.`commissie` FROM `planning`, `kerkdiensten` WHERE `planning`.`dienst` = `kerkdiensten`.`id` AND `kerkdiensten`.`start` > ". mktime(0, 0, 0, date('n')-1) ." AND `lid` = ". $member;
 
         $db = new Mysql();
         $data = $db->select($sql, true);

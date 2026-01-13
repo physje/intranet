@@ -117,7 +117,7 @@ if(!$_SESSION['logged']) {
 	#storeLogin($_SESSION['realID'], $_SERVER['REMOTE_ADDR'], $_SERVER['HTTP_USER_AGENT']);
 	
 	# Schrijf inlog in logfiles weg
-	toLog('Inlogpoging vanaf '. $_SERVER['REMOTE_ADDR']);
+	toLog('Ingelogd vanaf '. $_SERVER['REMOTE_ADDR']);
 }
 
 

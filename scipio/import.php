@@ -22,8 +22,6 @@ include_once('../Classes/KKDMailer.php');
 $test = false;
 $debug = false;
 
-//TODO: Voor uploaden runnen en dan na uploaden eerst een keer runnen zonder mailen (om plaatsnamen ed recht te trekken). Daarna mailen aanzetten
-
 # Omdat de server deze dagelijks moet draaien wordt toegang niet gedaan op basis
 # van naam+wachtwoord maar op basis van IP-adres
 if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) || $test) {

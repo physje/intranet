@@ -57,7 +57,7 @@ if(isset($_REQUEST['id'])) {
 
 foreach($ids as $id) {
 	# Initialiseren
-	$ics = array();
+	$ics = $ics_temp = array();
 	$member		= new Member($id);
 	$diensten	= Vulling::getPlannedTimes4Member($member->id);
 
@@ -87,7 +87,7 @@ foreach($ids as $id) {
 			$ics[] = "END:VEVENT";
 
 			$ics_temp[] = "BEGIN:VEVENT";
-			$ics_temp[] = "UID:3GK-". substr('00'.$kerkdienst->dienst, -3) .'.'. substr('00'.$rooster->id, -3) .'.'. substr('00'.$member->$id, -3);
+			$ics_temp[] = "UID:3GK-". substr('00'.$kerkdienst->dienst, -3) .'.'. substr('00'.$rooster->id, -3) .'.'. substr('00'.$member->id, -3);
 			$ics_temp[] = "DTSTART;TZID=Europe/Amsterdam:". date("Ymd\THis", $kerkdienst->start);
 			$ics_temp[] = "DTEND;TZID=Europe/Amsterdam:". date("Ymd\THis", $kerkdienst->eind);	
 			$ics_temp[] = "LAST-MODIFIED:". date("Ymd\THis", time());
