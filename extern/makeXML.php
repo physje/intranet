@@ -1,6 +1,13 @@
 <?php
 include_once('../include/functions.php');
 include_once('../include/config.php');
+include_once('../Classes/Member.php');
+include_once('../Classes/Rooster.php');
+include_once('../Classes/Agenda.php');
+include_once('../Classes/Kerkdienst.php');
+include_once('../Classes/Vulling.php');
+include_once('../Classes/Voorganger.php');
+include_once('../Classes/Logging.php');
 
 # Initialiseer
 $header = $footer = $dienstenXML = $agendaXML = array();
