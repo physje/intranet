@@ -70,9 +70,9 @@ foreach($kerkdiensten as $dienstID) {
 
 	if($dienst->opmerking != "") { $postfix = ' - '.$dienst->opmerking; } else { $postfix = ''; }
 
-	if(date("H", $dienst->dienst) < 12) {
+	if(date("H", $dienst->start) < 12) {
 		$ics[] = "SUMMARY:Ochtenddienst ". $voorganger->getName(3) . $postfix;
-	} elseif(date("H", $dienst->dienst) < 18) {
+	} elseif(date("H", $dienst->start) < 18) {
 		$ics[] = "SUMMARY:Middagdienst ". $voorganger->getName(3) . $postfix;
 	} else {
 		$ics[] = "SUMMARY:Avonddienst ". $voorganger->getName(3) . $postfix;
