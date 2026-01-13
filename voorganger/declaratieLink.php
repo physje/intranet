@@ -3,7 +3,6 @@ include_once('../include/functions.php');
 include_once('../include/config.php');
 include_once('../include/config_mails.php');
 include_once('../include/HTML_TopBottom.php');
-include_once('../include/HTML_HeaderFooter.php');
 include_once('../Classes/Voorganger.php');
 include_once('../Classes/Kerkdienst.php');
 include_once('../Classes/KKDMailer.php');
