@@ -18,6 +18,7 @@ include_once('../Classes/Vulling.php');
 include_once('../Classes/Kerkdienst.php');
 include_once('../Classes/Rooster.php');
 include_once('../Classes/Member.php');
+include_once('../Classes/Agenda.php');
 include_once('../Classes/Logging.php');
 include_once('../Classes/OpenKerkRooster.php');
 
