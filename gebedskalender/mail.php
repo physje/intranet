@@ -2,7 +2,7 @@
 include_once('../include/functions.php');
 include_once('../include/config.php');
 include_once('../include/LP_functions.php');
-include_once('../intranet/Classes/Gebedspunt.php');
+include_once('../Classes/Gebedspunt.php');
 
 $afzenderAdress = 'gebedskalender@koningskerkdeventer.nl';
 $rust = 2;
