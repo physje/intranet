@@ -4,6 +4,7 @@ include_once('../include/config.php');
 include_once('../include/LP_functions.php');
 include_once('../Classes/Member.php');
 include_once('../Classes/LaPostaData.php');
+include_once('../Classes/Logging.php');
 
 # Deze gebruiken voor reguliere sync
 # De eerste keer kan je beter firstRun.php gebruiken

@@ -828,13 +828,13 @@ class Member {
 	
 	/**
 	 * Vraag alle leden met een mailadres op.
-	 * Mailadres is daarbij alles met een @-teken erin	
+	 * Mailadres is daarbij alles met een @-teken (%40 omdat urlencoded) erin	
 	 * @return array Array met key = scipio-ID, value = mailadres
 	 */
 	static function getMailadressen() {
 		$db = new Mysql();
 
-		$data = $db->select("SELECT `scipio_id`, `mail` FROM `leden` WHERE `mail` like '*@*' AND `status` like 'actief'", true);
+		$data = $db->select("SELECT `scipio_id`, `mail` FROM `leden` WHERE `mail` like '*%40*' AND `status` like 'actief'", true);
 						
 		return array_column($data, 'mail', 'scipio_id');
 	}
