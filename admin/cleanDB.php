@@ -27,8 +27,6 @@ if(count($data) > 0) {
 
     $sql_diensten = "DELETE FROM `planning` WHERE `dienst` = '". implode("' OR `dienst` = '", $diensten) ."'";
 
-    echo $sql_diensten;
-
     if($db->query($sql_diensten)) {
         toLog('Planning opgeschoond na verwijderen diensten', 'debug');
     } else {

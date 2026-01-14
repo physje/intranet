@@ -278,9 +278,8 @@ if(in_array(1, $myGroups)) {
 	//TODO: Schrijf script om alle rechten overzichtelijk inzichttelijk te hebben
 	#$adminLinks['admin/reviewRechten.php'] = 'Bekijk groepen en rechten';
 	$adminLinks['admin/configuration.php'] = 'Configuratie-variabelen';
-	$adminLinks['admin/vermommen.php'] = 'Vermommen';
-	//TODO: Oude diensten verwijderen
-	#$adminLinks['onderhoud/cleanUpDb.php'] = 'Verwijder oude diensten';
+	$adminLinks['admin/vermommen.php'] = 'Vermommen';	
+	$adminLinks['onderhoud/cleanDB.php'] = 'Verwijder oude diensten';
 	$adminLinks['../dumper/'] = 'Dumper';
 	
 	foreach($adminLinks as $link => $naam) {
