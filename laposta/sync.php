@@ -312,7 +312,7 @@ toLog('Synchronisatie naar LaPosta uitgevoerd');
 #
 # Verwijder adressen die 2 ronde's (uitgaande van elke 12 uur een check) niet meer gezien zijn
 # Er is een limiet van 4 per keer om de LaPosta-API niet te overvragen
-
+/*
 $users = LaPostaData::getOldAdresses();
 foreach($users as $userID) {
 	$user = new LaPostaData($userID);
@@ -337,4 +337,5 @@ foreach($users as $userID) {
 		toLog($email.' lijkt vaker voor te komen, niet uitgeschreven bij LaPosta', '', $user->id);
 	}
 }
+*/
 ?>
