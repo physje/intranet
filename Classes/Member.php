@@ -834,9 +834,9 @@ class Member {
 	static function getMailadressen() {
 		$db = new Mysql();
 
-		$data = $db->select("SELECT `scipio_id`, `mail` FROM `leden` WHERE `mail` like '*%40*' AND `status` like 'actief'", true);
+		$data = $db->select("SELECT `scipio_id`, `email` FROM `leden` WHERE `email` like '%%40%' AND `status` like 'actief'", true);
 						
-		return array_column($data, 'mail', 'scipio_id');
+		return array_column($data, 'email', 'scipio_id');
 	}
 
 
