@@ -165,5 +165,20 @@ class Kerkdienst {
 
         return $db -> query($sql);
     }
+
+
+    /**
+     * Verwijder de kerkdienst helemaal uit de database
+     * 
+     * Voor een dienst die uitvalt kan je beter $this->actief op 0 zetten (dan kan je het namelijk later makkelijker hestellen).
+     * Gebruik deze funtie vooral om de database op te schonen
+     * @return bool Succesvol verwijderd of niet
+     */
+    function delete() {
+        $db = new Mysql;
+
+        $sql = "DELETE FROM `kerkdiensten` WHERE WHERE `id` = ". $this->dienst;
+        return $db->query($sql);
+    }
 }
 ?>
