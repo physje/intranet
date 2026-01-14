@@ -158,7 +158,7 @@ if(isset($_POST['send_mail'])) {
 	$voorbeeld[] = "";
 	$voorbeeld[] = htmlentities("Om te beginnen heb je inloggegevens nodig. Weet niet of je die al hebt, maar anders kan je die zelf kiezen via <a href='".$ScriptURL."account.php?hash=[[hash_lang]]'>deze pagina</a>. Dit is een link die alleen voor jou is, iedereen met deze link kan jouw inloggegevens wijzigen.");
 	$voorbeeld[] = "";
-	$voorbeeld[] = htmlentities("Met deze inloggegevens kan je naar <a href='".$criptURL."'>de startpagina</a> gaan. Je hebt daar links het kopje <b>Teams die ik beheer</b> met daaronder als het goed is <a href='".$ScriptURL."editGroup.php?groep=[[groep]]'>[[groep-naam]]</a>. Hier heb je een overzicht van iedereen die in [[groep-naam]] zit. Door een vinkje voor een naam weg te halen verdwijnt iemand uit de groep en door in de balk onder de namen een naam in te voeren kan je leden toevoegen.");
+	$voorbeeld[] = htmlentities("Met deze inloggegevens kan je naar <a href='".$ScriptURL."'>de startpagina</a> gaan. Je hebt daar links het kopje <b>Teams die ik beheer</b> met daaronder als het goed is <a href='".$ScriptURL."editGroup.php?groep=[[groep]]'>[[groep-naam]]</a>. Hier heb je een overzicht van iedereen die in [[groep-naam]] zit. Door een vinkje voor een naam weg te halen verdwijnt iemand uit de groep en door in de balk onder de namen een naam in te voeren kan je leden toevoegen.");
 	$voorbeeld[] = "";
 	$voorbeeld[] = htmlentities("Als dat allemaal goed is kan je op <a href='".$ScriptURL."'>de startpagina</a> onder <b>Roosters die ik beheer</b> op <a href='".$ScriptURL."makeRooster.php?rooster=[[rooster]]'>[[rooster-naam]]</a> klikken om het rooster in te vullen.");
 	$voorbeeld[] = "";
