@@ -23,9 +23,12 @@ $zeventigPlus = mktime(0,0,0, date('m'), date('d'), (date('Y')-70));
 # Ga op zoek naar alle personen met een mailadres
 $adressen = Member::getMailadressen();
 
-foreach($adressen as $id => $email) {
+foreach($adressen as $id => $email_encoded) {
 	# 5 seconden per persoon moet voldoende zijn
 	set_time_limit(5);
+
+	# Mail staat encoded in database
+	$email = urldecode($email_encoded);
 			
 	# Maak lid-object aan
 	$lid = new Member($id);
