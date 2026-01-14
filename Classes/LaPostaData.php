@@ -96,6 +96,19 @@ class LaPostaData {
 		if($id > 0) {			
             $this->id = $id;
             $this->new = true;
+            $this->status = '';
+            $this->geslacht = '';
+                $this->voornaam = '';
+                $this->tussenvoegsel = '';
+                $this->achternaam = '';
+	            $this->mail = '';
+	            $this->wijk = '';
+                $this->relatie = '';
+                $this->doop = '';
+	            $this->zeventigPlus = false;
+                $this->lastSeen = 0;
+                $this->lastChecked = 0;
+            
             
 			$data = $db->select("SELECT * FROM `lp_data` WHERE `scipio_id` = ". $this->id);
 
@@ -148,20 +161,23 @@ class LaPostaData {
         $db = new Mysql();
 
         $data = $set = array();
-
-        $data['status'] = $this->status;
+        
+        $data['scipio_id'] = $this->id;
         $data['geslacht'] = $this->geslacht;
         $data['voornaam'] = urlencode($this->voornaam);
         $data['tussenvoegsel'] = urlencode($this->tussenvoegsel);
         $data['achternaam'] = urlencode($this->achternaam);
         $data['mail'] = urlencode($this->mail);
         $data['wijk'] = $this->wijk;
+        $data['status'] = $this->status;
         $data['relatie'] = $this->relatie;
         $data['doop'] = $this->doop;
         $data['70_plus'] = ($this->zeventigPlus ? '1' : '0');
+        $data['last_seen'] = $this->lastSeen;
+        $data['last_checked'] = $this->lastChecked;        
 
         if($this->new) {
-            $sql = "INSERT INTO `lp_data` (`". implode('`, `', array_keys($data)) ."`) VALUES ('". implode("', '", array_values($data)) ."')";
+            $sql = "INSERT INTO `lp_data` (`". implode('`, `', array_keys($data)) ."`) VALUES ('". implode("', '", array_values($data)) ."')";            
         } else {
             foreach($data as $key => $value) {
                 $set[] = "`$key`='$value'";
@@ -169,7 +185,7 @@ class LaPostaData {
 
             $sql = "UPDATE `lp_data` SET ". implode(', ', $set) ." WHERE `scipio_id` = ". $this->id;
         }
-
+                        
         return $db -> query($sql);
     }
 

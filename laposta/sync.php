@@ -29,7 +29,7 @@ foreach($adressen as $id => $email_encoded) {
 
 	# Mail staat encoded in database
 	$email = urldecode($email_encoded);
-			
+				
 	# Maak lid-object aan
 	$lid = new Member($id);
 	
@@ -43,7 +43,7 @@ foreach($adressen as $id => $email_encoded) {
 		$custom_fields['3gkadres'] 		= 'Ja';
 		$custom_fields_short = $custom_fields;
 		
-		$custom_fields['wijk'] 			= $lid->$wijk;
+		$custom_fields['wijk'] 			= $lid->wijk;
 		$custom_fields['geboortedatum']	= $lid->geboortedatum;
 		$custom_fields['relatie'] 		= $lid->relatie;
 		$custom_fields['status'] 		= $lid->doop_belijdenis;
@@ -126,12 +126,23 @@ foreach($adressen as $id => $email_encoded) {
 					toLog('nieuw update: '. $updateMember['error'], 'error', $lid->id);
 				}			
 			}
-					
+						
+			$LP->status = 'actief';
+			$LP->geslacht = $lid->geslacht;
+			$LP->voornaam		= $lid->voornaam;
+			$LP->tussenvoegsel	= $lid->tussenvoegsel;
+			$LP->achternaam		= $lid->achternaam;	
+			$LP->mail = $lid->email;
+			$LP->wijk = $lid->wijk;
+			$LP->relatie = $lid->relatie;
+			$LP->doop = $lid->doop_belijdenis;
+			$LP->lastSeen = time();
+			$LP->lastChecked = time();
+								
 			# De wijzigingen aan de LP kant moeten ook verwerkt worden in mijn lokale laposta-database
 			if($LP->save()) {
 				toLog('LaPosta-data na sync toegevoegd in lokale LP-tabel', 'debug', $lid->id);
 			} else {
-				echo $sql_lp_insert;
 				toLog('Kon na sync niets toevoegen in lokale LP-tabel', 'error', $lid->id);
 			}				
 			
@@ -169,7 +180,7 @@ foreach($adressen as $id => $email_encoded) {
 					$changed_field['tussenvoegsel'] = $lid->tussenvoegsel;
 					$changed_field['achternaam']	= $lid->achternaam;
 										
-					$LP->achternaam		= $lid->voornaam;
+					$LP->voornaam		= $lid->voornaam;
 					$LP->tussenvoegsel	= $lid->tussenvoegsel;
 					$LP->achternaam		= $lid->achternaam;					
 
