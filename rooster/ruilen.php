@@ -50,7 +50,7 @@ if(isset($dader) AND isset($slachtoffer)) {
 	$mail_d[] = "";
 	$mail_d[] = $dader->getName() ." heeft zojuist met jou geruild op het rooster '". $rooster->naam ."'.";
 	$dader->nameType = 1;
-	$mail_d[] = "Jij staat nu ingepland op ". time2str("j F", $dienst_d->start) ." en ". $dader->getName() ." op ". time2str("j F", $dienst_s->start);
+	$mail_d[] = "Jij staat nu ingepland op ". time2str("d LLLL", $dienst_d->start) ." en ". $dader->getName() ." op ". time2str("d LLLL", $dienst_s->start);
 	$mail_d[] = "";
 	$mail_d[] = "Klik <a href='".$ScriptURL."rooster/index.php?id=". $rooster->id ."'>hier</a> voor het meest recente rooster";	
 	
@@ -71,7 +71,7 @@ if(isset($dader) AND isset($slachtoffer)) {
 	$slachtoffer->nameType = 2;
 	$mail_d[] = "Jij hebt zojuist met ". $slachtoffer->getName() ." geruild op het rooster '". $rooster->naam ."'.";
 	$slachtoffer->nameType = 1;
-	$mail_d[] = "Jij staat nu ingepland op ". time2str("j F",  $dienst_s->start) ." en ". $slachtoffer->getName() ." op ". time2str("j F",  $dienst_d->start);
+	$mail_d[] = "Jij staat nu ingepland op ". time2str("d LLLL",  $dienst_s->start) ." en ". $slachtoffer->getName() ." op ". time2str("d LLLL",  $dienst_d->start);
 	$mail_d[] = "";
 	$mail_d[] = "Klik <a href='".$ScriptURL."rooster/index.php?id=". $rooster->id ."'>hier</a> voor het meest recente rooster";	
 	

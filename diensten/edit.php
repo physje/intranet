@@ -133,7 +133,7 @@ if(true) {
 			}		
 			$text[] = "	</select></td>";				
 		} else {
-			$text[] = "	<td align='right'>". time2str("D j M", $data->start) ."</td>";
+			$text[] = "	<td align='right'>". time2str("E d LLL", $data->start) ."</td>";
 		}
 		
 		$text[] = "	<td><select name='sUur[$DienstID]'>";

@@ -88,7 +88,7 @@ foreach($diensten as $dienst) {
 		
 		if(trim($RoosterString) != '') {
 			$block_1[] = "<tr>";
-			$block_1[] = "	<td><a href='komendeWeek.php?id=$dienst'>".time2str("j M H:s", $kerkdienst->start)."</a></td>";
+			$block_1[] = "	<td><a href='komendeWeek.php?id=$dienst'>".time2str("d LLL HH:mm", $kerkdienst->start)."</a></td>";
 			$block_1[] = "	<td>". $RoosterString ."</td>";
 			$block_1[] = "</tr>";
 			$leeg = false;

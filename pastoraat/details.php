@@ -62,7 +62,7 @@ if(isset($_REQUEST['ID'])) {
 				} else {
 					$text[] = "	<td>&nbsp;</td>";
 				}
-				$text[] = "	<td>". time2str("j F Y", $bezoek->tijdstip) ."</td>";
+				$text[] = "	<td>". time2str("d LLLL yyyy", $bezoek->tijdstip) ."</td>";
 				$text[] = "	<td>&nbsp;</td>";
 				$text[] = "	<td>". $indiener->getName() ."</td>";
 				$text[] = "	<td>&nbsp;</td>";

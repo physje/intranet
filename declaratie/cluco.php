@@ -79,12 +79,12 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 				$mail = array();
 				$mail[] = "Beste ". $indiener->getName(1) .",<br>";
 				$mail[] = "<br>";
-				$mail[] = "Je declaratie van ".time2str('j F', $declaratie->tijd) ." voor <i>". makeOpsomming($onderwerpen, '</i>, <i>', '</i> en <i>') ."</i> ter waarde van ". formatPrice($declaratie->totaal) ." is door ". $cluco->getName(5) ." als cluster-coordinator goedgekeurd en doorgestuurd naar de penningmeester voor verdere afhandeling.<br>";
+				$mail[] = "Je declaratie van ".time2str('d LLLL', $declaratie->tijd) ." voor <i>". makeOpsomming($onderwerpen, '</i>, <i>', '</i> en <i>') ."</i> ter waarde van ". formatPrice($declaratie->totaal) ." is door ". $cluco->getName(5) ." als cluster-coordinator goedgekeurd en doorgestuurd naar de penningmeester voor verdere afhandeling.<br>";
 				$mail[] = "Mocht deze laatste nog vragen hebben dan neemt hij contact met je op.<br>";
 
 				$gem = new KKDMailer();
 				$gem->aan = $indiener->id;
-				$gem->Subject	= "Declaratie van ". time2str('j F', $declaratie->tijd) ." doorgestuurd voor afhandeling";
+				$gem->Subject	= "Declaratie van ". time2str('d LLLL', $declaratie->tijd) ." doorgestuurd voor afhandeling";
 				$gem->Body		= implode("\n", $mail);
 								
 				# @live.nl heeft zijn mail-records niet op orde (geen SPF ed).
@@ -155,13 +155,13 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 			if(isset($_REQUEST['send_reject'])) {				
 				$mail[] = "Beste ". $indiener->getName(1) .",<br>";
 				$mail[] = "<br>";
-				$mail[] = "Je declaratie van ".time2str('j F', $declaratie->tijd) ." voor <i>". makeOpsomming($onderwerpen, '</i>, <i>', '</i> en <i>') ."</i> ter waarde van ". formatPrice($declaratie->totaal) ." is door de cluster-coordinator afgewezen.<br>";				
+				$mail[] = "Je declaratie van ".time2str('d LLLL', $declaratie->tijd) ." voor <i>". makeOpsomming($onderwerpen, '</i>, <i>', '</i> en <i>') ."</i> ter waarde van ". formatPrice($declaratie->totaal) ." is door de cluster-coordinator afgewezen.<br>";				
 				$mail[] = "Als reden daarvoor heeft de cluster-coordinator de volgende reden opgegeven :";
 				$mail[] = "<i>". $declaratie->opmerking ."</i>";
 				
 				$gem = new KKDMailer();
 				$gem->aan = $indiener->id;
-				$gem->Subject	= "Afwijzing declaratie van ". time2str('j F', $declaratie->tijd);
+				$gem->Subject	= "Afwijzing declaratie van ". time2str('d LLLL', $declaratie->tijd);
 				$gem->Body		= implode("\n", $mail);
 								
 				# @live.nl heeft zijn mail-records niet op orde (geen SPF ed).
@@ -208,7 +208,7 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 			if(isset($_REQUEST['send_question'])) {
 				$mail[] = "Beste ". $indiener->getName(1) .",<br>";
 				$mail[] = "<br>";
-				$mail[] = "Je declaratie van ".time2str('j F', $declaratie->tijd) ." voor <i>". makeOpsomming($onderwerpen, '</i>, <i>', '</i> en <i>') ."</i> ter waarde van ". formatPrice($declaratie->totaal) ." is door de cluster-coordinator bekeken.<br>";
+				$mail[] = "Je declaratie van ".time2str('d LLLL', $declaratie->tijd) ." voor <i>". makeOpsomming($onderwerpen, '</i>, <i>', '</i> en <i>') ."</i> ter waarde van ". formatPrice($declaratie->totaal) ." is door de cluster-coordinator bekeken.<br>";
 				$mail[] = "Naar aanleiding daarvan heeft ". $cluco->getName(5) ." nog een vraag die hieronder is opgenomen.<br>";
 				$mail[] = "<br>";
 				$mail[] = "<i>". $declaratie->opmerking ."</i><br>";
@@ -217,7 +217,7 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 				
 				$gem = new KKDMailer();
 				$gem->aan = $indiener->id;
-				$gem->Subject	= "Aanvullende vraag over je declaratie van ". time2str('j F', $declaratie->tijd);
+				$gem->Subject	= "Aanvullende vraag over je declaratie van ". time2str('d LLLL', $declaratie->tijd);
 				$gem->Body		= implode("\n", $mail);
 								
 				# @live.nl heeft zijn mail-records niet op orde (geen SPF ed).
@@ -309,7 +309,7 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 				$user = new Member($declaratie->gebruiker);
 
 				$page[] = "<tr>";
-				$page[] = "<td>". time2str('j M H:i', $declaratie->tijd) ."</td>";
+				$page[] = "<td>". time2str('d LLL HH:mm', $declaratie->tijd) ."</td>";
 				$page[] = "<td>&nbsp;</td>";
 				
 				if($cluster == 0) {

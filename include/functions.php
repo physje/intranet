@@ -23,28 +23,32 @@ function time2str(string $format, int $time = 0) {
 	if($time == 0) {
 		$time = time();
 	}	
-	
-	// Check for Windows to find and replace the %e
-	// modifier correctly
-	if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN') {
-		$format = preg_replace('#(?<!%)((?:%%)*)%e#', '\1%#d', $format);
-	}
 
-	/*
-	D = Man, Tue, Wed, Thu, Fri, Sat, Sun (%a)
-	l = Sunday to Saturday (%A)
-	j = 1 to 31 (%e)
-	d = 01 to 31 (%d)
-	m = 01 to 12 (%m)
-	M = Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec (%b)
-	F = January to December (%B)
-	Y = 4 digit year (%Y)
-	H = 00 to 23 (%H)
-	i = 00 to 59 (%M)
-	*/
+	# https://unicode-org.github.io/icu/userguide/format_parse/datetime/
+
+	# d	dd
+	# F	LLLL
+	# Y yyyy
+	# y yy
+	# l	EEEE
+	# j d
+	# H HH
+	# i mm
+	# M LLL
+	# D E
+	# W ww
+	# N e
 
 	#return strftime($format, $time);	
-    return date($format, $time);
+    #return date($format, $time);
+
+	$dt = new DateTime;
+	$dt->setTimestamp($time);
+
+	$formatter = new IntlDateFormatter('nl_NL', IntlDateFormatter::LONG, IntlDateFormatter::LONG);
+	$formatter->setPattern($format);
+
+	return $formatter->format($dt);
 }
 
 

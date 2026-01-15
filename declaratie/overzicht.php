@@ -55,7 +55,7 @@ if(isset($_REQUEST['key'])) {
             }
                     
             $page[] = "<tr>";
-            $page[] = "<td>". time2str('j F H:i', $declaratie->tijd) ."</td>";
+            $page[] = "<td>". time2str('d LLLL HH:mm', $declaratie->tijd) ."</td>";
             $page[] = "<td>&nbsp;</td>";			
             $page[] = "<td>". $clusters[$declaratie->cluster] ."</td>";
             $page[] = "<td>&nbsp;</td>";

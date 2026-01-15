@@ -117,7 +117,7 @@ while($datum < $lastDag) {
 		
 		if(($minDag <= $weekdag) AND ($weekdag <= $maxDag)) {
 			$row[] = "<tr>";
-			$row[] = "		<td valign='top'>".time2str("D j M H:i", $tijdstip)." - ".time2str("H:i", $eind)."</td>";
+			$row[] = "		<td valign='top'>".time2str("E d LLL HH:mm", $tijdstip)." - ".time2str("HH:mm", $eind)."</td>";
 			$row[] = "		<td valign='top'>";
 
 			$rooster = new OpenKerkRooster($tijdstip);

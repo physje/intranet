@@ -101,7 +101,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 				
 			$mailText[] = "Beste $aanspeekNaam en anderen met een taak in de eredienst,";
 			$mailText[] = "";
-			$mailText[] = "Jullie staan op het rooster voor de $dagdeel van ". time2str('l j F', $dienst->start)." om ". date('H:i', $dienst->start)." uur in de Koningskerk te Deventer.";
+			$mailText[] = "Jullie staan op het rooster voor de $dagdeel van ". time2str('EEEE d LLLL', $dienst->start)." om ". date('H:i', $dienst->start)." uur in de Koningskerk te Deventer.";
 						
 			if(isset($ouderling)) {
 				$mailText[] = "";
@@ -112,7 +112,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 			if(isset($bandleider)) {
 				$mailText[] = "";
 				$mailText[] = "<i>Bandleider</i>";				
-				$mailText[] = "De muzikale begeleiding wordt geco&ouml;rdineerd door ". $bandleider->getName() ." (". $bandleider->getMail() ."). Wij waarderen het als predikant en bandleider de interactie zoeken over de liturgie. ".($voorganger->vousvoyeren ? 'Wilt u' : 'Wil jij').", ". $aanspeekNaam ." als voorganger in de week voorafgaand ".($voorganger->vousvoyeren ? 'uw' : 'jouw')." voorstel voor liturgie met liederen, preekthema en bijbelteksten met ". $bandleider->getName(1) ." delen? ". ($bandleider->geslacht == 'M' ? 'Hij' : 'Zij') ." kan eventueel suggesties aandragen en helpen inschatten of liederen goed uit te voeren zijn (dit ivm niveau muzikanten, bekendheid van het lied in de gemeente, of dat een lied zeer recent al vaker is gezongen). Als er Engelse liederen worden gebruikt willen we graag dat de vertaling in het Nederlands erbij staat. Uiterlijk op ". time2str('l', ($dienst->start - (4*24*60*60)))."avond moet de liturgie bekend en gedeeld zijn.";
+				$mailText[] = "De muzikale begeleiding wordt geco&ouml;rdineerd door ". $bandleider->getName() ." (". $bandleider->getMail() ."). Wij waarderen het als predikant en bandleider de interactie zoeken over de liturgie. ".($voorganger->vousvoyeren ? 'Wilt u' : 'Wil jij').", ". $aanspeekNaam ." als voorganger in de week voorafgaand ".($voorganger->vousvoyeren ? 'uw' : 'jouw')." voorstel voor liturgie met liederen, preekthema en bijbelteksten met ". $bandleider->getName(1) ." delen? ". ($bandleider->geslacht == 'M' ? 'Hij' : 'Zij') ." kan eventueel suggesties aandragen en helpen inschatten of liederen goed uit te voeren zijn (dit ivm niveau muzikanten, bekendheid van het lied in de gemeente, of dat een lied zeer recent al vaker is gezongen). Als er Engelse liederen worden gebruikt willen we graag dat de vertaling in het Nederlands erbij staat. Uiterlijk op ". time2str('EEEE', ($dienst->start - (4*24*60*60)))."avond moet de liturgie bekend en gedeeld zijn.";
 				
 				# Reinier heeft zelf ID 91
 				if($dienst->voorganger != 91) {

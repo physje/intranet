@@ -28,7 +28,7 @@ $dag[] = '<blockquote>'. $punt->gebedspunt .'</blockquote>'.NL;
 $verzendtijd = mktime(5, 57);
 
 $info['name']		= 'Gebedskalender - '. date('y.m.d');
-$info['subject']	= 'Gebedspunt voor '. time2str('l j F');
+$info['subject']	= 'Gebedspunt voor '. time2str('EEEE d LLLL');
 $info['from']		= array('name' => 'Gebedskalender','email' => $afzenderAdress);
 $info['reply_to']	= $afzenderAdress;
 $info['list_ids']	= array($LPGebedDagListID);
@@ -62,14 +62,14 @@ if(date('w') == 0) {
 	
 	foreach($wPunten as $punt) {
 		$wData = new Gebedspunt($punt);		
-		$week[] = "<tr><td valign='top' width='100'>".time2str("l", $wData->unix) .'</td><td>'. $wData->gebedspunt .'</td></tr>'.NL;
+		$week[] = "<tr><td valign='top' width='100'>".time2str("EEEE", $wData->unix) .'</td><td>'. $wData->gebedspunt .'</td></tr>'.NL;
 	}
 	$week[] = "</table>".NL;
 	
 	$verzendtijd = mktime(5, 58);
 
 	$info['name']		= 'Gebedskalender - week '. date('W', (time() + (24*60*60)));
-	$info['subject']	= 'Gebedspunten week '. time2str('%U');
+	$info['subject']	= 'Gebedspunten week '. time2str('ww');
 	$info['from']		= array('name' => 'Gebedskalender','email' => $afzenderAdress);
 	$info['reply_to']	= $afzenderAdress;
 	$info['list_ids']	= array($LPGebedWeekListID);
@@ -106,15 +106,15 @@ if(date('j') == 1) {
 
 	foreach($mPunten as $punt) {
 		$mData =  new Gebedspunt($punt);		
-		$maand[] = "<tr><td valign='top' width='25'>".time2str("j", $mData->unix) .'</td><td>'. $mData->gebedspunt .'</td></tr>'. NL;
+		$maand[] = "<tr><td valign='top' width='25'>".time2str('d', $mData->unix) .'</td><td>'. $mData->gebedspunt .'</td></tr>'. NL;
 	}
 	$maand[] = "</table>".NL;
 
 	$verzendtijd = mktime(5, 59);
 	#$verzendtijd = time()+(365*24*60*60);
 
-	$info['name']		= 'Gebedskalender - '. time2str('F');
-	$info['subject']	= 'Gebedspunten '. time2str('F');
+	$info['name']		= 'Gebedskalender - '. time2str('LLLL');
+	$info['subject']	= 'Gebedspunten '. time2str('LLLL');
 	$info['from']		= array('name' => 'Gebedskalender','email' => $afzenderAdress);
 	$info['reply_to']	= $afzenderAdress;
 	$info['list_ids']	= array($LPGebedWeekListID);

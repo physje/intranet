@@ -189,9 +189,8 @@ if($aToon['wijk']) {
 
 if($aToon['geboorte']) {
 	$blok[] = "	<tr>";
-	$blok[] = "		<td><b>Geboortemaand</b></td>";
-	//echo "		<td>". time2str("%d %B '%y", $personData['geb_unix']) ."</td>";
-	$blok[] = "		<td>". time2str("F Y", mktime(0,0,0,$person->geboorte_maand, $person->geboorte_dag, $person->geboorte_jaar)) ."</td>";
+	$blok[] = "		<td><b>Geboortemaand</b></td>";	
+	$blok[] = "		<td>". time2str("LLLL yyyy", mktime(0,0,0,$person->geboorte_maand, $person->geboorte_dag, $person->geboorte_jaar)) ."</td>";
 	$blok[] = "	</tr>";
 }
 
@@ -255,21 +254,21 @@ if($aToon['EB_relatie']) {
 if($aToon['vestiging'] AND $person->tijd_vestiging > 0) {
 	$blok[] = "	<tr>";
 	$blok[] = "		<td><b>Vestingsdatum</b></td>";
-	$blok[] = "		<td>". time2str("d F 'y", $person->tijd_vestiging) ."</td>";
+	$blok[] = "		<td>". time2str("dd LLLL 'yy", $person->tijd_vestiging) ."</td>";
 	$blok[] = "	</tr>";
 }
 	
 if($aToon['change'] AND $person->tijd_wijziging > 0) {
 	$blok[] = "	<tr>";
 	$blok[] = "		<td><b>Laatste wijziging</b></td>";
-	$blok[] = "		<td>". time2str("d F 'y", $person->tijd_wijziging) ."</td>";
+	$blok[] = "		<td>". time2str("dd LLLL 'yy", $person->tijd_wijziging) ."</td>";
 	$blok[] = "	</tr>";
 }
 
 if($aToon['visit'] AND $person->tijd_bezoek > 0) {
 	$blok[] = "	<tr>";
 	$blok[] = "		<td><b>Laatste login</b></td>";
-	$blok[] = "		<td>". time2str("d F 'y", $person->tijd_bezoek) ."</td>";
+	$blok[] = "		<td>". time2str("dd LLLL 'yy", $person->tijd_bezoek) ."</td>";
 	$blok[] = "	</tr>";	
 }
 

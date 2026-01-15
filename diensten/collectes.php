@@ -98,7 +98,7 @@ foreach($diensten as $dienstID) {
 	$dienst = new Kerkdienst($dienstID);	
 	
 	$text[] = "<tr>";
-	$text[] = "	<td align='right'>". time2str("D j M", $dienst->start) ."</td>";
+	$text[] = "	<td align='right'>". time2str("E d LLL", $dienst->start) ."</td>";
 	$text[] = "	<td>". date('H:i', $dienst->start) ."</td>";	
 	$text[] = "	<td><input type='text' name='collecte[$dienstID][1]' value='". addslashes($dienst->collecte_1) ."'></td>";
 	$text[] = "	<td><input type='text' name='collecte[$dienstID][2]' value='". addslashes($dienst->collecte_2) ."'></td>";		

@@ -82,7 +82,7 @@ foreach($diensten as $dienstID) {
 	$dienst = new Kerkdienst($dienstID);
 	
 	$text[] = "<tr>";
-	$text[] = "	<td align='right'>". time2str("D d M", $dienst->start) ."</td>";
+	$text[] = "	<td align='right'>". time2str("E dd LLL", $dienst->start) ."</td>";
 	$text[] = "	<td>". date('H:i', $dienst->start) ."</td>";
 	$text[] = "	<td>";
 	$text[] = "<select name='voorganger[$dienstID]'>";

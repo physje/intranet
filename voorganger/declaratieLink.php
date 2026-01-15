@@ -36,7 +36,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 			$mailText[] = "De Koningskerk heeft een digitale declaratie-omgeving waar gast-predikanten hun declaratie kunnen indienen.";
 			$mailText[] = "Voordeel hiervan is dat waar mogelijk gegevens al zijn ingevuld, dat de declaratie direct in de boekhouding komt (wat de doorloop-tijd verkort) en dat ". ($voorganger->vousvoyeren ? 'u' : 'jij') ." een PDF-document voor de administratie in ". ($voorganger->vousvoyeren ? 'uw' : 'jouw') ." mailbox krijgt.";
 			$mailText[] = "";
-			$mailText[] = "<b>Declaratie $dagdeel ". time2str('j F', $dienst->start) ."</b>";
+			$mailText[] = "<b>Declaratie $dagdeel ". time2str('d LLLL', $dienst->start) ."</b>";
 			$mailText[] = "Om de persoonlijke digitale declaratie-omgeving voor deze dienst te bereiken ". ($voorganger->vousvoyeren ? 'kunt u' : 'kun jij') ." <a href='$declaratieLink'>hier</a> klikken.";
 			$mailText[] = "";
 			$mailText[] = "<b>Afzien van declaratie</b>";

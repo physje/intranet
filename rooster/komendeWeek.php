@@ -39,7 +39,7 @@ foreach($diensten as $dienst) {
 	$block_1 = array();
 	$block_1[] = "<table>";
 	$block_1[] = "<tr>";
-	$block_1[] = "	<td colspan='2'><h2>". ucfirst($dagdeel) .' '. time2str("j M", $kerkdienst->start).($kerkdienst->opmerking != "" ? ' ('.$kerkdienst->opmerking.')' : '').'; '.$voorganger->getName()."</h2></td>";
+	$block_1[] = "	<td colspan='2'><h2>". ucfirst($dagdeel) .' '. time2str("d LLL", $kerkdienst->start).($kerkdienst->opmerking != "" ? ' ('.$kerkdienst->opmerking.')' : '').'; '.$voorganger->getName()."</h2></td>";
 	$block_1[] = "</tr>".NL;
 	$block_1[] = "<tr>";
 	$block_1[] = "	<td>". ($kerkdienst->collecte_2 != '' ? '1ste collecte' : 'Collecte') ."</td>";
@@ -103,7 +103,7 @@ foreach($diensten as $dienst) {
 
 echo showCSSHeader(array('default', 'table_default'));
 echo '<div class="content_vert_kolom">'.NL;
-echo "<h1>". (isset($_REQUEST['id']) ? "Diensten van ". time2str("j M", $start) : "Diensten tussen ". time2str("j M", $start) ." en ". time2str("j M", $eind)) ."</h1>";
+echo "<h1>". (isset($_REQUEST['id']) ? "Diensten van ". time2str("d LLL", $start) : "Diensten tussen ". time2str("d LLL", $start) ." en ". time2str("d LLL", $eind)) ."</h1>";
 
 foreach($dienstBlocken as $block) {
 	echo "<div class='content_block'>".NL. $block .NL."</div>".NL;

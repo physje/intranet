@@ -176,7 +176,7 @@ foreach($diensten as $dienst) {
 		}
 				
 		$block_rooster[] = "<tr>";
-		$block_rooster[] = "	<td>". ($korteDatum ? time2str("l d M", $kerkdienst->start) : time2str("l d M H:i", $kerkdienst->start)) ."</td>";
+		$block_rooster[] = "	<td>". ($korteDatum ? time2str("EEEE dd LLL", $kerkdienst->start) : time2str("EEEE dd LLL HH:mm", $kerkdienst->start)) ."</td>";
 				
 		if($rooster->tekst) {
 			$block_rooster[] = "	<td><input type='text' name='invulling[$dienst]' value='". $vulling->tekst ."'></td>";			

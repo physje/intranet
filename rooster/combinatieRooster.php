@@ -109,10 +109,10 @@ if(count($roosters) > 0) {
 		
 		if($gevuldeCel) {
 			$text[] = "<tr>";
-			$text[] = "<td>".time2str("D d M H:i", $d->start)."<br><i>". $d->opmerking ."</i></td>";
+			$text[] = "<td>".time2str("E dd LLL HH:mm", $d->start)."<br><i>". $d->opmerking ."</i></td>";
 			$text[] = implode("\n", $cel);
 			$text[] = "</tr>";
-			$rij = array_merge(array(time2str("D d M H:i", $d->start)."\n".$d->opmerking), $rij);
+			$rij = array_merge(array(time2str("E dd LLL HH:mm", $d->start)."\n".$d->opmerking), $rij);
 			$data[] = $rij;
 		}		
 	}

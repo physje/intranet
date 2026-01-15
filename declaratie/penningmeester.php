@@ -173,7 +173,7 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 					# Ken de waarde van $indiener->boekhouden daarom toe aan $EBCode
 					$EBCode = $indiener->boekhouden;
 
-					$factuurnummer	= $boekstukNummer->nummer.'-declaratie-'.time2str('dM-H.i', $declaratie->tijd);					
+					$factuurnummer	= $boekstukNummer->nummer.'-declaratie-'.time2str('ddLLL-HH.mm', $declaratie->tijd);					
 				}		
 				
 				# EIGEN = NEE
@@ -231,7 +231,7 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 				# Omdat bij de toelichting altijd de key (van 8 tekens) met haakjes wordt getoond
 				# moet de grens op 188 tekens komen te liggen.
 				if(strlen($toelichting) > 188) {
-					$toelichting = 'declaratie '. time2str('j F Y', $declaratie->tijd);
+					$toelichting = 'declaratie '. time2str('d LLLL yyyy', $declaratie->tijd);
 				}
 							
 				if($write2EB)	{					
@@ -290,7 +290,7 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 					$MailIndiener = array();
 					$MailIndiener[] = "Beste ". $indiener->getName(1) .",<br>";
 					$MailIndiener[] = "<br>";
-					$MailIndiener[] = "Je declaratie van ".time2str('j F', $declaratie->tijd) ." voor <i>". makeOpsomming($onderwerpen, '</i>, <i>', '</i> en <i>') ."</i> ter waarde van ". formatPrice($declaratie->totaal)." is goedgekeurd en zal worden uitbetaald.<br>";
+					$MailIndiener[] = "Je declaratie van ".time2str('d LLLL', $declaratie->tijd) ." voor <i>". makeOpsomming($onderwerpen, '</i>, <i>', '</i> en <i>') ."</i> ter waarde van ". formatPrice($declaratie->totaal)." is goedgekeurd en zal worden uitbetaald.<br>";
 					
 					$IndMail = new KKDMailer();
 					$IndMail->aan = $indiener->id;
@@ -701,7 +701,7 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 				$indiener = new Member($decl->gebruiker);
 
 				$page[] = "<tr>";
-				$page[] = "<td>". time2str('j M H:i', $decl->tijd) ."</td>";
+				$page[] = "<td>". time2str('d LLL HH:mm', $decl->tijd) ."</td>";
 				$page[] = "<td>&nbsp;</td>";			
 				$page[] = "<td>". $clusters[$decl->cluster] ."</td>";
 				$page[] = "<td>&nbsp;</td>";

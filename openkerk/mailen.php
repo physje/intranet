@@ -34,7 +34,7 @@ if(isset($_POST['versturen'])) {
 			
 		# Genereer regel	
 		$rij = $people = array();
-		$rij[] = time2str("D j M H:i", $rooster->start) .'-'. time2str("H:i", $rooster->eind);
+		$rij[] = time2str("E d LLL HH:mm", $rooster->start) .'-'. time2str("HH:mm", $rooster->eind);
 			
 		foreach($rooster->personen as $key) {					
 			if(is_numeric($key) && $key > 0) {
@@ -102,7 +102,7 @@ if(isset($_POST['versturen'])) {
 		$OKMail->Body		= $message;		
 		$OKMail->setFrom($ScriptMailAdress, $ScriptTitle);
 		$OKMail->addReplyTo('maartendejonge55@gmail.com', 'Maarten de Jonge');
-		$OKMail->addAttachment($filename.'.pdf', 'Rooster_Open_Kerk_'. time2str("d_M", $first) .'-tm-'. time2str("d_M", $last) .'.pdf');
+		$OKMail->addAttachment($filename.'.pdf', 'Rooster_Open_Kerk_'. time2str("dd_LLL", $first) .'-tm-'. time2str("dd_LLL", $last) .'.pdf');
 		if(!$productieOmgeving)	$OKMail->testen = true;
 				
 		if($OKMail->Sendmail()) {
@@ -122,7 +122,7 @@ if(isset($_POST['versturen'])) {
 	
 		$standaardTekst[] = "Beste [[voornaam]],";
 		$standaardTekst[] = "";
-		$standaardTekst[] = "Hierbij krijg je als bijlage bij het rooster \"Open Kerk\" voor de periode tot en met ". time2str("D j M", $last) .".";
+		$standaardTekst[] = "Hierbij krijg je als bijlage bij het rooster \"Open Kerk\" voor de periode tot en met ". time2str("E d LLL", $last) .".";
 		$standaardTekst[] = "";
 		$standaardTekst[] = "Je kan je persoonlijke open-kerk-rooster opnemen in je digitale agenda door eenmalig <a href='[[url-agenda]]'>deze link</a> toe te voegen.";
 		$standaardTekst[] = "";

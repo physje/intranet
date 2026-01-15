@@ -90,8 +90,8 @@ if(isset($_POST['remove'])) {
 		$body[] = "De volgende gegevens zijn daarbij opgeslagen :";
 		$body[] = "Titel: ". $agenda->titel;
 		$body[] = "Beschrijving: ". $agenda->beschrijving;
-		$body[] = "Datum : ". time2str("l j F Y", $agenda->start);
-		$body[] = "Tijd: ". time2str("H:i", $agenda->start) ." tot ". time2str("H:i", $agenda->eind);
+		$body[] = "Datum : ". time2str("EEEE d LLLL yyyy", $agenda->start);
+		$body[] = "Tijd: ". time2str("HH:mm", $agenda->start) ." tot ". time2str("HH:mm", $agenda->eind);
 		$body[] = "";
 		$body[] = "Om deze afspraak te beheren kan je <a href='". $ScriptURL ."agenda/agenda.php?id=". $newID ."&hash=". $gebruiker->hash_long ."'>deze link</a> gebruiken, daarmee kom je direct weer bij deze afspraak terecht.";
 		$body[] = "Mocht je deze mail later niet meer terug kunnen vinden, via <a href='". $ScriptURL ."agenda/agenda.php'>Agenda voor Scipio</a> op het intranet kan je ook weer bij deze afspraak komen.";

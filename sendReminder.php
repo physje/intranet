@@ -86,7 +86,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 							
 							$gebruiker->nameType = 1;	$ReplacedBericht = str_replace ('[[voornaam]]', $gebruiker->getName(), $ReplacedBericht);
 							$gebruiker->nameType = 4;	$ReplacedBericht = str_replace ('[[achternaam]]', $gebruiker->getName(), $ReplacedBericht);
-							$ReplacedBericht = str_replace ('[[dag]]', time2str ("l", $dienst->start), $ReplacedBericht);
+							$ReplacedBericht = str_replace ('[[dag]]', time2str ("EEEE", $dienst->start), $ReplacedBericht);
 							$ReplacedBericht = str_replace ('[[dagdeel]]', $dagdeel, $ReplacedBericht);
 							$ReplacedBericht = str_replace ('[[voorganger]]', $voorganger->getName(), $ReplacedBericht);
 							$ReplacedBericht = str_replace ('[[collecte1]]', $dienst->collecte_1, $ReplacedBericht);

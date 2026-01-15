@@ -27,12 +27,12 @@ foreach($starttijden as $start) {
 
 	# Opmaak voor HTML
 	$text[] = "<tr>";
-	$text[] = "		<td valign='top'>".time2str("D j M H:i", $rooster->start) .'-'. time2str("H:i", $rooster->eind) ."</td>";
+	$text[] = "		<td valign='top'>".time2str("E d LLL HH:mm", $rooster->start) .'-'. time2str("HH:mm", $rooster->eind) ."</td>";
 	$text[] = "		<td valign='top'>";
 
 	# Opmaak voor PDF
 	$rij = array();
-	$rij[] = time2str("D j M H:s", $rooster->start) .'-'. time2str("H:s", $rooster->eind);
+	$rij[] = time2str("E d LLL HH:mm", $rooster->start) .'-'. time2str("HH:mm", $rooster->eind);
 	$people = array();
 
 	foreach($rooster->personen as $key => $value) {		

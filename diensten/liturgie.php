@@ -19,10 +19,10 @@ if(isset($_REQUEST['dienstID'])) {
 		
 		if($dienst->save()) {
 			$text[] = "Liturgie succesvol opgeslagen!";
-			toLog('Litugie ('. time2str("D j M", $dienst->start) .') bijgewerkt');
+			toLog('Litugie ('. time2str("E d LLL", $dienst->start) .') bijgewerkt');
 		} else {
 			$text[] = "Helaas, er ging iets niet goed met het opslaan van de liturgie";
-			toLog('Liturgie ('. time2str("D j M", $dienst->start) .') konden niet worden opgeslagen', 'error');
+			toLog('Liturgie ('. time2str("E d LLL", $dienst->start) .') konden niet worden opgeslagen', 'error');
 		}
     } else {        
         $dienst = new Kerkdienst($_REQUEST['dienstID']);
@@ -32,11 +32,11 @@ if(isset($_REQUEST['dienstID'])) {
 
         if(!$liturgie) {
             # Geen liturgie aanwezig voor geselecteerde dienst, nieuwe invoeren
-            $text[] = "Voer hieronder de nieuwe liturgie in voor de dienst van ". time2str("j F Y", $dienst->start). " om ". date("H:i", $dienst->start). ":<br><br>";
+            $text[] = "Voer hieronder de nieuwe liturgie in voor de dienst van ". time2str("d LLLL yyyy", $dienst->start). " om ". date("H:i", $dienst->start). ":<br><br>";
             $text[] = "<textarea rows='30' name='liturgieTekst' cols='50' font: normal 1em Verdana, sans-serif></textarea>";
         } else {
             # Liturgie gevonden voor geselecteerde dienst, bijwerken
-            $text[] = "Pas hieronder de liturgie aan voor de dienst van ". time2str("j F Y",  $dienst->start). " om ". date("H:i", $dienst->start). ":<br><br>";
+            $text[] = "Pas hieronder de liturgie aan voor de dienst van ". time2str("d LLLL yyyy",  $dienst->start). " om ". date("H:i", $dienst->start). ":<br><br>";
             $text[] = "<textarea rows='30' name='liturgieTekst' cols='50'>". $liturgie. "</textarea>";
         }
 
@@ -66,7 +66,7 @@ if(isset($_REQUEST['dienstID'])) {
         $dienst = new Kerkdienst($dienstID);
 
         $text[] = "<tr>";
-        $text[] = "	<td align='right'>". time2str("D j M", $dienst->start) ."</td>";
+        $text[] = "	<td align='right'>". time2str("E d LLL", $dienst->start) ."</td>";
         //$text[] = "	<td align='right'>". date("d-m-Y", $data['start']) ."</td>";
         $text[] = "	<td>". date('H:i', $dienst->start) ."</td>";
         $text[] = "	<td>". $dienst->opmerking ."</td>";

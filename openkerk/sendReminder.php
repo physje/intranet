@@ -42,7 +42,7 @@ foreach($personen as $persoon) {
 
 		foreach($shifts as $shift) {
 			$rooster = new OpenKerkRooster($shift);
-			$mail[] = "<li>". time2str("D j M H:i", $rooster->start) .'-'. time2str("H:i", $rooster->eind) .($rooster->opmerking != '' ? " (<i>$rooster->opmerking</i>)" : '') .'</li>';				
+			$mail[] = "<li>". time2str("E d LLL HH:mm", $rooster->start) .'-'. time2str("HH:mm", $rooster->eind) .($rooster->opmerking != '' ? " (<i>$rooster->opmerking</i>)" : '') .'</li>';				
 		}
 		
 		$mail[] = "</ul>";

@@ -278,7 +278,7 @@ if(isset($declaratie->hash) && $declaratie->hash != '') {
 				$mailPredikant = array();
 				$mailPredikant[] = "Beste ". $voorganger->getName(5) .",";
 				$mailPredikant[] = "";
-				$mailPredikant[] = ($voorganger->vousvoyeren ? 'u heeft' : 'jij hebt')." online een declaratie ingediend voor het voorgaan in de $dagdeel van ". time2str('j F', $dienst->start)." in de Koningskerk te Deventer.";
+				$mailPredikant[] = ($voorganger->vousvoyeren ? 'u heeft' : 'jij hebt')." online een declaratie ingediend voor het voorgaan in de $dagdeel van ". time2str('d LLLL', $dienst->start)." in de Koningskerk te Deventer.";
 				$mailPredikant[] = "Een samenvatting van deze declaratie voor in ". ($voorganger->vousvoyeren ? 'uw administratie treft u' : 'in je administratie tref je')." aan in de bijlage";
 				$mailPredikant[] = "";
 				$mailPredikant[] = "Declaratie worden over het algemeen rond de 20ste van de maand uitbetaald.";
@@ -353,7 +353,7 @@ if(isset($declaratie->hash) && $declaratie->hash != '') {
 			$page[] = "	<tr>";
 			$page[] = "		<td>Dienst</td>";
 			$page[] = "		<td>&nbsp;</td>";
-			$page[] = "		<td colspan='2'>". formatDagdeel($dienst->start) ." ". time2str('j F Y', $dienst->start) ."</td>";
+			$page[] = "		<td colspan='2'>". formatDagdeel($dienst->start) ." ". time2str('d LLLL yyyy', $dienst->start) ."</td>";
 			$page[] = "	</tr>";
 			$page[] = "	<tr>";
 			$page[] = "		<td>Declaratie</td>";
@@ -416,7 +416,7 @@ if(isset($declaratie->hash) && $declaratie->hash != '') {
 			$page[] = "	</tr>";
 			$page[] = "	<tr>";
 			$page[] = "		<td width='20'>&nbsp;</td>";
-			$page[] = "		<td colspan='3'>".formatDagdeel($dienst->start) ." ". time2str('j F Y', $dienst->start) ."</td>";
+			$page[] = "		<td colspan='3'>".formatDagdeel($dienst->start) ." ". time2str('d LLLL yyyy', $dienst->start) ."</td>";
 			$page[] = "		<td>&nbsp;</td>";
 			$page[] = "		<td align='right'>". formatPrice($voorganger->honorarium) ."</td>";
 			$page[] = "	</tr>";
@@ -565,7 +565,7 @@ if(isset($declaratie->hash) && $declaratie->hash != '') {
 		$mailText[] = $declaratieReplyAddress;
 
 		# Onderwerp maken
-		$Subject = "Link naar declaratie-omgeving voor $dagdeel ". time2str('j M Y', $dienst->start);
+		$Subject = "Link naar declaratie-omgeving voor $dagdeel ". time2str('d LLLL yyyy', $dienst->start);
 		
 		$mail = new KKDMailer();
 		$mail->Body			= implode("<br>\n", $mailText);
@@ -606,7 +606,7 @@ if(isset($declaratie->hash) && $declaratie->hash != '') {
 	foreach(array_reverse($diensten) as $dienstID) {
 		$dienst = new Kerkdienst($dienstID);
 		$dagdeel = formatDagdeel($dienst->start);
-		$page[] = "<option value='$dienstID'>$dagdeel ". time2str('j M', $dienst->start) ."</option>";		
+		$page[] = "<option value='$dienstID'>$dagdeel ". time2str('d LLL', $dienst->start) ."</option>";		
 	}
 	$page[] = "</select>";
 	$page[] = "<p class='after_table'><input type='submit' name='send_link' value='Verstuur link'></p>";	

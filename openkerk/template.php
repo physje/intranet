@@ -65,8 +65,8 @@ if(isset($_POST['enroll'])) {
 		
 		do {
 			$nieuweDag	= mktime(0,0,0,date('n', $start),(date('j', $start)+$offset));
-			$week				= fmod(time2str('W', $nieuweDag), 2);
-			$dag				= time2str('N', $nieuweDag);
+			$week				= fmod(time2str('w', $nieuweDag), 2);
+			$dag				= time2str('e', $nieuweDag);
 												
 			# Als er een leeg rooster moet worden uitgerold, alleen op vakantie dagen
 			# anders alle dagen van de week
@@ -96,7 +96,7 @@ if(isset($_POST['enroll'])) {
 			$offset++;
 		} while($nieuweDag < $eind);
 		
-		$block[] = 'Het rooster is op basis van template <i>'. $templates[$template] .'</i> uitgerold van '. time2str('j F', $start) .' tot '. time2str('j F', $eind) .'.<br>';
+		$block[] = 'Het rooster is op basis van template <i>'. $templates[$template] .'</i> uitgerold van '. time2str('d LLLL', $start) .' tot '. time2str('d LLLLF', $eind) .'.<br>';
 		$block[] = '<br>';
 		$block[] = 'Klik <a href="index.php">hier</a> om door te gaan naar het rooster';
 	} else {
