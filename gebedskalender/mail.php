@@ -34,19 +34,19 @@ $info['reply_to']	= $afzenderAdress;
 $info['list_ids']	= array($LPGebedDagListID);
 
 $preheader = $disclaimer = $afmelding = '';
-include('../include/LP_HeaderFooter.php');
-$bericht  = implode("\n", $LaPostaHeader);
+#include('../include/LP_HeaderFooter.php');
+#$bericht  = implode("\n", $LaPostaHeader);
 $bericht .= implode("\n", $Kop);
 $bericht .= implode("\n", $dag);
 $bericht .= implode("\n", $Staart);
-$bericht .= implode("\n", $LaPostaFooter);
+#$bericht .= implode("\n", $LaPostaFooter);
 
 $campaignDag = lp_createMail($info);
 sleep($rust);
 if(lp_populateMail($campaignDag, $bericht)) {
 	sleep($rust);
 	lp_scheduleMail($campaignDag, $verzendtijd);
-	toLog('debug', '', 'Dagelijkse gebedskalender verstuurd');
+	toLog('Dagelijkse gebedskalender verstuurd', 'debug');
 }
 
 
@@ -75,19 +75,19 @@ if(date('w') == 0) {
 	$info['list_ids']	= array($LPGebedWeekListID);
 
 	$preheader = $disclaimer = $afmelding = '';
-	include('../include/LP_HeaderFooter.php');
-	$bericht  = implode("\n", $LaPostaHeader);
+	#include('../include/LP_HeaderFooter.php');
+	#$bericht  = implode("\n", $LaPostaHeader);
 	$bericht .= implode("\n", $Kop);
 	$bericht .= implode("\n", $week);
 	$bericht .= implode("\n", $Staart);
-	$bericht .= implode("\n", $LaPostaFooter);
+	#$bericht .= implode("\n", $LaPostaFooter);
 	
 	$campaignWeek = lp_createMail($info);
 	sleep($rust);
 	if(lp_populateMail($campaignWeek, $bericht)) {
 		sleep($rust);
 		lp_scheduleMail($campaignWeek, $verzendtijd);
-		toLog('debug', '', 'Wekelijkse gebedskalender verstuurd');
+		toLog('Wekelijkse gebedskalender verstuurd', 'debug');
 	}
 }
 
@@ -120,19 +120,19 @@ if(date('j') == 1) {
 	$info['list_ids']	= array($LPGebedWeekListID);
 
 	$preheader = $disclaimer = $afmelding = '';
-	include('../include/LP_HeaderFooter.php');
-	$bericht  = implode("\n", $LaPostaHeader);
+	#include('../include/LP_HeaderFooter.php');
+	#$bericht  = implode("\n", $LaPostaHeader);
 	$bericht .= implode("\n", $Kop);
 	$bericht .= implode("\n", $maand);
 	$bericht .= implode("\n", $Staart);
-	$bericht .= implode("\n", $LaPostaFooter);
+	#$bericht .= implode("\n", $LaPostaFooter);
 	
 	$campaignMaand = lp_createMail($info);
 	sleep($rust);
 	if(lp_populateMail($campaignMaand, $bericht)) {
 		sleep($rust);
 		lp_scheduleMail($campaignMaand, $verzendtijd);
-		toLog('debug', '', 'Maandelijkse gebedskalender verstuurd');
+		toLog('Maandelijkse gebedskalender verstuurd', 'debug');
 	}
 }
 
