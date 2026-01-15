@@ -228,10 +228,14 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 				}
 				
 				# eBoekhouden heeft een limiet voor 200 tekens voor de toelichting
-				# Omdat bij de toelichting altijd de key (van 8 tekens) met haakjes wordt getoond
-				# moet de grens op 188 tekens komen te liggen.
-				if(strlen($toelichting) > 188) {
+				# bij een te lange toelichting wordt dit gewoon vervangen door 'declaratie 15 januari 2026'
+				if(strlen($toelichting) > 200) {
 					$toelichting = 'declaratie '. time2str('d LLLL yyyy', $declaratie->tijd);
+				}
+
+				# Tijdelijk voor Wandertheater Dolorosa
+				if($declaratie->cluster == 8) {
+					$toelichting = $toelichting.'_Dolorosa';
 				}
 							
 				if($write2EB)	{					
