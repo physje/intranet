@@ -716,9 +716,10 @@ class Member {
 	/**
 	 * Geeft het mailadres van het lid terug (afhankelijk van emailType)
 	 * 
-	 * Hiervoor wordt eerst het eigen mailadres opgevraagd. Als deze leeg is wordt het mailadres van de partner opgevraagd.
+	 * Hiervoor wordt eerst het eigen mailadres opgevraagd.
+	 * Als deze leeg is wordt het mailadres van de ouders opgevraagd en als die niet bestaan het adres van de partner.
 	 * Voor het formele mailadres wordt eerst gekeken of het formele adres is ingevuld,
-	 * zo niet dan wordt het standaard mailadres teruggegeven. Dat kan dus ook het adres van de partner zijn zoals hierboven.
+	 * zo niet dan wordt het standaard mailadres teruggegeven. Dat kan dus ook het adres van de ouders of partner zijn zoals hierboven.
 	 * 
 	 * @return string String met mailadres
 	 */
@@ -729,13 +730,20 @@ class Member {
 		if($this->email != '') {
 			$plain = $this->email;
 		} else {
+			# Persoonlijke mailadres bestaat niet
+			# Check of er ouders zijn met een mailadres
+			$ouders = $this->getParents();
 			$prtnr = $this->getPartner();
-			if(is_int($prtnr)) {
+
+			if(count($ouders) > 0) {
+				$ouder = new Member($ouders[0]);
+				$plain = $ouder->getMail($type);
+			} elseif(is_int($prtnr)) {
 				$partner = new Member($prtnr);
 				$plain = $partner->getMail($type);
 			} else {
 				$plain = '';
-			}			
+			}						
 		}
 
 		if($this->email_formeel != '') {
