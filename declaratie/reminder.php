@@ -6,6 +6,7 @@ include_once('../include/config_mails.php');
 include_once('../Classes/Declaratie.php');
 include_once('../Classes/Member.php');
 include_once('../Classes/KKDMailer.php');
+include_once('../Classes/Logging.php');
 
 /**
  * Doorloop de array met clustercoordinatoren.
