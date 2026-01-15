@@ -715,6 +715,11 @@ class Member {
 
 	/**
 	 * Geeft het mailadres van het lid terug (afhankelijk van emailType)
+	 * 
+	 * Hiervoor wordt eerst het eigen mailadres opgevraagd. Als deze leeg is wordt het mailadres van de partner opgevraagd.
+	 * Voor het formele mailadres wordt eerst gekeken of het formele adres is ingevuld,
+	 * zo niet dan wordt het standaard mailadres teruggegeven. Dat kan dus ook het adres van de partner zijn zoals hierboven.
+	 * 
 	 * @return string String met mailadres
 	 */
 	function getMail($type = 1) {        
@@ -725,8 +730,12 @@ class Member {
 			$plain = $this->email;
 		} else {
 			$prtnr = $this->getPartner();
-			$partner = new Member($prtnr);
-			$plain = $partner->getMail($type);
+			if(is_int($prtnr)) {
+				$partner = new Member($prtnr);
+				$plain = $partner->getMail($type);
+			} else {
+				$plain = '';
+			}			
 		}
 
 		if($this->email_formeel != '') {
