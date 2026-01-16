@@ -770,7 +770,7 @@ class Member {
 		$db = new Mysql;
 		$data = $set = array();
 
-		#$data['scipio_id'] = $this->id;
+		$data['scipio_id'] = $this->id;
 		$data['status'] = $this->status;
 		$data['kerk_adres'] = $this->adres;
 		$data['geslacht'] = $this->geslacht;
