@@ -135,7 +135,7 @@ echo showCSSHeader();
 echo '<div class="content_vert_kolom">'.NL;
 
 foreach($blocks as $block) {
-	echo "<div class='content_block'>". implode("<br>".NL, $block) ."</div>".NL;
+	echo "<div class='content_block'>". $block ."</div>".NL;
 }
 
 echo '</div> <!-- end \'content_vert_kolom\' -->'.NL;
