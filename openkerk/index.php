@@ -5,6 +5,7 @@ include_once('../include/config.php');
 include_once('../include/HTML_TopBottom.php');
 include_once('../Classes/Member.php');
 include_once('../Classes/OpenKerkRooster.php');
+include_once('../Classes/Logging.php');
 include_once('../include/pdf/config.php');
 include_once('../include/pdf/3gk_table.php');
 
