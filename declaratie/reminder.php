@@ -8,6 +8,8 @@ include_once('../Classes/Member.php');
 include_once('../Classes/KKDMailer.php');
 include_once('../Classes/Logging.php');
 
+$blocks = array();
+
 /**
  * Doorloop de array met clustercoordinatoren.
  * De key is het ID van het cluster, de value het ID van de Cluster-coordinator.
@@ -54,11 +56,14 @@ foreach($clusterCoordinatoren as $cluster => $clucoID) {
 
 		if($mail->sendMail()) {
 			toLog("Reminder-mail aan Cluco gestuurd", '', $clucoID);
+			$blocks[] = 'Reminder-mail aan Cluco '. $clusters[$cluster] .' gestuurd';
 		} else {
 			toLog("Problemen met reminder-mail aan Cluco", 'error', $clucoID);
+			$blocks[] = 'Kon geen reminder-mail aan Cluco '. $clusters[$cluster] .' sturen';
 		}	
 	} else {
 		toLog('Geen openstaande declaraties voor Cluco', '', $clucoID);
+		$blocks[] = 'Geen openstaande declaraties voor Cluco '. $clusters[$cluster];
 	}
 }
 
@@ -70,7 +75,7 @@ foreach($clusterCoordinatoren as $cluster => $clucoID) {
  * En maken er 2 lijsten van, key = 1 van J&G en key = 0 voor de rest)
  * Vervolgens lopen wij deze 2 lijsten door om te zien of er een mail naar 1 of beide penningmeesters verstuurd moet worden.
  */
-$declaraties = Declaratie::getDeclaraties(2);
+$declaraties = Declaratie::getDeclaraties(4);
 
 if(count($declaraties) > 0) {
 	$list = array();
@@ -84,48 +89,41 @@ if(count($declaraties) > 0) {
 		if(count($declaratie->overigeKosten) > 0)	$onderwerpen = array_merge($onderwerpen, array_keys($declaratie->overigeKosten));
 		if($declaratie->reiskosten > 0)				$onderwerpen = array_merge($onderwerpen, array('reiskosten'));
 
-		if($cluster == 2) {
-			$list[1][] = "<li>De declaratie van ". $indiener->getName(5)." voor <i>". makeOpsomming($onderwerpen, '</i>, <i>', '</i> en <i>') ."</i> ter waarde van ". formatPrice($declaratie->totaal) ."</li>\n";
-		} else {
-			$list[0][] = "<li>De declaratie van ". $indiener->getName(5)." voor <i>". makeOpsomming($onderwerpen, '</i>, <i>', '</i> en <i>') ."</i> ter waarde van ". formatPrice($declaratie->totaal) ."</li>\n";
-		}
+		$lijst[] = "<li>De declaratie van ". $indiener->getName(5)." voor <i>". makeOpsomming($onderwerpen, '</i>, <i>', '</i> en <i>') ."</i> ter waarde van ". formatPrice($declaratie->totaal) ."</li>\n";
 	}
 
-	foreach($list as $id => $lijst) {
-		if(count($lijst) > 0) {
-			$reminderMail = array();
-			$reminderMail[] = "Beste Penningmeester,<br>";
-			$reminderMail[] = "<br>";
-			$reminderMail[] = "De volgende ". (count($lijst) == 1 ? 'declaratie wacht' : 'declaraties wachten')." op een reactie van jouw :<br>";
-			$reminderMail[] = "<ul>";
-			$reminderMail[] = implode("\n", $lijst);
-			$reminderMail[] = "</ul>";
-			$reminderMail[] = "<br>";
-			if(count($lijst) == 1) {
-				$reminderMail[] = "Klik <a href='". $ScriptURL ."declaratie/penningmeester.php?key=". $declaratie->hash ."'>hier</a> om direct naar de declaratie te gaan.<br>";
-			} else {
-				$reminderMail[] = "Klik <a href='". $ScriptURL ."declaratie/penningmeester.php?reset'>hier</a> (inloggen vereist) om direct naar de openstaande declaraties te gaan.<br>";
-			}
+	if(count($lijst) > 0) {
+		$reminderMail = array();
+		$reminderMail[] = "Beste Penningmeester,<br>";
+		$reminderMail[] = "<br>";
+		$reminderMail[] = "De volgende ". (count($lijst) == 1 ? 'declaratie wacht' : 'declaraties wachten')." op een reactie van jouw :<br>";
+		$reminderMail[] = "<ul>";
+		$reminderMail[] = implode("\n", $lijst);
+		$reminderMail[] = "</ul>";
+		$reminderMail[] = "<br>";
+		if(count($lijst) == 1) {
+			$reminderMail[] = "Klik <a href='". $ScriptURL ."declaratie/penningmeester.php?key=". $declaratie->hash ."'>hier</a> om direct naar de declaratie te gaan.<br>";
+		} else {
+			$reminderMail[] = "Klik <a href='". $ScriptURL ."declaratie/penningmeester.php?reset'>hier</a> (inloggen vereist) om direct naar de openstaande declaraties te gaan.<br>";
+		}
 
-			$mail = new KKDMailer();
-			if($id == 1) {
-				$mail->ontvangers[] = array($penningmeesterJGAddress, $penningmeesterJGNaam);
-			} else {
-				$mail->ontvangers[] = array($declaratieReplyAddress, $declaratieReplyName);				
-			}			
-			$mail->Subject	= count($lijst) ." openstaande ". (count($lijst) == 1 ? 'declaratie wacht' : 'declaraties wachten')." op reactie";	
-			$mail->Body		= implode("\n", $reminderMail);
-			if(!$productieOmgeving)	$mail->testen	= true;
+		$mail = new KKDMailer();
+		$mail->ontvangers[] = array($declaratieReplyAddress, $declaratieReplyName);				
+		$mail->Subject	= count($lijst) ." openstaande ". (count($lijst) == 1 ? 'declaratie wacht' : 'declaraties wachten')." op reactie";	
+		$mail->Body		= implode("\n", $reminderMail);
+		if(!$productieOmgeving)	$mail->testen	= true;
 			
-			if($mail->sendMail()) {
-				toLog("Reminder-mail aan penningmeester gestuurd");
-			} else {
-				toLog("Problemen met reminder-mail aan penningmeester", 'error');
-			}			
+		if($mail->sendMail()) {
+			toLog("Reminder-mail aan penningmeester gestuurd");
+			$blocks[] = 'Reminder-mail aan penningsmeester gestuurd';
+		} else {
+			toLog("Problemen met reminder-mail aan penningmeester", 'error');
+			$blocks[] = 'Kon geen Reminder-mail aan penningsmeester sturen';
 		}
 	}
 } else {
 	toLog('Geen openstaande declaraties voor penningmeester');
+	$blocks[] = 'Geen openstaande declaraties voor penningsmeester';
 }
 		
 
@@ -137,7 +135,7 @@ echo showCSSHeader();
 echo '<div class="content_vert_kolom">'.NL;
 
 foreach($blocks as $block) {
-	echo "<div class='content_block'>". implode("<br>".NL, $page) ."</div>".NL;
+	echo "<div class='content_block'>". implode("<br>".NL, $block) ."</div>".NL;
 }
 
 echo '</div> <!-- end \'content_vert_kolom\' -->'.NL;
