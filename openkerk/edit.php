@@ -9,6 +9,7 @@ include_once('../include/config.php');
 include_once('../include/HTML_TopBottom.php');
 include_once('../Classes/Member.php');
 include_once('../Classes/OpenKerkRooster.php');
+include_once('../Classes/Logging.php');
 include_once('../Classes/Team.php');
 
 $cfgProgDir = '../auth/';
