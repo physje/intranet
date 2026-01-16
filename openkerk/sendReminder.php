@@ -4,6 +4,7 @@ include_once('../include/functions.php');
 include_once('../include/config.php');
 include_once('../include/config_mails.php');
 include_once('../Classes/Member.php');
+include_once('../Classes/Logging.php');
 include_once('../Classes/OpenKerkRooster.php');
 include_once('../Classes/KKDMailer.php');
 
@@ -60,8 +61,8 @@ foreach($personen as $persoon) {
 		$OKReminder->From		= $ScriptMailAdress;
 		$OKReminder->FromName	= 'Open Kerk herinnering';
 		$OKReminder->addReplyTo('maartendejonge55@gmail.com', 'Maarten de Jonge');
-		$OKReminder->testen		= true;
-		if(!$productieOmgeving)	$OKReminder->Sendmail();
+		if(!$productieOmgeving)	$OKReminder->testen		= true;
+		$OKReminder->Sendmail();
 	}
 }
 
