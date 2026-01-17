@@ -59,7 +59,7 @@ foreach($adressen as $id => $email_encoded) {
 		# Komt hij niet voor dan moet hij aan LP worden toegevoegd
 		#  en alle variabelen ingesteld
 		if($LP->new) {
-			# Komt ook niet voor in LP
+			# Komt ook niet voor in de ledenlijst van LP
 			if(!lp_onList($LPLedenListID, $lid->email)) {
 				# Toevoegen aan de leden-lijst
 				$addMember = lp_addMember($LPLedenListID, $lid->email, $custom_fields);
@@ -98,7 +98,7 @@ foreach($adressen as $id => $email_encoded) {
 				}
 				
 				# Toevoegen aan de juiste wijkmail-lijst			
-				$addMember = lp_addMember($LPWijkListID[$wijk], $lid->email, $custom_fields_short);
+				$addMember = lp_addMember($LPWijkListID[$lid->wijk], $lid->email, $custom_fields_short);
 				if($addMember === true) {			
 					toLog('Toegevoegd aan LaPosta wijklijst wijk '. $lid->wijk, 'debug', $lid->id);
 					echo $lid->getName() ." toegevoegd aan LaPosta wijklijst wijk ". $lid->wijk ."<br>\n";
@@ -259,23 +259,23 @@ foreach($adressen as $id => $email_encoded) {
 									
 				# Gewijzigde wijk
 				if($LP->wijk != $lid->wijk) {					
-					$changed_field['wijk'] = array($wijk);
+					$changed_field['wijk'] = array($lid->wijk);
 					
 					# Stel iemand heeft zich uitgeschreven voor zijn/haar oude wijk
 					# dan moet hij/zij niet worden ingeschreven bij de nieuwe wijk
 					# dus even een check of iemand 'lid' is van de oude wijk				
-					if(lp_onList($LPWijkListID[$oudeWijk], $lid->email)) {					
+					if(lp_onList($LPWijkListID[$LP->wijk], $lid->email)) {					
 						$addmember = lp_addMember($LPWijkListID[$lid->wijk], $lid->email, $custom_fields_short);
 						$unsubscribeMember = lp_unsubscribeMember($LPWijkListID[$LP->wijk], $lid->email);
 						
 						if($addmember === true && $unsubscribeMember === true) {
-							toLog("Wijk gewijzigd ($oudeWijk -> $wijk), verplaatst naar nieuwe LaPosta lijst", '', $lid->id);							
+							toLog("Wijk gewijzigd (". $LP->wijk ." -> ". $lid->wijk ."), verplaatst naar nieuwe LaPosta lijst", '', $lid->id);							
 						} else {
-							toLog("-> $wijk: ". $addmember['error'], 'error', $lid->id);
-							toLog("$oudeWijk ->: ". $unsubscribeMember['error'], 'error', $lid->id);
+							toLog("-> ". $lid->wijk .": ". $addmember['error'], 'error', $lid->id);
+							toLog($LP->wijk ." ->: ". $unsubscribeMember['error'], 'error', $lid->id);
 						}
 					} else {
-						toLog("Wijk gewijzigd ($oudeWijk -> $wijk) maar was onbekend in $oudeWijk", '', $lid->id);						
+						toLog("Wijk gewijzigd (". $LP->wijk ." -> ". $lid->wijk .") maar was onbekend in ". $LP->wijk, '', $lid->id);						
 					}
 					$LP->wijk = $lid->wijk;
 				}

@@ -15,6 +15,7 @@ if(isset($_REQUEST['key'])) {
 		
 	$page = array_merge(array('<table border=0>'), showDeclaratieDetails($declaratie), array('</table>'));	
 } else {
+    $statusNaam[2] = 'Gemeentelid';
 	$statusNaam[3] = 'CluCo';
 	$statusNaam[6] = 'Afgekeurd';
 	$statusNaam[4] = 'Penningmeester';
