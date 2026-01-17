@@ -41,6 +41,11 @@ Search.appendIndex(
             "summary": "Slaat\u0020het\u0020agenda\u002Ditem\u0020op\u0020in\u0020de\u0020database",
             "url": "classes/Agenda.html#method_save"
         },                {
+            "fqsen": "\\Agenda\u003A\u003Adelete\u0028\u0029",
+            "name": "delete",
+            "summary": "Verwijder\u0020een\u0020agenda\u002Ditem",
+            "url": "classes/Agenda.html#method_delete"
+        },                {
             "fqsen": "\\Agenda\u003A\u003A\u0024id",
             "name": "id",
             "summary": "",
@@ -158,7 +163,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Boeknummer\u003A\u003Asave\u0028\u0029",
             "name": "save",
-            "summary": "",
+            "summary": "Sla\u0020het\u0020boeknummer\u0020op.",
             "url": "classes/Boeknummer.html#method_save"
         },                {
             "fqsen": "\\Boeknummer\u003A\u003A\u0024jaar",
@@ -198,7 +203,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Declaratie\u003A\u003Asave\u0028\u0029",
             "name": "save",
-            "summary": "",
+            "summary": "Sla\u0020de\u0020declaratie\u0020op.",
             "url": "classes/Declaratie.html#method_save"
         },                {
             "fqsen": "\\Declaratie\u003A\u003A\u0024type",
@@ -361,6 +366,11 @@ Search.appendIndex(
             "summary": "Sla\u0020het\u0020Kerkdienst\u002Dobject\u0020op\u0020in\u0020de\u0020database",
             "url": "classes/Kerkdienst.html#method_save"
         },                {
+            "fqsen": "\\Kerkdienst\u003A\u003Adelete\u0028\u0029",
+            "name": "delete",
+            "summary": "Verwijder\u0020de\u0020kerkdienst\u0020helemaal\u0020uit\u0020de\u0020database",
+            "url": "classes/Kerkdienst.html#method_delete"
+        },                {
             "fqsen": "\\Kerkdienst\u003A\u003A\u0024dienst",
             "name": "dienst",
             "summary": "",
@@ -435,6 +445,21 @@ Search.appendIndex(
             "name": "sendMail",
             "summary": "Verstuur\u0020de\u0020KKD\u002Dmail.",
             "url": "classes/KKDMailer.html#method_sendMail"
+        },                {
+            "fqsen": "\\KKDMailer\u003A\u003AgetKKDHeader\u0028\u0029",
+            "name": "getKKDHeader",
+            "summary": "",
+            "url": "classes/KKDMailer.html#method_getKKDHeader"
+        },                {
+            "fqsen": "\\KKDMailer\u003A\u003AgetKKDFooter\u0028\u0029",
+            "name": "getKKDFooter",
+            "summary": "",
+            "url": "classes/KKDMailer.html#method_getKKDFooter"
+        },                {
+            "fqsen": "\\KKDMailer\u003A\u003ASCRIPTURL",
+            "name": "SCRIPTURL",
+            "summary": "",
+            "url": "classes/KKDMailer.html#constant_SCRIPTURL"
         },                {
             "fqsen": "\\KKDMailer\u003A\u003A\u0024ontvangers",
             "name": "ontvangers",
@@ -748,7 +773,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Member\u003A\u003AgetMailadressen\u0028\u0029",
             "name": "getMailadressen",
-            "summary": "Vraag\u0020alle\u0020leden\u0020met\u0020een\u0020mailadres\u0020op",
+            "summary": "Vraag\u0020alle\u0020leden\u0020met\u0020een\u0020mailadres\u0020op.",
             "url": "classes/Member.html#method_getMailadressen"
         },                {
             "fqsen": "\\Member\u003A\u003AsetUsersInactive\u0028\u0029",
@@ -760,6 +785,11 @@ Search.appendIndex(
             "name": "getNewUsers",
             "summary": "Maak\u0020username\u0020en\u0020hashes\u0020aan\u0020voor\u0020actieve\u0020leden\u0020waar\u0020deze\u0020ontbreken",
             "url": "classes/Member.html#method_getNewUsers"
+        },                {
+            "fqsen": "\\Member\u003A\u003AgetMembersByLetter\u0028\u0029",
+            "name": "getMembersByLetter",
+            "summary": "Vraag\u0020leden\u0020op\u0020op\u0020basis\u0020van\u0020wijk\u0020of\u0020eerste\u0020letter\u0020van\u0020de\u0020achternaam",
+            "url": "classes/Member.html#method_getMembersByLetter"
         },                {
             "fqsen": "\\Member\u003A\u003A\u0024db",
             "name": "db",
@@ -1856,6 +1886,16 @@ Search.appendIndex(
             "summary": "Resize\u0020een\u0020afbeelding\u0020naar\u0020de\u0020opgegeven\u0020breedte\u0020en\u0020hoogte.",
             "url": "namespaces/default.html#function_resize_image"
         },                {
+            "fqsen": "\\guessDate\u0028\u0029",
+            "name": "guessDate",
+            "summary": "Probeer\u0020op\u0020basis\u0020van\u0020een\u0020datum\u002Dstring\u0020deze\u0020om\u0020te\u0020zetten\u0020naar\u0020dd\u002Dmm\u002Djjjj\u0020formaat",
+            "url": "namespaces/default.html#function_guessDate"
+        },                {
+            "fqsen": "\\isDatum\u0028\u0029",
+            "name": "isDatum",
+            "summary": "Controleer\u0020of\u0020een\u0020string\u0020een\u0020datum\u0020is",
+            "url": "namespaces/default.html#function_isDatum"
+        },                {
             "fqsen": "\\showCSSHeader\u0028\u0029",
             "name": "showCSSHeader",
             "summary": "",
@@ -1941,21 +1981,6 @@ Search.appendIndex(
             "summary": "",
             "url": "namespaces/default.html#function_lp_addFieldToList"
         },                {
-            "fqsen": "\\guessDate\u0028\u0029",
-            "name": "guessDate",
-            "summary": "",
-            "url": "namespaces/default.html#function_guessDate"
-        },                {
-            "fqsen": "\\columnArray\u0028\u0029",
-            "name": "columnArray",
-            "summary": "",
-            "url": "namespaces/default.html#function_columnArray"
-        },                {
-            "fqsen": "\\isDatum\u0028\u0029",
-            "name": "isDatum",
-            "summary": "",
-            "url": "namespaces/default.html#function_isDatum"
-        },                {
             "fqsen": "\\Gebedspunt",
             "name": "Gebedspunt",
             "summary": "Class\u0020voor\u0020het\u0020beheren\u0020van\u0020gebedspunten.",
@@ -1973,7 +1998,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Gebedspunt\u003A\u003Asave\u0028\u0029",
             "name": "save",
-            "summary": "Sla\u0020het\u0020gebedspunt\u0020op\u0020in\u0020de\u0020databaee",
+            "summary": "Sla\u0020het\u0020gebedspunt\u0020op\u0020in\u0020de\u0020database",
             "url": "classes/Gebedspunt.html#method_save"
         },                {
             "fqsen": "\\Gebedspunt\u003A\u003A\u0024id",

@@ -59,8 +59,8 @@
 
         <section class="phpdocumentor-sidebar__category">
         <h2 class="phpdocumentor-sidebar__category-header">Packages</h2>
-                    <h3 class="phpdocumentor-sidebar__root-package"><a href="packages/Application.html"><abbr title="\Application">Application</abbr></a></h3>
-                                <h3 class="phpdocumentor-sidebar__root-package"><a href="packages/IntranetKKD.html"><abbr title="\IntranetKKD">IntranetKKD</abbr></a></h3>
+                    <h3 class="phpdocumentor-sidebar__root-package"><a href="packages/IntranetKKD.html"><abbr title="\IntranetKKD">IntranetKKD</abbr></a></h3>
+                                <h3 class="phpdocumentor-sidebar__root-package"><a href="packages/Application.html"><abbr title="\Application">Application</abbr></a></h3>
                         </section>
     
     <section class="phpdocumentor-sidebar__category">
@@ -525,7 +525,7 @@
     <span>
                         &nbsp;: array&lt;string|int, mixed&gt;    </span>
 </dt>
-<dd>Vraag alle leden met een mailadres op</dd>
+<dd>Vraag alle leden met een mailadres op.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a href="classes/Member.html#method_getMembers">getMembers()</a>
@@ -533,6 +533,13 @@
                         &nbsp;: array&lt;string|int, mixed&gt;    </span>
 </dt>
 <dd>Geeft een array terug met ID&#039;s van alle leden in de database.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a href="classes/Member.html#method_getMembersByLetter">getMembersByLetter()</a>
+    <span>
+                        &nbsp;: array&lt;string|int, mixed&gt;    </span>
+</dt>
+<dd>Vraag leden op op basis van wijk of eerste letter van de achternaam</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a href="classes/Member.html#method_getName">getName()</a>
@@ -2505,7 +2512,7 @@ Let-op, volwassen kinderen die nog thuis wonen hebben een ander kerkelijk adres.
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Classes/Member.php"><a href="files/classes-member.html"><abbr title="Classes/Member.php">Member.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">720</span>
+    <span class="phpdocumentor-element-found-in__line">726</span>
 
     </aside>
 
@@ -2515,7 +2522,12 @@ Let-op, volwassen kinderen die nog thuis wonen hebben een ander kerkelijk adres.
     <span class="phpdocumentor-signature__visibility">public</span>
                 <span class="phpdocumentor-signature__name">getMail</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$type</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">1</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
 
-    
+        <section class="phpdocumentor-description"><p>Hiervoor wordt eerst het eigen mailadres opgevraagd.
+Als deze leeg is wordt het mailadres van de ouders opgevraagd en als die niet bestaan het adres van de partner.
+Voor het formele mailadres wordt eerst gekeken of het formele adres is ingevuld,
+zo niet dan wordt het standaard mailadres teruggegeven. Dat kan dus ook het adres van de ouders of partner zijn zoals hierboven.</p>
+</section>
+
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
@@ -2551,17 +2563,19 @@ Let-op, volwassen kinderen die nog thuis wonen hebben een ander kerkelijk adres.
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Classes/Member.php"><a href="files/classes-member.html"><abbr title="Classes/Member.php">Member.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">834</span>
+    <span class="phpdocumentor-element-found-in__line">851</span>
 
     </aside>
 
-        <p class="phpdocumentor-summary">Vraag alle leden met een mailadres op</p>
+        <p class="phpdocumentor-summary">Vraag alle leden met een mailadres op.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
             <span class="phpdocumentor-signature__static">static</span>    <span class="phpdocumentor-signature__name">getMailadressen</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span></code>
 
-    
+        <section class="phpdocumentor-description"><p>Mailadres is daarbij alles met een @-teken (%40 omdat urlencoded) erin</p>
+</section>
+
     
     
 
@@ -2586,7 +2600,7 @@ Let-op, volwassen kinderen die nog thuis wonen hebben een ander kerkelijk adres.
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Classes/Member.php"><a href="files/classes-member.html"><abbr title="Classes/Member.php">Member.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">813</span>
+    <span class="phpdocumentor-element-found-in__line">830</span>
 
     </aside>
 
@@ -2616,6 +2630,62 @@ Let-op, volwassen kinderen die nog thuis wonen hebben een ander kerkelijk adres.
     <span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span>
             &mdash;
             <section class="phpdocumentor-description"><p>array met lid-IDs</p>
+</section>
+
+    
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_getMembersByLetter">
+        getMembersByLetter()
+        <a href="classes/Member.html#method_getMembersByLetter" class="headerlink"><i class="fas fa-link"></i></a>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Classes/Member.php"><a href="files/classes-member.html"><abbr title="Classes/Member.php">Member.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">895</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Vraag leden op op basis van wijk of eerste letter van de achternaam</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+            <span class="phpdocumentor-signature__static">static</span>    <span class="phpdocumentor-signature__name">getMembersByLetter</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$letter</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$wijk</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span></code>
+
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$letter</span>
+                : <span class="phpdocumentor-signature__argument__return-type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Beginletter of wijk waarop gezocht moet worden</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$wijk</span>
+                : <span class="phpdocumentor-signature__argument__return-type">bool</span>
+                 = <span class="phpdocumentor-signature__argument__default-value">false</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Zoeken in wijk (True) of op eerste letter van achternaam (False)</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+    <span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span>
+            &mdash;
+            <section class="phpdocumentor-description"><p>Array met scipio-IDs</p>
 </section>
 
     
@@ -2696,7 +2766,7 @@ Let-op, volwassen kinderen die nog thuis wonen hebben een ander kerkelijk adres.
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Classes/Member.php"><a href="files/classes-member.html"><abbr title="Classes/Member.php">Member.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">862</span>
+    <span class="phpdocumentor-element-found-in__line">879</span>
 
     </aside>
 
@@ -3092,7 +3162,7 @@ Let-op, volwassen kinderen die nog thuis wonen hebben een ander kerkelijk adres.
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Classes/Member.php"><a href="files/classes-member.html"><abbr title="Classes/Member.php">Member.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">752</span>
+    <span class="phpdocumentor-element-found-in__line">769</span>
 
     </aside>
 
@@ -3162,7 +3232,7 @@ Let-op, volwassen kinderen die nog thuis wonen hebben een ander kerkelijk adres.
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Classes/Member.php"><a href="files/classes-member.html"><abbr title="Classes/Member.php">Member.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">848</span>
+    <span class="phpdocumentor-element-found-in__line">865</span>
 
     </aside>
 

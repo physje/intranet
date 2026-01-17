@@ -59,8 +59,8 @@
 
         <section class="phpdocumentor-sidebar__category">
         <h2 class="phpdocumentor-sidebar__category-header">Packages</h2>
-                    <h3 class="phpdocumentor-sidebar__root-package"><a href="packages/Application.html"><abbr title="\Application">Application</abbr></a></h3>
-                                <h3 class="phpdocumentor-sidebar__root-package"><a href="packages/IntranetKKD.html"><abbr title="\IntranetKKD">IntranetKKD</abbr></a></h3>
+                    <h3 class="phpdocumentor-sidebar__root-package"><a href="packages/IntranetKKD.html"><abbr title="\IntranetKKD">IntranetKKD</abbr></a></h3>
+                                <h3 class="phpdocumentor-sidebar__root-package"><a href="packages/Application.html"><abbr title="\Application">Application</abbr></a></h3>
                         </section>
     
     <section class="phpdocumentor-sidebar__category">
@@ -233,6 +233,13 @@
 </dt>
 <dd>Maak een Kerkdienst-object aan
 Door een dienst-ID (optioneel) op te geven wordt het object gevuld met data van die dienst</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a href="classes/Kerkdienst.html#method_delete">delete()</a>
+    <span>
+                        &nbsp;: bool    </span>
+</dt>
+<dd>Verwijder de kerkdienst helemaal uit de database</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a href="classes/Kerkdienst.html#method_getDiensten">getDiensten()</a>
@@ -729,6 +736,44 @@ Door een dienst-ID (optioneel) op te geven wordt het object gevuld met data van 
     <span class="phpdocumentor-signature__response_type">mixed</span>
             &mdash;
         
+    
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_delete">
+        delete()
+        <a href="classes/Kerkdienst.html#method_delete" class="headerlink"><i class="fas fa-link"></i></a>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Classes/Kerkdienst.php"><a href="files/classes-kerkdienst.html"><abbr title="Classes/Kerkdienst.php">Kerkdienst.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">177</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Verwijder de kerkdienst helemaal uit de database</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                <span class="phpdocumentor-signature__name">delete</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
+
+        <section class="phpdocumentor-description"><p>Voor een dienst die uitvalt kan je beter $this-&gt;actief op 0 zetten (dan kan je het namelijk later makkelijker hestellen).
+Gebruik deze funtie vooral om de database op te schonen</p>
+</section>
+
+    
+    
+
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+    <span class="phpdocumentor-signature__response_type">bool</span>
+            &mdash;
+            <section class="phpdocumentor-description"><p>Succesvol verwijderd of niet</p>
+</section>
+
     
 </article>
                     <article
