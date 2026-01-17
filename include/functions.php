@@ -3,16 +3,30 @@
 /**
  * Maak een datum op.
  *
- * D = Man, Tue, Wed, Thu, Fri, Sat, Sun (%a)
- * l = Sunday to Saturday (%A)
- * j = 1 to 31 (%e)
- * d = 01 to 31 (%d)
- * m = 01 to 12 (%m)
- * M = Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec (%b)
- * F = January to December (%B)
- * Y = 4 digit year (%Y)
- * H = 00 to 23 (%H)
- * i = 00 to 59 (%M)
+ * 04-05-2026 01:02
+ * ---------
+ * L : 5
+ * LL : 05
+ * LLL : mei
+ * LLLL : mei
+ * yy : 26
+ * yyyy : 2026
+ * E : ma
+ * EE : ma
+ * EEE : ma
+ * EEEE : maandag
+ * d : 4
+ * dd : 04
+ * H : 1
+ * HH : 01
+ * m : 2
+ * mm : 02
+ * w : 19
+ * ww : 19
+ * e : 1
+ * ee : 01
+ * s : 3
+ * ss : 03
  *
  * @param string $format In welk format moet de datum worden opgemaakt.
  * @param int $time tijd in UNIX-format
@@ -25,22 +39,6 @@ function time2str(string $format, int $time = 0) {
 	}	
 
 	# https://unicode-org.github.io/icu/userguide/format_parse/datetime/
-
-	# d	dd
-	# F	LLLL
-	# Y yyyy
-	# y yy
-	# l	EEEE
-	# j d
-	# H HH
-	# i mm
-	# M LLL
-	# D E
-	# W ww
-	# N e
-
-	#return strftime($format, $time);	
-    #return date($format, $time);
 
 	$dt = new DateTime;
 	$dt->setTimestamp($time);
@@ -741,11 +739,19 @@ function showDeclaratieDetails(Declaratie $declaratie) {
 		$page[] = "</tr>";
 
 		$first = true;
-		foreach($declaratie->correspondentie as $regel) {
-			$user = new Member($regel['user']);
+		foreach($declaratie->correspondentie as $regel) {			
+			if(!$first) {
+				$page[] = "<tr>";
+				$page[] = "		<td colspan='6'>&nbsp;</td>";			
+				$page[] = "</tr>";
+			}
+
+			$user = new Member($regel['user']);			
 			$page[] = "<tr>";
-			$page[] = "		<td>". ($first ? '<b>Correspondentie<b>' : '') ."</td>";
-			$page[] = "		<td colspan='1' valign='top'>". $user->getName(5) ."<br>". date('d-m-y H:i', $regel['time']) ."</td>";
+			$page[] = "		<td rowspan='2' valign='top'>". ($first ? '<b>Correspondentie<b>' : '&nbsp;') ."</td>";			
+			$page[] = "		<td colspan='4' valign='top'>". $user->getName(5) ."; ". time2str('E d LL HH:mm', $regel['time']) ."</td>";
+			$page[] = "</tr>";
+			$page[] = "<tr>";
 			$page[] = "		<td colspan='4' valign='top'>". $regel['text'] ."</td>";			
 			$page[] = "</tr>";
 			$first = false;

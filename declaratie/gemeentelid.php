@@ -589,10 +589,11 @@ if(isset($_POST['correct'])) {
 			foreach($declaratie->correspondentie as $regel) {
 				$user = new Member($regel['user']);
 
-				$page[] = "<tr>";				
-				$page[] = "		<td>". date('d-m-y H:i', $regel['time']) ."</td>";
-				$page[] = "		<td>". $user->getName(2) ."</td>";				
-				$page[] = "		<td colspan='2'>". $regel['text'] ."</td>";			
+				$page[] = "<tr>";		
+				$page[] = "		<td colspan='4'>". $user->getName(1) ." op ". time2str('d LLL HH:mm', $regel['time']) ."</td>";
+				$page[] = "</tr>";
+				$page[] = "<tr>";
+				$page[] = "		<td colspan='4'>". $regel['text'] ."</td>";			
 				$page[] = "</tr>";			
 			}
 			$page[] = "<tr>";

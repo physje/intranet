@@ -222,7 +222,7 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 								
 				# @live.nl heeft zijn mail-records niet op orde (geen SPF ed).
 				# Aantal mailservers weigeren daarom deze mails als met een @live.nl verstuurd.
-				# Daarom voor de zekerheid het formele van de cluco
+				# Daarom voor de zekerheid het formele mailadres van de cluco
 				$gem->From	= $cluco->getMail(2);
 				$gem->FromName = $cluco->getName(5);
 				if(!$productieOmgeving)	$gem->testen = true;
