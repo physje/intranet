@@ -147,7 +147,7 @@ class KKDMailer extends PHPMailer\PHPMailer\PHPMailer implements KKDConfig {
                 }
             } else {
                 $db = new Mysql();
-                $sql = "INSERT INTO `mail_log` (`tijd`, `bericht`) VALUES ('". time() ."', '". urlencode($this->Body) ."')";
+                $sql = "INSERT INTO `mail_log` (`tijd`, `bericht`) VALUES ('". time() ."', '". serialize($this) ."')";
                 $db->query($sql);
 
                 $this->Body = $this->getKKDHeader().$this->Body.$this->getKKDFooter();                
