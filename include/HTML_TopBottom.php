@@ -4,7 +4,7 @@ function showCSSHeader($sheets = array('default'), $header = '', $pageTitle = ''
 	global $pageTitle, $ScriptTitle, $Version, $ScriptServer, $ScriptURL;
 	
 	$Header[] = "<!--     Deze pagina is onderdeel van $ScriptTitle $Version gemaakt door Matthijs Draijer     -->";
-	$Header[] = "<!--     Gegenereerd op ". time2str("%A %e %B %Y %H:%M:%S") ."     -->";
+	$Header[] = "<!--     Gegenereerd op ". time2str("EEEE d LLL YYYY HH:mm:ss") ."     -->";
 	$Header[] = "";
 	$Header[] = '<html>';
 	$Header[] = '<head>';

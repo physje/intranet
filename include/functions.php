@@ -5,28 +5,47 @@
  *
  * 04-05-2026 01:02
  * ---------
+ * DAG
+ * d : 4
+ * dd : 04
+ *  
+ * MAAND
  * L : 5
  * LL : 05
  * LLL : mei
  * LLLL : mei
+ * 
+ * JAAR
  * yy : 26
  * yyyy : 2026
+ * 
+ * WEEKDAG (Tekst)
  * E : ma
  * EE : ma
  * EEE : ma
  * EEEE : maandag
- * d : 4
- * dd : 04
- * H : 1
- * HH : 01
- * m : 2
- * mm : 02
- * w : 19
- * ww : 19
+ * 
+ * WEEKDAG (Nummer)
  * e : 1
  * ee : 01
+ * 
+ * UUR
+ * H : 1
+ * HH : 01
+ * 
+ * MINUUT
+ * m : 2
+ * mm : 02
+ * 
+ * SECONDEN
  * s : 3
  * ss : 03
+ * 
+ * WEEK-NUMMER
+ * w : 19
+ * ww : 19
+ * 
+ * @see https://unicode-org.github.io/icu/userguide/format_parse/datetime/
  *
  * @param string $format In welk format moet de datum worden opgemaakt.
  * @param int $time tijd in UNIX-format
@@ -38,15 +57,18 @@ function time2str(string $format, int $time = 0) {
 		$time = time();
 	}	
 
-	# https://unicode-org.github.io/icu/userguide/format_parse/datetime/
-
 	$dt = new DateTime;
 	$dt->setTimestamp($time);
 
-	$formatter = new IntlDateFormatter('nl_NL', IntlDateFormatter::LONG, IntlDateFormatter::LONG);
-	$formatter->setPattern($format);
+	// Check for Windows to modifier correctly
+	if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN') {
+		return $dt->format($format);	
+	} else {
+		$formatter = new IntlDateFormatter('nl_NL', IntlDateFormatter::LONG, IntlDateFormatter::LONG);
+		$formatter->setPattern($format);
 
-	return $formatter->format($dt);
+		return $formatter->format($dt);
+	}
 }
 
 

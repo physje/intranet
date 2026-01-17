@@ -34,7 +34,7 @@ class Team {
         if($team > 0) {
             $db = new Mysql;
             $details = $db->select("SELECT * FROM `groepen` WHERE `id` = ". $team);
-            $groep = $db->select("SELECT `lid` FROM `group_member` WHERE `commissie` = ". $team, true);
+            $groep = $db->select("SELECT `group_member`.`lid` FROM `group_member`, `leden` WHERE `group_member`.`lid` = `leden`.`scipio_id` AND `group_member`.`commissie` = ". $team ." ORDER BY `leden`.`achternaam`", true);
 
             $this->id = $team;
             $this->name = urldecode($details['naam']);
