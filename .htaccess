@@ -1,0 +1,15 @@
+# ===============================
+# Basis .htaccess-configuratie
+# Domein: www.koningskerkdeventer.nl
+# Laatste update: 2026-01-17
+# ===============================
+
+# --- Schakel herschrijfmodule in ---
+RewriteEngine On
+
+# --- Forceer HTTPS (beveiligde verbinding) ---
+RewriteCond %{HTTPS} !=on
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# --- Aangepaste foutpagina ---
+ErrorDocument 404 /error_pages/404.php

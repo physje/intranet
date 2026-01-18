@@ -16,10 +16,11 @@ $personen = OpenKerkRooster::getCrew($startDag, $eindDag);
 # Niet alle dagen is er een mail te versturen
 foreach($personen as $persoon) {
 	if($persoon != 'externTG' && $persoon != 'externSM' && $persoon != '' && $persoon > 0) {
-		$OKReminder = new KKDMailer();
-		
 		$geslacht = '';
 		$mail = array();
+		unset($person);
+
+		$OKReminder = new KKDMailer();		
 				
 		if(is_numeric($persoon)) {
 			$person = new Member($persoon);
@@ -62,8 +63,23 @@ foreach($personen as $persoon) {
 		$OKReminder->FromName	= 'Open Kerk herinnering';
 		$OKReminder->addReplyTo('maartendejonge55@gmail.com', 'Maarten de Jonge');
 		if(!$productieOmgeving)	$OKReminder->testen		= true;
-		$OKReminder->Sendmail();
+
+		if($OKReminder->Sendmail()) {
+			if(isset($person)) {
+				toLog('Reminder open kerk gestuurd', 'debug', $person->id)
+			} else {
+				toLog('Reminder open kerk gestuurd naar'. $extern[$persoon]['naam'], 'debug')
+			}			
+		} else {
+			if(isset($person)) {
+				toLog('Kon geen reminder open kerk sturen', 'error', $person->id)
+			} else {
+				toLog('Kon geen reminder open kerk sturen naar'. $extern[$persoon]['naam'], 'error')
+			}				
+		}
 	}
 }
+
+toLog('Reminders open kerk verstuurd');
 
 ?>
