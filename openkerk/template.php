@@ -16,7 +16,7 @@ $team		= new Team(43);
 $namen		= array_merge($team->leden, $extern);
 $templates	= OpenKerkTemplate::getAllTemplates();
 $block		= array();
-$half		= true;
+$half		= false;
 
 # De boel opslaan indien op 'opslaan' is geklikt, of als op uitrollen is geklikt
 # maar alleen als het 1ste scherm van uitrollen moet worden getoond

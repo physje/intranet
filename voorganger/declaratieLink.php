@@ -56,7 +56,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 			# Mail object aanmaken
 			$mail = new KKDMailer();
 			$mail->ontvangers[] = array($voorganger->mail, $voorganger->getName(4));
-			$mail->Subject	= "Online declaratie-formulier $dagdeel ". date('j-n-Y', $dienstData['start']);
+			$mail->Subject	= "Online declaratie-formulier $dagdeel ". date('j-n-Y', $dienst->start);
 			$mail->From		= $declaratieReplyAddress;
 			$mail->FromName	= $declaratieReplyName;
 			$mail->Body		= implode("<br>\n", $mailText);

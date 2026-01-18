@@ -88,7 +88,7 @@ $text[] = "</ol>";
 
 
 echo showCSSHeader();
-echo '<div class="content_vert_kolom">'.NL;
+echo '<div class="content_vert_kolom_full">'.NL;
 echo "<div class='content_block'>". implode("<br>".NL, $text) ."</div>".NL;
 echo '</div> <!-- end \'content_vert_kolom\' -->'.NL;
 echo showCSSFooter();
