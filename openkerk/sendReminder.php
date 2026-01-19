@@ -66,15 +66,15 @@ foreach($personen as $persoon) {
 
 		if($OKReminder->Sendmail()) {
 			if(isset($person)) {
-				toLog('Reminder open kerk gestuurd', 'debug', $person->id)
+				toLog('Reminder open kerk gestuurd', 'debug', $person->id);
 			} else {
-				toLog('Reminder open kerk gestuurd naar'. $extern[$persoon]['naam'], 'debug')
+				toLog('Reminder open kerk gestuurd naar'. $extern[$persoon]['naam'], 'debug');
 			}			
 		} else {
 			if(isset($person)) {
-				toLog('Kon geen reminder open kerk sturen', 'error', $person->id)
+				toLog('Kon geen reminder open kerk sturen', 'error', $person->id);
 			} else {
-				toLog('Kon geen reminder open kerk sturen naar'. $extern[$persoon]['naam'], 'error')
+				toLog('Kon geen reminder open kerk sturen naar'. $extern[$persoon]['naam'], 'error');
 			}				
 		}
 	}
