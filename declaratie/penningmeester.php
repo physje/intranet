@@ -246,7 +246,7 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 						$addSucces = false;
 					} else {
 						toLog('Declaratie ['. $declaratie->hash .'] van '. formatPrice($declaratie->totaal) .' toegevoegd voor '. $EBData['naam'] .' ('. $EBCode .')', 'info', $indiener->id);
-						$page[] = 'Declaratie van '. formatPrice($totaal) .' ingediend tnv '. $EBData['naam'] .'<br>';
+						$page[] = 'Declaratie van '. formatPrice($declaratie->totaal) .' ingediend tnv '. $EBData['naam'] .'<br>';
 						$addSucces = true;
 					}
 				} else {
