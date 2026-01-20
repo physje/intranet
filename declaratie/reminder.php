@@ -55,21 +55,21 @@ foreach($clusterCoordinatoren as $cluster => $clucoID) {
 		if(!$productieOmgeving)	$mail->testen	= true;
 
 		if($mail->sendMail()) {
-			toLog("Reminder-mail aan Cluco gestuurd", '', $clucoID);
+			toLog("Reminder-mail Cluco gestuurd", '', $clucoID);
 			$blocks[] = 'Reminder-mail aan Cluco '. $clusters[$cluster] .' gestuurd';
 		} else {
-			toLog("Problemen met reminder-mail aan Cluco", 'error', $clucoID);
+			toLog("Problemen met reminder-mail Cluco", 'error', $clucoID);
 			$blocks[] = 'Kon geen reminder-mail aan Cluco '. $clusters[$cluster] .' sturen';
 		}	
 	} else {
-		toLog('Geen openstaande declaraties voor Cluco', '', $clucoID);
+		toLog('Geen openstaande declaraties voor Cluco', 'debug', $clucoID);
 		$blocks[] = 'Geen openstaande declaraties voor Cluco '. $clusters[$cluster];
 	}
 }
 
 
 /**
- * De penningmeester is iets ingewikkelder omdat er 2 penningmeesters zijn (1 van J&G en 1 voor de rest)
+ 
  * 
  * Daarom vragen we eerst alle openstaande declaraties voor de penningmeester op.
  * En maken er 2 lijsten van, key = 1 van J&G en key = 0 voor de rest)
@@ -114,15 +114,15 @@ if(count($declaraties) > 0) {
 		if(!$productieOmgeving)	$mail->testen	= true;
 			
 		if($mail->sendMail()) {
-			toLog("Reminder-mail aan penningmeester gestuurd");
+			toLog("Reminder-mail penningmeester gestuurd");
 			$blocks[] = 'Reminder-mail aan penningsmeester gestuurd';
 		} else {
-			toLog("Problemen met reminder-mail aan penningmeester", 'error');
+			toLog("Problemen met reminder-mail penningmeester versturen", 'error');
 			$blocks[] = 'Kon geen Reminder-mail aan penningsmeester sturen';
 		}
 	}
 } else {
-	toLog('Geen openstaande declaraties voor penningmeester');
+	toLog('Geen openstaande declaraties voor penningmeester', 'debug');
 	$blocks[] = 'Geen openstaande declaraties voor penningsmeester';
 }
 		

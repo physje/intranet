@@ -473,9 +473,9 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 				}			
 			} elseif(isset($_POST['change_post'])) {
 				$page[] = "<form method='post' action='". $_SERVER['PHP_SELF']."'>";
-				$page[] = "<input type='hidden' name='key' value='". $_REQUEST['key'] ."'>";
-				$page[] = "<input type='hidden' name='user' value='". $data['user'] ."'>";
-				$page[] = "<input type='hidden' name='GBR' value='". $_REQUEST['GBR'] ."'>";		
+				$page[] = "<input type='hidden' name='key' value='". $declaratie->hash ."'>";
+				#$page[] = "<input type='hidden' name='user' value='". $data['user'] ."'>";
+				#$page[] = "<input type='hidden' name='GBR' value='". $_REQUEST['GBR'] ."'>";		
 				$page[] = "<table border=0 width='100%'>";
 								
 				foreach($declaratie->overigeKosten as $key => $string) {
