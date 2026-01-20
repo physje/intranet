@@ -141,7 +141,7 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 							if($errorResult) {
 								toLog($errorResult, 'error', $indiener->id);
 							} else {
-								toLog('IBAN van relatie '. $indiener->boekhouden .' aangepast van '. cleanIBAN($EBIBAN) .' naar '. cleanIBAN($declaratie->iban), 'debug', $indiener->id);
+								toLog('IBAN van relatie '. $indiener->boekhouden .' aangepast van '. cleanIBAN($EBIBAN) .' naar '. cleanIBAN($declaratie->IBAN), 'debug', $indiener->id);
 							}					
 						}		
 					
@@ -477,6 +477,8 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 				#$page[] = "<input type='hidden' name='user' value='". $data['user'] ."'>";
 				#$page[] = "<input type='hidden' name='GBR' value='". $_REQUEST['GBR'] ."'>";		
 				$page[] = "<table border=0 width='100%'>";
+				
+				$counter = 0;
 								
 				foreach($declaratie->overigeKosten as $key => $string) {
 					if($string != '' OR $first) {
@@ -490,7 +492,7 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 							$page[] = "	<optgroup label='$kop'>";
 							
 							foreach($declJGPost[$id] as $post_nr => $titel) {
-								$page[] = "	<option value='$post_nr'". ($data['post'][$key] == $post_nr ? ' selected' : '') .">$titel</option>";
+								$page[] = "	<option value='$post_nr'". ($declaratie->posten[$counter] == $post_nr ? ' selected' : '') .">$titel</option>";
 							}
 							
 							$page[] = "	</optgroup>";
@@ -498,6 +500,7 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 						$page[] = "</select></td>";
 						$page[] = "	</tr>";
 					}
+					$counter++;
 				}
 				
 				$page[] = "<tr>";

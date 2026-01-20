@@ -666,7 +666,7 @@ function price2RightFormat(float $price) {
  * 
  */
 function showDeclaratieDetails(Declaratie $declaratie) {
-	global $clusters;
+	global $clusters, $declJGKop, $declJGPost;
 
 	$user = new Member($declaratie->gebruiker);
 
@@ -712,17 +712,34 @@ function showDeclaratieDetails(Declaratie $declaratie) {
 		
 	if(isset($declaratie->overigeKosten) && count($declaratie->overigeKosten) > 0) {
 		$first = true;
+		$counter = 0;
 		foreach($declaratie->overigeKosten as $item => $bedrag) {
 			if($bedrag > 0) {
 				$page[] = "<tr>";
 				$page[] = "		<td>". ($first ? '<b>Declaratie<b>' : '') ."</td>";
 				$page[] = "		<td>&nbsp;</td>";
-				$page[] = "		<td colspan='2'>". $item ."</td>";			
+
+				# Bij Jeugd & Gezin moet de post ook gestood worden
+				# Check daarop is of $declaratie->posten bestaat
+				if(isset($declaratie->posten[$counter])) {					
+					$page[] = "		<td>". $item ."</td>";
+
+					$JGpost = $declaratie->posten[$counter];
+					foreach($declJGKop as $id => $kop) {
+						if(isset($declJGPost[$id][$JGpost])) {
+							$page[] = "		<td>(". $kop ." -> ". $declJGPost[$id][$JGpost] .")</td>";
+						}						
+					}
+				} else {
+					$page[] = "		<td colspan='2'>". $item ."</td>";	
+				}				
+				
 				$page[] = "		<td align='right'>". formatPrice($bedrag, true) ."</td>";
 				$page[] = "		<td>&nbsp;</td>";
 				$page[] = "</tr>";
 				$first = false;
-			}
+				$counter++;
+			}			
 		}		
 	}
 

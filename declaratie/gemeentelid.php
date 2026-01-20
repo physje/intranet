@@ -365,29 +365,24 @@ if(isset($_POST['correct'])) {
 			$page[] = "		<td colspan='2'>Cluster Jeugd & Gezin heeft verschillende posten waar een declaratie op geboekt kan worden. Selecteer hieronder de post die het beste past bij jouw declaratie.</td>";
 			$page[] = "</tr>";
 			
-			# Opties genereren zodat dat zometeen hergebruikt kan worden
-			$options[] = "	<option value='0'></option>";
-			
-			foreach($declJGKop as $id => $kop) {
-				$options[] = "	<optgroup label='$kop'>";
-				
-				foreach($declJGPost[$id] as $post_nr => $titel) {
-					$options[] = "	<option value='$post_nr'>$titel</option>";
-				}
-				
-				$options[] = "	</optgroup>";
-			}
-
 			$key=0;
 
 			foreach($declaratie->overigeKosten as $item => $prijs) {
 				if($item != '') {
 					$page[] = "	<tr>";
 					$page[] = "		<td>$item (". formatPrice($prijs) .")</td>";
-					$page[] = "		<td><select name='post[$key]'>";
-					
-					$page = array_merge($page, $options);
-					
+					$page[] = "		<td><select name='post[$key]'>";					
+					$page[] = "	<option value='0'></option>";
+
+					foreach($declJGKop as $id => $kop) {
+						$page[] = "	<optgroup label='$kop'>";
+
+						foreach($declJGPost[$id] as $post_nr => $titel) {
+							$page[] = "	<option value='$post_nr'". ($post_nr == $declaratie->posten[$key] ? ' selected' : '') .">$titel</option>";
+						}
+
+						$page[] = "	</optgroup>";
+					}					
 					$page[] = "</select></td>";
 					$page[] = "	</tr>";
 					$key++;
