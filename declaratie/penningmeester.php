@@ -478,10 +478,10 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 				$page[] = "<input type='hidden' name='GBR' value='". $_REQUEST['GBR'] ."'>";		
 				$page[] = "<table border=0 width='100%'>";
 								
-				foreach($data['overige'] as $key => $string) {
+				foreach($declaratie->overigeKosten as $key => $string) {
 					if($string != '' OR $first) {
 						$page[] = "	<tr>";
-						$page[] = "		<td>$string (". formatPrice(100*$data['overig_price'][$key]) .")</td>";
+						$page[] = "		<td>$key (". formatPrice($string) .")</td>";
 						$page[] = "		<td><select name='post[$key]'>";
 						
 						$page[] = "	<option value='0'></option>";
