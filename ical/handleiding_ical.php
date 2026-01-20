@@ -2,6 +2,7 @@
 include_once('../include/functions.php');
 include_once('../include/config.php');
 include_once('../include/HTML_TopBottom.php');
+include_once('../Classes/Member.php');
 
 if(isset($_REQUEST['showLogin'])) {
 	$cfgProgDir = '../auth/';
@@ -16,7 +17,7 @@ if (session_status() === PHP_SESSION_NONE) {
 if(isset($_SESSION['useID'])) {
 	$member = new Member($_SESSION['useID']);
 	
-	$agendaURL = $ScriptURL .'/ical/'. $member->hash_long .'.ics';
+	$agendaURL = $ScriptURL .'ical/'. $member->hash_long .'.ics';
 	$agendaNaam = "KKD (". $member->getName(1) .")";
 } else {
 	$agendaURL = '';
@@ -89,7 +90,7 @@ $text[] = "</ol>";
 
 echo showCSSHeader();
 echo '<div class="content_vert_kolom_full">'.NL;
-echo "<div class='content_block'>". implode("<br>".NL, $text) ."</div>".NL;
+echo "<div class='content_block'>". implode(NL, $text) ."</div>".NL;
 echo '</div> <!-- end \'content_vert_kolom\' -->'.NL;
 echo showCSSFooter();
 
