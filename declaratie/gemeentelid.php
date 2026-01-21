@@ -274,7 +274,7 @@ if(isset($_POST['correct'])) {
 		
 		
 		# Is er wel een relatie ingevuld	
-		if(!$declaratie->eigenRekening && $declaratie->EB_relatie == '') {
+		if(!$declaratie->eigenRekening && $declaratie->begunstigde == '') {
 			$checkFields = false;
 			$meldingRelatie = 'Selecteer ';
 		}
