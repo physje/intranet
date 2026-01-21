@@ -224,7 +224,7 @@ foreach($adressen as $id => $email_encoded) {
 				if($changedMail OR $changed_short) {
 					# Controleer welke lijsten allemaal getroffen zijn		
 					foreach($listIDs as $naam => $listID) {					
-						if(lp_onList($listID, $row_lp[$LPmail])) {
+						if(lp_onList($listID, $oldMail)) {
 							 $affectedLists[$naam] = $listID;
 						}
 					}
