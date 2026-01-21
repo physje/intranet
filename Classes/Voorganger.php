@@ -111,11 +111,16 @@ class Voorganger {
      * @var float Honorarium
      */
     public float $honorarium;
-    
+
     /**
      * @var float Honorarium wat voor een bepaalde datum gerekend moet worden
      */
     public float $honorarium_oud;
+    
+    /**
+     * @var float Honorarium wat na een bepaalde datum gerekend moet worden
+     */
+    public float $honorarium_new;
     
     /**
      * @var float Honorarium voor speciale gelegenheden (bruiloft, begrafenis)
@@ -193,8 +198,9 @@ class Voorganger {
             $this->last_voorgaan = $data['laatst_voorgaan'];
             $this->last_data = $data['laatst_gegevens'];
             $this->honorarium_oud = $data['honorarium_2023'];
-            $this->honorarium = $data['honorarium_2023'];
+            $this->honorarium_new = $data['honorarium_2026'];
             $this->honorarium_special = $data['honorarium_special'];
+            $this->honorarium = $this->honorarium_new;
             $this->km_vergoeding = $data['km_vergoeding'];
             $this->vertrekpunt = urldecode($data['vertrekpunt']);
             $this->boekhoud_id = $data['boekhoudenID'];
@@ -224,12 +230,19 @@ class Voorganger {
             $this->last_data = 0;
             $this->honorarium = 0;
             $this->honorarium_oud = 0;
+            $this->honorarium_new = 0;
             $this->honorarium_special = 0;
             $this->km_vergoeding = 0;
             $this->vertrekpunt = '';
             $this->boekhoud_id = 0;       
         }
         $this->nameType = 3;
+    }
+
+
+    //TODO: Schrijf functie om op basis van datum het juiste honorarium toe te kennen
+    function setHonorarium() {
+
     }
 
 
