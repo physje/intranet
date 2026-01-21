@@ -93,7 +93,7 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 		if($declaratie->status < 5) {
 			$veldenCorrect = true;
 					
-			if($declaratie->status == '') {
+			if($declaratie->GBR == '') {
 				$veldenCorrect = false;
 				$meldingGBR = 'Grootboekrekening ontbreekt';
 			}
@@ -257,7 +257,7 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 				}
 							
 				if($write2EB)	{					
-					$errorResult = eb_verstuurDeclaratie ($EBCode, $boekstukNummer->nummer, $factuurnummer, $declaratie->totaal, $_POST['GBR'], $toelichting.' ('.$declaratie->hash.')', $mutatieId);
+					$errorResult = eb_verstuurDeclaratie ($EBCode, $boekstukNummer->nummer, $factuurnummer, $declaratie->totaal, $declaratie->GBR, $toelichting.' ('.$declaratie->hash.')', $mutatieId);
 					if($errorResult) {
 						toLog($errorResult, 'error', $indiener->id);
 						$page[] = 'Probleem met toevoegen van declaratie ter waarde van '. formatPrice($declaratie->totaal) .' aan '. $EBData['naam'] .' ('. $EBCode .')<br>';
@@ -273,7 +273,7 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 					$page[] = "BoekstukNummer: ". $boekstukNummer->nummer .'<br>';
 					$page[] = "Factuurnummer: ". $factuurnummer .'<br>';
 					$page[] = "Totaal: ". $declaratie->totaal .'<br>';
-					$page[] = "GBR: ". $_POST['GBR'] .'<br>';
+					$page[] = "GBR: ". $declaratie->GBR .'<br>';
 					$page[] = "Toelichting: ". $toelichting .'<br>';		
 					$addSucces = true;
 				}						

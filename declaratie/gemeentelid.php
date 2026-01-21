@@ -239,12 +239,15 @@ if(isset($_POST['correct'])) {
 	$page[] = "<br>";
 	$page[] = "<br>";
 	$page[] = "Wilt u nog een declaratie indienen, klik dan <a href='". $_SERVER['PHP_SELF']."'>hier</a>. Mocht dit uw laatste declaratie zijn, klik dan <a href='". $ScriptURL ."'>hier</a>";	
-} elseif(isset($_POST['page']) AND $_POST['page'] > 0) {
+} elseif(isset($_POST['page']) AND $_POST['page'] > 0) {	
+	# Als vertrek-adres en IBAN leeg zijn, stel deze dan in op basis van de gegevens van de gebruiker.
+	# Rekeningnummer wordt bepaald op basis van het eBoekhouden-ID en opvragen van IBAN
 	if($declaratie->eigenRekening) {		
 		if($declaratie->van == '')									$declaratie->van = $gebruiker->getWoonadres();				
 		if($gebruiker->boekhouden > 0 && $declaratie->IBAN == '')	eb_getRelatieIbanByCode($gebruiker->boekhouden, $declaratie->IBAN);
 	}
 	
+	# Initialiseer
 	$meldingCluster = $meldingIBAN = $meldingDeclaratie = $meldingBestand = $meldingNegatief = '';
 			
 	# Check op correct ingevulde velden	
