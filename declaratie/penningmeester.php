@@ -217,16 +217,34 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 				# Bouw anders de omschrijving op uit de verschillende declaraties
 				if(count($declaratie->overigeKosten) == 0) {
 					$toelichting		= 'reiskostenvergoeding';
-				} elseif(count($declaratie->posten) > 0) {
-					# Als er een post bekend is, voeg dat dan toe aan de omschrijving
-					foreach($declaratie->posten as $index => $post) {
-						$regel[] = $declaratie->overigeKosten[$index]['omschrijving'].' [JG'. substr('0'.$post, -2) .']';
-					}
-					$toelichting		= implode(', ', $regel);					
-				} else {
-					$toelichting		= implode(', ', array_column($declaratie->overigeKosten, 'omschrijving'));
-				}
 				
+				# Loopje voor oude declaraties
+				} elseif(isset($declaratie->overigeKosten[0]['omschrijving'])) {
+					if(count($declaratie->posten) > 0) {
+						# Als er een post bekend is, voeg dat dan toe aan de omschrijving
+						foreach($declaratie->posten as $index => $post) {
+							$regel[] = $declaratie->overigeKosten[$index]['omschrijving'].' [JG'. substr('0'.$post, -2) .']';            
+						}
+						$toelichting		= implode(', ', $regel);					
+					} else {
+						$toelichting		= implode(', ', array_column($declaratie->overigeKosten, 'omschrijving'));        
+					}
+				
+				# Loopje voor declaraties in de nieuwe manier
+				} else {
+					if(count($declaratie->posten) > 0) {
+						$key = 0;
+						foreach($declaratie->overigeKosten as $titel => $bedrag) {
+							$post = $declaratie->posten[$key];
+							$regel[] = $titel .' [JG'. substr('0'.$post, -2) .']';
+							$key++;
+						}
+						$toelichting		= implode(', ', $regel);        
+					} else {
+						$toelichting		= implode(', ', array_keys($declaratie->overigeKosten));
+					}
+				}
+								
 				# eBoekhouden heeft een limiet voor 200 tekens voor de toelichting
 				# bij een te lange toelichting wordt dit gewoon vervangen door 'declaratie 15 januari 2026'
 				if(strlen($toelichting) > 200) {

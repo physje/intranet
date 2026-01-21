@@ -1,12 +1,13 @@
 <?php
-include_once('../include/functions.php');
-include_once('../include/EB_functions.php');
-include_once('../include/config.php');
-include_once('../Classes/Declaratie.php');
-include_once('../Classes/Member.php');
+include_once('../../include/functions.php');
+include_once('../../include/EB_functions.php');
+include_once('../../include/HTML_TopBottom.php');
+include_once('../../include/config.php');
+include_once('../../Classes/Declaratie.php');
+include_once('../../Classes/Member.php');
 
 $requiredUserGroups = array(1);
-$cfgProgDir = '../auth/';
+$cfgProgDir = '../../auth/';
 include($cfgProgDir. "secure.php");
 
 $i=0;
