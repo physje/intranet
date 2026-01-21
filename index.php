@@ -308,9 +308,8 @@ if(in_array($gebruiker->id, $clusterCoordinatoren)) {
 
 if(in_array(1, $myGroups)) {
 	//TODO: Schrijf script om alle relaties te zien
-	#$EBLinks['declaratie/relatieOverview.php'] = 'Toon alle relaties';
-	//TODO: Schrijf script om alle mutaties  te zien
-	#$EBLinks['declaratie/mutatieOverview.php'] = 'Toon alle mutaties';	
+	#$EBLinks['declaratie/relatieOverview.php'] = 'Toon alle relaties';	
+	$EBLinks['declaratie/admin/mutaties.php'] = 'Toon alle mutaties';	
 	#$EBLinks['declaratie/zoekWeesBijlages.php'] = 'Koppel wees-bijlages';
 	//$EBLinks['declaratie/syncRelaties.php'] = 'Synchroniseer relaties naar lokale database';
 	//TODO: Schrijf script om relaties te bewerken
