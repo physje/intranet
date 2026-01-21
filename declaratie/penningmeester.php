@@ -173,7 +173,7 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 					# Ken de waarde van $indiener->boekhouden daarom toe aan $EBCode
 					$EBCode = $indiener->boekhouden;
 
-					$factuurnummer	= $boekstukNummer->nummer.'-declaratie-'.time2str('ddLLL-HH.mm', $declaratie->tijd);					
+					$factuurnummer	= $boekstukNummer->nummer.'-declaratie-'.time2str('dd.MMMYY-HH.mm', $declaratie->tijd);					
 				}		
 				
 				# EIGEN = NEE

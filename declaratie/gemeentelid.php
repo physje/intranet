@@ -258,13 +258,13 @@ if(isset($_POST['correct'])) {
 		}
 		
 		# Is er wel een IBAN ingevuld	
-		if($declaratie->eigenRekening && $declaratie->IBAN == '') {
+		if($declaratie->eigenRekening == '1' && $declaratie->IBAN == '') {
 			$checkFields = false;
 			$meldingIBAN = 'Vul IBAN in';
 		}
 		
 		# Is de IBAN wel geldig
-		if($declaratie->eigenRekening && $declaratie->IBAN != '' && !validateIBAN($declaratie->IBAN)) {
+		if($declaratie->eigenRekening == '1' && $declaratie->IBAN != '' && !validateIBAN($declaratie->IBAN)) {
 			$checkFields = false;
 			$meldingIBAN = 'IBAN niet geldig';
 		}
