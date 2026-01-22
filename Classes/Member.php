@@ -528,14 +528,20 @@ class Member {
 	 * @return array array met lid-IDs
 	 */
 	function getParents() {
-		$familie = $this->getFamilieLeden();
+		$kind		= array('zoon', 'dochter');
+		$volwassen	= array('echtgenote', 'gezinshoofd', 'echtgenoot', 'levenspartner', 'partner');
 		$ouders = array();
 
-		foreach($familie as $lid_id) {
-			$lid = new Member($lid_id);
+		# Alleen als de persoon zelf als kind in de boeken staat
+		if(in_array($this->relatie, $kind)) {
+			$familie = $this->getFamilieLeden();			
 
-			if(in_array($lid->relatie, ['echtgenote', 'gezinshoofd', 'echtgenoot', 'levenspartner', 'partner'])) {				
-				$ouders[] = $lid_id;
+			foreach($familie as $lid_id) {
+				$lid = new Member($lid_id);
+
+				if(in_array($lid->relatie, ['echtgenote', 'gezinshoofd', 'echtgenoot', 'levenspartner', 'partner'])) {				
+					$ouders[] = $lid_id;
+				}
 			}
 		}
 

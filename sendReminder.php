@@ -131,7 +131,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 								if(in_array($r, $importRoosters)) {
 									$ReplacedBericht .= "Als je een volgende keer de ruiling doorgeeft aan de roostermaker, zorgt die dat het op deze site ook wordt aangepast.";	
 								} else {
-									$ReplacedBericht .= "In het vervolg kan je die ruiling ook doorgeven via <a href='". $ScriptURL ."showRooster.php?id=$r'>het rooster</a> zelf, dan komt de mail direct goed terecht.";	
+									$ReplacedBericht .= "In het vervolg kan je die ruiling ook doorgeven via <a href='". $ScriptURL ."rooster/index.php?id=$r'>het rooster</a> zelf, dan komt de mail direct goed terecht.";	
 								}
 														
 								$FinalHTMLMail = $ReplacedBericht;
