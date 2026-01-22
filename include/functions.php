@@ -788,7 +788,7 @@ function showDeclaratieDetails(Declaratie $declaratie) {
 			$user = new Member($regel['user']);			
 			$page[] = "<tr>";
 			$page[] = "		<td rowspan='2' valign='top'>". ($first ? '<b>Correspondentie<b>' : '&nbsp;') ."</td>";			
-			$page[] = "		<td colspan='4' valign='top'>". $user->getName(5) ."; ". time2str('E d LL HH:mm', $regel['time']) ."</td>";
+			$page[] = "		<td colspan='4' valign='top'><a href='../profiel.php?id=". $user->id ."' target='profiel'>". $user->getName(5) ."</a>; ". time2str('E d LLL HH:mm', $regel['time']) ."</td>";
 			$page[] = "</tr>";
 			$page[] = "<tr>";
 			$page[] = "		<td colspan='4' valign='top'>". $regel['text'] ."</td>";			

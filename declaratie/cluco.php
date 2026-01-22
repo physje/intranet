@@ -317,7 +317,7 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 					$page[] = "<td>&nbsp;</td>";
 				}				
 				
-				$page[] = "<td><a href='../profiel.php?id=". $user->id ."'>". $user->getName(5) ."</a></td>";
+				$page[] = "<td><a href='../profiel.php?id=". $user->id ."' target='profiel'>". $user->getName(5) ."</a></td>";
 				$page[] = "<td>&nbsp;</td>";
 				
 				$page[] = "<td><a href='?key=".$declaratie->hash ."'>". formatPrice($declaratie->totaal) ."</a></td>";

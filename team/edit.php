@@ -54,7 +54,7 @@ $block_1[] = "<input type='hidden' name='id' value='". $_REQUEST['id'] ."'>";
 
 foreach($GroupMembers as $lid) {
 	$person = new Member($lid);
-	$block_1[] = "<input type='checkbox' name='ids[]' value='$lid' checked> <a href='../profiel.php?id=$lid'>". $person->getName() ."</a><br>";
+	$block_1[] = "<input type='checkbox' name='ids[]' value='$lid' checked> <a href='../profiel.php?id=". $person->id ."' target='profiel'>". $person->getName() ."</a><br>";
 }
 
 $block_1[] = "<br>";

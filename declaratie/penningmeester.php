@@ -730,7 +730,7 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 				$page[] = "<td>&nbsp;</td>";			
 				$page[] = "<td>". $clusters[$decl->cluster] ."</td>";
 				$page[] = "<td>&nbsp;</td>";
-				$page[] = "<td><a href='../profiel.php?id=". $indiener->id ."'>". $indiener->getName(5) ."</a></td>";
+				$page[] = "<td><a href='../profiel.php?id=". $indiener->id ."' target='profiel'>". $indiener->getName(5) ."</a></td>";
 				$page[] = "<td>&nbsp;</td>";					
 				$page[] = "<td><a href='?key=". $decl->hash ."'>". formatPrice($decl->totaal) ."</a></td>";
 				$page[] = "</tr>";

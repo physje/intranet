@@ -60,7 +60,7 @@ if(isset($_REQUEST['key'])) {
             $page[] = "<td>&nbsp;</td>";			
             $page[] = "<td>". $clusters[$declaratie->cluster] ."</td>";
             $page[] = "<td>&nbsp;</td>";
-            $page[] = "<td><a". ($class != '' ? " class='$class'" : '')." href='../profiel.php?id=". $indiener->id ."'>". $indiener->getName(5) ."</a></td>";
+            $page[] = "<td><a". ($class != '' ? " class='$class'" : '')." href='../profiel.php?id=". $indiener->id ."' target='profiel'>". $indiener->getName(5) ."</a></td>";
             $page[] = "<td>&nbsp;</td>";			
             $page[] = "<td><a". ($class != '' ? " class='$class'" : '')." href='?key=". $declaratie->hash ."'>". formatPrice($declaratie->totaal) ."</a></td>";
             $page[] = "<td>&nbsp;</td>";

@@ -144,9 +144,9 @@ if(count($logData) > 0) {
 		$rij[] = "<tr>";
 		$rij[] = "	<td>". date("d-m H:i:s", $data_array['tijd']) ."</td>";
 		$rij[] = "	<td>&nbsp;</td>";
-		$rij[] = "	<td>". ($data_array['dader'] != 0 ? "<a href='../profiel.php?id=". $dader->id ."'>".  $dader->getName() ."</a>" : "&nbsp;") ."</td>";
+		$rij[] = "	<td>". ($data_array['dader'] != 0 ? "<a href='../profiel.php?id=". $dader->id ."' target='profiel'>".  $dader->getName() ."</a>" : "&nbsp;") ."</td>";
 		$rij[] = "	<td>&nbsp;</td>";
-		$rij[] = "	<td>". ($data_array['slachtoffer'] != 0 ? "<a href='../profiel.php?id=". $slachtoffer->id ."'>". $slachtoffer->getName() ."</a>" : "&nbsp;") ."</td>";
+		$rij[] = "	<td>". ($data_array['slachtoffer'] != 0 ? "<a href='../profiel.php?id=". $slachtoffer->id ."' target='profiel'>". $slachtoffer->getName() ."</a>" : "&nbsp;") ."</td>";
 		$rij[] = "	<td>&nbsp;</td>";
 		$rij[] = "	<td>". $pre . $data_array['message']. ($data_array['vermomd'] > 0 ? ' (vermomd als '. $vermomming->getName() .')' : '') . $post ."</td>";
 		$rij[] = "</tr>";
