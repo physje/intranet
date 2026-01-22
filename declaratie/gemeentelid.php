@@ -223,9 +223,33 @@ if(isset($_POST['correct'])) {
 			toLog("Declaratie [". $declaratie->hash ."] ingevoerd en doorgestuurd naar cluco (". $cluco->getName(5) .")", 'info', $clucoID);
 			$page[] = "De declaratie is ter goedkeuring voorgelegd aan ". $cluco->getName(5) ." als clustercoordinator";
 		}
-		
+
 		# Stel de declaratie-status in
 		$declaratie->status = $status;
+
+		# -------
+		# Mail naar de indiener
+		$mailGebruiker = array();
+		$mailGebruiker[] = "Beste ". $gebruiker->getName(1).",<br>";
+		$mailGebruiker[] = "<br>";
+		$mailGebruiker[] = "jij hebt zojuist een declaratie ingediend voor <i>". makeOpsomming($onderwerpen, '</i>, <i>', '</i> en <i>') ."</i> ter waarde van ". formatPrice($declaratie->totaal)."<br>";
+		$mailGebruiker[] = "<br>";
+		$mailGebruiker[] = "Deze ligt op dit moment ter beoordeling bij ". $cluco->getName(5)." als cluster-coordinator. Mocht ". ($cluco->geslacht == 'M' ? 'hij' : 'zij') ." daar vragen over hebben dan zal hij dit naar jou terugkoppelen.<br>";
+
+		$gMail = new KKDMailer();
+		$gMail->aan		= $gebruiker->id;
+		$gMail->Subject	= "Declaratie voor cluster ". $clusters[$cluster];
+		$gMail->Body	= implode("\n", $mailGebruiker);  	
+
+		if(!$sendMail)	$gMail->testen = true;
+					
+		if(!$gMail->sendMail()) {
+			toLog("Problemen met notificatie naar gebruiker voor declaratie [". $declaratie->hash ."]", 'error');
+			$page[] = "Er zijn problemen met het versturen van de notificatie-mail naar jou.";
+		} else {
+			toLog("Notificatie naar gebruiker voor declaratie [". $declaratie->hash ."]", 'info');
+			$page[] = "Er is een bevestigingsmail naar jou onderweg.";
+		}
 
 		# En sla het object op
 		$declaratie->save();

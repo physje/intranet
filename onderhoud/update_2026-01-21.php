@@ -16,9 +16,14 @@ foreach($sql as $query) {
     if($db->query($query)) {
         echo $query .' -> succesvol';
     } else {
-        echo $query .' -> NIET succesvol';
+        echo $query .' -> <b>NIET succesvol</b>';
     }
     echo '<br>';
 }
 
+# Na uitvoeren bestand verwijderen
+if($productieOmgeving) {
+	$delen = explode('/', parse_url($_SERVER['PHP_SELF'], PHP_URL_PATH));
+	unlink(end($delen));
+}
 ?>
