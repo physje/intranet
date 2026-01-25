@@ -13,6 +13,7 @@ include_once('Classes/Team.php');
 include_once('Classes/Rooster.php');
 include_once('Classes/Mysql.php');
 include_once('Classes/Logging.php');
+include_once('Classes/Declaratie.php');
 include_once('Classes/Wijk.php');
 include_once('include/functions.php');
 include_once('include/config.php');
@@ -271,7 +272,7 @@ if(in_array(1, $myGroups)) {
 	$adminLinks['admin/editWijkteams.php'] = 'Wijkteams wijzigen';	
 	#$adminLinks['admin/crossCheck.php'] = 'Check databases';
 	$adminLinks['admin/log.php'] = 'Bekijk logfiles';
-	#$adminLinks['admin/mailLog.php'] = 'Bekijk mail-files';	
+	$adminLinks['admin/mailLog.php'] = 'Bekijk mail-files';	
 	$adminLinks['admin/sendMail.php'] = 'Verstuur mail';
 	//TODO: Logins zoeken
 	#$adminLinks['admin/logins.php'] = 'Zoek binnen logins';
@@ -291,6 +292,7 @@ if(in_array(1, $myGroups)) {
 
 
 # e-boekhouden.nl
+$hashes = Declaratie::getDeclaraties(2,0,$_SESSION['useID']);
 $EBDeel = $EBLinks = array();
 $EBDeel[] = "<b>Declaraties</b>";
 
@@ -305,6 +307,12 @@ if(in_array($gebruiker->id, $clusterCoordinatoren)) {
 	//TODO: Schrijf script om oude bijlages te verwijderen
 	#$EBLinks['declaratie/opschonenOudeBijlages.php'] = 'Verwijder oude bijlages';
 }
+
+if(count($hashes) > 0) {
+	$EBLinks['declaratie/gemeentelid.php?key='. current($hashes)] = 'Openstaande declaratie';	
+}
+
+var_dump($hashes);
 
 if(in_array(1, $myGroups)) {
 	//TODO: Schrijf script om alle relaties te zien

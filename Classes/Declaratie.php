@@ -306,19 +306,22 @@ class Declaratie
     * Geef een array met hashes van alle declaraties die aan het filter voldoen
     * @param int $status Status waar op gezocht moet worden
     * @param int $cluster Cluster waar op gezocht moet worden
+    * @param int $gebruiker Gebruiker waar op gezocht moet worden
     * 
     * @return array Array met hashes
     */
-    static function getDeclaraties(int $status = 0, int $cluster = 0) {
+    static function getDeclaraties(int $status = 0, int $cluster = 0, int $gebruiker = 0) {
         $db = new Mysql();
         $where = array();
                 
         if($status > 0)     $where[] = "`status` = ". $status;
         if($cluster > 0)    $where[] = "`cluster` = ". $cluster;
+        if($gebruiker > 0)  $where[] = "`indiener` = ". $gebruiker;
 
-        if (session_status() === PHP_SESSION_ACTIVE) {
-            $where[] = "`indiener` NOT like '". $_SESSION['useID'] ."'";
-        }
+        # Als er niet specifiek op "eigen" declaraties gezocht wordt, eigen declaraties uitsluiten
+        #if (session_status() === PHP_SESSION_ACTIVE && $gebruiker == 0) {
+        #    $where[] = "`indiener` NOT like '". $_SESSION['useID'] ."'";
+        #}
 
         $sql = "SELECT `hash` FROM `eb_declaraties` WHERE ". implode(' AND ', $where) ." ORDER BY `tijd` DESC LIMIT 0, 100";
   
