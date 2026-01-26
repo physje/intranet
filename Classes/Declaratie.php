@@ -323,7 +323,9 @@ class Declaratie
         #    $where[] = "`indiener` NOT like '". $_SESSION['useID'] ."'";
         #}
 
-        $sql = "SELECT `hash` FROM `eb_declaraties` WHERE ". implode(' AND ', $where) ." ORDER BY `tijd` DESC LIMIT 0, 100";
+        $sql = "SELECT `hash` FROM `eb_declaraties` ". (count($where) > 0 ? "WHERE ". implode(' AND ', $where) : '') ." ORDER BY `tijd` DESC LIMIT 0, 100";
+
+        #echo $sql;
   
         $data = $db->select($sql, true);
 
