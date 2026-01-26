@@ -161,12 +161,26 @@ class KKDMailer extends PHPMailer\PHPMailer\PHPMailer implements KKDConfig {
     }
 
 
+    /**
+     * Sla de mail op in de database.
+     * 
+     * Vlak voordat een mail wordt verzonden wordt deze functie aangeroepen om de mail weg te schrijven in de database.
+     * Met mailLog.php kan op deze manier nagekeken worden welke mails zijn verstuurd
+     * @return bool Wel of niet gelukt met opslaan
+     */
     function store() {
         $db = new Mysql();
         $sql = "INSERT INTO `mail_log` (`tijd`, `bericht`) VALUES ('". time() ."', '". serialize($this) ."')";
         $db->query($sql);
     }
 
+    
+    /**
+     * Geef de header terug voor boven de mail.
+     * 
+     * Deze header bevat CCS-code en standaard lay-out voor KKD-mails
+     * @return string Met HTML-code voor boven/voor de eigenlijke mail
+     */
     function getKKDHeader() {
         $Header  = "<html>".NL;
         $Header .= "<head>".NL;
@@ -198,6 +212,13 @@ class KKDMailer extends PHPMailer\PHPMailer\PHPMailer implements KKDConfig {
         return $Header;
     }
 
+
+    /**
+     * Geef de footer terug voor onder de mail.
+     * 
+     * Deze footer bevat de afsluitende standaard lay-out voor KKD-mails
+     * @return string Met HTML-code voor onder/na de eigenlijke mail
+     */
     function getKKDFooter() {
         $Footer = "			</div>".NL;
         $Footer .= "		<div class='dunnebalk'>&nbsp;</div>".NL;
