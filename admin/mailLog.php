@@ -55,10 +55,11 @@ if(count($data) > 0) {
 			} else {
 				$ontvanger = new Member($mailbericht->aan[0]);				
 			}
-			$block[] = "	<td><a href='../profiel.php?id=". $ontvanger->id ."'>". $ontvanger->getName(5)."</a></td>";		
-		} else {
-			#var_dump($mailbericht->ontvangers);
+			$block[] = "	<td><a href='../profiel.php?id=". $ontvanger->id ."' target='_profiel'>". $ontvanger->getName(5)."</a></td>";		
+		} elseif(isset($mailbericht->ontvangers)) {			
 			$block[] = "	<td>". implode('|', $mailbericht->ontvangers[0]) ."</td>";
+		} else {
+			$block[] = "	<td>&nbsp;</td>";
 		}
 
 		$block[] = "	<td>". $mailbericht->Subject ."</td>";
@@ -70,7 +71,7 @@ if(count($data) > 0) {
 		$block[] = "</tr>";
 		
 		if(isset($id) AND $id == $mail['id']) {
-			$show = array('aan', 'formeel', 'testen', 'From', 'FromName', 'Subject', 'Body');
+			$show = array('aan', 'formeel', 'testen', 'partnerTo', 'ouderCC', 'From', 'FromName', 'Subject', 'Body', 'van', 'vanNaam');
 
 			$block[] = "<tr>";
 			$block[] = "	<td>&nbsp;</td>";		
