@@ -67,7 +67,12 @@ class LaPostaData {
 	 * @var string Is dit lid 70+
 	 */
 	public string $zeventigPlus;
-    
+
+    /**
+     * @var int UNIX-tijd waarop dit lid voor het eerst gezien is
+     */
+    public int $firstSeen;
+
     /**
      * @var int UNIX-tijd waarop dit lid voor het laatst gezien is
      */
@@ -75,6 +80,7 @@ class LaPostaData {
     
     /**
      * @var int UNIX-tijd waarop dit lid voor het laatst gecontroleerd is
+     * @deprecated
      */
     public int $lastChecked;
     
@@ -98,17 +104,16 @@ class LaPostaData {
             $this->new = true;
             $this->status = '';
             $this->geslacht = '';
-                $this->voornaam = '';
-                $this->tussenvoegsel = '';
-                $this->achternaam = '';
-	            $this->mail = '';
-	            $this->wijk = '';
-                $this->relatie = '';
-                $this->doop = '';
-	            $this->zeventigPlus = false;
-                $this->lastSeen = 0;
-                $this->lastChecked = 0;
-            
+            $this->voornaam = '';
+            $this->tussenvoegsel = '';
+            $this->achternaam = '';
+	        $this->mail = '';
+	        $this->wijk = '';
+            $this->relatie = '';
+            $this->doop = '';
+	        $this->zeventigPlus = false;
+            $this->firstSeen = 0;
+            $this->lastSeen = 0;            
             
 			$data = $db->select("SELECT * FROM `lp_data` WHERE `scipio_id` = ". $this->id);
 
@@ -124,7 +129,7 @@ class LaPostaData {
                 $this->doop = $data['doop'];
 	            $this->zeventigPlus = ($data['70_plus'] == 1 ? true : false);
                 $this->lastSeen = $data['last_seen'];
-                $this->lastChecked = $data['last_checked'];
+                $this->firstSeen = $data['last_checked'];
                 $this->new = false;
             }
         }
@@ -174,7 +179,7 @@ class LaPostaData {
         $data['doop'] = $this->doop;
         $data['70_plus'] = ($this->zeventigPlus ? '1' : '0');
         $data['last_seen'] = $this->lastSeen;
-        $data['last_checked'] = $this->lastChecked;        
+        $data['last_checked'] = $this->firstSeen;        
 
         if($this->new) {
             $sql = "INSERT INTO `lp_data` (`". implode('`, `', array_keys($data)) ."`) VALUES ('". implode("', '", array_values($data)) ."')";            

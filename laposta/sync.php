@@ -137,7 +137,7 @@ foreach($adressen as $id => $email_encoded) {
 			$LP->relatie = $lid->relatie;
 			$LP->doop = $lid->doop_belijdenis;
 			$LP->lastSeen = time();
-			$LP->lastChecked = time();
+			$LP->firstSeen = time();
 								
 			# De wijzigingen aan de LP kant moeten ook verwerkt worden in mijn lokale laposta-database
 			if($LP->save()) {
@@ -156,8 +156,6 @@ foreach($adressen as $id => $email_encoded) {
 			
 			$formerMail = $LP->mail;
 			$LP->lastSeen = time();
-			#$sql_update = array();
-			#$sql_update[] = "$LPlastSeen = ". time();
 			
 			# Als mensen zichzelf hebben uitgeschreven, is hun adres
 			# bij LaPosta geblokeerd en mag ik er niks aan wijzigen
@@ -326,7 +324,6 @@ toLog('Synchronisatie naar LaPosta uitgevoerd');
 #
 # Verwijder adressen die 2 ronde's (uitgaande van elke 12 uur een check) niet meer gezien zijn
 # Er is een limiet van 4 per keer om de LaPosta-API niet te overvragen
-/*
 $users = LaPostaData::getOldAdresses();
 foreach($users as $userID) {
 	$user = new LaPostaData($userID);
@@ -351,5 +348,4 @@ foreach($users as $userID) {
 		toLog($email.' lijkt vaker voor te komen, niet uitgeschreven bij LaPosta', '', $user->id);
 	}
 }
-*/
 ?>
