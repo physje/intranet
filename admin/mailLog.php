@@ -1,8 +1,11 @@
 <?php
 include_once('../include/functions.php');
 include_once('../include/config.php');
+include_once('../include/config_mails.php');
 include_once('../include/HTML_TopBottom.php');
 include_once('../Classes/Mysql.php');
+include_once('../Classes/Member.php');
+include_once('../Classes/KKDMailer.php');
 
 $requiredUserGroups = array(1);
 $cfgProgDir = '../auth/';
@@ -30,7 +33,7 @@ $data = $db->select($sql, true);
 if(count($data) > 0) {
 	$block[] = "<form method='post' action='$_SERVER[PHP_SELF]'>";
 	$block[] = "<input type='hidden' name='start' value='$start'>";
-	$block[] = "<table>";
+	$block[] = "<table border=0>";
 	$block[] = "<thead>";
 	$block[] = "<tr>";	
 	$block[] = "	<th>Tijdstip</th>";
@@ -38,68 +41,50 @@ if(count($data) > 0) {
 	$block[] = "	<th>Onderwerp</th>";
 	$block[] = "	<th>&nbsp;</th>";
 	$block[] = "</tr>";
-	$block[] = "</thead>";
+	$block[] = "</thead>";	
 	
-	do {		
-		$mail = unserialize($data['bericht']);
-		
+	foreach($data as $mail) {
+		$mailbericht = unserialize($mail['bericht']);
+						
 		$block[] = "<tr>";		
-		$block[] = "	<td>". time2str('E d L HH:mm ', $row[$MailTime]) ."</td>";
-		$eersteOntvanger = current($param['to']);
+		$block[] = "	<td>". time2str('EE d L HH:mm', $mail['tijd']) ."</td>";
 		
-		if(count($eersteOntvanger) == 1 AND is_numeric(current($eersteOntvanger))) {
-			$block[] = "	<td>". makeName(current($eersteOntvanger), 5)."</td>";
-		} elseif(count($eersteOntvanger) == 2) {
-			$block[] = "	<td>". $eersteOntvanger[1] ."</td>";
+		if(isset($mailbericht->aan)) {
+			if(!is_array($mailbericht->aan)) {
+				$ontvanger = new Member($mailbericht->aan);				
+			} else {
+				$ontvanger = new Member($mailbericht->aan[0]);				
+			}
+			$block[] = "	<td><a href='../profiel.php?id=". $ontvanger->id ."'>". $ontvanger->getName(5)."</a></td>";		
 		} else {
-			$block[] = "	<td>". $eersteOntvanger ."</td>";
+			#var_dump($mailbericht->ontvangers);
+			$block[] = "	<td>". implode('|', $mailbericht->ontvangers[0]) ."</td>";
 		}
-		$block[] = "	<td>". $param['subject'] ."</td>";
-		if(isset($id) AND $id == $row[$MailID]) {	
+
+		$block[] = "	<td>". $mailbericht->Subject ."</td>";
+		if(isset($id) AND $id == $mail['id']) {	
 			$block[] = "	<td><input type='submit' name='id[0]' value='-'></td>";
 		} else {
-			$block[] = "	<td><input type='submit' name='id[".$row[$MailID]."]' value='+'></td>";
+			$block[] = "	<td><input type='submit' name='id[". $mail['id'] ."]' value='+'></td>";
 		}
 		$block[] = "</tr>";
 		
-		if(isset($id) AND $id == $row[$MailID]) {
+		if(isset($id) AND $id == $mail['id']) {
+			$show = array('aan', 'formeel', 'testen', 'From', 'FromName', 'Subject', 'Body');
+
 			$block[] = "<tr>";
-			$block[] = "	<td>&nbsp;</td>";
-			$block[] = "	<td colspan='3'>";
+			$block[] = "	<td>&nbsp;</td>";		
+			$block[] = "	<td colspan='2'>";
 			$block[] = "	<table border=1>";
-			
-			foreach($mailVariabele as $key) {			
-				if(isset($param[$key])) {
-					$value = $param[$key];
-					
+			foreach($mailbericht as $key => $value) {
+				if(in_array($key, $show)) {
 					$block[] = "<tr>";
-					$block[] = "	<td valign='top'>". $key ."</td>";
-					$block[] = "	<td>";
-					
-					if(is_array($value)) {						
-						foreach($value as $subkey => $subvalue) {
-							if(is_array($subvalue)) {
-								foreach($subvalue as $subsubkey => $subsubvalue) {
-									$block[] = addslashes ($subsubvalue);
-								}
-							} else {
-								$block[] = addslashes ($subsubvalue);
-							}
-							$block[] = "<br>";
-						}					
-					} else {
-						if($key != 'message') {
-							$block[] = addslashes($value);
-						} else {
-							$block[] = $value;
-						}
-					}
-					
-					$block[] = "	</td>";
+					$block[] = "	<td>$key</td>";
+					$block[] = "	<td>$value</td>";
 					$block[] = "</tr>";
 				}
 			}
-						
+			
 			$block[] = "	<tr>";
 			$block[] = "		<td>&nbsp;</td>";
 			$block[] = "		<td align='center'><a href='composeMail.php?id=$id'>Bewerk deze mail</a></td>";
@@ -107,8 +92,8 @@ if(count($data) > 0) {
 			$block[] = "	</table>";
 			$block[] = "</td>";
 			$block[] = "</tr>";
-		}		
-	} while($row = mysqli_fetch_array($result));
+		}
+	}
 	
 	/*
 	$block[] = "<tr>";
