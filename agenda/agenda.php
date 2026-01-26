@@ -7,6 +7,7 @@ include_once('../Classes/Member.php');
 include_once('../Classes/Agenda.php');
 include_once('../Classes/Logging.php');
 include_once('../Classes/KKDMailer.php');
+include_once('../Classes/Mysql.php');
 
 $showLogin = true;
 $text = $footer = array();

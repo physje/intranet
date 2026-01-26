@@ -8,6 +8,7 @@ include_once('../Classes/Member.php');
 include_once('../Classes/Rooster.php');
 include_once('../Classes/Team.php');
 include_once('../Classes/Logging.php');
+include_once('../Classes/Mysql.php');
 
 $requiredUserGroups = array(1);
 $cfgProgDir = '../auth/';

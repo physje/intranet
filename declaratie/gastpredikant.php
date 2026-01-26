@@ -10,6 +10,7 @@ include_once('../Classes/Declaratie.php');
 include_once('../Classes/KKDMailer.php');
 include_once('../Classes/Logging.php');
 include_once('../Classes/Boeknummer.php');
+include_once('../Classes/Mysql.php');
 include_once('genereerDeclaratiePdf.php');
 
 if($productieOmgeving) {

@@ -7,6 +7,7 @@ include_once('../Classes/Member.php');
 include_once('../Classes/Kerkdienst.php');
 include_once('../Classes/Logging.php');
 include_once('../Classes/KKDMailer.php');
+include_once('../Classes/Mysql.php');
 
 $cfgProgDir = '../auth/';
 $requiredUserGroups = array(1, 22, 52);

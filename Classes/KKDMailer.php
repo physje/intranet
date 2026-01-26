@@ -146,9 +146,7 @@ class KKDMailer extends PHPMailer\PHPMailer\PHPMailer implements KKDConfig {
                     echo 'Bijlage : '. implode('|', $this->attachment[0]) .'<br>';
                 }
             } else {
-                $db = new Mysql();
-                $sql = "INSERT INTO `mail_log` (`tijd`, `bericht`) VALUES ('". time() ."', '". serialize($this) ."')";
-                $db->query($sql);
+                $this->store();
 
                 $this->Body = $this->getKKDHeader().$this->Body.$this->getKKDFooter();                
                 $this->send();
@@ -160,6 +158,13 @@ class KKDMailer extends PHPMailer\PHPMailer\PHPMailer implements KKDConfig {
             echo $this->ErrorInfo;
             return false;
         }
+    }
+
+
+    function store() {
+        $db = new Mysql();
+        $sql = "INSERT INTO `mail_log` (`tijd`, `bericht`) VALUES ('". time() ."', '". serialize($this) ."')";
+        $db->query($sql);
     }
 
     function getKKDHeader() {

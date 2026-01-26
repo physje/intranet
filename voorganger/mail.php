@@ -10,6 +10,7 @@ include_once('../Classes/Rooster.php');
 include_once('../Classes/Member.php');
 include_once('../Classes/Logging.php');
 include_once('../Classes/KKDMailer.php');
+include_once('../Classes/Mysql.php');
 
 $sendMail = true;
 $sendTestMail = false;

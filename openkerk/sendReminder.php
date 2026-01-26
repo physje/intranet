@@ -7,6 +7,7 @@ include_once('../Classes/Member.php');
 include_once('../Classes/Logging.php');
 include_once('../Classes/OpenKerkRooster.php');
 include_once('../Classes/KKDMailer.php');
+include_once('../Classes/Mysql.php');
 
 $startDag = mktime(0,0,0,date('n'),(date('j')+1));
 $eindDag = $startDag + (24*60*60);

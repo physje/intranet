@@ -18,6 +18,7 @@ include_once('../Classes/Member.php');
 include_once('../Classes/Logging.php');
 include_once('../Classes/Wijk.php');
 include_once('../Classes/KKDMailer.php');
+include_once('../Classes/Mysql.php');
 
 $test = false;
 $debug = false;

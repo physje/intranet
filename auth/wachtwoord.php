@@ -6,6 +6,7 @@ include_once('../include/HTML_TopBottom.php');
 include_once('../Classes/Member.php');
 include_once('../Classes/KKDMailer.php');
 include_once('../Classes/Logging.php');
+include_once('../Classes/Mysql.php');
 
 if(isset($_POST['opvragen']) AND isset($_POST['invoer']) AND trim($_POST['invoer']) != '') {
 	$invoer	= trim($_POST['invoer']);

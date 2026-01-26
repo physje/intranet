@@ -20,6 +20,7 @@ include_once('Classes/Member.php');
 include_once('Classes/Voorganger.php');
 include_once('Classes/KKDMailer.php');
 include_once('Classes/Logging.php');
+include_once('Classes/Mysql.php');
 
 # Omdat de server deze dagelijks moet draaien wordt toegang niet gedaan op basis
 # van naam+wachtwoord maar op basis van IP-adres

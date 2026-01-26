@@ -9,6 +9,7 @@ include_once('../Classes/Vulling.php');
 include_once('../Classes/Kerkdienst.php');
 include_once('../Classes/KKDMailer.php');
 include_once('../Classes/Logging.php');
+include_once('../Classes/Mysql.php');
 
 $cfgProgDir = '../auth/';
 include($cfgProgDir. "secure.php");
