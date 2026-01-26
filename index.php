@@ -312,7 +312,7 @@ if(count($hashes) > 0) {
 	$EBLinks['declaratie/gemeentelid.php?key='. current($hashes)] = 'Openstaande declaratie';	
 }
 
-var_dump($hashes);
+#var_dump($hashes);
 
 if(in_array(1, $myGroups)) {
 	//TODO: Schrijf script om alle relaties te zien
