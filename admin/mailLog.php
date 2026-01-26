@@ -47,7 +47,7 @@ if(count($data) > 0) {
 		$mailbericht = unserialize($mail['bericht']);
 						
 		$block[] = "<tr>";		
-		$block[] = "	<td>". time2str('EE d L HH:mm', $mail['tijd']) ."</td>";
+		$block[] = "	<td>". time2str('EE d LLL HH:mm', $mail['tijd']) ."</td>";
 		
 		if(isset($mailbericht->aan)) {
 			if(!is_array($mailbericht->aan)) {
