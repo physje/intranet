@@ -44,7 +44,7 @@ if(count($data) > 0) {
 	$block[] = "</thead>";	
 	
 	foreach($data as $mail) {
-		$mailbericht = unserialize($mail['bericht']);
+		$mailbericht = unserialize(urldecode($mail['bericht']));
 						
 		$block[] = "<tr>";		
 		$block[] = "	<td>". time2str('EE d LLL HH:mm', $mail['tijd']) ."</td>";

@@ -83,6 +83,7 @@ class KKDMailer extends PHPMailer\PHPMailer\PHPMailer implements KKDConfig {
         $this->formeel      = false;
     }
 
+
     /**
      * Verstuur de KKD-mail.
      * @return bool Of versturen succesvol was
@@ -170,8 +171,9 @@ class KKDMailer extends PHPMailer\PHPMailer\PHPMailer implements KKDConfig {
      */
     function store() {
         $db = new Mysql();
-        $sql = "INSERT INTO `mail_log` (`tijd`, `bericht`) VALUES ('". time() ."', '". serialize($this) ."')";
-        $db->query($sql);
+        $sql = "INSERT INTO `mail_log` (`tijd`, `bericht`) VALUES ('". time() ."', '". urlencode(serialize($this)) ."')";
+        
+        return $db->query($sql);
     }
 
     
