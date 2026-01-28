@@ -312,20 +312,22 @@ if(count($hashes) > 0) {
 	$EBLinks['declaratie/gemeentelid.php?key='. current($hashes)] = 'Openstaande declaratie';	
 }
 
-#var_dump($hashes);
-
-if(in_array(1, $myGroups)) {
-	//TODO: Schrijf script om alle relaties te zien
-	#$EBLinks['declaratie/relatieOverview.php'] = 'Toon alle relaties';	
-	$EBLinks['declaratie/admin/mutaties.php'] = 'Toon alle mutaties';	
-	#$EBLinks['declaratie/zoekWeesBijlages.php'] = 'Koppel wees-bijlages';
-	//$EBLinks['declaratie/syncRelaties.php'] = 'Synchroniseer relaties naar lokale database';
+if(in_array(1, $myGroups)) {	
+	$EBLinks_admin['declaratie/admin/relaties.php'] = 'Toon alle relaties';	
+	$EBLinks_admin['declaratie/admin/mutaties.php'] = 'Toon alle mutaties';	
+	#$EBLinks_admin['declaratie/zoekWeesBijlages.php'] = 'Koppel wees-bijlages';
+	//$EBLinks_admin['declaratie/syncRelaties.php'] = 'Synchroniseer relaties naar lokale database';
 	//TODO: Schrijf script om relaties te bewerken
-	#$EBLinks['declaratie/editRelatie.php'] = 'Wijzig relaties';
-	#$EBLinks['https://secure.e-boekhouden.nl/handleiding/Documentatie_soap.pdf'] = 'SOAP documenatie PDF';
+	#$EBLinks_admin['declaratie/editRelatie.php'] = 'Wijzig relaties';
+	#$EBLinks_admin['https://secure.e-boekhouden.nl/handleiding/Documentatie_soap.pdf'] = 'SOAP documenatie PDF';
 }
 
 foreach($EBLinks as $link => $naam) {
+	$EBDeel[] = "<a href='$link' target='_blank'>$naam</a>";
+}
+$EBDeel[] = "<u>Admin</u>";
+
+foreach($EBLinks_admin as $link => $naam) {
 	$EBDeel[] = "<a href='$link' target='_blank'>$naam</a>";
 }
 $blocks[] = $EBDeel;

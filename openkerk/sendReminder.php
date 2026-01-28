@@ -24,10 +24,9 @@ foreach($personen as $persoon) {
 		$OKReminder = new KKDMailer();		
 				
 		if(is_numeric($persoon)) {
-			$person = new Member($persoon);
-			$person->nameType = 1;
+			$person = new Member($persoon);			
 
-			$mail[] = "Beste ". $person->getName() .",<br>";
+			$mail[] = "Beste ". $person->getName(1) .",<br>";
 			$OKReminder->aan = $person->id;			
 		} else {
 			$geslacht	= $extern[$persoon]['geslacht'];

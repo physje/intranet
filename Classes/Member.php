@@ -740,11 +740,11 @@ class Member {
 			# Check of er ouders zijn met een mailadres
 			$ouders = $this->getParents();
 			$prtnr = $this->getPartner();
-
+											
 			if(count($ouders) > 0) {
 				$ouder = new Member($ouders[0]);
 				$plain = $ouder->getMail($type);
-			} elseif(is_int($prtnr)) {
+			} elseif($prtnr != '') {				
 				$partner = new Member($prtnr);
 				$plain = $partner->getMail($type);
 			} else {
