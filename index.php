@@ -312,7 +312,12 @@ if(count($hashes) > 0) {
 	$EBLinks['declaratie/gemeentelid.php?key='. current($hashes)] = 'Openstaande declaratie';	
 }
 
-if(in_array(1, $myGroups)) {	
+foreach($EBLinks as $link => $naam) {
+	$EBDeel[] = "<a href='$link' target='_blank'>$naam</a>";
+}
+
+if(in_array(1, $myGroups)) {
+	$EBDeel[] = "<u>Admin</u>";
 	$EBLinks_admin['declaratie/admin/relaties.php'] = 'Toon alle relaties';	
 	$EBLinks_admin['declaratie/admin/mutaties.php'] = 'Toon alle mutaties';	
 	#$EBLinks_admin['declaratie/zoekWeesBijlages.php'] = 'Koppel wees-bijlages';
@@ -322,14 +327,10 @@ if(in_array(1, $myGroups)) {
 	#$EBLinks_admin['https://secure.e-boekhouden.nl/handleiding/Documentatie_soap.pdf'] = 'SOAP documenatie PDF';
 }
 
-foreach($EBLinks as $link => $naam) {
-	$EBDeel[] = "<a href='$link' target='_blank'>$naam</a>";
-}
-$EBDeel[] = "<u>Admin</u>";
-
 foreach($EBLinks_admin as $link => $naam) {
 	$EBDeel[] = "<a href='$link' target='_blank'>$naam</a>";
 }
+
 $blocks[] = $EBDeel;
 
 

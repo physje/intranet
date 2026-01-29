@@ -85,11 +85,11 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 							
 							$dagdeel					= formatDagdeel($dienst->start, false);
 							
-							$gebruiker->nameType = 1;	$ReplacedBericht = str_replace ('[[voornaam]]', $gebruiker->getName(), $ReplacedBericht);
-							$gebruiker->nameType = 4;	$ReplacedBericht = str_replace ('[[achternaam]]', $gebruiker->getName(), $ReplacedBericht);
+							$gebruiker->nameType = 1;	$ReplacedBericht = str_replace ('[[voornaam]]', $gebruiker->getName(1), $ReplacedBericht);
+							$gebruiker->nameType = 4;	$ReplacedBericht = str_replace ('[[achternaam]]', $gebruiker->getName(3), $ReplacedBericht);
 							$ReplacedBericht = str_replace ('[[dag]]', time2str ("EEEE", $dienst->start), $ReplacedBericht);
 							$ReplacedBericht = str_replace ('[[dagdeel]]', $dagdeel, $ReplacedBericht);
-							$ReplacedBericht = str_replace ('[[voorganger]]', $voorganger->getName(), $ReplacedBericht);
+							$ReplacedBericht = str_replace ('[[voorganger]]', $voorganger->getName(5), $ReplacedBericht);
 							$ReplacedBericht = str_replace ('[[collecte1]]', $dienst->collecte_1, $ReplacedBericht);
 							$ReplacedBericht = str_replace ('[[collecte2]]', $dienst->collecte_2, $ReplacedBericht);
 							$ReplacedBericht = str_replace ('[[n]]', $positie, $ReplacedBericht);
