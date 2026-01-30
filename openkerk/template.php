@@ -262,7 +262,7 @@ if($half) {
 	echo '</div> <!-- end \'content_vert_kolom\' -->'.NL;
 } else {
 	echo '<div class="content_vert_kolom_full">'.NL;
-	echo "<div class='content_block'>". implode(NL, $text) ."</div>".NL;
+	echo "<div class='content_block'>". implode(NL, $block) ."</div>".NL;
 	echo '</div> <!-- end \'content_vert_kolom_full\' -->'.NL;
 }
 
