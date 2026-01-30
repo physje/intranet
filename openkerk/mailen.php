@@ -77,13 +77,14 @@ if(isset($_POST['versturen'])) {
 	$ontvangers = explode('|', $_POST['ontvangers']);
 	
 	# Doorloop alle ontvangers om ze een persoonlijke mail te sturen met het rooster als bijlage
-	foreach($ontvangers as $ontvanger) {		
+	foreach($ontvangers as $ontvanger) {
+		# Na elke mail een paar seconden rust, dus daarom even elke keer de tijdslimiet op 5 seconden zetten.
+		set_time_limit(5);
 		$OKMail = new KKDMailer();
 		
 		if(is_numeric($ontvanger)) {			
-			$person = new Member($ontvanger);
-			$person->nameType = 1;
-			$voornaam = $person->getName();
+			$person = new Member($ontvanger);			
+			$voornaam = $person->getName(1);
 			$AgendaURL = $ScriptURL ."ical/". $person->hash_long .".ics";
 
 			$OKMail->aan = $ontvanger;
@@ -108,9 +109,21 @@ if(isset($_POST['versturen'])) {
 				
 		if($OKMail->Sendmail()) {
 			$text[] = 'Mail naar '. $voornaam .' gestuurd<br>';
+			if(is_numeric($ontvanger)) {
+				toLog('Rooster open kerk gestuurd', 'debug', $person->id);
+			} else {
+				toLog('Rooster open kerk gestuurd naar'. $extern[$ontvanger]['naam'], 'debug');
+			}			
 		} else {
 			$text[] = 'Geen mail naar '. $voornaam .' gestuurd<br>';
-		}		
+			if(is_numeric($ontvanger)) {
+				toLog('Kon geen rooster open kerk sturen', 'error', $person->id);
+			} else {
+				toLog('Kon geen rooster open kerk sturen naar'. $extern[$ontvanger]['naam'], 'debug');
+			}			
+		}
+		# Om niet te bommen, even paar seconden rust
+		sleep(2);
 	}
 	
 	# Rommel weer even opruimen
@@ -129,7 +142,7 @@ if(isset($_POST['versturen'])) {
 		$standaardTekst[] = "";
 		$standaardTekst[] = "Een dag voor je dienst krijg je sowieso een herinnering via de mail.";
 		$standaardTekst[] = "";
-		$standaardTekst[] = "Ik verzoek je om incidentele ruilingen zelf in 'Rooster wijzigen' door te voeren middels <a href='". $ScriptURL ."openkerk/editRooster.php'>deze link</a> of op de website <a href='". $ScriptURL ."'>". $ScriptURL ."</a> onder het kopje 'Open Kerk'.";
+		$standaardTekst[] = "Ik verzoek je om incidentele ruilingen zelf in 'Rooster wijzigen' door te voeren middels <a href='". $ScriptURL ."openkerk/edit.php'>deze link</a> of op de website <a href='". $ScriptURL ."'>". $ScriptURL ."</a> onder het kopje 'Open Kerk'.";
 		$standaardTekst[] = "Je hebt hiervoor inloggegevens nodig (alleen vrijwilligers die lid van de gemeente zijn hebben toegang tot deze app).";
 		$standaardTekst[] = "Als je roosterwijzigingen doorvoert is het voor iedereen duidelijk met wie hij/zij samenwerkt en krijgt de juiste persoon een herinneringsmail.";
 		$standaardTekst[] = "Als je in een volgend rooster structurele wijzigingen wilt dan verzoek ik je je wensen en mogelijkheden door te geven aan de roostermaker.";

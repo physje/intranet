@@ -27,7 +27,7 @@ foreach($clusterCoordinatoren as $cluster => $clucoID) {
 		$reminderMail = array();
 		$reminderMail[] = "Beste ". $cluco->getName(1).",<br>";
 		$reminderMail[] = "<br>";
-		$reminderMail[] = "De volgende ". (count($declaraties) == 1 ? 'declaratie wacht' : 'declaraties wachten')." op een reactie van jouw :<br>";
+		$reminderMail[] = "De volgende ". (count($declaraties) == 1 ? 'declaratie wacht' : 'declaraties wachten')." voor cluster ". $clusters[$cluster] ." wachten op een reactie van jouw:<br>";
 		$reminderMail[] = "<ul>";
 
 		foreach($declaraties as $hash) {
@@ -38,7 +38,7 @@ foreach($clusterCoordinatoren as $cluster => $clucoID) {
 			if(count($declaratie->overigeKosten) > 0)	$onderwerpen = array_merge($onderwerpen, array_keys($declaratie->overigeKosten));
 			if($declaratie->reiskosten > 0)				$onderwerpen = array_merge($onderwerpen, array('reiskosten'));
 
-			$reminderMail[] = "<li>De declaratie van ". $indiener->getName(5)." voor <i>". makeOpsomming($onderwerpen, '</i>, <i>', '</i> en <i>') ."</i> ter waarde van ". formatPrice($declaratie->totaal) ."</li>\n";
+			$reminderMail[] = "<li>De declaratie van ". $indiener->getName(5)." op ".time2str('d LLLL', $declaratie->tijd) ." voor <i>". makeOpsomming($onderwerpen, '</i>, <i>', '</i> en <i>') ."</i> ter waarde van ". formatPrice($declaratie->totaal) ."</li>\n";
 
 		}
 		$reminderMail[] = "</ul>";
@@ -51,7 +51,7 @@ foreach($clusterCoordinatoren as $cluster => $clucoID) {
 
 		$mail = new KKDMailer();
 		$mail->aan = $clucoID;
-		$mail->Subject	= count($declaraties) ." openstaande ". (count($declaraties) == 1 ? 'declaratie wacht' : 'declaraties wachten')." op reactie";	
+		$mail->Subject	= count($declaraties) ." openstaande ". (count($declaraties) == 1 ? 'declaratie' : 'declaraties')." voor voor cluster ". $clusters[$cluster];
 		$mail->Body		= implode("\n", $reminderMail);
 		if(!$productieOmgeving)	$mail->testen	= true;
 
@@ -89,8 +89,8 @@ if(count($declaraties) > 0) {
 		$onderwerpen = array();
 		if(count($declaratie->overigeKosten) > 0)	$onderwerpen = array_merge($onderwerpen, array_keys($declaratie->overigeKosten));
 		if($declaratie->reiskosten > 0)				$onderwerpen = array_merge($onderwerpen, array('reiskosten'));
-
-		$lijst[] = "<li>De declaratie van ". $indiener->getName(5)." voor <i>". makeOpsomming($onderwerpen, '</i>, <i>', '</i> en <i>') ."</i> ter waarde van ". formatPrice($declaratie->totaal) ."</li>\n";
+		
+		$lijst[] = "<li>De declaratie van ". $indiener->getName(5)." op ".time2str('d LLLL', $declaratie->tijd) ." voor <i>". makeOpsomming($onderwerpen, '</i>, <i>', '</i> en <i>') ."</i> ter waarde van ". formatPrice($declaratie->totaal) ."</li>\n";
 	}
 
 	if(count($lijst) > 0) {

@@ -94,7 +94,7 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 		if($declaratie->status < 5) {
 			$veldenCorrect = true;
 					
-			if($declaratie->GBR == '') {
+			if(isset($_POST['check_values']) && $declaratie->GBR == '') {
 				$veldenCorrect = false;
 				$meldingGBR = 'Grootboekrekening ontbreekt';
 			}
@@ -537,6 +537,7 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 			# Als geen van dan alles bekend is, toen dan het overzicht van de declaratie
 			} else {
 				$page[] = "<form method='post' action='". $_SERVER['PHP_SELF']."'>";
+				$page[] = "<input type='hidden' name='check_values' value='true'>";
 				if(isset($_POST['post'])) {
 					foreach($_POST['post'] as $key => $waarde) {
 						$page[] = "<input type='hidden' name='post[$key]' value='$waarde'>";
