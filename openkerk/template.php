@@ -16,7 +16,7 @@ $team		= new Team(43);
 $namen		= array_merge($team->leden, $extern);
 $templates	= OpenKerkTemplate::getAllTemplates();
 $block		= array();
-$half		= false;
+$half		= true;
 
 # De boel opslaan indien op 'opslaan' is geklikt, of als op uitrollen is geklikt
 # maar alleen als het 1ste scherm van uitrollen moet worden getoond
@@ -262,7 +262,7 @@ if($half) {
 	echo '</div> <!-- end \'content_vert_kolom\' -->'.NL;
 } else {
 	echo '<div class="content_vert_kolom_full">'.NL;
-	echo "<div class='content_block'>". implode(NL, $block) ."</div>".NL;
+	echo "<div class='content_block'>". implode(NL, $text) ."</div>".NL;
 	echo '</div> <!-- end \'content_vert_kolom_full\' -->'.NL;
 }
 
