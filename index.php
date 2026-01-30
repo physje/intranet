@@ -302,7 +302,7 @@ if(in_array($gebruiker->id, $clusterCoordinatoren)) {
 	$EBLinks['declaratie/cluco.php'] = 'Overzicht ingediende declaraties';	
 } elseif(in_array(38, $myGroups)) {
 	$EBLinks['declaratie/penningmeester.php'] = 'Overzicht ingediende declaraties';	
-} elseif(in_array(1, $myGroups)) {
+} elseif(in_array(1, $myGroups) || in_array(38, $myGroups)) {
 	$EBLinks['declaratie/overzicht.php'] = 'Status declaraties';	
 	//TODO: Schrijf script om oude bijlages te verwijderen
 	#$EBLinks['declaratie/opschonenOudeBijlages.php'] = 'Verwijder oude bijlages';
@@ -317,7 +317,7 @@ foreach($EBLinks as $link => $naam) {
 }
 
 if(in_array(1, $myGroups)) {
-	$EBDeel[] = "<u>Admin</u>";
+	$EBDeel[] = "<i>Admin</i>";
 	$EBLinks_admin['declaratie/admin/relaties.php'] = 'Toon alle relaties';	
 	$EBLinks_admin['declaratie/admin/mutaties.php'] = 'Toon alle mutaties';	
 	#$EBLinks_admin['declaratie/zoekWeesBijlages.php'] = 'Koppel wees-bijlages';
