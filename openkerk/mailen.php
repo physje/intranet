@@ -9,6 +9,7 @@ include_once('../Classes/OpenKerkRooster.php');
 include_once('../Classes/Team.php');
 include_once('../Classes/Mysql.php');
 include_once('../Classes/KKDMailer.php');
+include_once('../Classes/Logging.php');
 include_once('../include/pdf/config.php');
 include_once('../include/pdf/3gk_table.php');
 
