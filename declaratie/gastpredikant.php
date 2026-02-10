@@ -112,11 +112,15 @@ if(isset($declaratie->hash) && $declaratie->hash != '') {
 				if($errorResult) {
 					toLog($errorResult, 'error');
 					$IBANSearchSucces = false;
-				} else {
-					toLog('IBAN '. $declaratie->IBAN .' hoort bij relatie '. $EB_code, 'debug');
+				} elseif(is_int($EB_code)) {
+					toLog('IBAN '. $declaratie->IBAN .' hoort bij relatie '. $EB_code, 'debug');					
 					$voorganger->boekhoud_id = $EB_code;
 					$voorganger->save();
+				} else {
+					toLog('IBAN '. $declaratie->IBAN .' niet bekend in eBoekhouden', 'debug');
+					$IBANSearchSucces = false;
 				}
+
 
 				// Als er geen nummer terugkomt, is dit IBAN niet bekend en moet deze voorganger worden toegevoegd
 				if(!$IBANSearchSucces) {
