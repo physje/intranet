@@ -17,7 +17,10 @@ include_once('../Classes/Mysql.php');
 $cfgProgDir = '../auth/';
 include($cfgProgDir. "secure.php");
 
-if(in_array($_SESSION['useID'], array(1))) {	
+$gebruiker = new Member($_SESSION['useID']);
+$myGroups = $gebruiker->getTeams();
+
+if(in_array(1, $myGroups)) {	
     if(isset($_REQUEST['key'])) {
         $declaratie = new Declaratie($_REQUEST['key']);
 
