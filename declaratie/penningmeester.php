@@ -134,7 +134,9 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 						//$page[] = "Heeft daar IBAN: ". $EBIBAN .'<br>';
 						
 						# Klopt IBAN-nummer nog wat bij eBoekhouden bekend is
-						if(cleanIBAN($EBIBAN) != cleanIBAN($declaratie->IBAN)) {							
+						if(cleanIBAN($EBIBAN) != cleanIBAN($declaratie->IBAN)) {		
+							//TODO: Updaten info lijkt niet goed te gaan
+							#$data['iban'] = $declaratie->IBAN;
 							$errorResult = eb_updateRelatieByCode($indiener->boekhouden, $data);
 							
 							//$page[] = "In de declaratie is als IBAN ingevuld: ". $JSON['iban'] .'<br>';

@@ -1,4 +1,15 @@
 <?php
+/**
+ * Script waarmee een gemeentelid een declaratie kan doen.
+ * 
+ * Nadat de declaratie is ingevoerd wordt er automatisch een mail verstuurd naar de Cluco om de declaratie te beoordelen (@see cluco.php).
+ * Als deze akkoord is gaat de declaratie naar de penningsmeester in het kader van 4-ogen principe (@see penningmeester.php).
+ * Deze laaste keurt de declaratie goed zodat deze in eBoekhouden.nl komt
+ * 
+ * @package Intranet KKD
+ * @author Matthijs Draijer
+ * @version 1.0.0
+ */
 include_once('../include/functions.php');
 include_once('../include/EB_functions.php');
 include_once('../include/config.php');
@@ -76,6 +87,7 @@ if(isset($_POST['iban']))			$declaratie->IBAN = cleanIBAN($_POST['iban']);
 if(isset($_POST['EB_relatie']))		$declaratie->begunstigde = intval($_POST['EB_relatie']);
 if(isset($_POST['cluster']))		$declaratie->cluster = intval($_POST['cluster']);
 if(isset($_POST['opm_cluco']))		$declaratie->opmerking = trim($_POST['opm_cluco']);
+if($gebruiker->boekhouden > 0)		eb_getRelatieIbanByCode($gebruiker->boekhouden, $declaratie->oorspronkelijke_IBAN);
 
 # Overige kosten als array van omschrijving => bedrag
 if(isset($_POST['overig'])) {
@@ -268,7 +280,7 @@ if(isset($_POST['correct'])) {
 	# Als vertrek-adres en IBAN leeg zijn, stel deze dan in op basis van de gegevens van de gebruiker.
 	# Rekeningnummer wordt bepaald op basis van het eBoekhouden-ID en opvragen van IBAN
 	if($declaratie->eigenRekening) {		
-		if($declaratie->van == '')									$declaratie->van = $gebruiker->getWoonadres();				
+		if($declaratie->van == '')									$declaratie->van = $gebruiker->getWoonadres();
 		if($gebruiker->boekhouden > 0 && $declaratie->IBAN == '')	eb_getRelatieIbanByCode($gebruiker->boekhouden, $declaratie->IBAN);
 	}
 	
