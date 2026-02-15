@@ -207,7 +207,7 @@ class Declaratie
         # Typisch gemeentelid
         $this->id = 0;
         $this->gebruiker = 0;
-        $this->eigenRekening = true;
+        $this->eigenRekening = 0;
         #$this->opmerkingCluco = '';
         $this->opmerking = '';
         $this->betalingskenmerk = '';

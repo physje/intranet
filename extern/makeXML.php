@@ -5,16 +5,17 @@ include_once('../Classes/Member.php');
 include_once('../Classes/Rooster.php');
 include_once('../Classes/Agenda.php');
 include_once('../Classes/Kerkdienst.php');
+include_once('../Classes/OpenKerkRooster.php');
 include_once('../Classes/Vulling.php');
 include_once('../Classes/Voorganger.php');
 include_once('../Classes/Logging.php');
 
 # Initialiseer
-$header = $footer = $dienstenXML = $agendaXML = array();
+$header = $footer = $dienstenXML = $agendaXML = $OpenKerkXML = array();
 
 # Definieer header/footer
-$header[] = '<?xml version="1.0" encoding="utf-8"?>';
-$footer[] = '';
+$header[] = '<xml version="1.0" encoding="utf-8">';
+$footer[] = '</xml>';
 
 # Definieer tijden
 $startTijd = time();
@@ -50,6 +51,7 @@ foreach($diensten as $dienstID) {
 	
 	
 	$xml[] = "    <dag>". datefmt_format($fmt_dag, $dienst->start) ."</dag>";
+	$xml[] = "    <Dag>". ucfirst(datefmt_format($fmt_dag, $dienst->start)) ."</Dag>";
 	$xml[] = "    <datum>". datefmt_format($fmt_datum, $dienst->start) ."</datum>";
 	$xml[] = "    <datum_lang>". datefmt_format($fmt_datum_lang, $dienst->start) ."</datum_lang>";
 	$xml[] = "    <datum_kort>". datefmt_format($fmt_datum_kort, $dienst->start) ."</datum_kort>";
@@ -74,11 +76,13 @@ foreach($agendaItems as $agendaID) {
 	$xml = array();	
 				
 	$xml[] = "    <dag>". datefmt_format($fmt_dag, $agendaItem->start) ."</dag>";
+	$xml[] = "    <Dag>". ucfirst(datefmt_format($fmt_dag, $agendaItem->start)) ."</Dag>";
 	$xml[] = "    <datum>". datefmt_format($fmt_datum, $agendaItem->start) ."</datum>";
-	$xml[] = "    <datum_lang>". datefmt_format($fmt_datum_lang, $agendaItem->start) ."</datum_lang>";
-	$xml[] = "    <datum_kort>". datefmt_format($fmt_datum_kort, $agendaItem->start) ."</datum_kort>";
+	#$xml[] = "    <datum_lang>". datefmt_format($fmt_datum_lang, $agendaItem->start) ."</datum_lang>";
+	#$xml[] = "    <datum_kort>". datefmt_format($fmt_datum_kort, $agendaItem->start) ."</datum_kort>";
 	$xml[] = "    <start>". datefmt_format($fmt_tijd, $agendaItem->start) ."</start>";
 	$xml[] = "    <eind>". datefmt_format($fmt_tijd, $agendaItem->eind) ."</eind>";
+	$xml[] = "    <tijden>". datefmt_format($fmt_tijd, $agendaItem->start) ." - ".datefmt_format($fmt_tijd, $agendaItem->eind) ."</tijden>";
 	$xml[] = "    <titel>".urldecode($agendaItem->titel)."</titel>";
 	$xml[] = "    <beschrijving>".urldecode($agendaItem->beschrijving)."</beschrijving>";
 		
@@ -87,6 +91,44 @@ foreach($agendaItems as $agendaID) {
 	$agendaXML[] = "  </agenda>";			
 }
 
+# Open kerk rooster
+
+# Aantal seconden in een dag
+$eenDag = 24*60*60;
+
+# We beginnen op zondag van deze week
+$offset = date('w', $startTijd)*$eenDag;
+
+# Zondag-ochtend 00:00
+$zondag = mktime(0,0,0,date('n', $startTijd), date('j', $startTijd), date('Y', $startTijd)) - $offset;
+
+for($dag = 0 ; $dag < 7 ; $dag++) {
+	$start = $zondag+($dag*$eenDag);
+	$eind = $start + (24*60*60);
+	
+	$starts = OpenKerkRooster::getStarts($start, $eind);
+
+	if(count($starts) > 0) {
+		$eerste = new OpenKerkRooster(current($starts));
+		$laatste = new OpenKerkRooster(end($starts));
+
+		# Eigenlijke XML-data
+		$xml = array();	
+				
+		$xml[] = "    <dag>". datefmt_format($fmt_dag, $eerste->start) ."</dag>";
+		$xml[] = "    <Dag>". ucfirst(datefmt_format($fmt_dag, $eerste->start)) ."</Dag>";
+		$xml[] = "    <datum>". datefmt_format($fmt_datum, $eerste->start) ."</datum>";
+		$xml[] = "    <datum_lang>". datefmt_format($fmt_datum_lang, $eerste->start) ."</datum_lang>";
+		$xml[] = "    <datum_kort>". datefmt_format($fmt_datum_kort, $eerste->start) ."</datum_kort>";
+		$xml[] = "    <start>". datefmt_format($fmt_tijd, $eerste->start) ."</start>";
+		$xml[] = "    <eind>". datefmt_format($fmt_tijd, $laatste->eind) ."</eind>";
+		$xml[] = "    <titel>Open Kerk</titel>";
+
+		$OpenKerkXML[] = "  <openkerk>";
+		$OpenKerkXML = array_merge($OpenKerkXML, $xml);
+		$OpenKerkXML[] = "  </openkerk>";
+	}
+}
 
 $file_name = '../xml/agenda.xml';
 	
@@ -101,6 +143,10 @@ fwrite($file, "<agendaitems>\r\n");
 fwrite($file, implode("\r\n", $agendaXML));
 fwrite($file, "\r\n");
 fwrite($file, "</agendaitems>\r\n");
+fwrite($file, "<openkerkitems>\r\n");
+fwrite($file, implode("\r\n", $OpenKerkXML));
+fwrite($file, "\r\n");
+fwrite($file, "</openkerkitems>\r\n");
 fwrite($file, implode("\r\n", $footer));
 fclose($file);
 

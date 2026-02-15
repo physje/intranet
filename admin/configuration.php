@@ -29,7 +29,7 @@ if(isset($_POST['save'])) {
 		}
 	}
 	
-	foreach($_POST['value'] as $id => $value) {		
+	foreach($_POST['value'] as $id => $value) {
 		if(isset($_POST['name'][$id])) 	$name = $_POST['name'][$id];
 		
 		if(isset($_POST['key'][$id])) {
@@ -50,8 +50,8 @@ if(isset($_POST['save'])) {
 			$groep = 1;
 		}
 		
-		if($id == 999 AND $value != '') {
-			$sql_insert = "INSERT INTO `config` (`groep`, `name`, `key`, `value`, `comment`, `added`) VALUES ($groep, '". urlencode($name) ."', '". urlencode($key) ."', '". urlencode($value) ."', '". urlencode($comment) ."', '". time() ."')";
+		if($id == 999 AND $value != '') {			
+			$sql_insert = "INSERT INTO `config` (`groep`, `name`, `sleutel`, `value`, `comment`, `added`) VALUES ($groep, '". urlencode($name) ."', '". urlencode($key) ."', '". urlencode($value) ."', '". urlencode($comment) ."', '". time() ."')";
 			if($db->query($sql_insert)) {
 				$text[] = $name. ' toegevoegd';
 			} else {
