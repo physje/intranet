@@ -57,6 +57,7 @@ foreach($diensten as $dienstID) {
 	$xml[] = "    <datum_kort>". datefmt_format($fmt_datum_kort, $dienst->start) ."</datum_kort>";
 	$xml[] = "    <start>". datefmt_format($fmt_tijd, $dienst->start) ."</start>";
 	$xml[] = "    <eind>". datefmt_format($fmt_tijd, $dienst->eind) ."</eind>";
+	$xml[] = "    <duur>". datefmt_format($fmt_tijd, $dienst->start) ." - ". datefmt_format($fmt_tijd, $dienst->eind) ."</duur>";
 	$xml[] = "    <voorganger>".$voorganger->getName(0)."</voorganger>";
 	$xml[] = "    <bijzonderheid>".$dienst->opmerking."</bijzonderheid>";
 		
@@ -82,7 +83,7 @@ foreach($agendaItems as $agendaID) {
 	#$xml[] = "    <datum_kort>". datefmt_format($fmt_datum_kort, $agendaItem->start) ."</datum_kort>";
 	$xml[] = "    <start>". datefmt_format($fmt_tijd, $agendaItem->start) ."</start>";
 	$xml[] = "    <eind>". datefmt_format($fmt_tijd, $agendaItem->eind) ."</eind>";
-	$xml[] = "    <tijden>". datefmt_format($fmt_tijd, $agendaItem->start) ." - ".datefmt_format($fmt_tijd, $agendaItem->eind) ."</tijden>";
+	$xml[] = "    <duur>". datefmt_format($fmt_tijd, $agendaItem->start) ." - ". datefmt_format($fmt_tijd, $agendaItem->eind) ."</duur>";
 	$xml[] = "    <titel>".urldecode($agendaItem->titel)."</titel>";
 	$xml[] = "    <beschrijving>".urldecode($agendaItem->beschrijving)."</beschrijving>";
 		
@@ -118,11 +119,12 @@ for($dag = 0 ; $dag < 7 ; $dag++) {
 		$xml[] = "    <dag>". datefmt_format($fmt_dag, $eerste->start) ."</dag>";
 		$xml[] = "    <Dag>". ucfirst(datefmt_format($fmt_dag, $eerste->start)) ."</Dag>";
 		$xml[] = "    <datum>". datefmt_format($fmt_datum, $eerste->start) ."</datum>";
-		$xml[] = "    <datum_lang>". datefmt_format($fmt_datum_lang, $eerste->start) ."</datum_lang>";
-		$xml[] = "    <datum_kort>". datefmt_format($fmt_datum_kort, $eerste->start) ."</datum_kort>";
+		#$xml[] = "    <datum_lang>". datefmt_format($fmt_datum_lang, $eerste->start) ."</datum_lang>";
+		#$xml[] = "    <datum_kort>". datefmt_format($fmt_datum_kort, $eerste->start) ."</datum_kort>";
 		$xml[] = "    <start>". datefmt_format($fmt_tijd, $eerste->start) ."</start>";
 		$xml[] = "    <eind>". datefmt_format($fmt_tijd, $laatste->eind) ."</eind>";
-		$xml[] = "    <titel>Open Kerk</titel>";
+		$xml[] = "    <duur>". datefmt_format($fmt_tijd, $eerste->start) ." - ". datefmt_format($fmt_tijd, $laatste->eind) ."</duur>";
+		#$xml[] = "    <titel>Open Kerk</titel>";
 
 		$OpenKerkXML[] = "  <openkerk>";
 		$OpenKerkXML = array_merge($OpenKerkXML, $xml);
