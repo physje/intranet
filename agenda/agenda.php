@@ -59,7 +59,8 @@ if(isset($_POST['remove'])) {
 	$agenda->start	= mktime($_POST['sUur'], $_POST['sMin'], 0, $_POST['Maand'], $_POST['Dag'], $_POST['Jaar']);
 	$agenda->eind	= mktime($_POST['eUur'], $_POST['eMin'], 0, $_POST['Maand'], $_POST['Dag'], $_POST['Jaar']);
 	$agenda->titel	= $_POST['titel'];
-	$agenda->beschrijving = $_POST['omschrijving'];	
+	$agenda->beschrijving = $_POST['omschrijving'];
+	$agenda->stageSign = $_POST['stagesign'];
 	
 	if($new) {
 		if($newID = $agenda->save()) {
@@ -126,6 +127,7 @@ if(isset($_POST['remove'])) {
 		$eMin	= date("i", $agenda->eind);
 		$titel	= $agenda->titel;
 		$descr	= $agenda->beschrijving;
+		$stageSign = $agenda->stageSign;
 		$text[] = "<input type='hidden' name='id' value='". $_REQUEST['id'] ."'>";		
 	} else {
 		$Dag	= getParam('Dag', date("d"));
@@ -138,6 +140,7 @@ if(isset($_POST['remove'])) {
 		$eMin	= getParam('eMin', date("i"));
 		
 		$titel = $descr = '';
+		$stageSign =  false;
 	}
 	
 	
@@ -204,6 +207,10 @@ if(isset($_POST['remove'])) {
 			$text[] = "	<option value='$m'". ($m == $eMin ? ' selected' : '') .">". substr('0'.$m, -2) ."</option>";
 		}
 		$text[] = "	</select></td>";
+		$text[] = "</tr>";
+		$text[] = "<tr>";
+		$text[] = "	<td><input type='checkbox' name='stagesign' value='1'". ($stageSign ? ' checked' : '') ."></td>";
+		$text[] = "	<td colspan=2>Toon afspraak op het scherm voor voorbijgangers</td>";
 		$text[] = "</tr>";
 		$text[] = "<tr>";
 		$text[] = "	<td>Titel</td>";

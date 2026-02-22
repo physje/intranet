@@ -40,10 +40,10 @@ if(isset($_POST['save_details'])) {
 
 # Als op de knop van de mail geklikt is die data wegschrijven
 if(isset($_POST['save_mail'])) {
-	$rooster->mail = urlencode($_POST['text_mail']);
-	$rooster->onderwerp = urlencode($_POST['onderwerp_mail']);
-	$rooster->van = urlencode($_POST['mail_afzender']);
-	$rooster->vanNaam = urlencode($_POST['naam_afzender']);
+	$rooster->mail = $_POST['text_mail'];
+	$rooster->onderwerp = $_POST['onderwerp_mail'];
+	$rooster->van = $_POST['mail_afzender'];
+	$rooster->vanNaam = $_POST['naam_afzender'];
 	$rooster->save();
 
 	toLog('Mail voor '. $rooster->naam .' aangepast');

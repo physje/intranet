@@ -32,9 +32,14 @@ class Agenda {
 	 * @var string Beschrijving van het agenda-item
 	 */
 	public string $beschrijving;
+
+	/**
+	 * @var bool Moet item worden opgenomen in de getoonde agenda op de schermen van StageSign
+	 */
+	public bool $stageSign;
 	
 	/**
-	 * @var int Eigenaar van het agenda-item (lid-ID)
+	 * @var int Eigenaar van het agenda-item (scipio-ID)
 	 */
 	public int $eigenaar;
 
@@ -51,11 +56,13 @@ class Agenda {
 			$this->eind = $data['eind'];
 			$this->beschrijving = urldecode($data['beschrijving']);
 			$this->titel = urldecode($data['titel']);
+			$this->stageSign = ($data['stagesign'] == '1' ? True : False);
 			$this->eigenaar = $data['eigenaar'];
 		} else {
 			$this->start = 0;
 			$this->eind = 0;
 			$this->beschrijving = '';
+			$this->stageSign = false;
 			$this->titel = '';
 		}
 	}
@@ -90,6 +97,7 @@ class Agenda {
 		$data['eind'] = $this->eind;
 		$data['beschrijving'] = urlencode($this->beschrijving);
 		$data['titel'] = urlencode($this->titel);
+		$data['stagesign'] = ($this->stageSign ? '1' : '0');
 		$data['eigenaar'] = $this->eigenaar;
 
 		if(isset($this -> id)) {
