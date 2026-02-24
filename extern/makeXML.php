@@ -36,7 +36,7 @@ foreach($diensten as $dienstID) {
 	# Welke gegevens horen daar bij
 	# Welke diensten zijn er nog meer die dag
 	$dienst = new Kerkdienst($dienstID);
-	$voorganger = new Voorganger($dienst->voorganger);
+	
 	
 	# Eigenlijke XML-data
 	$xml = array();	
@@ -58,8 +58,16 @@ foreach($diensten as $dienstID) {
 	$xml[] = "    <start>". datefmt_format($fmt_tijd, $dienst->start) ."</start>";
 	$xml[] = "    <eind>". datefmt_format($fmt_tijd, $dienst->eind) ."</eind>";
 	$xml[] = "    <duur>". datefmt_format($fmt_tijd, $dienst->start) ." - ". datefmt_format($fmt_tijd, $dienst->eind) ."</duur>";
-	$xml[] = "    <voorganger>".$voorganger->getName(0)."</voorganger>";
-	$xml[] = "    <bijzonderheid>".$dienst->opmerking."</bijzonderheid>";
+	
+	if($dienst->voorganger > 0) {
+		$voorganger = new Voorganger($dienst->voorganger);
+		$xml[] = "    <voorganger>".$voorganger->getName(0)."</voorganger>";
+		$xml[] = "    <bijzonderheid>".$dienst->opmerking."</bijzonderheid>";
+	} else {
+		$xml[] = "    <voorganger>".$dienst->opmerking."</voorganger>";
+		$xml[] = "    <bijzonderheid></bijzonderheid>";
+	}
+
 		
 	$dienstenXML[] = "  <kerkdienst>";
 	$dienstenXML = array_merge($dienstenXML, $xml);
