@@ -93,15 +93,17 @@ class Agenda {
      * 
      * @return Array array met agenda ID's. Deze zijn te gebruiken om agenda-objects aan te maken
      */
-    public static function getPublicAgendaItems($start, $eind) {
-        $db = new Mysql();
-
-		$where[] = "`stagesign` like '1'";
-		$where[] = "`start` BETWEEN ". $start ." AND ". $eind;
-
-        $data = $db->select("SELECT `id` FROM `agenda` WHERE ". implode(' AND ', $where) ." ORDER BY `start` ASC");
-
-        return array_column($data, 'id');
+    public static function getPublicAgendaItems($aantal) {
+    	$db = new Mysql();
+    	
+    	$where[] = "`stagesign` like '1'";
+    	$where[] = "`eind` > ". time();
+    	
+    	$sql = "SELECT `id` FROM `agenda` WHERE ". implode(' AND ', $where) ." ORDER BY `start` ASC LIMIT 0, ". $aantal;
+    	
+    	$data = $db->select($sql);
+    	    	
+    	return array_column($data, 'id');
     }
 
 	/**

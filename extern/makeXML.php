@@ -74,7 +74,7 @@ foreach($diensten as $dienstID) {
 	$dienstenXML[] = "  </kerkdienst>";	
 }
 
-$agendaItems = Agenda::getPublicAgendaItems($startTijd, $eindTijd);
+$agendaItems = Agenda::getPublicAgendaItems(4);
 
 foreach($agendaItems as $agendaID) {
 	# Wat is de ID van het agenda-item
