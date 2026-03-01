@@ -15,10 +15,12 @@ $showLogin = true;
 
 if($productieOmgeving) {
 	$write2EB = true;
-	$sendMail = true;	
+	$sendMail = true;
+	$debug = false;
 } else {
 	$write2EB = false;
-	$sendMail = false;	
+	$sendMail = false;
+	$debug = true;
 	
 	echo '[ Test-omgeving ]';
 }
@@ -89,8 +91,12 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 		if(isset($_POST['betalingskenmerk']) && $_POST['betalingskenmerk'] != '')	$declaratie->betalingskenmerk = trim($_POST['betalingskenmerk']);
 		if(isset($_POST['begunstigde']) && $_POST['begunstigde'] != '')				$declaratie->begunstigde = trim($_POST['begunstigde']);
 		if(isset($_POST['toelichting']))											$declaratie->opmerking = trim($_POST['toelichting']);
+
+		if($debug) {
+			var_dump($declaratie, $indiener);
+		}
 				
-		# Als declaratie niet al is afgehandeld (status > 5) mag je doorgaan
+		# Als declaratie niet al is afgehandeld (status < 5) mag je doorgaan
 		if($declaratie->status < 5) {
 			$veldenCorrect = true;
 					
@@ -129,25 +135,23 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 					# Al bekend bij eBoekhouden
 					if($indiener->boekhouden > 0) {												
 						$errorResult = eb_getRelatieIbanByCode($indiener->boekhouden, $EBIBAN);
-													
-						//$page[] = "Gebruiker is al bekend in e-boekhouden: ". $EBCode .'<br>';
-						//$page[] = "Heeft daar IBAN: ". $EBIBAN .'<br>';
+						#$page[] = "Gebruiker is al bekend in e-boekhouden: ". $indiener->boekhouden .'<br>';
+						#$page[] = "Heeft daar IBAN: ". $EBIBAN .'<br>';
 						
 						# Klopt IBAN-nummer nog wat bij eBoekhouden bekend is
-						if(cleanIBAN($EBIBAN) != cleanIBAN($declaratie->IBAN)) {		
-							//TODO: Updaten info lijkt niet goed te gaan
-							#$data['iban'] = $declaratie->IBAN;
+						if(cleanIBAN($EBIBAN) != cleanIBAN($declaratie->IBAN)) {
+							#$page[] = 'Oud :'. cleanIBAN($EBIBAN);
+            				#$page[] = 'Nieuw :'. cleanIBAN($declaratie->IBAN);
+
+							$data['iban'] = $declaratie->IBAN;
 							$errorResult = eb_updateRelatieByCode($indiener->boekhouden, $data);
-							
-							//$page[] = "In de declaratie is als IBAN ingevuld: ". $JSON['iban'] .'<br>';
-							
+														
 							if($errorResult) {
 								toLog($errorResult, 'error', $indiener->id);
 							} else {
 								toLog('IBAN van relatie '. $indiener->boekhouden .' aangepast van '. cleanIBAN($EBIBAN) .' naar '. cleanIBAN($declaratie->IBAN), 'debug', $indiener->id);
-							}					
-						}		
-					
+							}
+						}					
 					} else {
 						# Niet bekend bij eBoekhouden				
 						$naam		= $indiener->getName(15);
@@ -168,13 +172,28 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 								$indiener->boekhouden = $EBCode;
 								$indiener->save();
 							}
-						}				
+						} else {
+							$page[] = "gebruik van de functie <i>eb_maakNieuweRelatieAan</i> met de parameters :<br>";
+							$page[] = "Naam: $naam<br>";
+							$page[] = "Geslacht: $geslacht<br>";
+							$page[] = "Adres: $adres<br>";
+							$page[] = "Postcode: $postcode<br>";
+							$page[] = "Plaats: $plaats<br>";
+							$page[] = "Mail: $mail<br>";
+							$page[] = "IBAN: $iban<br>";
+							$page[] = "<br>";
+						}
 					}
 
 					# EBCode gebruiken we verderop om de declaratie in te schieten
 					# Dit gedeelte van het if-statement is voor als het op de rekening van de indiener gestort moet worden
 					# Ken de waarde van $indiener->boekhouden daarom toe aan $EBCode
-					$EBCode = $indiener->boekhouden;
+					if($indiener->boekhouden > 0) {
+						$EBCode = $indiener->boekhouden;
+					} else {
+						$EBCode = 9000;
+					}
+					
 
 					$factuurnummer	= $boekstukNummer->nummer.'-declaratie-'.time2str('dd.MMMYY-HH.mm', $declaratie->tijd);					
 				}		
@@ -199,6 +218,16 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 								toLog($naam .' als nieuwe relatie aangemaakt met als code '. $EBCode, 'debug', $indiener->id);
 							}						
 						} else {
+							$page[] = "gebruik van de functie <i>eb_maakNieuweRelatieAan</i> met de parameters :<br>";
+							$page[] = "Naam: $naam<br>";
+							$page[] = "Geslacht: $geslacht<br>";
+							$page[] = "Adres: $adres<br>";
+							$page[] = "Postcode: $postcode<br>";
+							$page[] = "Plaats: $plaats<br>";
+							$page[] = "Mail: $mail<br>";
+							$page[] = "IBAN: $iban<br>";
+							$page[] = "EB ID: $EB_id<br>";
+							$page[] = "<br>";
 							$EBCode = 9010;
 						}						
 					} else {
@@ -259,7 +288,7 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 					$toelichting = $toelichting.'_Dolorosa';
 				}
 							
-				if($write2EB)	{					
+				if($write2EB) {					
 					$errorResult = eb_verstuurDeclaratie ($EBCode, $boekstukNummer->nummer, $factuurnummer, $declaratie->totaal, $declaratie->GBR, $toelichting.' ('.$declaratie->hash.')', $mutatieId);
 					if($errorResult) {
 						toLog($errorResult, 'error', $indiener->id);
@@ -271,13 +300,14 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 						$addSucces = true;
 					}
 				} else {
-					$page[] = "DECLARATIE<br>";
+					$page[] = "gebruik van de functie <i>eb_verstuurDeclaratie</i> met de parameters :<br>";
 					$page[] = "EBCode: ". $EBCode .'<br>';
 					$page[] = "BoekstukNummer: ". $boekstukNummer->nummer .'<br>';
 					$page[] = "Factuurnummer: ". $factuurnummer .'<br>';
 					$page[] = "Totaal: ". $declaratie->totaal .'<br>';
 					$page[] = "GBR: ". $declaratie->GBR .'<br>';
-					$page[] = "Toelichting: ". $toelichting .'<br>';		
+					$page[] = "Toelichting: ". $toelichting .'<br>';
+					$page[] = "<br>";	
 					$addSucces = true;
 				}						
 				
@@ -494,7 +524,7 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 				}			
 			} elseif(isset($_POST['change_post'])) {
 				$page[] = "<form method='post' action='". $_SERVER['PHP_SELF']."'>";
-				$page[] = "<input type='hidden' name='key' value='". $declaratie->hash ."'>";
+				#$page[] = "<input type='hidden' name='key' value='". $declaratie->hash ."'>";
 				#$page[] = "<input type='hidden' name='user' value='". $data['user'] ."'>";
 				#$page[] = "<input type='hidden' name='GBR' value='". $_REQUEST['GBR'] ."'>";		
 				$page[] = "<table border=0 width='100%'>";
