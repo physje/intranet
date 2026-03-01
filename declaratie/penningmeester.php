@@ -681,6 +681,7 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 					$page[] = "		<tr>";			
 					$page[] = "			<td><input type='submit' name='change_post' value='Wijzig posten'></td>";
 					#$page[] = "			<td align='center'><input type='submit' name='reroute' value='Betreft geen declaratie'></td>";
+					$page[] = "			<td align='center'><input type='submit' name='reject' value='Afwijzen'></td>";
 					$page[] = "			<td align='center'><input type='submit' name='dump' value='Verwijderen'></td>";
 					$page[] = "			<td align='right'><input type='submit' name='accept' value='Invoeren in e-boekhouden.nl'></td>";			
 					$page[] = "		</tr>";
