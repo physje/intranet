@@ -42,6 +42,7 @@ if((in_array($_SERVER['REMOTE_ADDR'], $allowedIP) AND date('j') <= 7) OR $test) 
 		$voorganger->hash = generateID(48);
 		$voorganger->save();		
 		
+		$mailText = array();
 		$mailText[] = "Beste ". $voorganger->getName(5) .",<br>";
 		$mailText[] = "<br>";
 		$mailText[] = ($stijl == 0 ? 'u' : 'jij'). " gaat volgende maand voor in de Koningskerk te Deventer.<br>";
@@ -66,7 +67,7 @@ if((in_array($_SERVER['REMOTE_ADDR'], $allowedIP) AND date('j') <= 7) OR $test) 
 		
 
 		$mail = new KKDMailer();
-		#$mail->ontvangers = array($voorganger->mail, $voorganger->getName(4));
+		$mail->ontvangers[] = array($voorganger->mail, $voorganger->getName(4));
 		$mail->Subject	= 'Controle gegevens';
 		$mail->Body		= implode("\n", $mailText);
 		$mail->From		= $noReplyAdress;
