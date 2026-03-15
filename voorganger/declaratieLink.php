@@ -65,9 +65,9 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 			
 			# Mail versturen
 			if($mail->sendMail()) {
-				toLog("Problemen met versturen online declaratie-formulier naar ". $voorganger->getName(4), 'error');
+				toLog("Online declaratie-formulier verstuurd naar naar ". $voorganger->getName(4));				
 			} else {
-				toLog("Online declaratie-formulier verstuurd naar naar ". $voorganger->getName(4));
+				toLog("Problemen met versturen online declaratie-formulier naar ". $voorganger->getName(4), 'error');			
 			}
 
 			# Declaratie-status bijwerken						

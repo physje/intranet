@@ -265,7 +265,7 @@ if(isset($declaratie->hash) && $declaratie->hash != '') {
 				$mail_p->addCC($EBDeclaratieAddress);
 				$mail_p->addCC($FinAdminAddress);
     			$mail_p->Subject	= "Declaratie $dagdeel ". date('j-n-Y', $dienst->start);
-				$mail_p->bijlage	= array('file' => 'PDF/'. $mutatieNr .'.pdf', 'name' => $boekstuk->nummer .' '. $voorganger->getName(1) . ' '. date('d-m', $dienst->start) .' '. $dagdeel .'.pdf');	
+				$mail_p->bijlage[]	= array('file' => 'PDF/'. $mutatieNr .'.pdf', 'name' => $boekstuk->nummer .' '. $voorganger->getName(1) . ' '. date('d-m', $dienst->start) .' '. $dagdeel .'.pdf');
 				$mail_p->Body		= implode("\n", $mailPenningsmeester);
 
 				if(!$sendMail)	$mail_p->testen = true;				
@@ -302,8 +302,8 @@ if(isset($declaratie->hash) && $declaratie->hash != '') {
 				$mail_v->From		= $declaratieReplyAddress;
 				$mail_v->FromName	= $declaratieReplyName;
 				$mail_v->Body		= implode("<br>\n", $mailPredikant);
-				$mail_v->bijlage	= array('file' => 'PDF/'. $mutatieNr .'.pdf', 'name' => "Declaratie $dagdeel ". date('j-n-Y', $dienst->start) ." Koningskerk Deventer.pdf");
-    			
+				$mail_v->bijlage[]	= array('file' => 'PDF/'. $mutatieNr .'.pdf', 'name' => "Declaratie $dagdeel ". date('j-n-Y', $dienst->start) ." Koningskerk Deventer.pdf");
+
 				# Alle geadresseerden toevoegen
 				if(!$sendMail)	$mail_v->testen = true;
 				

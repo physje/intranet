@@ -47,7 +47,8 @@ class KKDMailer extends PHPMailer\PHPMailer\PHPMailer implements KKDConfig {
     public array $blancoCopy;
 
     /**
-     * @var array Array met bijlages
+     * @var array Array met bijlages.
+     * key 'file' voor het locale bestand, key 'name' voor de bestandsnaam in de mail
      */
     public array $bijlage;
 
@@ -132,6 +133,13 @@ class KKDMailer extends PHPMailer\PHPMailer\PHPMailer implements KKDConfig {
                     $this->addCC($ouder->getMail(), $ouder->getName());
                 }
             }
+
+            # Bijlages toevoegen
+            if(isset($this->bijlage) && is_array($this->bijlage)) {                
+                foreach($this->bijlage as $bestand){
+                    $this->addAttachment($bestand['file'], $bestand['name']);
+                }
+            }            
 
             if($this->testen) {
                 echo 'Aan : '. implode('|', array_column($this->to, 0)) .'<br>';

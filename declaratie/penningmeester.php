@@ -84,17 +84,19 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 		
 		if(count($declaratie->overigeKosten) > 0)	$onderwerpen = array_merge($onderwerpen, array_keys($declaratie->overigeKosten));		
 		if($declaratie->reiskosten > 0)				$onderwerpen = array_merge($onderwerpen, array('reiskosten'));
-						
-		# Mochten de POST-variabele post bekend zijn (lees posten gewijzigd), ken de nieuwe posten dan toe aan JSON['post']
-		#if(isset($_POST['post'])) $JSON['post'] = $data['post'] = $_POST['post'];
+
 		if(isset($_POST['GBR']) && $_POST['GBR'] != '')								$declaratie->GBR = trim($_POST['GBR']);
 		if(isset($_POST['betalingskenmerk']) && $_POST['betalingskenmerk'] != '')	$declaratie->betalingskenmerk = trim($_POST['betalingskenmerk']);
 		if(isset($_POST['begunstigde']) && $_POST['begunstigde'] != '')				$declaratie->begunstigde = trim($_POST['begunstigde']);
 		if(isset($_POST['toelichting']))											$declaratie->opmerking = trim($_POST['toelichting']);
-
-		if($debug) {
-			var_dump($declaratie, $indiener);
+		if(isset($_POST['post']) && isset($_POST['save_post'])) {
+			$declaratie->posten = array();
+			foreach($_POST['post'] as $title => $key) {
+				$declaratie->posten[] = $key;
+			}
 		}
+
+		if($debug)	var_dump($declaratie, $indiener);
 				
 		# Als declaratie niet al is afgehandeld (status < 5) mag je doorgaan
 		if($declaratie->status < 5) {
@@ -557,10 +559,9 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 				$page[] = "<tr>";
 				$page[] = "		<td colspan='2'>&nbsp;</td>";
 				$page[] = "</tr>";
-				$page[] = "<tr>";
-				$page[] = "	<td><input type='submit' name='prev' value='Terug naar declaratie'></td>";
-				$page[] = "	<td><input type='submit' name='accept' value='Invoeren in e-boekhouden.nl'></td>";
-				#$page[] = "	<td colspan='2'><input type='submit' name='accept' value='Invoeren in e-boekhouden.nl'></td>";
+				$page[] = "<tr>";				
+				$page[] = "	<td><input type='submit' name='prev' value='Annuleren'></td>";
+				$page[] = "	<td><input type='submit' name='save_post' value='Opslaan'></td>";				
 				$page[] = "</tr>";		
 				$page[] = "</table>";
 				$page[] = "</form>";
@@ -570,11 +571,11 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 			} else {
 				$page[] = "<form method='post' action='". $_SERVER['PHP_SELF']."'>";
 				$page[] = "<input type='hidden' name='check_values' value='true'>";
-				if(isset($_POST['post'])) {
-					foreach($_POST['post'] as $key => $waarde) {
-						$page[] = "<input type='hidden' name='post[$key]' value='$waarde'>";
-					}					
-				}
+				#if(isset($_POST['post'])) {
+				#	foreach($_POST['post'] as $key => $waarde) {
+				#		$page[] = "<input type='hidden' name='post[$key]' value='$waarde'>";
+				#	}					
+				#}
 				$page[] = "<table border=0 width='100%'>";
 							
 				$page = array_merge($page, showDeclaratieDetails($declaratie));
