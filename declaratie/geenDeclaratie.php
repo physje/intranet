@@ -3,9 +3,12 @@ include_once('../include/functions.php');
 include_once('../include/config.php');
 include_once('../include/config_mails.php');
 include_once('../include/HTML_TopBottom.php');
-include_once('../Classes/DeclaratieVoorganger.php');
 include_once('../Classes/Kerkdienst.php');
 include_once('../Classes/Voorganger.php');
+include_once('../Classes/Declaratie.php');
+include_once('../Classes/KKDMailer.php');
+include_once('../Classes/Logging.php');
+include_once('../Classes/Mysql.php');
 
 # Start de sessie en kijk of er een declaratie-object in de sessie staat
 # Laad die dan
