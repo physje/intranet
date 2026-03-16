@@ -60,7 +60,7 @@ if(isset($_POST['remove'])) {
 	$agenda->eind	= mktime($_POST['eUur'], $_POST['eMin'], 0, $_POST['Maand'], $_POST['Dag'], $_POST['Jaar']);
 	$agenda->titel	= $_POST['titel'];
 	$agenda->beschrijving = $_POST['omschrijving'];
-	$agenda->stageSign = $_POST['stagesign'];
+	$agenda->stageSign = (isset($_POST['stagesign']) ? True : False);
 	
 	if($new) {
 		if($newID = $agenda->save()) {
