@@ -258,7 +258,7 @@ class Declaratie
             if(isset($json['opm_cluco']))   $this->opmerking = $json['opm_cluco'];
             if(isset($json['totaal']))      $this->totaal = floatval($json['totaal']);
             if(isset($json['EBCode']))      $this->begunstigde = intval($json['EBCode']);
-            if(isset($json['post']))        $this->posten = $json['post'];
+            if(isset($json['post']))        $this->posten = (is_array($json['post']) ? $json['post'] : array($json['post']));
             if(isset($json['reis_van']))    $this->van = $json['reis_van'];
             if(isset($json['reis_naar']))   $this->naar = $json['reis_naar'];
             if(isset($json['km']))          $this->afstand = $json['km'];
