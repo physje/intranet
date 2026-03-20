@@ -12,6 +12,8 @@ $rescue = $page = array();
 $test = false;
 
 if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
+    toLog('Oude declaratie-bijlages opgeruimd');
+
     # Status waarvan de bijlages sowieso bewaard moeten blijven
     # @see Declaratie::status voor de omschrijving van elke status
     $keepStatus = array(0, 1, 2, 3, 4);

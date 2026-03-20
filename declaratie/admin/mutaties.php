@@ -202,6 +202,5 @@ echo "<div class='content_block'>".NL. implode(NL, $zoekScherm).NL."</div>".NL;
 echo "<div class='content_block'>".NL. implode(NL, $page).NL."</div>".NL;
 echo '</div> <!-- end \'content_vert_kolom_full\' -->'.NL;
 echo showCSSFooter();
-?>
 
 ?>
