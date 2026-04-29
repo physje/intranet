@@ -37,7 +37,7 @@ jobs:
         server: web0171.zxcs.nl
         username: intranet@u224095p489749.web0171.zxcs-klant.nl
         password: ${{ secrets.new_ftp_password }}
-        server-dir: /public_html/intranet/
+        server-dir: /domains/u224095p489749.web0171.zxcs-klant.nl/public_html/intranet/
         exclude: |
           **/.git*
           **/.git*/**
