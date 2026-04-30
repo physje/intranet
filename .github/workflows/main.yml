@@ -37,7 +37,7 @@ jobs:
         server: web0171.zxcs.nl
         username: u224095p489749
         password: ${{ secrets.new_ftp_password }}
-        server-dir: /home/u224095p489749/domains/koningskerkdeventer.nl/public_html/intranet/
+        server-dir: /domains/koningskerkdeventer.nl/public_html/intranet/
         exclude: |
           **/.git*
           **/.git*/**
