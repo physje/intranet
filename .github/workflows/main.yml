@@ -35,9 +35,9 @@ jobs:
       uses: SamKirkland/FTP-Deploy-Action@v4.3.5
       with:
         server: web0171.zxcs.nl
-        username: intranet@u224095p489749.web0171.zxcs-klant.nl
+        username: u224095p489749
         password: ${{ secrets.new_ftp_password }}
-        server-dir: /private_html/intranet/
+        server-dir: /domains/koningskerkdeventer.nl/public_html/intranet/
         exclude: |
           **/.git*
           **/.git*/**
