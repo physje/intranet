@@ -1,7 +1,7 @@
 # ===============================
 # Basis .htaccess-configuratie
 # Domein: www.koningskerkdeventer.nl
-# Laatste update: 2026-01-17
+# Laatste update: 2026-05-02
 # ===============================
 
 # --- Schakel herschrijfmodule in ---
@@ -9,7 +9,23 @@ RewriteEngine On
 
 # --- Forceer HTTPS (beveiligde verbinding) ---
 RewriteCond %{HTTPS} !=on
+RewriteCond %{HTTP:X-Forwarded-Proto} !https [NC]
 RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
 # --- Aangepaste foutpagina ---
-ErrorDocument 404 /error_pages/404.php
+ErrorDocument 404 /intranet/error_pages/404.php
+
+# Jouw IP whitelisten
+#RewriteCond %{REMOTE_ADDR} !^123\.123\.123\.123$
+
+# Maintenance pagina uitsluiten
+#RewriteCond %{REQUEST_URI} !^/intranet/onderhoud\.html$ [NC]
+#RewriteCond %{REQUEST_URI} !^/intranet/images/ [NC]
+#RewriteCond %{REQUEST_URI} !^/intranet/include/ [NC]
+
+# 503 status + tonen van pagina
+#RewriteCond %{DOCUMENT_ROOT}/intranet/maintenance.enable -f
+#RewriteCond %{REQUEST_URI} !^/intranet/onderhoud\.html$ [NC]
+#RewriteRule ^ - [R=503,L]
+
+#ErrorDocument 503 /intranet/onderhoud.html

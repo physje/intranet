@@ -20,6 +20,13 @@ class Vulling {
     public int $dienst;
 
     /**
+     * @var int Dienst ID voor het rooster.
+     * Voor sommige roosters is de ochtend- en middag-dienst gelijk
+     * Dit is de dienst waarop gezocht moet worden voor het rooster
+     */
+    public int $roosterDienst;
+
+    /**
      * @var int Rooster ID
      */
     public int $rooster;
@@ -53,16 +60,32 @@ class Vulling {
      */
     function __construct($dienst = 0, $rooster = 0) {
         if($dienst > 0 and $rooster > 0) {
-            $db = new Mysql;
-            $r = new Rooster($rooster);
-            $tekst_only = $r->tekst;
-
             $this->dienst = $dienst;
             $this->rooster = $rooster;
 
+            $db = new Mysql;
+            $r = new Rooster($this->rooster);
+            $d = new Kerkdienst($this->dienst);
+            $tekst_only = $r->tekst;
+
+            $this->roosterDienst = $this->dienst;
+            
+            # Voor sommige roosters is de ochtend- en middag-dienst gelijk, als dat zo is ($r->gelijk  is true) vragen wij de diensten van die dag op
+            # Standaard gaan we uit van het feit dat voor de huidige dienst het rooster opgezocht moet worden ($this->roosterDienst = $this->dienst)
+            # Vervolgens kijken wij of er die dag meer diensten zijn (isset($overigeDiensten[1])) en of de dienst waar wij voor zoeken de tweede dienst is ($dienst == $overigeDiensten[1])
+            # Als dat zo is passen wij de dienst aan waarvoor het rooster gezocht moet worden
+            if($r->gelijk) {
+                $overigeDiensten = Kerkdienst::getDiensten(mktime(0,0,0,date("n", $d->start),date("j", $d->start),date("Y", $d->start)), mktime(23,59,59,date("n", $d->start),date("j", $d->start),date("Y", $d->start)));
+
+			    if(isset($overigeDiensten[1]) AND $dienst == $overigeDiensten[1]) {
+				    $this->roosterDienst = $overigeDiensten[0];
+			    } 		
+		    }
+
             # Is het een tekst-rooster of een leden-rooster?
             if($tekst_only) {
-                $data = $db->select("SELECT `text` FROM `planning_tekst` WHERE `dienst` = ". $this->dienst ." AND `rooster` = ". $this->rooster);
+                $data = $db->select("SELECT `text` FROM `planning_tekst` WHERE `dienst` = ". $this->dienst ." AND `rooster` = ". $this->roosterDienst);
+
                 if(isset($data['text'])) {
                     $this->tekst = urldecode($data['text']);
                 } else {
@@ -70,13 +93,13 @@ class Vulling {
                 }
                 $this->tekst_only = true;
             } else {
-                $data = $db->select("SELECT `positie`, `lid` FROM `planning` WHERE `dienst` = ". $this->dienst ." AND `commissie` = ". $this->rooster ." ORDER BY `positie` ASC", true);
+                $data = $db->select("SELECT `positie`, `lid` FROM `planning` WHERE `dienst` = ". $this->roosterDienst ." AND `commissie` = ". $this->rooster ." ORDER BY `positie` ASC", true);
                 $this->leden = array_column($data, 'lid', 'positie');
                 $this->tekst_only = false;
             }
 
             # Opmerking ophalen
-            $data = $db->select("SELECT `opmerking` FROM `rooster_opmerkingen` WHERE `rooster` = ". $this->rooster ." AND `dienst` = ". $this->dienst);
+            $data = $db->select("SELECT `opmerking` FROM `rooster_opmerkingen` WHERE `rooster` = ". $this->rooster ." AND `dienst` = ". $this->roosterDienst);
             if(isset($data['opmerking'])) {
                 $this->opmerking = urldecode($data['opmerking']);
             } else {
