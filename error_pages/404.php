@@ -15,11 +15,11 @@ if(strpos($_SERVER['REQUEST_URI'], '/ical/') !== false) {
 	fwrite($fp, date('d-m-Y H:i:s').';'. $_SERVER['REMOTE_ADDR'] .';'. $_SERVER['HTTP_USER_AGENT'] .';'.$_SERVER['REQUEST_URI']."\n");
 	fclose($fp);
 	
-	$header[] = "<meta http-equiv='refresh' content='3; url=$ScriptURL' />\n";
+	$header[] = "<meta http-equiv='refresh' content='5; url=$ScriptURL' />\n";
 }
 
 $page[] = "<h2>Helaas</h2>";
-$page[] = "De door jou opgevraagde pagina bestaat niet (meer).<br>Je wordt nu doorgestuurd naar de begin-pagina. Mogelijk is de URL aangepast.";
+$page[] = "De door jou opgevraagde pagina bestaat niet (meer).<br>Je wordt nu doorgestuurd naar de <a href='$ScriptURL'>begin-pagina</a>. Mogelijk is de URL aangepast.";
 $page[] = "";
 $page[] = "Pas indien mogelijk je bookmark aan zodat je niet meer op deze pagina komt";
 $page[] = "";
