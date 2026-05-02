@@ -5,7 +5,7 @@ on:
 name: 🚀 Deploy website on push
 jobs:
   web-deploy:
-    name: 🎉 Deploy
+    name: 🎉 Deploy to FTP
     runs-on: ubuntu-latest
     steps:
     - name: 🚚 Get latest code
@@ -14,30 +14,10 @@ jobs:
     - name: 📂 Sync files
       uses: SamKirkland/FTP-Deploy-Action@v4.3.5
       with:
-        server: ftp.koningskerkdeventer.nl
-        username: koning1q
-        password: ${{ secrets.ftp_password }}
-        server-dir: /public_html/intranet/
-        exclude: |
-          **/.git*
-          **/.git*/**
-          **/Classes/KKDConfig.php
-          **/docs/**
-  
-  web-deploy_new:
-    name: 🎉 Deploy ZXCS
-    runs-on: ubuntu-latest
-    steps:
-    - name: 🚚 Get latest code
-      uses: actions/checkout@v4
-
-    - name: 📂 Sync files
-      uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-      with:
-        server: web0171.zxcs.nl
-        username: u224095p489749
+        server: ${{ secrets.new_ftp_server }}
+        username: ${{ secrets.new_ftp_username }}
         password: ${{ secrets.new_ftp_password }}
-        server-dir: /domains/koningskerkdeventer.nl/public_html/intranet/
+        server-dir: ${{ secrets.new_ftp_userdir }}
         exclude: |
           **/.git*
           **/.git*/**
