@@ -120,7 +120,7 @@ if(isset($_POST['versturen'])) {
 			if(is_numeric($ontvanger)) {
 				toLog('Kon geen rooster open kerk sturen', 'error', $person->id);
 			} else {
-				toLog('Kon geen rooster open kerk sturen naar'. $extern[$ontvanger]['naam'], 'debug');
+				toLog('Kon geen rooster open kerk sturen naar'. $extern[$ontvanger]['naam'], 'error');
 			}			
 		}
 		# Om niet te bommen, even paar seconden rust
@@ -129,6 +129,8 @@ if(isset($_POST['versturen'])) {
 	
 	# Rommel weer even opruimen
 	unlink($filename.'.pdf');
+
+	toLog('Rooster Open Kerk verstuurd naar leden');
 } elseif(isset($_POST['mailen'])) {
 	if(isset($_POST['begeleidendeTekst'])) {
 		$begeleidendeTekst = $_POST['begeleidendeTekst'];

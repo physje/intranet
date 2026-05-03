@@ -189,4 +189,6 @@ foreach($roosters as $r) {
 		}
 	}
 }
+
+toLog('Rooster vulling gecontroleerd');
 ?>

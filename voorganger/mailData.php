@@ -76,12 +76,12 @@ if((in_array($_SERVER['REMOTE_ADDR'], $allowedIP) AND date('j') <= 7) OR $test) 
 		if(!$productieOmgeving) $mail->testen = true;
 		
 		if($mail->sendMail()) {
-			toLog('Voorgangerscheck naar '. $voorganger->id .' gestuurd', 'debug');
+			toLog('Check voorgangersdata naar '. $voorganger->id .' gestuurd', 'info');
 		} else {
 			toLog('Kan geen voorgangerscheck sturen naar '. $voorganger->id, 'error');
 		}		
 	}
-	
+	toLog('Voorgangersdatacheck gedaan', 'debug');
 } elseif(!in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 	toLog('Poging handmatige run vorgangermail, IP:'.$_SERVER['REMOTE_ADDR'], 'error');
 }

@@ -205,6 +205,8 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 			toLog("Kon geen voorgangersmail versturen voor ". $dagdeel .' van '. date('j-n', $dienst->start) .", ongeldig mailadres", 'error');
 		}
 	}
+
+	toLog('Voorgangersmail gecheckt', 'debug');
 } else {
 	toLog('Poging handmatige run vorgangermail, IP:'.$_SERVER['REMOTE_ADDR'], 'error');
 }
