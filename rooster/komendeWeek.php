@@ -63,7 +63,7 @@ foreach($diensten as $dienst) {
 		# Daarna kijken wij of beide diensten aan elkaar gelijk gesteld zijn ($roosterDetails['gelijk']) en zoeken wij alle diensten van die dag op
 		# Indien nodig passen wij de dienst aan waarvoor het rooster gezocht moet worden
 		$roosterDienst = $dienst;
-		if($roosterDetails->gelijk) {			
+		if($roosterDetails->gelijk == 1) {			
 			$overigeDiensten = Kerkdienst::getDiensten(mktime(0,0,0,date("n", $kerkdienst->start),date("j", $kerkdienst->start),date("Y", $kerkdienst->start)), mktime(23,59,59,date("n", $kerkdienst->start),date("j", $kerkdienst->start),date("Y", $kerkdienst->start)));
 			if(isset($overigeDiensten[1]) AND $dienst == $overigeDiensten[1]) {
 				$roosterDienst = $overigeDiensten[0];

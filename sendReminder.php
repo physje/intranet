@@ -30,6 +30,8 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 
 	$diensten = Kerkdienst::getDiensten($startTijd, $eindTijd);
 	$roosters = Rooster::getAllRoosters();
+
+	$roosterSend = array();
 		
 	# Mochten er diensten zijn, dan even alle teams opvragen
 	# Van deze teamID's een naam-array maken ($teamVulling).
@@ -60,13 +62,24 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 
 		foreach($roosters as $r) {
 			$vulling = $teams[$d][$r];
+			$alreadySend = false;
 		
 			if(is_array($vulling) AND count($vulling) > 0) {
 				$rooster = new Rooster($r);
+
+				# Voor roosters waar alle diensten gelijk zijn ($rooster->gelijk == 1), is 1 mail voldoende
+				# Daarom voor die roosters even controleren of er al een mail gestuurd is.
+				if($rooster->gelijk == 1) {
+					if(in_array($rooster->id, $roosterSend)) {
+						$alreadySend = true;
+					} else {
+						$alreadySend = false;
+					}
+				}
 				
 				# Alleen als is aangegeven dat er remindermails verstuurd moeten worden
 				# moet deze hele loop doorlopen worden
-				if($rooster->reminder) {
+				if($rooster->reminder && !$alreadySend) {
 					$positie	= 0;
 					$HTMLMail	= $rooster->mail;
 					$onderwerp	= $rooster->onderwerp;
@@ -163,6 +176,8 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 							toLog('Problemen met herinnering-mail '. $rooster->naam .' versturen', 'error', $lid);
 						}
 					}
+
+					$roosterSend[] = $rooster->id;
 				}
 			}
 		}

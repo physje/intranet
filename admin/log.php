@@ -143,11 +143,11 @@ if(count($logData) > 0) {
 		$rij = array();
 		$rij[] = "<tr>";
 		$rij[] = "	<td>". date("d-m H:i:s", $data_array['tijd']) ."</td>";
-		$rij[] = "	<td>&nbsp;</td>";
+		#$rij[] = "	<td>&nbsp;</td>";
 		$rij[] = "	<td>". ($data_array['dader'] != 0 ? "<a href='../profiel.php?id=". $dader->id ."' target='profiel'>".  $dader->getName() ."</a>" : "&nbsp;") ."</td>";
-		$rij[] = "	<td>&nbsp;</td>";
+		#$rij[] = "	<td>&nbsp;</td>";
 		$rij[] = "	<td>". ($data_array['slachtoffer'] != 0 ? "<a href='../profiel.php?id=". $slachtoffer->id ."' target='profiel'>". $slachtoffer->getName() ."</a>" : "&nbsp;") ."</td>";
-		$rij[] = "	<td>&nbsp;</td>";
+		#$rij[] = "	<td>&nbsp;</td>";
 		$rij[] = "	<td>". $pre . $data_array['message']. ($data_array['vermomd'] > 0 ? ' (vermomd als '. $vermomming->getName() .')' : '') . $post ."</td>";
 		$rij[] = "</tr>";
 		
@@ -160,12 +160,41 @@ if(count($logData) > 0) {
 	$rijen[] = implode(NL, $rij);
 }
 
-echo showCSSHeader();
-echo "<div class='content_horz_kolom'>".NL."<div class='content_block'>".NL. implode(NL, $zoekScherm_1).NL."</div>".NL."</div>".NL;
-echo "<div class='content_horz_kolom'>".NL."<div class='content_block'>".NL. implode(NL, $zoekScherm_2).NL."</div>".NL."</div>".NL;
-echo "</div><div class='row'>";
-#echo "<div class='content_horz_kolom'>".NL."<div class='content_block'><table>".NL. implode(NL, $blok_1).NL."</table></div>".NL."</div>".NL;
-#echo "<div class='content_horz_kolom'>".NL."<div class='content_block'><table>".NL. implode(NL, $blok_2).NL."</table></div>".NL."</div>".NL;
-echo "<div class='content_horz_kolom_full'>".NL."<div class='content_block'><table>".NL. implode(NL, $rijen).NL."</table></div>".NL."</div>".NL;
+$header = array();
+$header[] = '<style>';
+$header[] = '@media only screen and (max-width: 760px), (min-device-width: 768px) and (max-device-width: 1024px)  {';
+$header[] = '	td:nth-of-type(1):before { content: "Datum"; }';
+$header[] = '	td:nth-of-type(2):before { content: "Dader"; }';
+$header[] = '	td:nth-of-type(3):before { content: "Slachtoffer"; }';
+$header[] = '	td:nth-of-type(4):before { content: "Melding"; }';
+$header[] = "}";
+$header[] = "</style>";
+
+echo showCSSHeader(array('default', 'table_rot'), $header);
+echo "<div class='content_horz_kolom'>".NL;
+echo "	<div class='content_block'>". implode(NL, $zoekScherm_1). "</div>".NL;
+echo "</div>".NL;
+echo "<div class='content_horz_kolom'>".NL;
+echo "	<div class='content_block'>".NL. implode(NL, $zoekScherm_2).NL."</div>".NL;
+echo "</div>".NL;
+echo "</div>".NL;
+echo "<div class='row'>".NL;
+echo "	<div class='content_horz_kolom_full'>".NL;
+echo "	<div class='content_block'>".NL;
+echo "<table>".NL;
+echo "<thead>".NL;
+echo "<tr>".NL;
+echo "	<th>Datum</th>".NL;
+echo "	<th>Dader</th>".NL;
+echo "	<th>Slachtoffer</th>".NL;
+echo "	<th>Melding</th>".NL;
+echo "</tr>".NL;
+echo "</thead>".NL;
+echo "<tbody>".NL;
+echo implode(NL, $rijen);
+echo "</tbody>".NL;
+echo "</table>".NL;
+echo "</div>".NL;
+echo "</div>".NL;
 echo showCSSFooter();
 ?>

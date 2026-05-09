@@ -70,11 +70,11 @@ class Vulling {
 
             $this->roosterDienst = $this->dienst;
             
-            # Voor sommige roosters is de ochtend- en middag-dienst gelijk, als dat zo is ($r->gelijk  is true) vragen wij de diensten van die dag op
+            # Voor sommige roosters is de ochtend- en middag-dienst gelijk, als dat zo is ($r->gelijk  is 1) vragen wij de diensten van die dag op
             # Standaard gaan we uit van het feit dat voor de huidige dienst het rooster opgezocht moet worden ($this->roosterDienst = $this->dienst)
             # Vervolgens kijken wij of er die dag meer diensten zijn (isset($overigeDiensten[1])) en of de dienst waar wij voor zoeken de tweede dienst is ($dienst == $overigeDiensten[1])
             # Als dat zo is passen wij de dienst aan waarvoor het rooster gezocht moet worden
-            if($r->gelijk) {
+            if($r->gelijk == 1) {
                 $overigeDiensten = Kerkdienst::getDiensten(mktime(0,0,0,date("n", $d->start),date("j", $d->start),date("Y", $d->start)), mktime(23,59,59,date("n", $d->start),date("j", $d->start),date("Y", $d->start)));
 
 			    if(isset($overigeDiensten[1]) AND $dienst == $overigeDiensten[1]) {
