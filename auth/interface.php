@@ -7,15 +7,15 @@ include_once('Classes/Logging.php');
 echo "<html>".NL;
 echo "<head>".NL;
 echo "	<title>Koningskerk Intranet 4.0.252</title>".NL;
-echo "	<link rel='stylesheet' type='text/css' href='http://localhost/3GK/intranet/include/style_default.css?". time() ."'>".NL;
-echo "	<link rel='icon' href='http://localhost/3GK/intranet/images/logo.ico'>".NL;
+echo "	<link rel='stylesheet' type='text/css' href='". $cfgProgDir ."/include/style_default.css'>".NL;
+echo "	<link rel='icon' href='". $cfgProgDir ."/images/logo.ico'>".NL;
 echo "	<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>".NL;
 echo "	<meta name='viewport' content='width=device-width, initial-scale=1'>".NL;
 echo "</head>".NL;
 echo "<body>".NL;
 echo "<div class='middenstuk'>".NL;
 echo "	<div class='content'>".NL;
-echo "		<div class='top_logo'><a href='http://localhost/3GK/intranet/'><img class='logo' src='http://localhost/3GK/intranet/images/logoKoningsKerk.png'></a></div>".NL;
+echo "		<div class='top_logo'><a href='". $cfgProgDir ."'><img class='logo' src='". $cfgProgDir ."/images/logoKoningsKerk.png'></a></div>".NL;
 echo "		<form action='". $_SERVER['REQUEST_URI'] ."' METHOD='post'>".NL;
 
 $pname = $pval = "";
