@@ -19,21 +19,26 @@ a:hover	{
 	text-decoration: none;
 }
 
-/* Dit moet nog worden aangepast.... lelijk
 input[type=submit], input[type=reset] {
   background-color: #8C1974;
   border: none;
-  border-radius: 15px;
+  border-radius: 5px;
   color: #F2F2F2;
-  padding: 16px 32px;
+  padding: 10px 25px;
   text-decoration: none;
   margin: 4px 2px;
   cursor: pointer;
-}*/
+}
 
+input[type=text], input[type=password] {
+	width: 100%;
+}
+
+/*
 input[type=submit], input[type=reset] {
   border-color: #8C1974;
 }
+  */
 
 input[type=text] {
 	width: 100%;
@@ -53,7 +58,7 @@ textarea {
 .middenstuk {
 	width: 1024px;
 	background-color:#ffffff;
-  margin: auto;
+	margin: auto;
 }
 
 .bredebalk {
@@ -81,8 +86,8 @@ textarea {
 
 img.logo {
 	float: left;
-  width: min(600px, 70%);
-  height: auto;
+	width: min(600px, 70%);
+	height: auto;
 }
 
 /* Clear floats after the columns */
@@ -114,9 +119,9 @@ a.ontrokken {
 .content_vert_kolom, .content_vert_kolom_full {
 	width: 95%;								/* 95% breed en marges automatisch laten verdelen */
 	margin: auto;
-  column-count: 2;
-  column-gap: 1.5%;
-  margin-bottom:20px				/* marge tussen middenstuk met tekst en dunne balk onderaan */
+	column-count: 2;
+	column-gap: 1.5%;
+	margin-bottom:20px				/* marge tussen middenstuk met tekst en dunne balk onderaan */
 }
 
 .content_vert_kolom_full {
@@ -195,24 +200,78 @@ a.ontrokken {
 	font-weight:bold;
 }
 
+.login_box {
+	width:50%;
+	margin: auto;
+	border-color: #D2D2D2;
+	border-style: solid;
+	border-width: 5px;
+}
+
+.login_error {
+	margin:1em auto;
+	background:#FA4956;
+	color:#FFFFFF;
+	border:8px solid #FA4956;
+	font-weight:bold;
+	width:50%;
+	text-align:center;
+	position:relative;
+}
+
+.login_header {
+	text-align:center;
+	background:#8C1974;
+	color:#fff;
+	font-size:16px;
+	padding:10px;
+	border-bottom:5px solid #D2D2D2;
+}
+
+.login_text, .login_input {
+	width:45%;
+	padding-right:10px;
+	float: left;
+}
+
+.login_username, .login_password{
+	padding-top:25px;
+	padding-left:25px;
+	padding-right:25px;
+}
+
+.login_submit {
+	padding-top:45px;
+	padding-bottom:25px;
+	text-align:center;
+}
+
 
 /* Bij nog kleinere schermen de witte balken links en rechts verwijderen */	
 /* En het middenstuk 100% breed maken */
 /* En het logo iets kleiner maken*/	
 @media screen and (max-width:1024px) {	
-	.middenstuk {
+	.middenstuk, .content_horz_kolom {
 		width: 100%;
 	}
-	
-	.content_horz_kolom {
-		width: 100%;
-  }
+
+	.login_box {
+		width: 75%;
+	}
+
+	.login_password, .login_submit {
+		margin-top:30px;
+	}
 }
 
 /* Bij nog kleinere schermen het aantal kolommen verminderen */
 /* En het logo iets kleiner maken*/	
 @media screen and (max-width:700px) {
-  .content_vert_kolom {
-  	column-count: 1;
-  }
+	.content_vert_kolom {
+		column-count: 1;
+	}
+
+	.login_text, .login_input {
+		width:100%;
+	}
 }

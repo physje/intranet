@@ -90,7 +90,7 @@ if(isset($requiredUserGroups)) {
 # Als je voor de eerste keer hier komt (lees, nog nooit het einde van dit script gehaald)
 # moet gecheckt worden of je een 2FA moet invoeren
 # en moet de administratie worden bijgewerkt
-if(!$_SESSION['logged']) {
+if(!isset($_SESSION['logged']) OR (isset($_SESSION['logged']) && !$_SESSION['logged'])) {
 	/*
 	$secret_key = get2FACode($_SESSION['realID']);
 	
