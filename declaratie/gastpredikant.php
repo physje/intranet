@@ -222,7 +222,7 @@ if(isset($declaratie->hash) && $declaratie->hash != '') {
 					$page[] = 'Neem contact op met de webmaster zodat deze de logfiles kan uitlezen';
 					$sendDeclaratieSucces = false;
 				} else {
-					toLog("Declaratie aangemaakt; relatie:". $voorganger->boekhoud_id .", boekstukNummer:". $boekstuk->nummer .", mutatieId:". $mutatieId .", factuurnummer:". $factuurnummer);
+					toLog("Declaratie aangemaakt; relatie:". $voorganger->boekhoud_id .", boekstukNummer:". $boekstuk->nummer .", mutatieId:". $mutatieId .", factuurnummer:". $factuurnummer, 'debug');
 				}
 			} else {
 				$mutatieId = '10101';

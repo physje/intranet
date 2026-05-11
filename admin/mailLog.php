@@ -115,7 +115,18 @@ if(count($data) > 0) {
 	$block[] = "</form>";
 }
 
-echo showCSSHeader(array('default', 'table_default'));
+
+$header = array();
+$header[] = '<style>';
+$header[] = '@media only screen and (max-width: 760px), (min-device-width: 768px) and (max-device-width: 1024px)  {';
+$header[] = '	td:nth-of-type(1):before { content: "Tijdstip"; }';
+$header[] = '	td:nth-of-type(2):before { content: "Ontvanger"; }';
+$header[] = '	td:nth-of-type(3):before { content: "Onderwerp"; }';
+$header[] = "}";
+$header[] = "</style>";
+
+echo showCSSHeader(array('default', 'table_rot'), $header);
+#echo showCSSHeader(array('default', 'table_default'));
 echo '<div class="content_vert_kolom_full">'.NL;
 echo "<div class='content_block'>".NL. implode(NL, $block).NL."</div>".NL;
 echo '</div> <!-- end \'content_vert_kolom_full\' -->'.NL;

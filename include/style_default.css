@@ -6,6 +6,7 @@ body {
 	background-color:#F2F2F2;
 	font-family: Arial, Helvetica, sans-serif;
 	color:#34383D;
+	height: 97%;
 }
 
 a	{
@@ -59,6 +60,7 @@ textarea {
 	width: 1024px;
 	background-color:#ffffff;
 	margin: auto;
+	height: 100%;
 }
 
 .bredebalk {
@@ -246,6 +248,9 @@ a.ontrokken {
 	text-align:center;
 }
 
+.empty {
+	padding-bottom:1115px;
+}
 
 /* Bij nog kleinere schermen de witte balken links en rechts verwijderen */	
 /* En het middenstuk 100% breed maken */

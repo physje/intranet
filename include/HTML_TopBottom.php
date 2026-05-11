@@ -11,10 +11,10 @@ function showCSSHeader($sheets = array('default'), $header = '', $pageTitle = ''
 	$Header[] = "	<title>$ScriptTitle ". ((isset($pageTitle) AND $pageTitle != '') ? "| $pageTitle" : $Version) ."</title>";
 	
 	foreach($sheets as $sheet) {
-		$Header[] = "	<link rel='stylesheet' type='text/css' href='". $ScriptURL ."include/style_". $sheet .".css?".time()."'>";
+		$Header[] = "	<link rel='stylesheet' type='text/css' href='". $ScriptURL ."include/style_". $sheet .".css'>";
 	}
 	
-	if($header != '') {
+	if(isset($header) && is_array($header)) {
 		$Header = array_merge($Header, $header);
 	}
 	

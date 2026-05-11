@@ -106,6 +106,8 @@ class Wijk {
                 }
             }
         }
+
+        return $result;
     }
 }
 ?>
