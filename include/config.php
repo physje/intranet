@@ -1,10 +1,15 @@
 <?php
 $temp = explode('/', $_SERVER['REQUEST_URI']);
-if(count($temp) == 4) {
+
+if(count($temp) == 3) {
 	include_once("Classes/Mysql.php");
-} else {
+} elseif(count($temp) == 4) {
 	include_once("../Classes/Mysql.php");
+} else {
+	include_once("../../Classes/Mysql.php");
 }
+
+include_once('version.php');
 
 # NL is een nieuwe regel
 define("NL", "\n");
@@ -26,8 +31,6 @@ $maandArrayLang = array(1 => 'januari', 2 => 'februari', 3 => 'maart', 4 => 'apr
 $maandArrayEng	= array(1 => 'January', 2 => 'February', 3 => 'March', 4 => 'April', 5 => 'May', 6 => 'June', 7 => 'July', 8 => 'August', 9 => 'September', 10 => 'October', 11 => 'November', 12 => 'December');
 $letterArray		= array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z');
 $teamRollen			= array(1 => 'Ouderling', 2 => 'Diaken', 3 => 'Wijkco&ouml;rdinator', 4 => 'Bezoekbroeder', 5 => 'Bezoekzuster', 6 => 'Ge&iuml;ntereseerde', 7 => 'Predikant');
-
-$VersionCount	= 252;
 
 # Het lukt helaas nog niet om 2D-arrays in de config-module op de site te definieren.
 # Vandaar hier

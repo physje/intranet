@@ -9,8 +9,17 @@
  * @version 1.0.0
  */
 
-# Lees huidige versie
-# Update waarde met +1
-# Schrijf waarde weg
+
+$file = '../include/version.php';
+
+include($file);
+
+$VersionCount++;
+
+$v = fopen($file, 'w+');
+fwrite($v, "<?php\n");
+fwrite($v, '$VersionCount = '. $VersionCount .";\n");
+fwrite($v, "?>\n");
+fclose($v);
 
 ?>
