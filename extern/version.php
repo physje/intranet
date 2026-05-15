@@ -19,6 +19,7 @@ $VersionCount++;
 $v = fopen($file, 'w+');
 fwrite($v, "<?php\n");
 fwrite($v, '$VersionCount = '. $VersionCount .";\n");
+fwrite($v, '// '. date('d-m-Y H:i:s') ."\n");
 fwrite($v, "?>\n");
 fclose($v);
 
