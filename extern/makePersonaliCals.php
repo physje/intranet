@@ -86,6 +86,7 @@ foreach($ids as $id) {
 			$ics[] = "TRANSP:TRANSPARENT";
 			$ics[] = "END:VEVENT";
 
+			/*
 			$ics_temp[] = "BEGIN:VEVENT";
 			$ics_temp[] = "UID:3GK-". substr('00'.$kerkdienst->dienst, -3) .'.'. substr('00'.$rooster->id, -3) .'.'. substr('00'.$member->id, -3);
 			$ics_temp[] = "DTSTART;TZID=Europe/Amsterdam:". date("Ymd\THis", $kerkdienst->start);
@@ -96,6 +97,7 @@ foreach($ids as $id) {
 			$ics_temp[] = "STATUS:CONFIRMED";	
 			$ics_temp[] = "TRANSP:TRANSPARENT";
 			$ics_temp[] = "END:VEVENT";
+			*/
 		}
 	}
 	
@@ -115,6 +117,7 @@ foreach($ids as $id) {
 		$ics[] = "TRANSP:TRANSPARENT";
 		$ics[] = "END:VEVENT";
 
+		/*
 		$ics_temp[] = "BEGIN:VEVENT";
 		$ics_temp[] = "UID:3GK-". $openkerk->start .'.OK.'. substr('00'.$member->id, -3);
 		$ics_temp[] = "DTSTART;TZID=Europe/Amsterdam:". date("Ymd\THis", $openkerk->start);
@@ -125,6 +128,7 @@ foreach($ids as $id) {
 		$ics_temp[] = "STATUS:CONFIRMED";	
 		$ics_temp[] = "TRANSP:TRANSPARENT";
 		$ics_temp[] = "END:VEVENT";
+		*/
 	}
 		
 	$file = fopen('../ical/'. $member->hash_long .'.ics', 'w+');	
@@ -135,6 +139,7 @@ foreach($ids as $id) {
 	fwrite($file, implode("\r\n", $footer));
 	fclose ($file);
 
+	/*
 	# Deze moet tijdelijk gerund worden.
 	# Na verloop van tijd kan dit, en $ics_temp hierboven, weg
 	# Doel is mensen te wijzen op het feit dat de URL gewijzigd is
@@ -145,6 +150,7 @@ foreach($ids as $id) {
 	fwrite($file, "\r\n");
 	fwrite($file, implode("\r\n", $footer));
 	fclose ($file);
+	*/
 	
 	toLog('Persoonlijke agenda geexporteerd', 'debug', $member->id);
 }
