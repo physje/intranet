@@ -41,12 +41,6 @@ $header[] = "END:VTIMEZONE";
 $footer[] = "END:VCALENDAR";
 
 $members = array(
-	110001 => 'BTJong-411313B7BF14D00A',
-	107901 => 'AHeld-9681188548B19B4C',
-	984907 => 'EGZwerver-03CDD515F17CBBBC',
-	580902 => 'JEHuisman-E71E4F4E8A17D799',
-	984716 => 'SHuijser-BE52CE2F0048438F',
-	984285 => 'MJDraijer-C4D41F8B61D2DD0D'
 );
 
 $startTijd = time() - 14*24*60*60;
@@ -81,6 +75,13 @@ foreach($members as $id => $filename) {
 	fwrite($file, implode("\r\n", str_replace('[[NAAM]]', 'KKD ('. $member->getName() .')', $header)));
 	fwrite($file, "\r\n");
 	fwrite($file, implode("\r\n", $ics_temp));
+	fwrite($file, "\r\n");
+	fwrite($file, implode("\r\n", $footer));
+	fclose ($file);
+
+	# Ook even een bestand aanmaken met juiste bestandsnaam zodat ze geen 404 meer krijgen
+	$file = fopen('../ical/'. $member->hash_long .'.ics', 'w+');	
+	fwrite($file, implode("\r\n", str_replace('[[NAAM]]', 'KKD ('. $member->getName() .')', $header)));
 	fwrite($file, "\r\n");
 	fwrite($file, implode("\r\n", $footer));
 	fclose ($file);
