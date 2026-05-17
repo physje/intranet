@@ -9,18 +9,31 @@
  * @version 1.0.0
  */
 
+$payload = file_get_contents('php://input');
 
-$file = '../include/version.php';
+if(strlen($payload) > 1) {
+    $file = '../include/version.php';
+    include($file);
+    $VersionCount++;
 
-include($file);
+    $githubData = json_decode($payload, true);
+    $bericht = $githubData["commits"][0]['message'];
+    $tijdstip = $githubData["commits"][0]['timestamp'];
 
-$VersionCount++;
+    $oudeFile = file($file, FILE_IGNORE_NEW_LINES);
+    $closeTag       = array_pop($oudeFile);
+    $laatsteRegel   = array_pop($oudeFile);
+    
+    $v = fopen($file, 'w+');
 
-$v = fopen($file, 'w+');
-fwrite($v, "<?php\n");
-fwrite($v, '$VersionCount = '. $VersionCount .";\n");
-fwrite($v, '// '. date('d-m-Y H:i:s') ."\n");
-fwrite($v, "?>\n");
-fclose($v);
+    foreach($oudeFile as $regel) {
+        fwrite($v, $regel."\n");
+    }
+
+    fwrite($v, "# $laatsteRegel \n");
+    fwrite($v, '$VersionCount = '. $VersionCount ."; # $bericht ($tijdstip)"."\n");
+    fwrite($v, $closeTag);    
+    fclose($v);
+}
 
 ?>
