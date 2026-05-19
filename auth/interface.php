@@ -6,7 +6,7 @@ include_once('Classes/Logging.php');
 
 echo "<html>".NL;
 echo "<head>".NL;
-echo "	<title>Koningskerk Intranet 4.0.252</title>".NL;
+echo "	<title>$ScriptTitle $Version</title>".NL;
 echo "	<link rel='stylesheet' type='text/css' href='". $ScriptURL ."include/style_default.css?". time() ."'>".NL;
 echo "	<link rel='icon' href='". $ScriptURL ."images/logo.ico'>".NL;
 echo "	<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>".NL;
