@@ -1,9 +1,9 @@
 <?php
 $temp = explode('/', $_SERVER['REQUEST_URI']);
 
-if(count($temp) == 3) {
+if(count($temp) == 4) {
 	include_once("Classes/Mysql.php");
-} elseif(count($temp) == 4) {
+} elseif(count($temp) == 5) {
 	include_once("../Classes/Mysql.php");
 } else {
 	include_once("../../Classes/Mysql.php");
@@ -32,42 +32,51 @@ $maandArrayEng	= array(1 => 'January', 2 => 'February', 3 => 'March', 4 => 'Apri
 $letterArray		= array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z');
 $teamRollen			= array(1 => 'Ouderling', 2 => 'Diaken', 3 => 'Wijkco&ouml;rdinator', 4 => 'Bezoekbroeder', 5 => 'Bezoekzuster', 6 => 'Ge&iuml;ntereseerde', 7 => 'Predikant');
 
+
 # Het lukt helaas nog niet om 2D-arrays in de config-module op de site te definieren.
 # Vandaar hier
-$declJGPost[0][1] = 'Professionalisering leiding';
-$declJGPost[0][2] = 'Lief en leed';
+# Algemeen en staf
+$declJGPost[0][1] = 'Toerusting leiders';
+$declJGPost[0][2] = 'Toerusting ouders';
+$declJGPost[0][3] = 'Kerstgeschenk kinderen 12-';
+$declJGPost[0][4] = 'Lief en leed';
+$declJGPost[0][5] = 'Onvoorzien';
 
-$declJGPost[1][3] = 'Materialen';
-$declJGPost[1][4] = 'Geschenken bij afscheid BK 5';
+# Bijbelklas
+$declJGPost[1][6] = 'Materialen';
+$declJGPost[1][7] = 'Bijeenkomsten';
+$declJGPost[1][8] = 'Activiteiten';
+$declJGPost[1][9] = 'Geschenken';
 
-$declJGPost[2][5] = 'Lesmateriaal';
-$declJGPost[2][6] = 'Materialen';
-$declJGPost[2][7] = 'Geschenken bij afscheid BC8';
+# Basiscatechese
+$declJGPost[2][10] = 'Materialen';
+$declJGPost[2][11] = 'Bijeenkomsten';
+$declJGPost[2][12] = 'Activiteiten';
+$declJGPost[2][13] = 'Geschenken';
 
-$declJGPost[3][8] = 'Materialen';
-$declJGPost[3][9] = 'Sociale activiteiten';
-$declJGPost[3][10] = 'Eten en drinken';
-$declJGPost[3][11] = 'Kamp';
-$declJGPost[3][12] = 'Schaatsactiviteit';
-$declJGPost[3][13] = 'Ouderbijdrage kamp';
+# Follow light
+$declJGPost[3][14] = 'Materialen';
+$declJGPost[3][15] = 'Bijeenkomsten';
+$declJGPost[3][16] = 'Activiteiten';
+$declJGPost[3][17] = 'Ouderbijdrage';
 
-$declJGPost[4][14] = 'Lesmateriaal';
-$declJGPost[4][15] = 'Materialen';
-$declJGPost[4][16] = 'Sociale activiteiten';
-$declJGPost[4][17] = 'Eten en Drinken';
-$declJGPost[4][18] = 'Kamp';
-$declJGPost[4][19] = 'Afscheid F4';
-$declJGPost[4][20] = 'Ouderbijdrage kamp';
+# Follow
+$declJGPost[4][18] = 'Materialen';
+$declJGPost[4][19] = 'Bijeenkomsten';
+$declJGPost[4][20] = 'Activiteiten';
+$declJGPost[4][21] = 'Ouderbijdrage';
 
-$declJGPost[5][21] = 'Diaconale activiteit';
-$declJGPost[5][22] = 'Gezamenlijk eten';
-$declJGPost[5][23] = 'Weekend';
-$declJGPost[5][24] = 'Ouderbijdrage kamp';
+# FollowNext
+$declJGPost[5][22] = 'Materialen';
+$declJGPost[5][23] = 'Bijeenkomsten';
+$declJGPost[5][24] = 'Activiteiten';
+$declJGPost[5][25] = 'Ouder- / eigen bijdrage';
 
-$declJGPost[6][25] = 'Geloof en opvoeding toerusting ouders';
-$declJGPost[6][26] = 'Kerstboekjes kinderen tot en met 12 jaar';
-$declJGPost[6][27] = 'Onvoorzien';
-
+# Youth Alpha
+$declJGPost[6][26] = 'Materialen';
+$declJGPost[6][27] = 'Bijeenkomsten';
+$declJGPost[6][28] = 'Activiteiten';
+$declJGPost[6][29] = 'Ouder- / eigen bijdrage';
 
 # Doorloop de config-tabel en groepeer op naam
 # In een array hebben alle value's dezelfde naam
