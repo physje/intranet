@@ -83,8 +83,8 @@ class Vulling {
 		    }
 
             # Is het een tekst-rooster of een leden-rooster?
-            if($tekst_only) {
-                $data = $db->select("SELECT `text` FROM `planning_tekst` WHERE `dienst` = ". $this->dienst ." AND `rooster` = ". $this->roosterDienst);
+            if($tekst_only) {                
+                $data = $db->select("SELECT `text` FROM `planning_tekst` WHERE `dienst` = ". $this->roosterDienst ." AND `rooster` = ". $this->rooster);
 
                 if(isset($data['text'])) {
                     $this->tekst = urldecode($data['text']);
