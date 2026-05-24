@@ -3,6 +3,7 @@ include_once('../include/functions.php');
 include_once('../include/config.php');
 include_once('../include/config_mails.php');
 #include_once('../include/HTML_HeaderFooter.php');
+include_once('../include/HTML_TopBottom.php');	
 include_once('../Classes/Kerkdienst.php');
 include_once('../Classes/Voorganger.php');
 include_once('../Classes/Vulling.php');
@@ -12,17 +13,50 @@ include_once('../Classes/Logging.php');
 include_once('../Classes/KKDMailer.php');
 include_once('../Classes/Mysql.php');
 
-$sendMail = true;
+$sendMail = false;
 $sendTestMail = false;
-$test = false;
 
-# Omdat de server deze dagelijks moet draaien wordt toegang niet gedaan op basis
-# van naam+wachtwoord maar op basis van IP-adres
+# Als je niet van de toegestane IP-adressen komt, ga ik er vanuit dat hij handmatig wordt gerund
+# Dat mag alleen door een Admin, saarom even checken of je wel admin-rechten hebt
+if(!in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
+	session_start();
+	$gebruiker = new Member($_SESSION['useID']);
+	$myGroups = $gebruiker->getTeams();	
+} else {
+	$gebruiker = new Member();
+	$myGroups = array();
+}
 
-if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
-	$startTijd	= mktime(0, 0, 0, date("n"), (date("j")+18), date("Y"));
-	$eindTijd	= mktime(23, 59, 59, date("n"), (date("j")+18), date("Y"));	
-	$diensten	= Kerkdienst::getDiensten($startTijd, $eindTijd);
+$diensten = array();
+$startTijd	= mktime(0, 0, 0, date("n"), (date("j")+18), date("Y"));
+$eindTijd	= mktime(23, 59, 59, date("n"), (date("j")+18), date("Y"));	
+
+# Omdat de server deze dagelijks moet draaien wordt toegang niet gedaan op basis van naam+wachtwoord maar op basis van IP-adres
+# Omdat soms achteraf toch (nogmaals) een reminder-mail verstuurd moet worden wel de mogelijkheid om als admin in te loggen
+if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) || in_array(1, $myGroups)) {
+	if(in_array(1, $myGroups)) {
+		if(isset($_POST['save'])) {
+			$diensten = array_keys($_POST['dienst']);
+		} else {			
+			$toekomst = Kerkdienst::getDiensten(time(), $eindTijd);
+			$text[] = "<form method='post' action='$_SERVER[PHP_SELF]'>";
+			foreach($toekomst as $d) {
+				$dnst = new Kerkdienst($d);
+				$text[] = "<input type='checkbox' name='dienst[". $d ."]' value='1'> ". time2str('EEEE d LLLL', $dnst->start) ."<br>";
+				#$text[] = "<input type='checkbox' name='dienst[". $d ."]' value='1'> ".date('d-m H:i', $dnst->start) ."<br>";
+			}
+			$text[] = "<input type='submit' name='save' value='Diensten sturen'>";
+			$text[] = "</form>";
+
+			echo showCSSHeader();
+			echo '<div class="content_vert_kolom_full">'.NL;			
+			echo "<div class='content_block'>".NL. implode(NL, $text).NL."</div>".NL;
+			echo '</div> <!-- end \'content_vert_kolom_full\' -->'.NL;
+			echo showCSSFooter();
+		}
+	} else {
+		$diensten	= Kerkdienst::getDiensten($startTijd, $eindTijd);
+	}	
 	
 	foreach($diensten as $dienstID) {
 		$dienst		= new Kerkdienst($dienstID);
@@ -70,13 +104,8 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) OR $test) {
 				$KKD->addCC($ouderling->getMail(), $ouderling->getName());
 				if(isset($schriftlezer)) {
 					$KKD->addCC($schriftlezer->getMail(), $schriftlezer->getName());
-				}				
-								
-				# Als Reinier geen voorganger is, gemeentelid voor jeugdmoment in de CC
-				#if($dienst->voorganger != 91) {					
-				#	$KKD->addCC($jeugdmoment->getMail(), $jeugdmoment->getName());
-				#}
-								
+				}
+
 				# CC toevoegen
 				foreach($voorgangerCC as $adres => $naam) {
 					$KKD->addCC($adres, $naam);

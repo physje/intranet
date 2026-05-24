@@ -37,8 +37,9 @@ foreach($roosters as $r) {
 			$sql = "SELECT * FROM `kerkdiensten`, `planning_tekst` WHERE `planning_tekst`.`dienst` = `kerkdiensten`.`id` AND `planning_tekst`.`rooster` = ". $rooster->id ." AND `kerkdiensten`.`actief` = '1' AND `kerkdiensten`.`start` > ". (time()+(($rooster->alert-1)*$week));
 		# Of een "normaal" rooster
 		} elseif(!$rooster->tekst) {
-			$sql = "SELECT * FROM `kerkdiensten`, `planning` WHERE `planning`.`dienst` = `kerkdiensten`.`id` AND `planning`.`commissie` = ". $rooster->id ." AND `kerkdiensten`.`actief` = '1' AND `kerkdiensten`.`start` > ". (time()+(($rooster->alert-1)*$week));
+			$sql = "SELECT `kerkdiensten`.`id` FROM `kerkdiensten`, `planning` WHERE `planning`.`dienst` = `kerkdiensten`.`id` AND `planning`.`commissie` = ". $rooster->id ." AND `kerkdiensten`.`actief` = '1' AND `kerkdiensten`.`start` > ". (time()+(($rooster->alert-1)*$week));
 		}
+
 		$data = $db->select($sql);
 
 		echo $rooster->naam .' -> '. count($data) .'<br>';
