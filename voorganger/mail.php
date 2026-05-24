@@ -42,7 +42,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) || in_array(1, $myGroups)) {
 			$text[] = "<form method='post' action='$_SERVER[PHP_SELF]'>";
 			foreach($toekomst as $d) {
 				$dnst = new Kerkdienst($d);
-				$text[] = "<input type='checkbox' name='dienst[". $d ."]' value='1'> ". time2str('EEEE d LLLL', $dnst->start) ."<br>";
+				$text[] = "<input type='checkbox' name='dienst[". $d ."]' value='1'> ". time2str('EEEE d LLLL HH:mm', $dnst->start) ." (". $voorganger->getName() .")<br>";
 				#$text[] = "<input type='checkbox' name='dienst[". $d ."]' value='1'> ".date('d-m H:i', $dnst->start) ."<br>";
 			}
 			$text[] = "<input type='submit' name='save' value='Diensten sturen'>";
@@ -69,18 +69,25 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) || in_array(1, $myGroups)) {
 		$aBandleider	= new Vulling($dienstID, 22);
 		#$aJeugd			= new Vulling($dienstID, 25);
 
-		$bandleider		= new Member($aBandleider->leden[0]);
-		$ouderling		= new Member($aOuderling->leden[0]);		
-		$beameraar		= new Member($aBeamer->leden[0]);
-		$koster			= new Member($aKoster->leden[0]);
+		if(count($aBandleider->leden) > 0) {
+			$bandleider		= new Member($aBandleider->leden[0]);
+		}
+
+		if(count($aOuderling->leden) > 0) {
+			$ouderling		= new Member($aOuderling->leden[0]);		
+		}
+
+		if(count($aBeamer->leden) > 0) {
+			$beameraar		= new Member($aBeamer->leden[0]);
+		}
+
+		if(count($aKoster->leden) > 0) {
+			$koster			= new Member($aKoster->leden[0]);
+		}
 		
 		if(count($aSchriftlezer->leden) > 0) {
 			$schriftlezer	= new Member($aSchriftlezer->leden[0]);
 		}	
-		
-		#if(count($aJeugd->leden) > 0) {
-		#	$jeugdmoment	= new Member($aJeugd->leden[0]);
-		#}
 		
 		$dagdeel 		= formatDagdeel($dienst->start);
 		
