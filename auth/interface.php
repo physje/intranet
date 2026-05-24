@@ -37,20 +37,22 @@ if ($phpSP_message) {
 }
 
 echo "		<div class='login_box'>".NL;
-echo "		<div class='login_header'>Login Scherm</div>".NL;
-echo "		<div class='login_username'>".NL;
-echo "			<div class='login_text'>Gebruikersnaam</div>".NL;
-echo "			<div class='login_input'><input type='text' name='entered_login'></div>".NL;
-echo "		</div>".NL;
-echo "		<div class='login_password'>".NL;
-echo "			<div class='login_text'>Wachtwoord</div>".NL;
-echo "			<div class='login_input'><input type='password' name='entered_password'></div>".NL;
-echo "		</div>".NL;
-echo "		<div class='login_submit'><input type='submit' name='submit' value='Log in'></div>".NL;
+echo "			<div class='login_header'>Login Scherm</div>".NL;
+echo "			<div class='login_username'>".NL;
+echo "				<div class='login_text'>Gebruikersnaam</div>".NL;
+echo "				<div class='login_input'><input type='text' name='entered_login'></div>".NL;
+echo "			</div>".NL;
+echo "			<div class='login_password'>".NL;
+echo "				<div class='login_text'>Wachtwoord</div>".NL;
+echo "				<div class='login_input'><input type='password' name='entered_password'></div>".NL;
+echo "			</div>".NL;
+echo "			<div class='login_submit'><input type='submit' name='submit' value='Log in'></div>".NL;
+echo "			<div class='login_credentials'><a href='". $ScriptURL ."auth/wachtwoord.php' title='Inloggegevens opvragen'>inloggegevens en/of wachtwoord opvragen</a></div>".NL;
 echo "		</div>".NL;
 echo "		</form>". NL;
-echo "		</div>".NL;
+echo "		<div class='empty'>&nbsp;</div>".NL;
 echo "	</div>".NL;
+echo "</div>".NL;
 echo "</body>".NL;
 echo "</html>".NL;
 

@@ -240,6 +240,14 @@ a.ontrokken {
 	padding-right:25px;
 }
 
+.login_credentials {
+	padding-top:15px;
+	padding-bottom:15px;	
+	text-align:center;
+	float:left;
+	width:100%;
+}
+
 .login_submit {
 	padding-top:45px;
 	padding-bottom:25px;
@@ -247,7 +255,7 @@ a.ontrokken {
 }
 
 .empty {
-	padding-bottom:1115px;
+	height: 50%;
 }
 
 /* Bij nog kleinere schermen de witte balken links en rechts verwijderen */	
