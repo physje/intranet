@@ -13,7 +13,7 @@ include_once('../Classes/Logging.php');
 include_once('../Classes/KKDMailer.php');
 include_once('../Classes/Mysql.php');
 
-$sendMail = false;
+$sendMail = true;
 $sendTestMail = false;
 
 # Als je niet van de toegestane IP-adressen komt, ga ik er vanuit dat hij handmatig wordt gerund
@@ -42,8 +42,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) || in_array(1, $myGroups)) {
 			$text[] = "<form method='post' action='$_SERVER[PHP_SELF]'>";
 			foreach($toekomst as $d) {
 				$dnst = new Kerkdienst($d);
-				$text[] = "<input type='checkbox' name='dienst[". $d ."]' value='1'> ". time2str('EEEE d LLLL HH:mm', $dnst->start) ." (". $voorganger->getName() .")<br>";
-				#$text[] = "<input type='checkbox' name='dienst[". $d ."]' value='1'> ".date('d-m H:i', $dnst->start) ."<br>";
+				$text[] = "<input type='checkbox' name='dienst[". $d ."]' value='1'> ". time2str('EEEE d LLLL HH:mm', $dnst->start).(isset($voorganger) ? " (". $voorganger->getName() .")" : '')."<br>";
 			}
 			$text[] = "<input type='submit' name='save' value='Diensten sturen'>";
 			$text[] = "</form>";
@@ -62,7 +61,8 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) || in_array(1, $myGroups)) {
 		$dienst		= new Kerkdienst($dienstID);
 		$voorganger = new Voorganger($dienst->voorganger);
 				
-		$aOuderling		= new Vulling($dienstID, 7);		
+		$aOuderling		= new Vulling($dienstID, 7);
+		$aDiaken		= new Vulling($dienstID, 10);		
 		$aBeamer		= new Vulling($dienstID, 11);		
 		$aSchriftlezer	= new Vulling($dienstID, 12);
 		$aKoster		= new Vulling($dienstID, 13);		
@@ -71,6 +71,10 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) || in_array(1, $myGroups)) {
 
 		if(count($aBandleider->leden) > 0) {
 			$bandleider		= new Member($aBandleider->leden[0]);
+		}
+
+		if(count($aDiaken->leden) > 0) {
+			$diaken		= new Member($aDiaken->leden[0]);		
 		}
 
 		if(count($aOuderling->leden) > 0) {
@@ -107,10 +111,21 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) || in_array(1, $myGroups)) {
 			if(!$sendTestMail) {
 				# Alle geadresseerden toevoegen
 				$KKD->addAddress($voorganger->mail, $mailNaam);
-				$KKD->addCC($bandleider->getMail(), $bandleider->getName());				
-				$KKD->addCC($ouderling->getMail(), $ouderling->getName());
+
+				if(isset($bandleider)) {
+					$KKD->addCC($bandleider->getMail(), $bandleider->getName());
+				}
+
+				if(isset($ouderling)) {
+					$KKD->addCC($ouderling->getMail(), $ouderling->getName());
+				}
+
 				if(isset($schriftlezer)) {
 					$KKD->addCC($schriftlezer->getMail(), $schriftlezer->getName());
+				}
+
+				if(isset($diaken)) {
+					$KKD->addCC($diaken->getMail(), $diaken->getName());
 				}
 
 				# CC toevoegen
@@ -166,8 +181,8 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) || in_array(1, $myGroups)) {
 			$opsomming[] = "<li>".(isset($ouderling->id) ? $ouderling->getName() ." zal als ouderling van dienst" : "De ouderling van dienst zal"). " de mededelingen voorafgaand aan de dienst verzorgen.</li>";
 			$opsomming[] = "<li>".(isset($schriftlezer->id) ? "De schriftlezing wordt gedaan door ". $schriftlezer->getName() : "Het is nog niet bekend wie de schriftlezing doet").". Wij gebruiken de vertaling NBV21.</li>";
 			$opsomming[] = "<li>".(isset($beameraar->id) ? "De beamer wordt bediend door ". $beameraar->getName() : "Het is nog niet bekend wie de beamer bedient").".</li>";
-			$opsomming[] = "<li>".(isset($koster->id)? $koster->getName() ." is koster" : "Het is nog niet bekend wie de koster is").".</li>";
-			$opsomming[] = "<li>Aankondiging/toelichting op de collecte en het collectegebed, wordt gedaan door de diaken van dienst.</li>";
+			$opsomming[] = "<li>".(isset($koster->id)? $koster->getName() ." is koster" : "Het is nog niet bekend wie de koster is").".</li>";			
+			$opsomming[] = "<li>Aankondiging/toelichting op de collecte en het collectegebed, wordt gedaan door ". (isset($diaken) ? $diaken->getName() ." als diaken van dienst" : 'de diaken van dienst') .".</li>";
 			$opsomming[] = "<li>". (isset($ouderling->id) ? $ouderling->getName() : "De ouderling van dienst"). " verzorgt het dankgebed en de voorbeden (meestal aansluitend aan het collectegebed)</li>";
 			$opsomming[] = "<li>De dienst wordt live vertaald door het vertaalteam voor gemeenteleden die de Nederlandse taal nog niet machtig zijn. Het helpt het vertaalteam als bij het verzenden van de liturgie ook de preek of een preekschets wordt toegevoegd zodat men zich kan voorbereiden.</li>";
 						
