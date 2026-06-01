@@ -45,7 +45,7 @@ if((in_array($_SERVER['REMOTE_ADDR'], $allowedIP) AND date('j') <= 7) OR $test) 
 		$mailText = array();
 		$mailText[] = "Beste ". $voorganger->getName(5) .",<br>";
 		$mailText[] = "<br>";
-		$mailText[] = ($stijl == 0 ? 'u' : 'jij'). " gaat volgende maand voor in de Koningskerk te Deventer.<br>";
+		$mailText[] = ($stijl ? 'u' : 'jij'). " gaat volgende maand voor in de Koningskerk te Deventer.<br>";
 		$mailText[] = "Om die reden wil ik controleren of alle gegegevens die wij van ". ($stijl? 'u' : 'jouw') ." in ons systeem hebben staan (nog) correct zijn.<br>";
 		$mailText[] = "<br>";
 		$mailText[] = "Op dit moment ". ($stijl ? 'staat u' : 'sta je'). " o.a. met de volgende gegevens in ons systeem:<br>";
