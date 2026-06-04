@@ -92,7 +92,7 @@ class OpenKerkRooster {
         # Nieuwe rooster-items opslaan
         foreach($this->personen as $pos=>$persoon) {
             $sql = "INSERT INTO `openkerk_rooster` (`tijd`, `eind`, `pos`, `persoon`) VALUES ('". $this->start ."', '". $this->eind ."', '". $pos ."', '". $persoon ."')";
-            if(!$db->query($sql))   $succes = false;
+            if(!$db->query($sql))   $succes = false;            
         }
 
         # Nieuwe rooster-opmerkingen opslaan

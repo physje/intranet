@@ -116,22 +116,31 @@ for($dag = 0 ; $dag < 7 ; $dag++) {
 	$eind = $start + (24*60*60);
 	
 	$starts = OpenKerkRooster::getStarts($start, $eind);
+	$begin = $einde = array();
 
-	if(count($starts) > 0) {
-		$eerste = new OpenKerkRooster(current($starts));
-		$laatste = new OpenKerkRooster(end($starts));
+	foreach($starts as $s) {
+		$OK = new OpenKerkRooster($s);
 
+		foreach($OK->personen as $p) {
+			if($p != '' AND $p > 0) {
+				$begin[] = $OK->start;
+				$einde[] = $OK->eind;
+			}
+		}
+	}
+
+	if(count($begin) > 0) {		
 		# Eigenlijke XML-data
 		$xml = array();	
 				
-		$xml[] = "    <dag>". datefmt_format($fmt_dag, $eerste->start) ."</dag>";
-		$xml[] = "    <Dag>". ucfirst(datefmt_format($fmt_dag, $eerste->start)) ."</Dag>";
-		$xml[] = "    <datum>". datefmt_format($fmt_datum, $eerste->start) ."</datum>";
+		$xml[] = "    <dag>". datefmt_format($fmt_dag, min($begin)) ."</dag>";
+		$xml[] = "    <Dag>". ucfirst(datefmt_format($fmt_dag, min($begin))) ."</Dag>";
+		$xml[] = "    <datum>". datefmt_format($fmt_datum, min($begin)) ."</datum>";
 		#$xml[] = "    <datum_lang>". datefmt_format($fmt_datum_lang, $eerste->start) ."</datum_lang>";
 		#$xml[] = "    <datum_kort>". datefmt_format($fmt_datum_kort, $eerste->start) ."</datum_kort>";
-		$xml[] = "    <start>". datefmt_format($fmt_tijd, $eerste->start) ."</start>";
-		$xml[] = "    <eind>". datefmt_format($fmt_tijd, $laatste->eind) ."</eind>";
-		$xml[] = "    <duur>". datefmt_format($fmt_tijd, $eerste->start) ." - ". datefmt_format($fmt_tijd, $laatste->eind) ."</duur>";
+		$xml[] = "    <start>". datefmt_format($fmt_tijd, min($begin)) ."</start>";
+		$xml[] = "    <eind>". datefmt_format($fmt_tijd, max($einde)) ."</eind>";
+		$xml[] = "    <duur>". datefmt_format($fmt_tijd, min($begin)) ." - ". datefmt_format($fmt_tijd, max($einde)) ."</duur>";
 		#$xml[] = "    <titel>Open Kerk</titel>";
 
 		$OpenKerkXML[] = "  <openkerk>";
