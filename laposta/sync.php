@@ -54,7 +54,8 @@ foreach($adressen as $id => $email_encoded) {
 		#		ik kan dan werken met het scipio id als identiefier ipv het mailadres (wat LP doet)		
 		$LP = new LaPostaData($id);
 
-		$geb_unix = mktime(0,0,0,substr($lid->geboorte_maand, 5, 2),substr($lid->geboorte_dag, 8, 2),substr($lid->geboorte_jaar, 0, 4));
+		#$geb_unix = mktime(0,0,0,substr($lid->geboorte_maand, 5, 2),substr($lid->geboorte_dag, 8, 2),substr($lid->geboorte_jaar, 0, 4));
+		$geb_unix = mktime(0,0,0,$lid->geboorte_maand,$lid->geboorte_dag,$lid->geboorte_jaar);
 		
 		# Komt hij niet voor dan moet hij aan LP worden toegevoegd
 		#  en alle variabelen ingesteld
