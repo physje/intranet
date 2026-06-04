@@ -47,7 +47,7 @@ if(isset($dader) AND isset($slachtoffer)) {
 		
 	$mail_d = array();	
 	$slachtoffer->nameType = 1;
-	$mail_d[] = "Dag ". $slachtoffer->getName() .",";
+	$mail_d[] = "Dag ". $slachtoffer->getName(1) .",";
 	$mail_d[] = "";
 	$mail_d[] = $dader->getName() ." heeft zojuist met jou geruild op het rooster '". $rooster->naam ."'.";
 	$dader->nameType = 1;
@@ -67,7 +67,7 @@ if(isset($dader) AND isset($slachtoffer)) {
 
 	
 	$mail_d = array();
-	$mail_d[] = "Dag ". $dader->getName() .",";
+	$mail_d[] = "Dag ". $dader->getName(1) .",";
 	$mail_d[] = "";
 	$slachtoffer->nameType = 2;
 	$mail_d[] = "Jij hebt zojuist met ". $slachtoffer->getName() ." geruild op het rooster '". $rooster->naam ."'.";
