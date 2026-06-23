@@ -7,6 +7,8 @@ include_once('../Classes/Voorganger.php');
 include_once('../Classes/KKDMailer.php');
 include_once('../Classes/Logging.php');
 
+$melding = $blocks = array();
+
 if(isset($_REQUEST['hash'])) {
 	$hash = $_REQUEST['hash'];
 	$voorgangerID = isValidVoorgangerHash($hash);
