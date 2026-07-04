@@ -51,7 +51,8 @@ if(isset($_POST['opvragen']) AND isset($_POST['invoer']) AND trim($_POST['invoer
 	$text[] = "<form action='". htmlspecialchars($_SERVER['PHP_SELF']) ."' method='post'>\n";
 	$text[] = "<table>";
 	$text[] = "<tr>";
-	$text[] = "	<td>Voer uw loginnaam of email-adres in. Het systeem zal dan een link sturen waarmee u een nieuw wachtwoord kunt instellen.</td>";
+	$text[] = "	<td>Voer uw loginnaam of email-adres in. Mocht u die niet weten, of mocht u die delen met uw partner, dan kunt u ook iets anders proberen wat uniek voor u is, bv voornaam, meisjesnaam, etc.<br>";
+	$text[] = "Mocht het systeem op basis daarvan een uniek persoon vinden, dan zal deze een link naar die persoon sturen waarmee u een nieuw wachtwoord ingesteld kan worden.</td>";
 	$text[] = "</tr>";
 	$text[] = "<tr>";
 	$text[] = "	<td><input type='text' name='invoer' value='$invoer' size='75'></td>";

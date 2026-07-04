@@ -80,7 +80,7 @@ if(isset($_REQUEST['hash'])) {
 				$voorganger->plaats			= $_POST['plaats'];
 				$voorganger->denominatie	= $_POST['denom'];
 				$voorganger->opmerkingen	= $_POST['opm'];
-				$voorganger->vousvoyeren	= ($_POST['stijl'] == 1 ? '1' : '0');
+				$voorganger->vousvoyeren	= ($_POST['stijl'] == 0 ? true : false);
 				$voorganger->last_data		= time();
 											
 				if($voorganger->save()) {

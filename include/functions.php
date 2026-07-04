@@ -134,15 +134,26 @@ function isValidVoorgangerHash(string $hash) {
 
 
 /**
- * Zoek een gebruikersID op basis van username of mailadres.
+ * Zoek een gebruikersID op basis van iets unieks of mailadres.
  * Username of mailadres moeten volledig overeenkomen, geen gedeeltelijke overeenkomst.
  * @param string $input String waarop gezocht moet worden.
  * 
  * @return Array Array met userIDs. Als er geen gebruiker is gevonden False.
  */
 function getUserByInput($input) {
+	$where = array();
 	$db = new Mysql();
-	$sql = "SELECT `scipio_id` FROM `leden` WHERE `username` like '". urlencode($input) ."' OR `email` like '". urlencode($input) ."' OR `formeel` like '". urlencode($input) ."'";
+
+	$where[] = "`username` like '". urlencode($input) ."'";
+	$where[] = "`voornaam` like '". urlencode($input) ."'";
+	$where[] = "`achternaam` like '". urlencode($input) ."'";
+	$where[] = "`meisjesnaam` like '". urlencode($input) ."'";
+	$where[] = "`hash_long` like '". urlencode($input) ."'";
+	$where[] = "`hash_short` like '". urlencode($input) ."'";	
+	$where[] = "`email` like '". urlencode($input) ."'";
+	$where[] = "`formeel` like '". urlencode($input) ."'";
+
+	$sql = "SELECT `scipio_id` FROM `leden` WHERE ". implode(' OR ', $where);
 	$data = $db->select($sql, true);
 	
 	if(count($data) == 0) {

@@ -231,10 +231,10 @@ if(isset($_POST['correct'])) {
 					
 		if(!$cMail->sendMail()) {
 			toLog("Problemen met invoeren van declaratie [". $declaratie->hash ."] en voorleggen aan cluco (". $cluco->getName(5) .")", 'error', $clucoID);
-			$page[] = "Er zijn problemen met het versturen van de notificatie-mail naar de clustercoordinator.";
+			$page[] = "Er zijn problemen met het versturen van de notificatie-mail naar de ". ($cluster == 2 ? 'penningmeester' : 'cluster-coordinator') .".";
 		} else {
 			toLog("Declaratie [". $declaratie->hash ."] ingevoerd en doorgestuurd naar cluco (". $cluco->getName(5) .")", 'info', $clucoID);
-			$page[] = "De declaratie is ter goedkeuring voorgelegd aan ". $cluco->getName(5) ." als clustercoordinator";
+			$page[] = "De declaratie is ter goedkeuring voorgelegd aan ". $cluco->getName(5) ." als ". ($cluster == 2 ? 'penningmeester' : 'cluster-coordinator') .".";
 		}
 
 		# Stel de declaratie-status in
@@ -247,11 +247,11 @@ if(isset($_POST['correct'])) {
 		$mailGebruiker[] = "<br>";
 		$mailGebruiker[] = "jij hebt zojuist een declaratie ingediend voor <i>". makeOpsomming($onderwerpen, '</i>, <i>', '</i> en <i>') ."</i> ter waarde van ". formatPrice($declaratie->totaal)."<br>";
 		$mailGebruiker[] = "<br>";
-		$mailGebruiker[] = "Deze ligt op dit moment ter beoordeling bij ". $cluco->getName(5)." als cluster-coordinator. Mocht ". ($cluco->geslacht == 'M' ? 'hij' : 'zij') ." daar vragen over hebben dan zal hij dit naar jou terugkoppelen.<br>";
+		$mailGebruiker[] = "Deze ligt op dit moment ter beoordeling bij ". $cluco->getName(5)." als ". ($cluster == 2 ? 'penningmeester' : 'cluster-coordinator') .". Mocht ". ($cluco->geslacht == 'M' ? 'hij' : 'zij') ." daar vragen over hebben dan zal ". ($cluco->geslacht == 'M' ? 'hij' : 'zij') ." dit naar jou terugkoppelen.<br>";
 
 		$gMail = new KKDMailer();
 		$gMail->aan		= $gebruiker->id;
-		$gMail->Subject	= "Declaratie voor cluster ". $clusters[$cluster];
+		$gMail->Subject	= "Declaratie voor ". $clusters[$cluster];
 		$gMail->Body	= implode("\n", $mailGebruiker);  	
 
 		if(!$sendMail)	$gMail->testen = true;
@@ -275,7 +275,7 @@ if(isset($_POST['correct'])) {
 	}
 	$page[] = "<br>";
 	$page[] = "<br>";
-	$page[] = "Wilt u nog een declaratie indienen, klik dan <a href='". $_SERVER['PHP_SELF']."'>hier</a>. Mocht dit uw laatste declaratie zijn, klik dan <a href='". $ScriptURL ."'>hier</a>";	
+	$page[] = "Wilt u nog een declaratie indienen, klik dan <a href='". $_SERVER['PHP_SELF']."'>hier</a>.<br>Mocht dit uw laatste declaratie zijn, klik dan <a href='". $ScriptURL ."'>hier</a>";	
 } elseif(isset($_POST['page']) AND $_POST['page'] > 0) {	
 	# Als vertrek-adres en IBAN leeg zijn, stel deze dan in op basis van de gegevens van de gebruiker.
 	# Rekeningnummer wordt bepaald op basis van het eBoekhouden-ID en opvragen van IBAN
@@ -363,12 +363,12 @@ if(isset($_POST['correct'])) {
 				}
 			}		
 			
-			# Alleen PDF's / JPG's
+			# Alleen PDF / JPG / PNG
 			foreach($declaratie->bijlagen as $naam) {
 				$path_parts = pathinfo($naam);
-				if(isset($path_parts['extension']) && $path_parts['extension'] != 'pdf' && $path_parts['extension'] != 'jpg' && $path_parts['extension'] != 'jpeg') {
+				if(isset($path_parts['extension']) && $path_parts['extension'] != 'pdf' && $path_parts['extension'] != 'jpg' && $path_parts['extension'] != 'jpeg'&& $path_parts['extension'] != 'png') {
 					$checkFields = false;
-					$meldingBestand = 'Alleen PDF of JPG toegestaan';					
+					$meldingBestand = 'Alleen PDF, JPG of PNG toegestaan';					
 				}
 			}
 		}		
