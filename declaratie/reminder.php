@@ -124,7 +124,7 @@ if(count($declaraties) > 0) {
 			$mail = new KKDMailer();
 
 			if($cluster == 2) {
-				$mail->aan = $clucoID;
+				$mail->aan = $clusterCoordinatoren[2];
 			} else {
 				$mail->ontvangers[] = array($declaratieReplyAddress, $declaratieReplyName);
 			}
