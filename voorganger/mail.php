@@ -29,7 +29,7 @@ if(!in_array($_SERVER['REMOTE_ADDR'], $allowedIP)) {
 
 $diensten = array();
 $startTijd	= mktime(0, 0, 0, date("n"), (date("j")+18), date("Y"));
-$eindTijd	= mktime(23, 59, 59, date("n"), (date("j")+18), date("Y"));	
+$eindTijd	= mktime(23, 59, 59, date("n"), (date("j")+18), date("Y"));
 
 # Omdat de server deze dagelijks moet draaien wordt toegang niet gedaan op basis van naam+wachtwoord maar op basis van IP-adres
 # Omdat soms achteraf toch (nogmaals) een reminder-mail verstuurd moet worden wel de mogelijkheid om als admin in te loggen
@@ -58,6 +58,9 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) || in_array(1, $myGroups)) {
 	}	
 	
 	foreach($diensten as $dienstID) {
+		# Zorgen dat alle voor de 2de ronde 'leeg' zijn
+		unset($bandleider, $diaken, $ouderling, $beameraar, $koster, $schriftlezer);
+
 		$dienst		= new Kerkdienst($dienstID);
 		$voorganger = new Voorganger($dienst->voorganger);
 				
@@ -105,7 +108,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) || in_array(1, $myGroups)) {
 			$KKD = new KKDMailer();
 			$KKD->FromName = 'Preekvoorziening Koningskerk Deventer';
 			$KKD->addReplyTo($voorgangerReplyAddress, $voorgangerReplyName);
-			if(!$productieOmgeving) $KKD->testen = true;
+			if(!$productieOmgeving) $KKD->testen = true;			
 						
 			# Als er niet getest wordt
 			if(!$sendTestMail) {
