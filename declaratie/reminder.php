@@ -123,7 +123,7 @@ if(count($declaraties) > 0) {
 
 			$mail = new KKDMailer();
 
-			if($cluster == 2) {
+			if($i == 1) {
 				$mail->aan = $clusterCoordinatoren[2];
 			} else {
 				$mail->ontvangers[] = array($declaratieReplyAddress, $declaratieReplyName);
@@ -134,10 +134,10 @@ if(count($declaraties) > 0) {
 			if(!$productieOmgeving)	$mail->testen	= true;
 				
 			if($mail->sendMail()) {
-				toLog("Reminder-mail penningmeester $i gestuurd");
+				toLog("Reminder-mail penningmeester ". ($i == 1 ? 'Jeugd & Gezin ' : '')."gestuurd");
 				$blocks[] = 'Reminder-mail aan penningsmeester gestuurd';
 			} else {
-				toLog("Problemen met reminder-mail penningmeester $i versturen", 'error');
+				toLog("Problemen met reminder-mail penningmeester ". ($i == 1 ? 'Jeugd & Gezin ' : '')."versturen", 'error');
 				$blocks[] = 'Kon geen Reminder-mail aan penningsmeester sturen';
 			}
 		}
