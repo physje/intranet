@@ -29,12 +29,14 @@ $extern['extern01'] = array(
 	);
 */
 
+/*
 $extern['extern02'] = array(
 	'geslacht' => 'M',
 	'mail' => 'antonlesley487@proton.me',
 	'naam' => 'Daniel van Hemert',
 	'voornaam' => 'Daniel'
 	);	
+*/
 
 $extern['extern03'] = array(
 	'geslacht' => 'M',
