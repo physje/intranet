@@ -274,8 +274,7 @@ if(in_array(1, $myGroups)) {
 	$adminLinks['admin/log.php'] = 'Bekijk logfiles';
 	$adminLinks['admin/mailLog.php'] = 'Bekijk mail-files';	
 	$adminLinks['admin/sendMail.php'] = 'Verstuur mail';
-	//TODO: Logins zoeken
-	#$adminLinks['admin/logins.php'] = 'Zoek binnen logins';
+	//$adminLinks['admin/logins.php'] = 'Zoek binnen logins';
 	//TODO: Schrijf script om alle rechten overzichtelijk inzichttelijk te hebben
 	#$adminLinks['admin/reviewRechten.php'] = 'Bekijk groepen en rechten';
 	$adminLinks['admin/configuration.php'] = 'Configuratie-variabelen';
@@ -390,6 +389,9 @@ if(isset($_SESSION['fakeID'])) {
 	$site[] = "<b>Ingelogd als ". $gebruiker->getName() ."</b>";
 }
 $site[] = "<a href='account.php' target='_blank'>Account</a>";
+if($gebruiker->MFA_code == '') {
+	$site[] = "<a href='2FA.php' target='_blank'>Multi-factor authenticatie instellen</a>";
+}
 $site[] = "<a href='profiel.php' target='_blank'>Profiel</a>";
 $site[] = "<a href='ledenlijst.php' target='_blank'>Ledenlijst</a>";
 $site[] = "<a href='admin/stats.php' target='_blank'>Statistieken</a>";
