@@ -71,8 +71,10 @@ if(isset($_SESSION['fakeID'])) {
 	$_SESSION['useID'] = $_SESSION['realID'];
 }
 
-if(isset($requiredUserGroups)) {
-	$gebruiker = new Member($_SESSION['useID']);	
+# Member-object aanmaken van het lid-id wat gebruikt moet worden
+$gebruiker = new Member($_SESSION['useID']);
+
+if(isset($requiredUserGroups)) {	
 	$authorisatieArray = $gebruiker->getTeams();
 	$overlap = array_intersect ($requiredUserGroups, $authorisatieArray);
 	
@@ -84,7 +86,6 @@ if(isset($requiredUserGroups)) {
 		exit;
 	}		
 }
-
 
 
 # Als je voor de eerste keer hier komt (lees, nog nooit het einde van dit script gehaald)
@@ -114,16 +115,19 @@ if(!isset($_SESSION['logged']) OR (isset($_SESSION['logged']) && !$_SESSION['log
 		
 	# Long-term store van logins
 	# Wordt later gebruikt om te bepalen of de 2FA gevraagd moet worden of niet
-	$gebruiker->storeLogin($_SERVER['REMOTE_ADDR'], $_SERVER['HTTP_USER_AGENT']);
-
-	# Laatste bezoek loggen
-	$gebruiker->tijd_bezoek = time();
-	$gebruiker->save();
+	$loginLocation = new Login();
+	$loginLocation->lid = $gebruiker->id;
+	$loginLocation->ip = $_SERVER['REMOTE_ADDR'];
+	$loginLocation->agent = $_SERVER['HTTP_USER_AGENT'];
+	$loginLocation->save();	
 	
 	# Schrijf inlog in logfiles weg
 	toLog('Ingelogd vanaf '. $_SERVER['REMOTE_ADDR']);
 }
 
+# Laatste bezoek loggen
+$gebruiker->tijd_bezoek = time();
+$gebruiker->save();
 
 # Stel een sessie-variabele in om aan te geven dat iemand ingelogd is.
 $_SESSION['logged'] = true;

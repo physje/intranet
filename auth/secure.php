@@ -1,4 +1,8 @@
 <?php
+include_once($cfgProgDir.'../Classes/Member.php');
+include_once($cfgProgDir.'../Classes/Logging.php');
+include_once($cfgProgDir.'../Classes/Login.php');
+
 error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
 
 # Create a constant that can be checked inside the files to be included.

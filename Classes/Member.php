@@ -774,6 +774,7 @@ class Member {
 	 * Hiermee kan later bepaald worden of dit een bekende computer is of niet
 	 * @param string $ip IP-adres
 	 * @param string $agent Gebruikte user agent
+	 * @deprecated Met het gebruik van Login-object niet meer in gebruik
 	 * 
 	 * @return bool Succesvol of niet
 	 */
@@ -838,7 +839,6 @@ class Member {
             $sql = "UPDATE `leden` SET ". implode(', ', $set) ." WHERE `scipio_id` = ". $this->id;			
         } else {
             $sql = "INSERT INTO `leden` (`". implode('`, `', array_keys($data)) ."`) VALUES ('". implode("', '", array_values($data)) ."')";
-			echo $sql;
         }
 
 		return $db -> query($sql);

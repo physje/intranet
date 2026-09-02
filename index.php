@@ -274,7 +274,7 @@ if(in_array(1, $myGroups)) {
 	$adminLinks['admin/log.php'] = 'Bekijk logfiles';
 	$adminLinks['admin/mailLog.php'] = 'Bekijk mail-files';	
 	$adminLinks['admin/sendMail.php'] = 'Verstuur mail';
-	//$adminLinks['admin/logins.php'] = 'Zoek binnen logins';
+	$adminLinks['admin/logins.php'] = 'Zoek binnen logins';
 	//TODO: Schrijf script om alle rechten overzichtelijk inzichttelijk te hebben
 	#$adminLinks['admin/reviewRechten.php'] = 'Bekijk groepen en rechten';
 	$adminLinks['admin/configuration.php'] = 'Configuratie-variabelen';
