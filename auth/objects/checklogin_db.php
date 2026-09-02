@@ -91,18 +91,17 @@ if(isset($requiredUserGroups)) {
 # moet gecheckt worden of je een 2FA moet invoeren
 # en moet de administratie worden bijgewerkt
 if(!isset($_SESSION['logged']) OR (isset($_SESSION['logged']) && !$_SESSION['logged'])) {
-	/*
-	$secret_key = get2FACode($_SESSION['realID']);
-	
+	$gebruiker = new Member($_SESSION['useID']);
+	$secret_key = $gebruiker->MFA_code;
+		
 	# Alleen als er een secret-key bekend is, en 2FA dus aan staat
 	# de loop van 2FA doorlopen
 	if($secret_key != '') {
 		if(isset($_POST['entered_2FA'])) {
-			include_once($cfgProgDir.'../include/google2fa/2FA.php');
-  		$google2fa = new \PragmaRX\Google2FA\Google2FA();
+			include_once($cfgProgDir.'../include/TOTP/Authenticator.php');
   		
-			if(!$google2fa->verifyKey($secret_key, $_POST['entered_2FA'])) {				
-				toLog('Foutieve 2FA-code', 'debug')
+			if(!Authenticator::verifyCode($secret_key, $_POST['entered_2FA'])) {
+				toLog('Foutieve 2FA-code', 'debug');
 				$phpSP_message = 'Onjuiste code';
 				include($cfgProgDir . "2FA.php");
 				exit;
@@ -112,10 +111,14 @@ if(!isset($_SESSION['logged']) OR (isset($_SESSION['logged']) && !$_SESSION['log
 			exit;
 		}
 	}
-	*/
 		
-	# Long-term store
-	#storeLogin($_SESSION['realID'], $_SERVER['REMOTE_ADDR'], $_SERVER['HTTP_USER_AGENT']);
+	# Long-term store van logins
+	# Wordt later gebruikt om te bepalen of de 2FA gevraagd moet worden of niet
+	$gebruiker->storeLogin($_SERVER['REMOTE_ADDR'], $_SERVER['HTTP_USER_AGENT']);
+
+	# Laatste bezoek loggen
+	$gebruiker->tijd_bezoek = time();
+	$gebruiker->save();
 	
 	# Schrijf inlog in logfiles weg
 	toLog('Ingelogd vanaf '. $_SERVER['REMOTE_ADDR']);

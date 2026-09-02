@@ -729,7 +729,7 @@ class Member {
 	 * 
 	 * @return string String met mailadres
 	 */
-	function getMail($type = 1) {        
+	function getMail(int $type = 1) {        
 		# 1 : gewone mail
 		# 2 : formeel mailadres
 
@@ -767,6 +767,23 @@ class Member {
 				break; 		
 		}
 	}
+
+
+	/**
+	 * Sla de logins (ip-adres en browser) van een gebruiker op.
+	 * Hiermee kan later bepaald worden of dit een bekende computer is of niet
+	 * @param string $ip IP-adres
+	 * @param string $agent Gebruikte user agent
+	 * 
+	 * @return bool Succesvol of niet
+	 */
+	function storeLogin(string $ip, string $agent) {
+		$db = new Mysql;
+		$sql = "INSERT INTO `logins` (`lid`, `ip`, `agent`, `tijd`) VALUES ('". $this->id ."', '". $ip ."', '". $agent ."', ". time() .")";
+
+		return $db -> query($sql);
+	}
+
 
 	/**
 	 * Sla het Member-object op in de database

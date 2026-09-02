@@ -182,7 +182,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $allowedIP) || in_array(1, $myGroups)) {
 			$opsomming[] = "<i>Andere taken</i>";
 			$opsomming[] = "<ul>";
 			$opsomming[] = "<li>".(isset($ouderling->id) ? $ouderling->getName() ." zal als ouderling van dienst" : "De ouderling van dienst zal"). " de mededelingen voorafgaand aan de dienst verzorgen.</li>";
-			$opsomming[] = "<li>".(isset($schriftlezer->id) ? "De schriftlezing wordt gedaan door ". $schriftlezer->getName() : "Het is nog niet bekend wie de schriftlezing doet").". Wij gebruiken de vertaling NBV21.</li>";
+			$opsomming[] = "<li>".(isset($schriftlezer->id) ? "De schriftlezing wordt gedaan door ". $schriftlezer->getName() : "Er is geen gemeentelid die de schriftlezing doet.").". Wij gebruiken de vertaling NBV21.</li>";
 			$opsomming[] = "<li>".(isset($beameraar->id) ? "De beamer wordt bediend door ". $beameraar->getName() : "Het is nog niet bekend wie de beamer bedient").".</li>";
 			$opsomming[] = "<li>".(isset($koster->id)? $koster->getName() ." is koster" : "Het is nog niet bekend wie de koster is").".</li>";			
 			$opsomming[] = "<li>Aankondiging/toelichting op de collecte en het collectegebed, wordt gedaan door ". (isset($diaken) ? $diaken->getName() ." als diaken van dienst" : 'de diaken van dienst') .".</li>";
