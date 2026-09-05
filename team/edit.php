@@ -21,8 +21,8 @@ include($cfgProgDir. "secure.php");
 
 if(isset($_POST['change_members'])) {
 	$team->emptyLeden();
-	$team->leden = $_POST['ids'];
-	
+	$team->leden = (isset($_POST['ids']) ? $_POST['ids'] : array());
+		
 	if($_POST['nieuw_lid'] != '') {
 		$delen = explode('|', $_POST['nieuw_lid']);
 		$newLidID = $delen[1];
