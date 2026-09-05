@@ -47,7 +47,7 @@ if(isset($_POST['send_mail'])) {
 	}
 	
     $mail = new KKDMailer();
-    $mail->aan      = $gebruiker->id;
+    $mail->aan      = $ontvanger->id;
     $mail->Body     = $FinalHTMLMail;
     $mail->Subject  = $FinalSubject;
     $mail->From     = $_POST['mail_afzender'];
