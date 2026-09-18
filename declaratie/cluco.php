@@ -214,7 +214,9 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 				$mail[] = "<br>";
 				$mail[] = "<i>". $declaratie->opmerking ."</i><br>";
 				$mail[] = "<br>";
-				$mail[] = "Je kan je declaratie aanvullen door middel van <a href='". $ScriptURL ."declaratie/gemeentelid.php?key=". $declaratie->hash ."&reset'>deze link</a> (inloggen vereist).";
+				$mail[] = "Ga daarom naar je indgediende declaratie via <a href='". $ScriptURL ."declaratie/gemeentelid.php?key=". $declaratie->hash ."&reset'>deze link</a> om hem aan te vullen.";
+				$mail[] = "<br>";
+				$mail[] = "<i>Vriendelijk verzoek om <b>geen<b> nieuwe declaratie te starten, maar de oude dmv bovenstaande link te vullen omdat er anders een halve declaratie in het systeem blijft staan</i>.<br>";
 				
 				$gem = new KKDMailer();
 				$gem->aan = $indiener->id;

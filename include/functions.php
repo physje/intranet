@@ -672,11 +672,12 @@ function price2RightFormat(float $price) {
  * Geef alle gegevens van de declaratie weer in een tabel
  * 
  * @param Declaratie Declaratie object
+ * @param bool Communicatie opnemen (true = default)
  * 
  * @return array Array met HTML-code voor een opgemaakte tabel met de declaratiegegevens
  * 
  */
-function showDeclaratieDetails(Declaratie $declaratie) {
+function showDeclaratieDetails(Declaratie $declaratie, $full = true) {
 	global $clusters, $declJGKop, $declJGPost;
 
 	$user = new Member($declaratie->gebruiker);
@@ -775,7 +776,7 @@ function showDeclaratieDetails(Declaratie $declaratie) {
 		}
 	}
 
-	if($declaratie->opmerking != '') {
+	if($declaratie->opmerking != '' && $full) {
 		$page[] = "<tr>";
 		$page[] = "		<td colspan='6'>&nbsp;</td>";
 		$page[] = "</tr>";
@@ -783,7 +784,7 @@ function showDeclaratieDetails(Declaratie $declaratie) {
 		$page[] = "		<td><b>Opmerking<b></td>";
 		$page[] = "		<td>&nbsp;</td>";
 		$page[] = "		<td colspan='4'>". $declaratie->opmerking ."</td>";
-	} elseif(count($declaratie->correspondentie) > 0) {
+	} elseif(count($declaratie->correspondentie) > 0 && $full) {
 		$page[] = "<tr>";
 		$page[] = "		<td colspan='6'>&nbsp;</td>";
 		$page[] = "</tr>";

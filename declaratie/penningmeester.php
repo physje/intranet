@@ -398,7 +398,19 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 					$mail[] = "<tr>";
 					$mail[] = "		<td colspan='6' height=50><hr></td>";
 					$mail[] = "</tr>";			
-					$mail = array_merge($mail, showDeclaratieDetails($declaratie));			
+					$mail = array_merge($mail, showDeclaratieDetails($declaratie, false));
+					$mail[] = "<tr>";
+					$mail[] = "		<td colspan='6' height=50>";
+
+					if($declaratie->cluster == 2) {
+						$mail[] = "Ga daarom naar je indgediende declaratie via <a href='". $ScriptURL ."declaratie/gemeentelid.php?key=". $declaratie->hash ."&reset'>deze link</a> om hem aan te vullen.";
+						$mail[] = "<br>";
+						$mail[] = "<i>Vriendelijk verzoek om <b>geen<b> nieuwe declaratie te starten, maar de oude dmv bovenstaande link te vullen omdat er anders een halve declaratie in het systeem blijft staan</i>.";
+					} else {
+						$mail[] = "Ga daarom naar de indgediende declaratie via <a href='". $ScriptURL ."declaratie/cluco.php?key=". $declaratie->hash ."&reset'>deze link</a> om hem aan te vullen.";
+					}
+					$mail[] = "		</td>";
+					$mail[] = "</tr>";				
 					$mail[] = "</table>";
 					
 					$terug = new KKDMailer();
