@@ -73,7 +73,16 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 		if(isset($_POST['opm_penning']))			$declaratie->opmerking = trim($_POST['opm_penning']);
 		if(isset($_POST['afwijzing']))				$declaratie->opmerking = trim($_POST['afwijzing']);
 		if(isset($_POST['information']))			$declaratie->opmerking = trim($_POST['information']);
-						
+
+		if(isset($_POST['edit_save'])) {
+			$declaratie->cluster = $_POST['cluster'];
+
+			foreach($_POST['prijs'] as $key => $value) {
+				$declaratie->overigeKosten[$key] = 100*floatval(str_replace(',', '.', $value));
+			}
+			$declaratie->totaal = calculateTotals($declaratie->overigeKosten) + $declaratie->reiskosten;
+		}		
+
 		if(isset($_REQUEST['accept'])) {			
 			if(isset($_REQUEST['send_accept'])) {
 				# Mail naar gemeentelid				
@@ -263,6 +272,43 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 				$page[] = "</table>";
 				$page[] = "</form>";
 			}
+		} elseif(isset($_REQUEST['edit'])) {
+			$page[] = "<form method='post' action='". $_SERVER['PHP_SELF']."'>";
+			$page[] = "<input type='hidden' name='key' value='". $_REQUEST['key'] ."'>";			
+			$page[] = "<table border=0 width='100%'>";
+			$page[] = "<tr>";
+			$page[] = "	<td>Dit hoort bij cluster</td>";
+			$page[] = "	<td><select name='cluster'>";
+			$page[] = "	<option value=''>Maak een keuze</option>";
+			foreach($clusters as $id => $naam) {
+				$page[] = "	<option value='$id'". ($declaratie->cluster == $id ? ' selected' : '').">$naam</option>";
+			}
+			$page[] = "	</select></td>";
+			$page[] = "	</tr>";		
+			$page[] = "<tr>";
+			$page[] = "		<td colspan='2'>&nbsp;</td>";
+			$page[] = "</tr>";
+			$counter = 0;
+							
+			foreach($declaratie->overigeKosten as $key => $string) {
+				if($string != '' OR $first) {
+					$page[] = "	<tr>";
+					$page[] = "		<td>$key</td>";
+					$page[] = "		<td><input type='text' name='prijs[$key]' value='". formatPrice($string, false) ."'></td>";
+					$page[] = "	</tr>";
+				}
+				$counter++;
+			}
+			
+			$page[] = "<tr>";
+			$page[] = "		<td colspan='2'>&nbsp;</td>";
+			$page[] = "</tr>";
+			$page[] = "<tr>";
+			$page[] = "	<td><input type='submit' name='edit_cancel' value='Annuleren'></td>";
+			$page[] = "	<td><input type='submit' name='edit_save' value='Opslaan'></td>";				
+			$page[] = "</tr>";
+			$page[] = "</table>";
+			$page[] = "</form>";		
 		} else {
 			if($declaratie->id > 0) {		
 				$page[] = "<form method='post' action='". $_SERVER['PHP_SELF']."'>";
@@ -276,7 +322,8 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 				$page[] = "</tr>";
 				$page[] = "<tr>";
 				$page[] = "		<td colspan='2'><input type='submit' name='reject' value='Afkeuren' title='Keur deze declaratie af'></td>";
-				$page[] = "		<td colspan='2' align='center'><input type='submit' name='ask' value='Terug naar gemeentelid' title='Vraag de indiener de declaratie aan te vullen'></td>";				
+				$page[] = "		<td align='center'><input type='submit' name='ask' value='Terug naar gemeentelid' title='Vraag de indiener de declaratie aan te vullen'></td>";
+				$page[] = "		<td align='center'><input type='submit' name='edit' value='Corrigeer'></td>";
 				$page[] = "		<td colspan='2' align='right'><input type='submit' name='accept' value='Goedkeuren' title='Stuur deze declaratie door naar de penningmeester'></td>";
 				$page[] = "</tr>";	
 				$page[] = "</table>";
@@ -336,14 +383,17 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 	toLog('Probeert als niet CluCo de cluco-pagina te opnenen', 'error');
 }
 
-if(isset($_REQUEST['send_accept']) || isset($_REQUEST['send_reject']) || isset($_REQUEST['send_question'])) {	
-	$page[] = "<br><br>Ga terug naar <a href='". $_SERVER['PHP_SELF']."'>het overzicht</a>.";
-
+if(isset($_REQUEST['send_accept']) || isset($_REQUEST['send_reject']) || isset($_REQUEST['send_question']) || isset($_REQUEST['edit_save'])) {
 	# En sla het object op
 	$declaratie->save();
-				
-	# Alles verwijderen nadat de declaratie is ingeschoten en de mail de deur uit is
-	$declaratie = null;	
+
+	# Het opslaan van de gecorrigeerde declaratie is nog niet het 'einde' van deze declaratie
+	if(!isset($_REQUEST['edit_save'])) {
+		$page[] = "<br><br>Ga terug naar <a href='". $_SERVER['PHP_SELF']."'>het overzicht</a>.";
+
+		# Alles verwijderen nadat de declaratie is ingeschoten en de mail de deur uit is
+		$declaratie = null;
+	}	
 }
 
 # Pagina tonen

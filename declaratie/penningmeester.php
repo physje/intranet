@@ -96,7 +96,21 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 			}
 		}
 
-		if($debug)	var_dump($declaratie, $indiener);
+		if(isset($_POST['edit_save'])) {
+			if($declaratie->cluster == 2 && $_POST['cluster'] != 2) {
+				$declaratie->posten = array();
+			}
+			$declaratie->cluster = $_POST['cluster'];
+
+			#var_dump($declaratie->overigeKosten);
+			foreach($_POST['prijs'] as $key => $value) {
+				$declaratie->overigeKosten[$key] = 100*floatval(str_replace(',', '.', $value));
+			}
+			$declaratie->totaal = calculateTotals($declaratie->overigeKosten) + $declaratie->reiskosten;			
+		}
+				
+
+		#if($debug)	var_dump($declaratie, $indiener);
 				
 		# Als declaratie niet al is afgehandeld (status < 5) mag je doorgaan
 		if($declaratie->status < 5) {
@@ -405,7 +419,7 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 					if($declaratie->cluster == 2) {
 						$mail[] = "Ga daarom naar je indgediende declaratie via <a href='". $ScriptURL ."declaratie/gemeentelid.php?key=". $declaratie->hash ."&reset'>deze link</a> om hem aan te vullen.";
 						$mail[] = "<br>";
-						$mail[] = "<i>Vriendelijk verzoek om <b>geen<b> nieuwe declaratie te starten, maar de oude dmv bovenstaande link te vullen omdat er anders een halve declaratie in het systeem blijft staan</i>.";
+						$mail[] = "<i>Vriendelijk verzoek om <b>geen<b> nieuwe declaratie te starten, maar de oude dmv bovenstaande link aan te vullen omdat er anders een halve declaratie in het systeem blijft staan</i>.";
 					} else {
 						$mail[] = "Ga daarom naar de indgediende declaratie via <a href='". $ScriptURL ."declaratie/cluco.php?key=". $declaratie->hash ."&reset'>deze link</a> om hem aan te vullen.";
 					}
@@ -483,7 +497,7 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 				
 				toLog("Declaratie afgekeurd [". $declaratie->hash ."]", '', $indiener->id);
 				
-				$page[] = "Declaratie is gemarkeerd als verwijderd. Neem contact op met de webmaster mocht dit onjuist zijn.<br>";
+				$page[] = "Declaratie is gemarkeerd als verwijderd. Het gemeentelid heeft hier <u>geen</u> melding van ontvangen. Neem contact op met de webmaster mocht dit onjuist zijn.<br>";
 				$page[] = "<br>Ga terug naar <a href='". $_SERVER['PHP_SELF']."'>het overzicht</a>.";			
 			
 			# 
@@ -536,6 +550,8 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 					$page[] = "</table>";
 					$page[] = "</form>";			
 				}			
+			
+			# Bij Jeugd en Gezin moeten de posten kunnen worden aangepast
 			} elseif(isset($_POST['change_post'])) {
 				$page[] = "<form method='post' action='". $_SERVER['PHP_SELF']."'>";
 				#$page[] = "<input type='hidden' name='key' value='". $declaratie->hash ."'>";
@@ -577,7 +593,44 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 				$page[] = "</tr>";		
 				$page[] = "</table>";
 				$page[] = "</form>";
+			} elseif(isset($_POST['edit'])) {
+				$page[] = "<form method='post' action='". $_SERVER['PHP_SELF']."'>";				
+				$page[] = "<table border=0 width='100%'>";
+				$page[] = "<tr>";
+				$page[] = "	<td>Dit hoort bij cluster</td>";
+				$page[] = "	<td><select name='cluster'>";
+				$page[] = "	<option value=''>Maak een keuze</option>";
+				foreach($clusters as $id => $naam) {
+					$page[] = "	<option value='$id'". ($declaratie->cluster == $id ? ' selected' : '').">$naam</option>";
+				}
+				$page[] = "	</select></td>";
+				$page[] = "	</tr>";		
+				$page[] = "<tr>";
+				$page[] = "		<td colspan='2'>&nbsp;</td>";
+				$page[] = "</tr>";
+				$counter = 0;
+								
+				foreach($declaratie->overigeKosten as $key => $string) {
+					if($string != '' OR $first) {
+						$page[] = "	<tr>";
+						$page[] = "		<td>$key</td>";
+						$page[] = "		<td><input type='text' name='prijs[$key]' value='". formatPrice($string, false) ."'></td>";
+						$page[] = "	</tr>";
+					}
+					$counter++;
+				}
 				
+				$page[] = "<tr>";
+				$page[] = "		<td colspan='2'>&nbsp;</td>";
+				$page[] = "</tr>";
+				$page[] = "<tr>";
+				$page[] = "	<td><input type='submit' name='edit_cancel' value='Annuleren'></td>";
+				$page[] = "	<td><input type='submit' name='edit_save' value='Opslaan'></td>";				
+				$page[] = "</tr>";
+				$page[] = "</table>";
+				$page[] = "</form>";
+
+
 			#
 			# Als geen van dan alles bekend is, toen dan het overzicht van de declaratie
 			} else {
@@ -722,10 +775,10 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 				if($declaratie->cluster == 2) {
 					$page[] = "		<table width='100%'>";
 					$page[] = "		<tr>";			
-					$page[] = "			<td><input type='submit' name='change_post' value='Wijzig posten'></td>";
-					#$page[] = "			<td align='center'><input type='submit' name='reroute' value='Betreft geen declaratie'></td>";
-					$page[] = "			<td align='center'><input type='submit' name='reject' value='Afwijzen'></td>";
-					$page[] = "			<td align='center'><input type='submit' name='dump' value='Verwijderen'></td>";
+					$page[] = "			<td><input type='submit' name='change_post' value='Wijzig posten'></td>";					
+					$page[] = "			<td align='center'><input type='submit' name='reject' value='Terug naar gemeentelid'></td>";
+					$page[] = "			<td align='center'><input type='submit' name='edit' value='Corrigeer'></td>";
+					$page[] = "			<td align='center'><input type='submit' name='dump' value='Verwijder'></td>";
 					$page[] = "			<td align='right'><input type='submit' name='accept' value='Invoeren in e-boekhouden.nl'></td>";			
 					$page[] = "		</tr>";
 					$page[] = "		</table>";
@@ -734,7 +787,8 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 					$page[] = "		<tr>";			
 					$page[] = "			<td><input type='submit' name='reject' value='Terug naar clustercoordinator'></td>";
 					$page[] = "			<td align='center'><input type='submit' name='reroute' value='Betreft geen declaratie'></td>";
-					$page[] = "			<td align='center'><input type='submit' name='dump' value='Verwijderen'></td>";
+					$page[] = "			<td align='center'><input type='submit' name='edit' value='Corrigeer'></td>";
+					$page[] = "			<td align='center'><input type='submit' name='dump' value='Verwijder'></td>";
 					$page[] = "			<td align='right'><input type='submit' name='accept' value='Invoeren in e-boekhouden.nl'></td>";			
 					$page[] = "		</tr>";
 					$page[] = "		</table>";
