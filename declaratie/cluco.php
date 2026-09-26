@@ -75,12 +75,15 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 		if(isset($_POST['information']))			$declaratie->opmerking = trim($_POST['information']);
 
 		if(isset($_POST['edit_save'])) {
+			toLog("cluster was ". $declaratie->cluster ." is nu ". $_POST['cluster'], 'debug');
 			$declaratie->cluster = $_POST['cluster'];
 
 			foreach($_POST['prijs'] as $key => $value) {
+				toLog("post '$key'  was ". $declaratie->overigeKosten[$key] ." is nu ". $value, 'debug');
 				$declaratie->overigeKosten[$key] = 100*floatval(str_replace(',', '.', $value));
 			}
 			$declaratie->totaal = calculateTotals($declaratie->overigeKosten) + $declaratie->reiskosten;
+			toLog("Declaratie [". $declaratie->hash ."] gecorrigeerd");
 		}		
 
 		if(isset($_REQUEST['accept'])) {			

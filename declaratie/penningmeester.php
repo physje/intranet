@@ -100,13 +100,17 @@ if(in_array($_SESSION['useID'], $toegestaan)) {
 			if($declaratie->cluster == 2 && $_POST['cluster'] != 2) {
 				$declaratie->posten = array();
 			}
+			toLog("cluster was ". $declaratie->cluster ." is nu ". $_POST['cluster'], 'debug');
 			$declaratie->cluster = $_POST['cluster'];
 
 			#var_dump($declaratie->overigeKosten);
 			foreach($_POST['prijs'] as $key => $value) {
+				toLog("post '$key'  was ". $declaratie->overigeKosten[$key] ." is nu ". $value, 'debug');
 				$declaratie->overigeKosten[$key] = 100*floatval(str_replace(',', '.', $value));
 			}
-			$declaratie->totaal = calculateTotals($declaratie->overigeKosten) + $declaratie->reiskosten;			
+			$declaratie->totaal = calculateTotals($declaratie->overigeKosten) + $declaratie->reiskosten;
+
+			toLog("Declaratie [". $declaratie->hash ."] gecorrigeerd");
 		}
 				
 

@@ -94,8 +94,8 @@ foreach($kerkdiensten as $dienstID) {
 
 	foreach($roosters as $roosterID) {
 		$rooster = new Rooster($roosterID);
-		$personen = array();
-
+		$personen = $vulling = $tempVulling = array();
+		
 		# Gelijk = 1 betekent  rooster voor de hele dag gelijk.
 		# Daarom alle diensten doorlopen
 		if($rooster->gelijk == 1) {

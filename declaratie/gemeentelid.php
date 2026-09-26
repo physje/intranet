@@ -172,6 +172,11 @@ if(isset($_POST['correct'])) {
 		# En bepaal wie cluster-coordinator is
 		if(isset($clusterCoordinatoren[$cluster]) AND $clusterCoordinatoren[$cluster] <> $_SESSION['useID']) {
 			$clucoID = $clusterCoordinatoren[$cluster];
+			$eigenCluster = true;
+		} elseif(isset($clusterCoordinatoren[$cluster]) AND $clusterCoordinatoren[$cluster] == $_SESSION['useID']) {
+			$randomCluster = array_rand($clusterCoordinatoren, 1);
+			$clucoID = $clusterCoordinatoren[$randomCluster];
+			$eigenCluster = false;
 		} else {
 			$clucoID = 0;
 		}	
@@ -195,6 +200,12 @@ if(isset($_POST['correct'])) {
 		$mailCluco[] = "Beste ". $cluco->getName(1).",<br>";
 		$mailCluco[] = "<br>";
 		$mailCluco[] = $gebruiker->getName(5) .' heeft een declaratie ingediend.<br>';
+
+		if(!$eigenCluster) {
+			$mailCluco[] = "<br>";
+			$mailCluco[] = "Omdat de declaratie voor het eigen cluster is, is er willekeurig een andere cluster-coordinator gekozen om deze te beoordelen.<br>";
+		}	
+
 		$mailCluco[] = "<br>";
 		$mailCluco[] = "Het betreft een declaratie van <i>". makeOpsomming($onderwerpen, '</i>, <i>', '</i> en <i>') ."</i> ter waarde van ". formatPrice($declaratie->totaal)."<br>";
 		$mailCluco[] = "<br>";
