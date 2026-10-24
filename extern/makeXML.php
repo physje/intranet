@@ -105,15 +105,12 @@ foreach($agendaItems as $agendaID) {
 # Aantal seconden in een dag
 $eenDag = 24*60*60;
 
-# We beginnen op zondag van deze week
-$offset = date('w', $startTijd)*$eenDag;
-
-# Zondag-ochtend 00:00
-$zondag = mktime(0,0,0,date('n', $startTijd), date('j', $startTijd), date('Y', $startTijd)) - $offset;
+# Vandaag
+$vandaag = mktime(0,0,0,date('n', $startTijd), date('j', $startTijd), date('Y', $startTijd));
 
 for($dag = 0 ; $dag < 7 ; $dag++) {
-	$start = $zondag+($dag*$eenDag);
-	$eind = $start + (24*60*60);
+	$start = $vandaag+($dag*$eenDag);
+	$eind = $start + $eenDag;
 	
 	$starts = OpenKerkRooster::getStarts($start, $eind);
 	$begin = $einde = array();
