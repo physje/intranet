@@ -863,6 +863,8 @@ function cleanDeclaratieString(string $in) {
 	$string = $in;
 
 	$string = str_replace('"', '*', $string);
+	$string = str_replace("'", '*', $string);
+	$string = str_replace("/", '-', $string);
 	$string = str_replace('\\r\\n', ' ', $string);
 
 	return $string;	

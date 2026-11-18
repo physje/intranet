@@ -203,6 +203,7 @@ class Declaratie
         $this->afstand = 0.0;
         $this->reiskosten = 0.0;
         $this->overigeKosten = [];
+        $this->type = '';
                     
         # Typisch gemeentelid
         $this->id = 0;
@@ -250,6 +251,7 @@ class Declaratie
                 }
             }
             
+            /*
             //TODO: Zijn er nog oudere declaraties of kan dit weg
             # Bij oudere declaraties moeten we het handmatig doen
             if(isset($json['eigen']))       $this->eigenRekening = ($json['eigen'] == 'Ja' ? true : false);
@@ -275,7 +277,8 @@ class Declaratie
                 for($i=0; $i < count($json['bijlage']); $i++) {
                     $this->bijlagen[$json['bijlage'][$i]] = $json['bijlage_naam'][$i];
                 }
-            }                      
+            }
+            */                     
         }
     }
 
@@ -364,6 +367,8 @@ class Declaratie
             } else {
                 $sql = "UPDATE `eb_declaraties` SET `indiener` = ". $this->gebruiker .", `cluster` = ". $this->cluster .", `status` = ". $this->status .", `declaratie` = '". json_encode($data) ."', `totaal` = ". $this->totaal .", `last_action` = ". $this->lastAction ."  WHERE `id` = ". $this->id;
             }
+
+            echo $sql;
 
             return $db->query($sql);
         }
