@@ -232,7 +232,7 @@ if($aToon['relatie']) {
 if($aToon['username']) {
 	$blok[] = "	<tr>";
 	$blok[] = "		<td><b>Gebruikersnaam</b></td>";
-	$blok[] = "		<td><a href='account.php?id=$id'>". $person->username ."</a></td>";
+	$blok[] = "		<td><a href='account.php?id=$id'>". $person->username ."</a>". (in_array(1, $myGroups) ?  " (<a href='../auth/wachtwoord.php?invoer=".$person->username."'>verstuur inlog</a>)" : '') ."</td>";
 	$blok[] = "	</tr>";
 }
 
